@@ -742,7 +742,7 @@ const STORES = [
   { id:'auchan', label:'Auchan', tags:['auchan','auchan-supermarche','auchan-drive'], match:/auchan/i, mdd:['auchan','pouce'], sal:['auchan','pouce'] },
   { id:'intermarche', label:'Intermarché', tags:['intermarche','intermarche-super','intermarche-contact'], match:/intermarch/i, mdd:MOUSQ, sal:['chabrior','paturages','monique-ranou','itineraire-des-saveurs','top-budget'] },
   { id:'u', label:'Super U, Hyper U', tags:['magasins-u','super-u','hyper-u','u-express','systeme-u'], match:/(^|\W)u(\W|$)|super u|hyper u|système u/i, mdd:['u','systeme u','bien vu'], sal:['u','u-bio','u-saveurs'] },
-  { id:'lidl', label:'Lidl', tags:['lidl'], match:/lidl/i, mdd:['lidl','gelatelli','milbona','crownfield','chef select','deluxe','bellarom','fin carre','freeway','solevita','combino','alesto','snack day','pilos','vemondo','saint alby'], sal:['lidl','gelatelli','milbona','crownfield','chef-select','bellarom','fin-carre','solevita','alesto','vemondo'] },
+  { id:'lidl', label:'Lidl', tags:['lidl'], match:/lidl/i, mdd:['lidl','gelatelli','milbona','crownfield','chef select','deluxe','bellarom','fin carre','freeway','solevita','combino','alesto','snack day','pilos','vemondo','saint alby','baresa','freshona','italiamo','sondey','nixe','vitasia','golden seafood'], sal:['lidl','gelatelli','milbona','crownfield','chef-select','bellarom','fin-carre','solevita','alesto','vemondo'] },
   { id:'aldi', label:'Aldi', tags:['aldi'], match:/aldi/i, mdd:['aldi','moser roth','choceur','gut bio','cucina nobile','brooklea','milsani'], sal:['aldi','moser-roth','choceur','gut-bio','cucina-nobile'] },
   { id:'monoprix', label:'Monoprix', tags:['monoprix'], match:/monoprix/i, mdd:['monoprix'], sal:['monoprix','monoprix-bio','monoprix-gourmet'] },
   { id:'casino', label:'Casino', tags:['casino','geant-casino'], match:/casino/i, mdd:['casino'], sal:['casino','casino-bio'] },
@@ -793,21 +793,21 @@ const ALLERGENS = [
   { key:'sulphites', label:'Sulfites', name:'sulfites', tag:'en:sulphur-dioxide-and-sulphites', kw:'sulphites' },
 ];
 const KW = {
-  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines)\b/g,
-          ex:/\b(lait|laits|creme|cremes|beurre)\s+(de\s+|d')\s*(noix\s+de\s+coco|coco|amandes?|avoine|soja|riz|noisettes?|cajou|cacao|karite|cacahuetes?|arachides?|marrons?|chataignes?|cassis|tartre)\b/g },
-  gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|gluten|malt|malte|maltee|triticale|froment)\b/g, ex:/\bsans\s+gluten\b/g },
-  eggs: { re:/\b(oeuf|oeufs|ovalbumine|lysozyme)\b/g },
-  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|nougatine|massepain|frangipane)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|saint-jacques)\b/g },
-  peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes)\b/g },
-  soybeans: { re:/\b(soja|soya|edamame|tofu)\b/g },
+  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|milch)\b/g,
+          ex:/\b(lait|laits|creme|cremes|beurre)\s+(de\s+|d')\s*(noix\s+de\s+coco|coco|amandes?|avoine|soja|riz|noisettes?|cajou|cacao|karite|cacahuetes?|arachides?|marrons?|chataignes?|cassis|tartre)\b|\b(coconut|almond|oat|soy|soya|rice|cashew|cocoa|peanut|shea|nut|hazelnut)\s+(milk|butter|cream|drink)\b|\bcream\s+of\s+tartar\b/g },
+  gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|gluten|malt|malte|maltee|triticale|froment|wheat|barley|rye|oat|oats|spelt)\b/g, ex:/\bsans\s+gluten\b|\bgluten[\s-]free\b/g },
+  eggs: { re:/\b(oeuf|oeufs|ovalbumine|lysozyme|egg|eggs)\b/g },
+  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|nougatine|massepain|frangipane|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|saint-jacques)\b/g },
+  peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes|peanut|peanuts)\b/g },
+  soybeans: { re:/\b(soja|soya|edamame|tofu|soy|soybean|soybeans)\b/g },
   sesame: { re:/\b(sesame|tahin|tahini|tahine)\b/g },
-  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs)\b/g },
-  crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes)\b/g },
-  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages)\b/g },
-  celery: { re:/\b(celeri|celeris)\b/g },
-  mustard: { re:/\b(moutarde|moutardes)\b/g },
+  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|fish|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring)\b/g },
+  crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish)\b/g },
+  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails)\b/g },
+  celery: { re:/\b(celeri|celeris|celery|celeriac)\b/g },
+  mustard: { re:/\b(moutarde|moutardes|mustard)\b/g },
   lupin: { re:/\b(lupin|lupins)\b/g },
-  sulphites: { re:/\b(sulfite|sulfites|bisulfite|bisulfites|metabisulfite|metabisulfites|e ?22[0-8]|anhydride sulfureux|dioxyde de soufre)\b/g },
+  sulphites: { re:/\b(sulfite|sulfites|bisulfite|bisulfites|metabisulfite|metabisulfites|e ?22[0-8]|anhydride sulfureux|dioxyde de soufre|sulphite|sulphites|sulfur dioxide|sulphur dioxide)\b/g },
 };
 const TAG_FR = Object.fromEntries(ALLERGENS.filter(a => a.key !== 'lactose').map(a => [a.tag, a.key === 'milk' ? 'Lait' : a.label]));
 const LABEL_FR = { 'en:no-lactose':'Sans lactose','en:no-gluten':'Sans gluten','en:no-milk':'Sans lait','en:vegan':'Végan','en:vegetarian':'Végétarien',
@@ -2002,72 +2002,74 @@ onboard.addEventListener('cancel', e => { e.preventDefault(); });
    Chaque ingrédient pointe vers des catégories de la base de l'appli (data/).
    c : catégories dans l'ordre de préférence ; « ~ » devant = produit de remplacement
        (boisson végétale à la place du lait, margarine à la place du beurre…).
-   kw : mots cherchés dans le nom ; si rien ne convient, toute la catégorie (sauf strict).
-   f : produit frais (pas de recherche) ; b : fond de placard ; al : allergènes d'un produit frais. */
+   kw : mots cherchés dans le nom ; si rien ne convient, toute la catégorie (sauf strict). nkw : mots exclus. skw : mots préférés pour le remplacement.
+   f : produit frais (pas de recherche) ; b : fond de placard ; al : allergènes d'un produit frais.
+   inh : allergène propre à l'ingrédient (lait pour le beurre…) : dans la catégorie principale, on n'accepte
+   alors que les produits étiquetés « sans » (sans lactose, végan, sans gluten), même si la fiche est incomplète. */
 const ING = {
-  spaghetti:{ n:'Spaghetti', c:['en:spaghetti','en:pastas'], kw:'spaghett' },
-  pates:{ n:'Pâtes', c:['en:pastas'] },
-  lasagnes:{ n:'Feuilles de lasagne', c:['en:lasagna-sheets','en:pastas'], kw:'lasagn' },
-  riz:{ n:'Riz', c:['en:rices'] },
+  spaghetti:{ n:'Spaghetti', c:['en:spaghetti','en:pastas'], kw:'spaghett', nkw:'bolognaise|carbonara|sauce|cuisin', inh:'gluten' },
+  pates:{ n:'Pâtes', c:['en:pastas'], kw:'penne|fusilli|spaghett|coquillette|torsade|farfalle|macaroni|rigatoni|tagliatelle', nkw:'farci|ravioli|tortellini|cuisin|sauce|salade', inh:'gluten' },
+  lasagnes:{ n:'Feuilles de lasagne', c:['en:lasagna-sheets','en:pastas'], kw:'lasagn', inh:'gluten' },
+  riz:{ n:'Riz', c:['en:rices'], kw:'long|basmati|tha[iï]|incollable|blanc|parfum', nkw:'cuisin|sauce|salade|galette|souffl|lait|g[aâ]teau|dessert|complet|sauvage|noir|rouge' },
   riz_basmati:{ n:'Riz basmati', c:['en:basmati-rices','en:rices'], kw:'basmati' },
   riz_risotto:{ n:'Riz à risotto', c:['en:rices-for-risotto','en:rices'], kw:'risotto|arborio|carnaroli' },
   riz_rond:{ n:'Riz rond', c:['en:rices'], kw:'rond|dessert|au lait' },
-  semoule:{ n:'Semoule', c:['en:durum-wheat-semolinas-for-couscous'] },
-  farine:{ n:'Farine', c:['en:wheat-flours','~en:flours'] },
-  sucre:{ n:'Sucre', c:['en:sugars'] },
+  semoule:{ n:'Semoule', c:['en:durum-wheat-semolinas-for-couscous'], inh:'gluten' },
+  farine:{ n:'Farine', c:['en:wheat-flours','~en:flours'], kw:'bl[eé]|froment|t45|t55|t65', skw:'sans gluten|riz|sarrasin|mix|tout usage', inh:'gluten' },
+  sucre:{ n:'Sucre', c:['en:sugars'], kw:'poudre|semoule|blanc|cristal', nkw:'glace|vanill|canne|cassonade|rapadura|coco|morceaux' },
   sucre_vanille:{ n:'Sucre vanillé', c:['en:vanilla-sugars'] },
   levure:{ n:'Levure chimique', c:['en:baking-powder-or-raising-agent'] },
   chocolat_patissier:{ n:'Chocolat noir pâtissier', c:['en:dark-chocolates'], kw:'p[aâ]tiss|dessert|cuisine|cors[eé]' },
-  pepites:{ n:'Pépites de chocolat', c:['en:chocolates','en:dark-chocolates'], kw:'p[eé]pite|chips|drops' },
+  pepites:{ n:'Pépites de chocolat', c:['en:chocolates','en:dark-chocolates'], kw:'p[eé]pites? de chocolat|p[eé]pites? chocolat|chocolate chips|drops', nkw:'framboise|orange|fruit|biscuit|cookie|c[ée]r[ée]ale|noisette|amande|muesli' },
   viande_hachee:{ n:'Viande hachée de bœuf', c:['en:ground-beef-preparations','en:ground-beef-steaks'] },
   steaks_haches:{ n:'Steaks hachés', c:['en:ground-beef-steaks'] },
   lardons:{ n:'Lardons', c:['en:lardons'] },
-  jambon:{ n:'Jambon blanc', c:['en:white-hams'] },
+  jambon:{ n:'Jambon blanc', c:['en:white-hams'], nkw:'poulet|dinde|volaille' },
   jambon_cru:{ n:'Jambon cru', c:['en:cured-hams'] },
-  poulet:{ n:'Filets de poulet', c:['en:chicken-breasts'], kw:'filet|aiguillette|escalope|blanc' },
-  boeuf:{ n:'Bœuf à braiser', c:['en:beef'], kw:'bourguignon|braiser|mijoter|morceaux|cube|paleron|joue' },
-  saumon:{ n:'Pavés de saumon', c:['en:salmon-steaks','en:salmon-fillets'] },
-  thon:{ n:'Thon en boîte', c:['en:canned-tunas'] },
-  oeufs:{ n:'Œufs', c:['en:eggs'], kw:'œuf|oeuf' },
-  lait:{ n:'Lait', c:['en:milks','~en:plant-based-milk-alternatives'] },
-  beurre:{ n:'Beurre', c:['en:butters','~en:margarines'] },
-  creme:{ n:'Crème fraîche', c:['en:creams','~en:plant-based-creams-for-cooking'] },
+  poulet:{ n:'Filets de poulet', c:['en:chicken-breasts'], kw:'filet|aiguillette|escalope|blanc', nkw:'cuit|r[oô]ti|tranche|pan[ée]|nugget|fum[ée]|marin|sauce' },
+  boeuf:{ n:'Bœuf à braiser', c:['en:beef'], kw:'bourguignon|braiser|mijoter|paleron|macreuse|joue|morceaux|cube', nkw:'sauce|cuisin|plat|recette|fa[cç]on|au vin|pr[ée]par' },
+  saumon:{ n:'Pavés de saumon', c:['en:salmon-steaks','en:salmon-fillets'], nkw:'fum[ée]|sauce|cuisin', inh:'fish' },
+  thon:{ n:'Thon en boîte', c:['en:canned-tunas'], inh:'fish' },
+  oeufs:{ n:'Œufs', c:['en:eggs'], kw:'œuf|oeuf', inh:'eggs' },
+  lait:{ n:'Lait', c:['en:milks','~en:plant-based-milk-alternatives'], skw:'avoine|soja|amande|riz|boisson', nkw:'chocolat|fraise|vanille|aromatis|concentr|poudre|croissance|b[ée]b[ée]', inh:'milk' },
+  beurre:{ n:'Beurre', c:['en:butters','~en:margarines'], kw:'beurre', strict:1, nkw:'arachide|cacahu|amande|noisette|cajou|karit|cacao|peanut|s[ée]same|pomme|tourteau|sal[ée] aux|ail|escargot', inh:'milk' },
+  creme:{ n:'Crème fraîche', c:['en:creams','~en:plant-based-creams-for-cooking'], skw:'cr[eè]me|cuisine|cuisson|soja|avoine|amande', nkw:'dessert|chocolat|vanille|caramel|lait de coco', inh:'milk' },
   lait_coco:{ n:'Lait de coco', c:['en:coconut-milks-and-creams'] },
-  fromage_rape:{ n:'Fromage râpé', c:['en:grated-cheese','~en:shredded-cheese-substitutes','~en:cheese-substitutes'] },
-  parmesan:{ n:'Parmesan', c:['en:parmigiano-reggiano','en:grana-padano','~en:cheese-substitutes'] },
-  mozzarella:{ n:'Mozzarella', c:['en:mozzarella','~en:cheese-substitutes'] },
-  cheddar:{ n:'Cheddar en tranches', c:['en:cheddar-slices','en:cheddar-cheese','~en:sliced-cheese-substitutes'] },
-  raclette:{ n:'Fromage à raclette', c:['en:raclette','~en:cheese-substitutes'] },
-  sauce_tomate:{ n:'Sauce tomate', c:['en:tomato-sauces'] },
-  tomates_pelees:{ n:'Tomates pelées', c:['en:peeled-tomatoes','en:canned-tomatoes'] },
+  fromage_rape:{ n:'Fromage râpé', c:['en:grated-cheese','~en:shredded-cheese-substitutes','~en:cheese-substitutes'], skw:'r[âa]p[ée]|grated|shred', nkw:'pesto|sauce|chips', inh:'milk' },
+  parmesan:{ n:'Parmesan', c:['en:parmigiano-reggiano','en:grana-padano','~en:cheese-substitutes'], skw:'parm|grana|r[âa]p[ée]|grated|bloc|hard', nkw:'pesto|sauce|chips|biscuit|cracker', inh:'milk' },
+  mozzarella:{ n:'Mozzarella', c:['en:mozzarella','~en:cheese-substitutes'], skw:'mozza|pizza|fondant|melt|filant|bloc', nkw:'stick|pan[ée]|pesto|sauce', inh:'milk' },
+  cheddar:{ n:'Cheddar en tranches', c:['en:cheddar-slices','en:cheddar-cheese','~en:sliced-cheese-substitutes','~en:cheese-substitutes'], skw:'cheddar|tranche|slice', nkw:'pesto|sauce|chips|crisps|cracker', inh:'milk' },
+  raclette:{ n:'Fromage à raclette', c:['en:raclette','~en:cheese-substitutes'], skw:'raclette|tranche|slice|melt|fondant', nkw:'pesto|sauce|pomme', inh:'milk' },
+  sauce_tomate:{ n:'Sauce tomate', c:['en:tomato-sauces'], kw:'sauce|coulis|passata|cuisin|basilic|napolitaine|tomate', nkw:'ketchup|barbecue|bbq|salsa' },
+  tomates_pelees:{ n:'Tomates pelées', c:['en:peeled-tomatoes','en:canned-tomatoes'], kw:'pel[ée]es|concass[ée]es|enti[èe]res|pulpe' },
   concentre_tomate:{ n:'Concentré de tomate', c:['en:tomato-pastes'] },
   huile_olive:{ n:'Huile d\'olive', c:['en:olive-oils'] },
-  huile:{ n:'Huile', c:['en:vegetable-oils'] },
-  vinaigre:{ n:'Vinaigre', c:['en:vinegars'] },
-  sauce_soja:{ n:'Sauce soja', c:['en:soy-sauces'] },
+  huile:{ n:'Huile', c:['en:vegetable-oils'], kw:'tournesol|colza|isio|arachide|friture|v[ée]g[ée]tale', nkw:'olive|noix|s[ée]same|truffe' },
+  vinaigre:{ n:'Vinaigre', c:['en:vinegars'], kw:'vin|cidre|alcool|x[ée]r[eè]s' },
+  sauce_soja:{ n:'Sauce soja', c:['en:soy-sauces'], inh:'soybeans' },
   ketchup:{ n:'Ketchup', c:['en:ketchup'] },
   bouillon:{ n:'Bouillon cube', c:['en:bouillon-cubes','en:broths'] },
   curry:{ n:'Curry en poudre', c:['en:curry-powder'] },
   cumin:{ n:'Cumin', c:['en:cumin'] },
   herbes_provence:{ n:'Herbes de Provence', c:['en:herbes-de-provence'] },
-  piment:{ n:'Piment', c:['en:chili-peppers'] },
+  piment:{ n:'Piment', c:['en:chili-peppers'], kw:'poudre|moulu|cayenne|piment d.espelette', nkw:'thon|sauce|pur[ée]e|mayonnaise|chips|farci' },
   muscade:{ n:'Muscade', c:['en:spices'], kw:'muscade', strict:1 },
   olives:{ n:'Olives', c:['en:olives'] },
   cornichons:{ n:'Cornichons', c:['en:gherkins'] },
   haricots_rouges:{ n:'Haricots rouges', c:['en:canned-red-kidney-beans','en:red-beans'] },
   lentilles_corail:{ n:'Lentilles corail', c:['en:red-lentils','en:lentils'], kw:'corail' },
-  petits_pois:{ n:'Petits pois', c:['en:canned-peas'] },
+  petits_pois:{ n:'Petits pois', c:['en:canned-peas'], kw:'petits? pois', nkw:'carotte' },
   haricots_verts:{ n:'Haricots verts', c:['en:canned-green-beans'] },
   champignons_boite:{ n:'Champignons en boîte', c:['en:canned-champignon-mushrooms','en:canned-mushrooms'] },
-  pate_brisee:{ n:'Pâte brisée', c:['en:shortcrust-pastry','en:pie-dough'], kw:'bris' },
-  pate_pizza:{ n:'Pâte à pizza', c:['en:pizza-dough'] },
-  pain_de_mie:{ n:'Pain de mie', c:['en:sliced-breads'] },
-  pains_burger:{ n:'Pains à burger', c:['en:hamburger-buns'] },
+  pate_brisee:{ n:'Pâte brisée', c:['en:shortcrust-pastry','en:pie-dough'], kw:'bris', inh:'gluten' },
+  pate_pizza:{ n:'Pâte à pizza', c:['en:pizza-dough'], inh:'gluten' },
+  pain_de_mie:{ n:'Pain de mie', c:['en:sliced-breads'], inh:'gluten' },
+  pains_burger:{ n:'Pains à burger', c:['en:hamburger-buns'], inh:'gluten' },
   galettes_sarrasin:{ n:'Galettes de sarrasin', c:['en:plain-buckwheat-crepes'] },
   frites:{ n:'Frites surgelées', c:['en:frozen-fries'] },
   compote:{ n:'Compote de pommes', c:['en:applesauces','en:apple-compotes'] },
-  vin_rouge:{ n:'Vin rouge', c:['en:red-wines'] },
-  vin_blanc:{ n:'Vin blanc sec', c:['en:white-wines'] },
+  vin_rouge:{ n:'Vin rouge', c:['en:red-wines'], nkw:'mousseux|p[ée]tillant' },
+  vin_blanc:{ n:'Vin blanc sec', c:['en:white-wines'], kw:'blanc|sec|sauvignon|chardonnay|muscadet', nkw:'mousseux|brut|cava|prosecco|champagne|cr[ée]mant|p[ée]tillant|freixenet|moelleux|doux' },
   pesto:{ n:'Pesto', c:['en:pestos'] },
   pruneaux:{ n:'Pruneaux', c:['en:dried-fruits'], kw:'pruneau', strict:1 },
   oignon:{ n:'Oignon', f:1 }, ail:{ n:'Ail', f:1 }, carotte:{ n:'Carotte', f:1 }, tomate:{ n:'Tomate', f:1 },
@@ -2156,34 +2158,62 @@ async function pickProducts(ing, st){
   if (!dataIndex) throw err('nodata');
   const main = ing.c.filter(t => t[0] !== '~'), subs = ing.c.filter(t => t[0] === '~').map(t => t.slice(1));
   const rx = ing.kw ? new RegExp(ing.kw, 'i') : null;
-  const steps = [];
-  if (rx) steps.push({ cats:main, rx });
-  if (!rx || !ing.strict) steps.push({ cats:main, rx:null });
-  for (const t of subs) steps.push({ cats:[t], rx:null, sub:t });
-  let checks = [];
-  for (const step of steps){
-    const found = [];
-    for (const tag of step.cats){
+  const nrx = ing.nkw ? new RegExp(ing.nkw, 'i') : null;
+  const srx = ing.skw ? new RegExp(ing.skw, 'i') : null;
+  const conflicts = ing.inh ? ({ milk:['milk','lactose'], gluten:['gluten'], eggs:['eggs'], fish:['fish'], soybeans:['soybeans'] }[ing.inh] || []).filter(k => profile.sel.has(k)) : [];
+  const vegan = p => (p.labels_tags || []).includes('en:vegan') || (p.ingredients_analysis_tags || []).includes('en:vegan');
+  const freeOf = (p, k) => { const lab = p.labels_tags || [];
+    if (k === 'lactose') return isLactoseFree(p) || vegan(p) || lab.includes('en:no-milk');
+    if (k === 'milk') return vegan(p) || lab.includes('en:no-milk');
+    if (k === 'gluten') return lab.includes('en:no-gluten');
+    return false; };   // œufs, poisson, soja : pas de version « sans » dans la même catégorie
+  const inhOK = p => !conflicts.length || conflicts.every(k => freeOf(p, k));
+  // popularité, petit bonus magasin ; malus pour les variantes parfumées et les noms étrangers
+  const score = p => Math.log1p(popOf(p)) + (seenAt(p, st) ? 1 : 0) - (/\b(au|aux|à la|à l'|saveur|go[uû]t|parfum|aromatis)/i.test(nameOf(p)) ? 1.5 : 0)
+    - (/\b(und|mit|der|die|das|in|the|and|with|of|ohne|met|van|het)\b/i.test(nameOf(p)) ? 2 : 0);
+  const checks = [];
+  const collect = async (cats, keep) => {
+    const out = [];
+    for (const tag of cats){
       const a = aisleOf(tag); if (!a || !a.n) continue;
-      for (let i = 0; i < a.pages && found.length < 12; i++){
-        const prods = (await aislePage(a, i)).filter(p => (!step.rx || step.rx.test(nameOf(p))) && !otherChainOnly(p, st));
-        for (const p of prods){
+      for (let i = 0; i < a.pages && out.length < 12; i++){
+        for (const p of await aislePage(a, i)){
+          const nm = nameOf(p);
+          if ((nrx && nrx.test(nm)) || !keep(p, nm) || otherChainOnly(p, st)) continue;
           const ev = evalP(p);
-          if (ev.status === 'ok') found.push(p);
+          if (ev.status === 'ok') out.push(p);
           else if (ev.status === 'check' && checks.length < 30) checks.push(p);
         }
       }
-      if (found.length >= 12) break;
+      if (out.length >= 12) break;
     }
-    if (found.length){
-      const seen = new Set();
-      const alts = found.filter(p => !seen.has(p.code) && seen.add(p.code))
-        .sort((x, y) => (seenAt(y, st) - seenAt(x, st)) || (popOf(y) - popOf(x))).slice(0, 40);
-      return { status:'ok', p:alts[0], alts, sub: step.sub ? (SUBNAME[step.sub] || 'un produit de remplacement') : null };
+    return out;
+  };
+  // 1. l'ingrédient lui-même : d'abord les noms qui correspondent, sinon toute la catégorie (sauf strict)
+  let mainFound = rx ? await collect(main, (p, nm) => rx.test(nm) && inhOK(p)) : [];
+  if (!mainFound.length && (!rx || !ing.strict)) mainFound = await collect(main, p => inhOK(p));
+  // 2. remplacement : si rien ne convient, ou si l'ingrédient contient lui-même un allergène du profil
+  let subFound = [], subTag = null;
+  if (subs.length && (!mainFound.length || conflicts.length)){
+    for (const t of subs){
+      let f = srx ? await collect([t], (p, nm) => srx.test(nm)) : [];
+      if (!f.length) f = await collect([t], () => true);
+      if (f.length){ subFound = f; subTag = t; break; }
     }
   }
-  checks.sort((x, y) => (seenAt(y, st) - seenAt(x, st)) || (popOf(y) - popOf(x)));
-  return { status: checks.length ? 'check' : 'no', p:checks[0] || null, alts:[], checks:checks.length };
+  const subOf = new Map();
+  for (const p of subFound) subOf.set(p.code, SUBNAME[subTag] || 'un produit de remplacement');
+  if (ing.inh === 'milk' && conflicts.length) for (const p of mainFound) if (vegan(p) && !subOf.has(p.code)) subOf.set(p.code, 'une alternative végétale');
+  const noteOf = new Map();
+  if (conflicts.includes('gluten')) for (const p of mainFound) if ((p.labels_tags || []).includes('en:no-gluten')) noteOf.set(p.code, 'Étiqueté sans gluten');
+  // sans lactose : on préfère le vrai produit étiqueté « sans lactose » à une alternative végétale
+  const bonus = new Map(conflicts.length ? mainFound.filter(p => !subOf.has(p.code)).map(p => [p.code, conflicts.every(k => k === 'lactose') ? 3 : 0.7]) : []);
+  const seen = new Set();
+  const ranked = [...mainFound, ...subFound].filter(p => !seen.has(p.code) && seen.add(p.code))
+    .sort((x, y) => (score(y) + (bonus.get(y.code) || 0)) - (score(x) + (bonus.get(x.code) || 0))).slice(0, 40);
+  if (ranked.length) return { status:'ok', p:ranked[0], alts:ranked, subOf, noteOf };
+  checks.sort((x, y) => score(y) - score(x));
+  return { status: checks.length ? 'check' : 'no', p:checks[0] || null, alts:[], checks:checks.length, inh: conflicts.length > 0 };
 }
 
 /* --- écran Recettes --- */
@@ -2264,10 +2294,11 @@ function renderRecipe(){
       return `<li class="item s-check rec pending"><div class="rowbtn"><span class="tw"><span class="thumb empty fresh"><span class="spin" aria-hidden="true"></span></span></span>
         <span><span class="iname">${esc(label)}</span><span class="meta">Recherche d'un produit compatible…</span></span></div></li>`;
     }
-    if (res.status === 'ok'){ ok++; if (res.sub) subs++; }
-    else if (!opt && !ing.b){ (res.status === 'check' ? toCheck : bad).push(ing.n); }
     const st2 = res.status === 'err' ? 'check' : res.status;
     const e = res.fresh || res.status === 'err' ? null : curPick(k);
+    const subLbl = e && res.subOf ? res.subOf.get(e.code) : null;
+    if (res.status === 'ok'){ ok++; if (subLbl) subs++; }
+    else if (!opt && !ing.b){ (res.status === 'check' ? toCheck : bad).push(ing.n); }
     const entry = shopEntry(k);
     const added = entry ? inShop(entry.code) : false;
     const addBtn = entry && !ing.b ? `<span class="side"><button class="iconbtn" type="button" data-radd="${k}" aria-pressed="${added}" aria-label="${added ? 'Retirer de ma liste' : 'Ajouter à ma liste'} : ${esc(ing.n)}">${added ? ICON_CHECK : ICON_PLUS}</button></span>` : '';
@@ -2279,13 +2310,13 @@ function renderRecipe(){
       pic = `<span class="thumb empty" aria-hidden="true"></span>`;
       body = `<span class="iname">${esc(label)}</span><span class="vline"><span class="verdict">Indisponible</span><span class="reason">${esc(res.err && res.err.code === 'nodata' ? 'La base de l\'appli ne répond pas.' : errorText(res.err))}</span></span>`;
     } else if (e){
-      const reason = res.status === 'ok' ? (res.sub ? `Remplacé par ${res.sub}` : (evalP(e).ok.find(x => /sans lactose|étiqueté/i.test(x)) || '')) : `Aucun produit sûr : ${res.checks} à vérifier`;
+      const reason = res.status === 'ok' ? (subLbl ? `Remplacé par ${subLbl}` : ((res.noteOf && res.noteOf.get(e.code)) || evalP(e).ok.find(x => /sans lactose|étiqueté/i.test(x)) || '')) : `Aucun produit sûr : ${res.checks} à vérifier`;
       pic = thumb(e);
       body = `<span class="iname">${esc(label)}</span><span class="name">${esc(nameOf(e))}</span>${metaOf(e) ? `<span class="meta">${esc(metaOf(e))}</span>` : ''}
         <span class="vline"><span class="verdict">${VERDICT[res.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span>${st.id === 'all' ? '' : `<span class="where${seenAt(e, st) ? ' yes' : ''}">${seenAt(e, st) ? 'Chez ' + esc(st.label) : 'Marque nationale'}</span>`}`;
     } else {
       pic = `<span class="thumb empty" aria-hidden="true"></span>`;
-      body = `<span class="iname">${esc(label)}</span><span class="vline"><span class="verdict">Aucun produit compatible</span><span class="reason">${opt ? 'Facultatif : tu peux t\'en passer.' : 'Rien de sûr dans la base pour ton profil.'}</span></span>`;
+      body = `<span class="iname">${esc(label)}</span><span class="vline"><span class="verdict">Aucun produit compatible</span><span class="reason">${opt ? 'Facultatif : tu peux t\'en passer.' : res.inh ? 'Il contient un de tes allergènes : retire-le ou remplace-le.' : 'Rien de sûr dans la base pour ton profil.'}</span></span>`;
     }
     const more = res.alts && res.alts.length > 1 ? `<div class="ralt"><button class="textbtn" type="button" data-ralts="${k}">Autres choix (${res.alts.length - 1})</button></div>` : '';
     const tag = e ? `button class="rowbtn" type="button" data-rp="${k}"` : 'div class="rowbtn"';
