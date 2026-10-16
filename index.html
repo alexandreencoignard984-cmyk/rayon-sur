@@ -311,6 +311,18 @@ div.rowbtn{cursor:default}
 .item.cur{background:var(--ok-bg)}
 .edall{margin-top:12px;max-height:260px;overflow-y:auto}
 .shop .meta.for{font-size:13px}
+/* où faire ses courses */
+.wlist{list-style:none;margin:10px 0 4px;padding:0}
+.wlist li{padding:12px 0;border-top:1px solid var(--line)}
+.wlist li:first-child{border-top:0}
+.wtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.wtop b{font-size:16px}
+.wlist li.best .wtop b::after{content:"Meilleur choix";margin-left:8px;padding:1px 7px;border-radius:6px;background:var(--ok-bg);color:var(--ok);font-size:12px;font-weight:700;vertical-align:2px}
+.wcount{font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums;white-space:nowrap}
+.wbar{height:6px;border-radius:3px;background:var(--sunk);margin:7px 0 5px;overflow:hidden}
+.wbar span{display:block;height:100%;border-radius:3px;background:var(--ok)}
+.wlist .hint{font-size:13px;margin-top:2px}
+.wlist a,#whereBox .hint a{color:var(--ok);font-weight:600;text-decoration:none}
 .aisle{margin-top:18px}
 .aisle h3{margin:0 0 8px 2px;color:var(--muted);font-size:14px;font-weight:600}
 
@@ -359,6 +371,7 @@ footer a{color:inherit}
     <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h10.2L20 8H7"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></g></symbol>
     <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-basket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1.6 9H5.6z"/><path d="m9 10 3-6 3 6"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
     <symbol id="i-pot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M2 10h2M20 10h2M9 3c0 1.5 1 1.5 1 3M14 3c0 1.5 1 1.5 1 3"/></g></symbol>
     <symbol id="i-cake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21v-8h14v8"/><path d="M5 15c2.3 1.5 4.7 1.5 7 0s4.7-1.5 7 0"/><path d="M12 13V9M12 6.5c-.9-.9-.9-2 0-3 .9 1 .9 2.1 0 3z"/></g></symbol>
     <symbol id="i-leaf" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/></g></symbol>
@@ -520,6 +533,25 @@ footer a{color:inherit}
       <button class="ghost small" id="clearDone" type="button">Retirer les produits cochés</button>
       <button class="ghost small" id="uncheckAll" type="button">Tout décocher</button>
     </div>
+
+    <section id="whereBox" hidden aria-labelledby="t-where">
+      <div class="sec"><h2 id="t-where">Où faire tes courses ?</h2></div>
+      <div class="group">
+        <div class="gpad">
+          <p class="banner rsum" id="whereBest" style="margin-top:0" aria-live="polite"></p>
+          <ul class="wlist" id="whereList"></ul>
+          <button class="ghost wide" id="nearBtn" type="button"><svg aria-hidden="true" style="width:18px;height:18px"><use href="#i-pin"/></svg>Magasins près de moi</button>
+          <form class="inrow" id="cityForm" hidden autocomplete="off" style="margin-top:10px">
+            <label class="sr" for="city">Ville ou code postal</label>
+            <input id="city" type="text" placeholder="Ta ville ou ton code postal" enterkeyhint="search">
+            <button class="ghost" type="submit">OK</button>
+          </form>
+          <p class="hint" id="nearStatus" style="margin-top:8px"></p>
+          <p class="hint" id="nearWhere"></p>
+          <p class="hint" style="margin-top:8px">« Vu dans l'enseigne » vient d'Open Food Facts, « marque nationale » veut dire vendue en général partout. Les stocks des drives ne sont pas publics : pour un magasin précis, ouvre le produit et touche « Chercher sur le site ». Ta position reste sur ton téléphone.</p>
+        </div>
+      </div>
+    </section>
 
     <div class="sec"><h2>Favoris</h2></div>
     <ul class="list" id="favList"></ul>
@@ -805,7 +837,7 @@ const ALLERGENS = [
   { key:'sulphites', label:'Sulfites', name:'sulfites', tag:'en:sulphur-dioxide-and-sulphites', kw:'sulphites' },
 ];
 const KW = {
-  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|milch)\b/g,
+  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase)\b/g,
           ex:/\b(lait|laits|creme|cremes|beurre)\s+(de\s+|d')\s*(noix\s+de\s+coco|coco|amandes?|avoine|soja|riz|noisettes?|cajou|cacao|karite|cacahuetes?|arachides?|marrons?|chataignes?|cassis|tartre)\b|\b(coconut|almond|oat|soy|soya|rice|cashew|cocoa|peanut|shea|nut|hazelnut)\s+(milk|butter|cream|drink)\b|\bcream\s+of\s+tartar\b/g },
   gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|gluten|malt|malte|maltee|triticale|froment|wheat|barley|rye|oat|oats|spelt)\b/g, ex:/\bsans\s+gluten\b|\bgluten[\s-]free\b/g },
   eggs: { re:/\b(oeuf|oeufs|ovalbumine|lysozyme|egg|eggs)\b/g },
@@ -1112,6 +1144,35 @@ function buildSet(kind, ctx){
 /* ================= Verdict ================= */
 const isLactoseFree = p => (p.labels_tags || []).some(l => /(no-lactose|lactose-free|sans-lactose)/.test(l));
 const hasCriteria = () => profile.sel.size > 0 || profile.words.length > 0;
+/* Rayons où l'allergène fait partie du produit : si la fiche est incomplète (ingrédients absents,
+   mal saisis ou dans une autre langue), on ne conclut pas « compatible » pour autant. */
+const DAIRY_CATS = new Set(['en:ice-creams','en:yogurts','en:plain-yogurts','en:cheeses','en:milks','en:butters','en:creams','en:dairy-desserts',
+  'en:fromages-blancs-petit-suisses-and-skyr','en:grated-cheese','en:cheese-spreads','en:dairy-drinks','en:entremets-mousses-and-creamy-puddings',
+  'en:parmigiano-reggiano','en:grana-padano','en:mozzarella','en:cheddar-slices','en:cheddar-cheese','en:raclette','en:milk-chocolates']);
+const GLUTEN_CATS = new Set(['en:breads','en:sliced-breads','en:viennoiseries','en:brioches','en:chocolate-croissant','en:milk-bread-rolls','en:pastas','en:spaghetti',
+  'en:lasagna-sheets','en:fresh-pasta','en:ravioli','en:biscuits','en:chocolate-biscuits','en:drop-cookies','en:dry-biscuits','en:cakes','en:madeleines',
+  'en:muffins','en:crepes-and-galettes','en:rusks','en:pizzas','en:quiches','en:pies','en:sandwiches','en:wraps','en:pie-dough','en:shortcrust-pastry',
+  'en:pizza-dough','en:hamburger-buns','en:wheat-flours','en:durum-wheat-semolinas-for-couscous','en:breakfast-cereals','en:mueslis','en:cereal-bars','en:beers']);
+const NOT_DAIRY = /dairy-substitutes|plant-based|non-dairy|soy-desserts|cheese-substitutes|milk-alternatives|oat-based|^en:sorbets$/;
+const veganP = p => (p.labels_tags || []).includes('en:vegan') || (p.ingredients_analysis_tags || []).includes('en:vegan');
+function dairyCat(p){
+  const c = p.categories_tags || [];
+  return c.some(t => DAIRY_CATS.has(t)) && !c.some(t => NOT_DAIRY.test(t)) && !veganP(p) && !(p.labels_tags || []).includes('en:no-milk');
+}
+const glutenCat = p => (p.categories_tags || []).some(t => GLUTEN_CATS.has(t)) && !(p.labels_tags || []).includes('en:no-gluten');
+// Texte d'ingrédients illisible pour l'appli : nom de marque recopié, texte de l'emballage mal lu,
+// ou langue étrangère sans aucun mot d'ingrédient courant en français ou en anglais.
+const ING_VOCAB = /\b(sucres?|sugars?|farines?|flours?|eau|water|sel|salt|huiles?|oils?|lait|milk|cacao|cocoa|ble|wheat|amidons?|starch|aromes?|flavou?r(ing)?s?|graisses?|fats?|oeufs?|eggs?|beurre|butter|creme|cream|sirops?|syrups?|jus|juices?|fruits?|chocolat|chocolate|levures?|yeast|emulsifiants?|emulsifiers?|lecithines?|lecithins?|poudre|powder|extraits?|extracts?|acides?|acids?|conservateurs?|preservatives?|colorants?|colou?rs?|epaississants?|thickeners?|gelifiants?|stabilisants?|stabili[sz]ers?|vinaigre|vinegar|ail|garlic|oignons?|onions?|tomates?|tomato(es)?|pommes?|apples?|citron|lemon|riz|rice|mais|corn|soja|soy|viande|meat|porc|pork|boeuf|beef|poulet|chicken|poissons?|fish|legumes|vegetables|epices|spices|herbes|ferments|glucose|fructose|dextrose|maltodextrine|proteines?|proteins?|fibres?|vitamines?|vitamins?|ingredients?|semoule|cereales|cereals|noix|nuts|amandes?|almonds?|noisettes?|hazelnuts?|arachides?|peanuts?|purees?|pulpe|concentre|ferment[eé]s?)\b/;
+function bogusIngredients(p, raw){
+  const t = fold(raw);
+  const brand = fold(brandList(p)[0] || '');
+  if (raw.length < 80 && brand.length >= 4 && t.includes(brand)) return true;
+  if (ING_VOCAB.test(t)) return false;
+  // une seule matière première qui reprend le nom du produit (« Lentilles corail »)
+  const nameWords = new Set(fold(nameOf(p)).split(/[^a-z0-9]+/).filter(w => w.length >= 3));
+  const words = t.split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+  return !(raw.length < 60 && words.length && words.filter(w => nameWords.has(w)).length >= Math.ceil(words.length / 2));
+}
 function evaluate(p){
   if (p && p._fresh){
     const bad = (p._al || []).filter(k => profile.sel.has(k)).map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k);
@@ -1120,16 +1181,22 @@ function evaluate(p){
   const al = new Set(p.allergens_tags || []);
   const tr = new Set(p.traces_tags || []);
   const raw = ingredientsOf(p);
-  const hasText = raw.length > 3;
+  const hasText = raw.length > 3 && !bogusIngredients(p, raw);
+  const dairy = dairyCat(p);
+  const nameTxt = [nameOf(p), p.generic_name_fr || ''].join(' ');
+  const nameFree = /\b(sans|free|vegan|vegetal|vegetale|vegetaux|plant)\b/.test(fold(nameTxt));
   const no = [], check = [], ok = [], info = [];
   for (const a of ALLERGENS){
     if (!profile.sel.has(a.key)) continue;
     if (a.key === 'lactose' && profile.sel.has('milk')) continue;
     const hits = hasText ? findHits(raw, KW[a.kw]).words : [];
+    const nameHits = nameFree ? [] : findHits(nameTxt, KW[a.kw]).words;
     if (a.key === 'lactose'){
       if (isLactoseFree(p)) ok.push(al.has('en:milk') ? 'Contient du lait mais étiqueté sans lactose' : 'Étiqueté sans lactose');
       else if (al.has('en:milk')) no.push('Contient du lait, donc du lactose');
+      else if (dairy) no.push('Produit laitier : contient du lactose, sauf mention « sans lactose »');
       else if (hits.length) check.push(`Ingrédient à vérifier : « ${hits[0]} »`);
+      else if (nameHits.length) check.push(`Le nom évoque « ${nameHits[0]} » : vérifie l'étiquette`);
       if (tr.has('en:milk')){
         if (profile.traces) no.push('Peut contenir des traces de lait');
         else info.push('Traces de lait possibles, en général sans souci en cas d\'intolérance');
@@ -1137,7 +1204,10 @@ function evaluate(p){
       continue;
     }
     if (al.has(a.tag)) no.push(`Contient : ${a.name}`);
+    else if (a.key === 'milk' && dairy) no.push('Produit laitier : contient du lait');
     else if (hits.length) check.push(`Ingrédient à vérifier : « ${hits[0]} »`);
+    else if (nameHits.length) check.push(`Le nom évoque « ${nameHits[0]} » : vérifie l'étiquette`);
+    else if (a.key === 'gluten' && glutenCat(p)) check.push('Le gluten est fréquent dans ce rayon : vérifie l\'étiquette');
     if (tr.has(a.tag)){
       if (profile.traces) no.push(`Traces possibles : ${a.name}`);
       else check.push(`Peut contenir des traces : ${a.name}`);
@@ -1617,6 +1687,7 @@ function productHTML(p){
     <span>Code-barres ${esc(code)}</span>
     <a href="${OFF_FR}/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir la fiche sur Open Food Facts</a>
     <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">Compléter ou corriger la fiche</a>
+    ${[...new Set([S.store, ...chainInfo(p).seen])].filter(id => DRIVE_SITE[id]).slice(0, 3).map(id => `<a href="${esc(siteSearch(p, id))}" target="_blank" rel="noopener">Chercher sur le site ${esc(shortLabel(storeById(id)))}</a>`).join('')}
   </div></section>`;
 }
 $('#sheetBody').addEventListener('click', async e => {
@@ -1911,13 +1982,14 @@ function renderLists(){
     const ev = evaluate(x.p);
     return `<li class="item s-${ev.status}"><div class="shop${x.done ? ' done' : ''}">
       <input type="checkbox" data-done="${esc(x.code)}" ${x.done ? 'checked' : ''} aria-label="Pris : ${esc(nameOf(x.p))}">
-      ${x.p._fresh ? '<div class="open">' : `<button class="open" type="button" data-open="${esc(x.code)}">`}<span class="name">${esc(nameOf(x.p))}</span>${metaOf(x.p) ? `<span class="meta">${esc(metaOf(x.p))}</span>` : ''}${x.for ? `<span class="meta for">Pour : ${esc(x.for)}</span>` : ''}<span class="vline"><span class="verdict">${x.p._fresh ? (ev.status === 'ok' ? 'Produit frais' : 'Exclu') : VERDICT[ev.status]}</span></span>${x.p._fresh ? '</div>' : '</button>'}
+      ${x.p._fresh ? '<div class="open">' : `<button class="open" type="button" data-open="${esc(x.code)}">`}<span class="name">${esc(nameOf(x.p))}</span>${metaOf(x.p) ? `<span class="meta">${esc(metaOf(x.p))}</span>` : ''}${x.p._fresh ? '' : `<span class="meta for">${esc(whereText(chainInfo(x.p)))}</span>`}${x.for ? `<span class="meta for">Pour : ${esc(x.for)}</span>` : ''}<span class="vline"><span class="verdict">${x.p._fresh ? (ev.status === 'ok' ? 'Produit frais' : 'Exclu') : VERDICT[ev.status]}</span></span>${x.p._fresh ? '</div>' : '</button>'}
       <button class="iconbtn" type="button" data-del="${esc(x.code)}" aria-label="Retirer de la liste : ${esc(nameOf(x.p))}"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </div></li>`;
   }).join('') : '<li class="empty-card">Ta liste est vide. Touche + à côté d\'un produit pour l\'ajouter.</li>';
   $('#shopActions').hidden = !shop.length; $('#shareList').hidden = !shop.length;
   $('#clearDone').hidden = !shop.some(x => x.done); $('#uncheckAll').hidden = !shop.some(x => x.done);
   const fl = Object.entries(favs).sort((a, b) => (b[1].at || 0) - (a[1].at || 0));
+  renderWhere();
   $('#favList').innerHTML = fl.length ? fl.map(([code, f]) => itemHTML(f.p, evaluate(f.p))).join('') : '<li class="empty-card">Aucun favori. Dans la fiche d\'un produit, touche l\'étoile.</li>';
   updateBadge();
 }
@@ -2441,28 +2513,160 @@ function showRecipes(){
   recView('home'); renderRecHome();
 }
 
-/* ================= Mise à jour =================
-   GitHub Pages garde l'ancienne page en cache jusqu'à 10 minutes : au lancement (et au retour
-   dans l'appli), on compare avec version.json et on recharge la nouvelle version si besoin. */
-const APP_VERSION = '3.4';
-$('#appVersion').textContent = APP_VERSION;
-let hiddenAt = 0;
-async function checkUpdate(){
-  try {
-    const r = await fetch('version.json?t=' + Date.now(), { cache:'no-store' });
-    if (!r.ok) return;
-    const j = await r.json();
-    if (!j || !j.v || j.v === APP_VERSION) return;
-    const key = 'rs2:upd-' + j.v;
-    if (sessionStorage.getItem(key)) return;
-    sessionStorage.setItem(key, '1');
-    location.replace(location.pathname + '?v=' + encodeURIComponent(j.v) + location.hash);
-  } catch (e) {}
+/* ================= Où faire mes courses ? =================
+   Pour chaque enseigne : les produits de la liste qu'on y a vus (Open Food Facts : magasins renseignés
+   et marques distributeur), plus les marques nationales, vendues en général partout. Les marques
+   distributeur d'une autre enseigne n'y sont pas. Les magasins proches viennent d'OpenStreetMap. */
+const CHAINS = () => STORES.filter(s => s.id !== 'all');
+const shortLabel = s => s.label.split(',')[0];
+function chainInfo(p){
+  if (!p || p._fresh) return { fresh:true, seen:[], mdd:[] };
+  const seen = CHAINS().filter(s => seenAt(p, s)).map(s => s.id);
+  const mdd = CHAINS().filter(s => isMdd(p, s)).map(s => s.id);
+  return { fresh:false, seen, mdd };
 }
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden){ hiddenAt = Date.now(); return; }
-  if (hiddenAt && Date.now() - hiddenAt > 120000 && !anyOpen() && !SC.running) checkUpdate();
+function availability(info, id){
+  if (info.fresh) return 'sure';
+  if (info.seen.includes(id)) return 'sure';
+  if (info.mdd.length) return 'no';
+  return 'likely';
+}
+function whereText(info){
+  if (info.fresh) return '';
+  const lab = id => shortLabel(storeById(id));
+  if (info.mdd.length && info.seen.length) return 'Marque distributeur : seulement ' + info.seen.map(lab).join(', ');
+  if (info.seen.length) return 'Vu chez ' + info.seen.map(lab).join(', ') + ', marque nationale';
+  return 'Marque nationale, sans magasin renseigné';
+}
+const NEAR_KEY = 'rs2:near';
+let near = ls.get(NEAR_KEY, null);
+function km(a, b, c, d){
+  const r = Math.PI / 180, x = Math.sin((c - a) * r / 2), y = Math.sin((d - b) * r / 2);
+  return 12742 * Math.asin(Math.sqrt(x * x + Math.cos(a * r) * Math.cos(c * r) * y * y));
+}
+const fmtKm = d => d < 1 ? `${Math.round(d * 1000 / 50) * 50} m` : `${d.toLocaleString('fr-FR', { maximumFractionDigits:1 })} km`;
+const mapsUrl = (lat, lon, name) => /iPhone|iPad|Macintosh/.test(navigator.userAgent)
+  ? `https://maps.apple.com/?daddr=${lat},${lon}&q=${encodeURIComponent(name)}`
+  : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+async function nearbyStores(lat, lon){
+  const q = `[out:json][timeout:25];nwr["shop"~"^(supermarket|convenience|frozen_food|greengrocer|organic|department_store|general)$"](around:15000,${lat},${lon});out center tags 500;`;
+  let j = null, last = null;
+  for (const base of ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter']){
+    try { j = await getJSON(`${base}?data=${encodeURIComponent(q)}`, { bucket:'free', timeout:30000, noCache:true }); break; }
+    catch (e) { last = e; }
+  }
+  if (!j) throw last || err('network');
+  const by = {};
+  for (const el of (j.elements || [])){
+    const t = el.tags || {}; const label = t.brand || t.name || '';
+    const s = CHAINS().find(c => c.match && c.match.test(label)); if (!s) continue;
+    const la = el.lat != null ? el.lat : el.center && el.center.lat, lo = el.lon != null ? el.lon : el.center && el.center.lon;
+    if (la == null || lo == null) continue;
+    const d = km(lat, lon, la, lo);
+    const name = [t.name || t.brand, t['addr:street'] || t['addr:city']].filter(Boolean).join(', ');
+    const cur = by[s.id];
+    if (!cur || d < cur.dist) by[s.id] = { name, dist:d, lat:la, lon:lo, n:(cur ? cur.n : 0) + 1 };
+    else cur.n++;
+  }
+  return by;
+}
+function locate(){
+  const st = $('#nearStatus'); st.classList.remove('err');
+  if (!('geolocation' in navigator)){ $('#cityForm').hidden = false; st.textContent = 'Indique ta ville pour trouver les magasins proches.'; return; }
+  st.innerHTML = SPIN + 'Localisation…'; $('#nearBtn').disabled = true;
+  navigator.geolocation.getCurrentPosition(pos => {
+    setNear(pos.coords.latitude, pos.coords.longitude, 'ta position');
+  }, () => {
+    $('#nearBtn').disabled = false; $('#cityForm').hidden = false;
+    st.textContent = 'Position non disponible : indique ta ville ou ton code postal.';
+  }, { enableHighAccuracy:false, timeout:15000, maximumAge:600000 });
+}
+async function setNear(lat, lon, label){
+  const st = $('#nearStatus');
+  st.innerHTML = SPIN + 'Recherche des magasins autour…'; $('#nearBtn').disabled = true;
+  try {
+    const stores = await nearbyStores(lat, lon);
+    near = { lat, lon, label, at:Date.now(), stores };
+    ls.set(NEAR_KEY, near);
+    const n = Object.keys(stores).length;
+    st.textContent = n ? '' : 'Aucune enseigne connue à moins de 15 km.';
+    $('#cityForm').hidden = true;
+  } catch (e) {
+    st.textContent = 'Carte des magasins indisponible pour le moment. Réessaie dans un instant.'; st.classList.add('err');
+  } finally { $('#nearBtn').disabled = false; renderWhere(); }
+}
+function renderWhere(){
+  const box = $('#whereBox');
+  const items = shop.filter(x => !x.done && x.p && !x.p._fresh);
+  const fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
+  box.hidden = !items.length;
+  if (!items.length) return;
+  const infos = items.map(x => ({ x, info:chainInfo(x.p) }));
+  const N = items.length;
+  let rows = CHAINS().map(s => {
+    let sure = 0, likely = 0; const miss = [];
+    for (const { x, info } of infos){
+      const a = availability(info, s.id);
+      if (a === 'sure') sure++; else if (a === 'likely') likely++; else miss.push(x);
+    }
+    const store = near && near.stores ? near.stores[s.id] : null;
+    return { s, sure, likely, avail:sure + likely, miss, store };
+  });
+  if (near && near.stores && Object.keys(near.stores).length) rows = rows.filter(r => r.store);
+  rows.sort((a, b) => (b.avail - a.avail) || (b.sure - a.sure) || ((a.store ? a.store.dist : 99) - (b.store ? b.store.dist : 99)));
+  const best = rows[0];
+  const ties = best ? rows.filter(r => r.avail === best.avail && r.sure >= best.sure - 1) : [];
+  // la meilleure paire si aucune enseigne n'a tout
+  let pair = null;
+  if (best && best.avail < N){
+    for (let i = 0; i < rows.length; i++) for (let k = i + 1; k < rows.length; k++){
+      const a = rows[i], b = rows[k];
+      const cover = infos.filter(({ info }) => availability(info, a.s.id) !== 'no' || availability(info, b.s.id) !== 'no').length;
+      const dist = (a.store ? a.store.dist : 0) + (b.store ? b.store.dist : 0);
+      if (cover > best.avail && (!pair || cover > pair.cover || (cover === pair.cover && dist < pair.dist))) pair = { a, b, cover, dist };
+    }
+  }
+  const lab = r => esc(shortLabel(r.s)) + (r.store ? ` (${fmtKm(r.store.dist)})` : '');
+  const bestEl = $('#whereBest');
+  if (!best){ bestEl.className = 'banner rsum'; bestEl.textContent = 'Aucune des enseignes trouvées autour de toi n\'est connue de l\'appli.'; }
+  else {
+    let t = ties.length > 1
+      ? `${ties.slice(0, 3).map(lab).join(' ou ')} : ${best.avail} produit${best.avail > 1 ? 's' : ''} sur ${N} chacun.`
+      : best.avail === N ? `Tout est disponible chez ${lab(best)}.` : `${lab(best)} a le plus de produits de ta liste : ${best.avail} sur ${N}.`;
+    if (pair && pair.cover > best.avail) t += ` En deux magasins, ${lab(pair.a)} et ${lab(pair.b)}, tu en trouves ${pair.cover} sur ${N}.`;
+    bestEl.className = 'banner rsum ' + (best.avail === N ? 's-ok' : 's-check');
+    bestEl.innerHTML = t;
+  }
+  $('#whereList').innerHTML = rows.slice(0, 6).map((r, i) => {
+    const pct = Math.round(r.avail / N * 100);
+    const parts = [r.sure ? `${r.sure} vu${r.sure > 1 ? 's' : ''} dans l'enseigne` : '', r.likely ? `${r.likely} marque${r.likely > 1 ? 's' : ''} nationale${r.likely > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
+    const miss = r.miss.length ? `<p class="hint">Pas chez eux : ${r.miss.slice(0, 3).map(x => esc(nameOf(x.p))).join(', ')}${r.miss.length > 3 ? '…' : ''}</p>` : '';
+    const st = r.store ? `<p class="hint">Le plus proche : ${esc(r.store.name)}, ${fmtKm(r.store.dist)} · <a href="${esc(mapsUrl(r.store.lat, r.store.lon, r.store.name))}" target="_blank" rel="noopener">Itinéraire</a></p>` : '';
+    return `<li class="${ties.includes(r) ? 'best' : ''}"><div class="wtop"><b>${esc(r.s.label)}</b><span class="wcount">${r.avail} / ${N}</span></div>
+      <div class="wbar" aria-hidden="true"><span style="width:${pct}%"></span></div><p class="hint">${parts || 'Aucun produit repéré'}</p>${miss}${st}</li>`;
+  }).join('');
+  const nb = $('#nearBtn');
+  nb.lastChild.textContent = near ? 'Actualiser les magasins proches' : 'Magasins près de moi';
+  $('#nearWhere').textContent = near ? `Magasins à moins de 15 km de ${near.label}${fresh ? '. Produits frais : partout' : ''}.` : (fresh ? 'Produits frais : disponibles partout.' : '');
+}
+$('#nearBtn').addEventListener('click', locate);
+$('#cityForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = $('#city').value.trim(); if (!q) return;
+  const st = $('#nearStatus'); st.classList.remove('err'); st.innerHTML = SPIN + 'Recherche de la ville…';
+  try {
+    const r = await getJSON(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=fr&limit=1&q=${encodeURIComponent(q)}`, { bucket:'free', noCache:true });
+    if (!r || !r.length){ st.textContent = 'Ville introuvable. Essaie avec le code postal.'; return; }
+    setNear(Number(r[0].lat), Number(r[0].lon), q);
+  } catch (er) { st.textContent = 'Recherche de la ville impossible pour le moment.'; st.classList.add('err'); }
 });
+const DRIVE_SITE = { leclerc:'e.leclerc', carrefour:'carrefour.fr', auchan:'auchan.fr', intermarche:'intermarche.com', u:'coursesu.com', lidl:'lidl.fr',
+  aldi:'aldi.fr', monoprix:'monoprix.fr', casino:'casino.fr', franprix:'franprix.fr', cora:'cora.fr', netto:'netto.fr', biocoop:'biocoop.fr', picard:'picard.fr', grandfrais:'grandfrais.com' };
+const siteSearch = (p, id) => `https://www.google.com/search?q=${encodeURIComponent([nameOf(p), brandOf(p).split(',')[0], 'site:' + DRIVE_SITE[id]].filter(Boolean).join(' '))}`;
+
+/* ================= Version ================= */
+const APP_VERSION = '3.5';
+$('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
 const THEME_COLOR = { light:'#FFFFFF', dark:'#101211' };
@@ -2484,7 +2688,7 @@ renderProfile(); updateBadge(); renderQuick();
 if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
 go(SCREENS.includes(start) ? start : 'search');
-loadIndex(); checkUpdate();
+loadIndex();
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
