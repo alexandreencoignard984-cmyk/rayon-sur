@@ -19,249 +19,530 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#EAF1F4; --surface:#FFFFFF; --sunk:#F4F8FA; --ink:#10263B; --muted:#4A6072; --line:#C6D5DF;
-  --ok:#126E4A; --ok-bg:#DDF2E8; --warn:#8A4F00; --warn-bg:#FBEBD0; --no:#AE2419; --no-bg:#F8DEDB;
-  --focus:#2F6FDE; --scrim:rgba(8,20,30,.55);
-  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
-  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --tabbar:64px;
+  --bg:#F1F3F5; --surface:#FFFFFF; --sunk:#E8ECF0; --ink:#0F2233; --muted:#5A6977; --line:rgba(15,34,51,.12);
+  --primary:#0F2233; --on-primary:#FFFFFF;
+  --ok:#12804F; --ok-bg:#E1F3E9; --warn:#A85A00; --warn-bg:#FBEED8; --no:#C0291D; --no-bg:#FBE3E0;
+  --focus:#2F6FDE; --scrim:rgba(8,20,30,.45); --bar:rgba(255,255,255,.86);
+  --ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --display:"Archivo",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
+  --tabbar:58px; --r:14px;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0E1A24; --surface:#152431; --sunk:#112029; --ink:#E4EDF3; --muted:#97AABA; --line:#2A3E4F;
-    --ok:#5BD198; --ok-bg:#12352A; --warn:#F2B04A; --warn-bg:#3A2A10; --no:#F5857A; --no-bg:#3D1C18;
-    --focus:#7FA8FF; --scrim:rgba(0,0,0,.65); color-scheme:dark;
+    --bg:#0A1117; --surface:#141E27; --sunk:#1E2B36; --ink:#E6EDF2; --muted:#94A5B4; --line:rgba(230,237,242,.12);
+    --primary:#E6EDF2; --on-primary:#0A1117;
+    --ok:#4FD08F; --ok-bg:#12301F; --warn:#F2B04A; --warn-bg:#36270E; --no:#FF8A7E; --no-bg:#3A1A17;
+    --focus:#7FA8FF; --scrim:rgba(0,0,0,.6); --bar:rgba(20,30,39,.86); color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E1A24; --surface:#152431; --sunk:#112029; --ink:#E4EDF3; --muted:#97AABA; --line:#2A3E4F;
-  --ok:#5BD198; --ok-bg:#12352A; --warn:#F2B04A; --warn-bg:#3A2A10; --no:#F5857A; --no-bg:#3D1C18;
-  --focus:#7FA8FF; --scrim:rgba(0,0,0,.65); color-scheme:dark;
+  --bg:#0A1117; --surface:#141E27; --sunk:#1E2B36; --ink:#E6EDF2; --muted:#94A5B4; --line:rgba(230,237,242,.12);
+  --primary:#E6EDF2; --on-primary:#0A1117;
+  --ok:#4FD08F; --ok-bg:#12301F; --warn:#F2B04A; --warn-bg:#36270E; --no:#FF8A7E; --no-bg:#3A1A17;
+  --focus:#7FA8FF; --scrim:rgba(0,0,0,.6); --bar:rgba(20,30,39,.86); color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 html.locked,html.locked body{overflow:hidden}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:17px;line-height:1.4;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-user-select:none;user-select:none}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;margin:-1px}
 [hidden]{display:none!important}
+svg{flex:none}
 
-.wrap{max-width:44rem;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 1rem) 1rem calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 2rem)}
-.top{padding:.5rem 0 1rem}
-h1{font-family:var(--display);font-stretch:68%;font-weight:880;font-size:clamp(3rem,14vw,4.5rem);line-height:.88;letter-spacing:-.005em;margin:0 0 .55rem}
-h1.h-screen{font-size:clamp(2.4rem,11vw,3.4rem)}
-h2{font-family:var(--display);font-stretch:80%;font-weight:800;font-size:1.45rem;line-height:1.1;margin:1.75rem 0 .6rem}
-h3{font-family:var(--display);font-stretch:85%;font-weight:750;font-size:1.05rem;margin:1.1rem 0 .35rem}
+.wrap{max-width:40rem;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 28px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0 12px}
+h1{font-family:var(--display);font-stretch:75%;font-weight:800;font-size:34px;line-height:1.05;letter-spacing:-.01em;margin:0}
+h2{font-size:20px;font-weight:700;line-height:1.2;margin:0}
+h3{font-size:17px;font-weight:700;margin:0 0 8px}
 p{margin:0}
-.lede{color:var(--muted);max-width:34rem}
-.profile-line{color:var(--muted);font-size:.95rem}
-.profile-line b{color:var(--ink)}
-.link{background:none;border:0;padding:.35rem .1rem;min-height:44px;color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.lede{color:var(--muted);font-size:15px;margin:-4px 0 14px}
+.hint{font-size:14px;color:var(--muted)}
+.sec{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:26px 4px 8px}
+.sec h2{font-size:20px}
 
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1rem}
-.panel+.panel{margin-top:.9rem}
-.field{display:grid;gap:.35rem;margin-bottom:.9rem;min-width:0}
-.lbl{font-weight:700;font-size:.95rem}
-.hint{font-size:.875rem;color:var(--muted)}
-select,input[type=search],input[type=text]{font-size:16px;background:var(--sunk);border:1.5px solid var(--line);border-radius:10px;min-height:48px;padding:.6rem .75rem;width:100%;min-width:0}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-@media (max-width:460px){.row2{grid-template-columns:1fr}}
-.picker{display:flex;align-items:center;justify-content:space-between;gap:.5rem;width:100%;min-height:48px;padding:.6rem .75rem;background:var(--sunk);border:1.5px solid var(--line);border-radius:10px;text-align:left;cursor:pointer}
-.picker span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.picker svg{flex:none}
+/* boutons */
+.primary{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border:0;border-radius:12px;background:var(--primary);color:var(--on-primary);font-weight:650;font-size:17px;text-decoration:none}
+.primary[disabled]{opacity:.55}
+.primary.wide{width:100%}
+.ghost{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 14px;border-radius:12px;border:0;background:var(--sunk);color:var(--ink);font-weight:600;font-size:16px;text-decoration:none}
+.ghost.small{min-height:36px;padding:0 12px;font-size:15px}
+.ghost.wide{display:flex;width:100%;margin-top:10px}
+.ghost.danger{color:var(--no)}
+.ghost[disabled]{opacity:.55}
+.textbtn{border:0;background:none;padding:6px 4px;min-height:40px;color:var(--ink);font-weight:600;font-size:15px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.iconbtn{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:0;background:var(--sunk);color:var(--ink)}
+.iconbtn svg{width:20px;height:20px}
+.iconbtn[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
 
-.chips{display:flex;flex-wrap:wrap;gap:.45rem}
-.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:.4rem .85rem;min-height:42px;cursor:pointer;font-size:.95rem}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink);font-weight:700}
-.chip.big{font-family:var(--display);font-stretch:85%;font-weight:750;font-size:1.05rem;padding:.45rem 1.1rem}
-.chip .x{margin-left:.35rem;font-weight:700}
-.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--sunk)}
-.seg button{flex:1;min-height:44px;border:0;background:transparent;cursor:pointer;font-size:.95rem;padding:.3rem .2rem}
-.seg button+button{border-left:1px solid var(--line)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);font-weight:700}
+/* puce profil */
+.pchip{display:inline-flex;align-items:center;gap:6px;max-width:55%;min-height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:14px;font-weight:600}
+.pchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pchip svg{width:16px;height:16px;color:var(--ok)}
 
-.check{display:flex;gap:.65rem;align-items:flex-start;margin-top:.9rem;font-size:.95rem;cursor:pointer}
-.check input{width:22px;height:22px;accent-color:var(--ink);margin:.1rem 0 0;flex:none}
+/* recherche */
+.searchbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.sfield{position:relative}
+.sfield svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted);pointer-events:none}
+.sfield input{width:100%;min-width:0;height:48px;padding:0 12px 0 40px;border:0;border-radius:12px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:17px;-webkit-appearance:none;appearance:none}
+.sfield input::placeholder{color:var(--muted)}
+#go{min-height:48px}
+.chiprow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:2px 16px 4px;scroll-padding:16px}
+.chiprow::-webkit-scrollbar{display:none}
+.selchip,.btnchip{flex:none;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:15px;font-weight:600;white-space:nowrap}
+.selchip{position:relative;padding:0}
+.selchip select{height:36px;padding:0 30px 0 12px;border:0;border-radius:999px;background:transparent;font-weight:600;font-size:15px;-webkit-appearance:none;appearance:none}
+.selchip svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;pointer-events:none}
+.btnchip svg{width:14px;height:14px}
+.btnchip .count{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--primary);color:var(--on-primary);font-size:12px;line-height:20px}
+.chip{flex:none;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;border-radius:999px;padding:0 14px;min-height:38px;font-size:15px;font-weight:500;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);box-shadow:none;font-weight:650}
+.chip .x{margin-left:6px;opacity:.75}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.quick .chip{min-height:34px;font-size:14px;background:transparent}
+.quick .chip[aria-pressed="true"]{background:var(--primary)}
 
-.primary{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin-top:1rem;min-height:54px;border:0;border-radius:12px;background:var(--ink);color:var(--surface);font-family:var(--display);font-stretch:85%;font-weight:800;font-size:1.2rem;cursor:pointer;text-decoration:none}
-.primary[disabled]{opacity:.6;cursor:progress}
-.ghost{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:46px;padding:.5rem 1rem;border-radius:10px;border:1.5px solid var(--ink);background:transparent;font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink)}
-.ghost.wide{display:flex;width:100%;margin-top:.75rem}
-.ghost.small{min-height:40px;padding:.35rem .8rem;font-size:.92rem}
-.ghost.danger{border-color:var(--no);color:var(--no)}
-.btnrow{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.status{min-height:22px;margin:12px 4px 0;color:var(--muted);font-size:15px}
+.status.err{color:var(--no);font-weight:600}
+.summary{color:var(--muted);font-size:13px;margin:14px 4px 0}
+.banner{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--warn-bg);font-size:14px}
 
-details.filters{margin-top:.25rem;border-top:1px solid var(--line)}
-details.filters>summary{cursor:pointer;padding:.8rem 0 .4rem;font-weight:700;list-style-position:inside}
-details.filters .inner{padding-top:.5rem}
+/* contrôle segmenté */
+.segwrap{position:sticky;top:0;z-index:5;margin:10px -16px 0;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 8px;background:var(--bg)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:3px;border-radius:12px;background:var(--sunk)}
+.tab{display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;white-space:nowrap}
+.tab b{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+.tab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--dot)}
+.tab[data-s="ok"]{--dot:var(--ok)} .tab[data-s="check"]{--dot:var(--warn)} .tab[data-s="no"]{--dot:var(--no)}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 
-.status{min-height:1.5rem;margin:1rem 0 0;color:var(--muted)}
-.status.err{color:var(--no);font-weight:700}
-.summary{color:var(--muted);font-size:.92rem;margin-top:1rem}
-.banner{margin-top:1rem;padding:.75rem .9rem;border-left:4px solid var(--warn);background:var(--warn-bg);border-radius:8px;font-size:.95rem}
-
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.9rem 0 .75rem}
-.tab{text-align:left;background:transparent;border:0;border-bottom:3px solid var(--line);padding:.4rem .15rem .5rem;color:var(--muted);cursor:pointer;font-size:.9rem}
-.tab b{display:block;font-family:var(--display);font-stretch:75%;font-weight:850;font-size:1.9rem;line-height:1;color:var(--ink)}
-.tab[aria-selected="true"]{color:var(--ink);font-weight:700}
-.tab[aria-selected="true"][data-s="ok"]{border-color:var(--ok)}
-.tab[aria-selected="true"][data-s="check"]{border-color:var(--warn)}
-.tab[aria-selected="true"][data-s="no"]{border-color:var(--no)}
-
-.list{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
-.item{--c:var(--muted);--cb:var(--sunk);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;overflow:hidden}
-.s-ok{--c:var(--ok);--cb:var(--ok-bg)}
-.s-check{--c:var(--warn);--cb:var(--warn-bg)}
-.s-no{--c:var(--no);--cb:var(--no-bg)}
-.rowbtn{display:grid;grid-template-columns:56px minmax(0,1fr);gap:.75rem;align-items:center;width:100%;padding:.65rem .75rem;border:0;background:transparent;text-align:left;cursor:pointer}
+/* listes groupées */
+.list{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:var(--r);overflow:hidden}
+.list:empty{display:none}
+.item{--c:var(--muted);--cb:var(--sunk);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.item + .item{background:linear-gradient(var(--line),var(--line)) no-repeat 78px 0/calc(100% - 78px) 1px}
+.s-ok{--c:var(--ok);--cb:var(--ok-bg)} .s-check{--c:var(--warn);--cb:var(--warn-bg)} .s-no{--c:var(--no);--cb:var(--no-bg)}
+.rowbtn{display:grid;grid-template-columns:52px minmax(0,1fr);gap:14px;align-items:center;width:100%;padding:12px 4px 12px 12px;border:0;background:transparent;text-align:left}
+.rowbtn:active{background:var(--sunk)}
 .rowbtn:focus-visible{outline-offset:-3px}
-.thumb{width:56px;height:56px;border-radius:8px;background:#fff;object-fit:contain;display:block;border:1px solid var(--line)}
-.thumb.empty{background:var(--sunk)}
-.name{display:block;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
-.meta{display:block;color:var(--muted);font-size:.875rem;overflow-wrap:anywhere}
-.vline{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .5rem;margin-top:.2rem}
-.verdict{font-family:var(--display);font-stretch:78%;font-weight:800;font-size:.9rem;color:var(--c);background:var(--cb);padding:.1rem .45rem;border-radius:6px;white-space:nowrap}
-.reason{font-size:.85rem;color:var(--c)}
-.where{display:inline-block;margin-top:.3rem;font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:0 .5rem;color:var(--muted)}
-.where.yes{border-color:var(--ink);color:var(--ink);font-weight:700}
-.side{display:flex;align-items:center;padding:0 .5rem 0 0}
-.iconbtn{display:grid;place-items:center;width:46px;height:46px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer}
-.iconbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
-.iconbtn svg{width:22px;height:22px}
-.empty-card{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:1rem;color:var(--muted)}
-.empty-card .ghost{margin-top:.75rem}
+.tw{position:relative;width:52px;height:52px}
+.thumb{width:52px;height:52px;border-radius:10px;background:#fff;object-fit:contain;display:block;box-shadow:0 0 0 1px var(--line) inset}
+.thumb.empty{background:var(--sunk);box-shadow:none}
+.sbadge{position:absolute;right:-5px;bottom:-5px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;border:2px solid var(--surface)}
+.sbadge svg{width:12px;height:12px}
+.name{display:block;font-size:16px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.meta{display:block;color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.vline{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin-top:3px}
+.verdict{font-size:13px;font-weight:700;color:var(--c)}
+.reason{font-size:13px;color:var(--muted)}
+.where{display:inline-block;margin-top:5px;font-size:12px;font-weight:600;color:var(--muted);background:var(--sunk);border-radius:6px;padding:1px 7px}
+.where.yes{color:var(--ink);background:var(--ok-bg)}
+.side{padding-right:12px}
+.empty-card{padding:18px 16px;color:var(--muted);font-size:15px;list-style:none}
+.empty-card .ghost{margin-top:10px}
+.morerow{display:flex;gap:8px;margin-top:12px}
+.morerow .ghost{flex:1}
+
+/* état vide de l'accueil */
+.welcome{margin-top:18px;padding:22px 18px;border-radius:var(--r);background:var(--surface);text-align:center}
+.welcome .ill{width:64px;height:64px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;background:var(--ok-bg);color:var(--ok)}
+.welcome .ill svg{width:34px;height:34px}
+.welcome p{color:var(--muted);font-size:15px;max-width:30ch;margin:6px auto 0}
 
 /* liste de courses */
 .item>.shop{grid-column:1/-1}
-.shop{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.6rem;align-items:center;padding:.55rem .6rem .55rem .75rem}
-.shop input{width:24px;height:24px;accent-color:var(--ok)}
+.shop{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px}
+.shop input{appearance:none;-webkit-appearance:none;width:26px;height:26px;margin:0;border-radius:50%;box-shadow:0 0 0 2px var(--line) inset;display:grid;place-items:center}
+.shop input:checked{background:var(--ok);box-shadow:none}
+.shop input:checked::after{content:"";width:12px;height:7px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:translateY(-2px) rotate(-45deg)}
 .shop.done .name{text-decoration:line-through;color:var(--muted)}
-.shop .open{border:0;background:none;text-align:left;padding:.2rem 0;cursor:pointer;min-width:0}
-.sec-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:1.75rem 0 .6rem}
-.sec-head h2{margin:0}
+.shop .open{border:0;background:none;text-align:left;padding:2px 0;min-width:0}
+
+/* réglages */
+.group{background:var(--surface);border-radius:var(--r);overflow:hidden}
+.group + .group{margin-top:14px}
+.gpad{padding:14px 16px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;min-height:52px}
+.grow + .grow,.gpad + .grow,.grow + .gpad{border-top:1px solid var(--line)}
+.grow label,.grow .lbl{font-size:16px}
+.grow small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.lbl{font-weight:600;font-size:15px}
+.switch{appearance:none;-webkit-appearance:none;flex:none;width:51px;height:31px;margin:0;border-radius:16px;background:var(--sunk);position:relative;transition:background .2s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:transform .2s}
+.switch:checked{background:var(--ok)}
+.switch:checked::after{transform:translateX(20px)}
+.field{display:grid;gap:6px;margin-bottom:16px;min-width:0}
+.field:last-child{margin-bottom:0}
+input[type=text],select.plain{font-size:16px;background:var(--sunk);border:0;border-radius:10px;min-height:44px;padding:0 12px;width:100%;min-width:0}
+.inrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.seg{display:flex;padding:3px;gap:2px;border-radius:10px;background:var(--sunk)}
+.seg button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-size:15px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 
 /* scanner */
-.viewer{position:relative;margin-top:.5rem;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:3/4;max-height:62vh}
+.scanidle{padding:26px 18px 20px;border-radius:var(--r);background:var(--surface);text-align:center}
+.scanidle .ill{width:84px;height:84px;margin:0 auto 12px;border-radius:24px;display:grid;place-items:center;background:var(--sunk)}
+.scanidle .ill svg{width:44px;height:44px}
+.scanidle p{color:var(--muted);font-size:15px;margin:0 auto 16px;max-width:30ch}
+.viewer{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:3/4;max-height:64vh}
 .viewer video{width:100%;height:100%;object-fit:cover;display:block}
-.frame{position:absolute;left:8%;right:8%;top:32%;height:36%;border:3px solid #fff;border-radius:12px;box-shadow:0 0 0 100vmax rgba(0,0,0,.35)}
-.frame::after{content:"";position:absolute;left:6%;right:6%;top:50%;height:2px;background:#ff5a4e;box-shadow:0 0 8px #ff5a4e;animation:scanline 1.8s ease-in-out infinite alternate}
-@keyframes scanline{from{transform:translateY(-38px)}to{transform:translateY(38px)}}
-.viewer-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:.6rem;padding:.75rem;background:linear-gradient(transparent,rgba(0,0,0,.6))}
-.viewer-bar .ghost{border-color:#fff;color:#fff;background:rgba(0,0,0,.3)}
-.viewer-msg{position:absolute;left:0;right:0;top:0;padding:.7rem .9rem;color:#fff;font-size:.95rem;text-align:center;background:linear-gradient(rgba(0,0,0,.6),transparent)}
-.scanrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem;margin-top:.75rem}
+.frame{position:absolute;left:9%;right:9%;top:33%;height:34%;border-radius:14px;box-shadow:0 0 0 100vmax rgba(0,0,0,.42)}
+.frame::before{content:"";position:absolute;inset:0;border-radius:14px;border:3px solid #fff}
+.frame::after{content:"";position:absolute;left:6%;right:6%;top:50%;height:2px;background:#4FD08F;box-shadow:0 0 10px #4FD08F;animation:scanline 1.6s ease-in-out infinite alternate}
+@keyframes scanline{from{transform:translateY(-36px)}to{transform:translateY(36px)}}
+.viewer-msg{position:absolute;left:0;right:0;top:0;padding:14px 16px;color:#fff;font-size:15px;font-weight:600;text-align:center;background:linear-gradient(rgba(0,0,0,.55),transparent)}
+.viewer-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:14px;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+.viewer-bar .ghost{background:rgba(255,255,255,.18);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.viewer-bar .ghost[aria-pressed="true"]{background:#fff;color:#000}
+.scanalt{display:grid;gap:8px;margin-top:10px}
 .filebtn{position:relative;overflow:hidden}
-.filebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.filebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
 
 /* barre d'onglets */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);max-width:44rem;margin:0 auto;background:var(--surface);border-top:1px solid var(--line);padding:0 0 env(safe-area-inset-bottom,0px)}
-@media (min-width:44rem){.tabbar{border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0}}
-.tabbar button{display:grid;justify-items:center;align-content:center;gap:.15rem;height:var(--tabbar);border:0;background:transparent;color:var(--muted);font-size:.75rem;cursor:pointer;position:relative}
-.tabbar button svg{width:24px;height:24px}
-.tabbar button[aria-current="page"]{color:var(--ink);font-weight:700}
-.tabbar button[aria-current="page"]::before{content:"";position:absolute;top:0;left:28%;right:28%;height:3px;border-radius:0 0 3px 3px;background:var(--ink)}
-.badge{position:absolute;top:8px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--no);color:#fff;font-size:.7rem;font-weight:700;line-height:18px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);max-width:40rem;margin:0 auto;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 var(--line)}
+.tabbar button{display:grid;justify-items:center;align-content:center;gap:2px;height:var(--tabbar);border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:600;position:relative}
+.tabbar button svg{width:26px;height:26px}
+.tabbar button[aria-current="page"]{color:var(--ok)}
+.badge{position:absolute;top:6px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--no);color:#fff;font-size:11px;font-weight:700;line-height:18px}
 
-/* fiches */
-dialog.sheet{width:100%;max-width:44rem;height:100%;height:100dvh;max-height:100dvh;margin:0 auto;padding:0;border:0;background:var(--bg);color:var(--ink)}
+/* fiches qui montent du bas */
+dialog.sheet{position:fixed;inset:auto 0 0 0;width:100%;max-width:40rem;height:calc(100dvh - env(safe-area-inset-top,0px) - 12px);max-height:none;margin:0 auto;padding:0;border:0;border-radius:16px 16px 0 0;background:var(--bg);color:var(--ink)}
+dialog.sheet[open]{animation:sheetup .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheetup{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 dialog.sheet::backdrop{background:var(--scrim)}
-@media (min-width:46rem){dialog.sheet{height:calc(100dvh - 2rem);margin-top:1rem;border-radius:16px}}
-.sheet-in{display:flex;flex-direction:column;height:100%}
-.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:calc(env(safe-area-inset-top,0px) + .5rem) 1rem .5rem;border-bottom:1px solid var(--line);background:var(--surface)}
-.sheet-head .t{font-family:var(--display);font-stretch:80%;font-weight:800;font-size:1.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sheet-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem 1rem calc(env(safe-area-inset-bottom,0px) + 2rem)}
-.hero{display:grid;grid-template-columns:96px minmax(0,1fr);gap:1rem;align-items:start}
-.hero img,.hero .ph{width:96px;height:96px;border-radius:12px;object-fit:contain;background:#fff;border:1px solid var(--line)}
-.hero .ph{background:var(--sunk)}
-.hero h2{margin:0 0 .25rem;font-size:1.5rem}
-.bigverdict{display:inline-block;margin-top:.45rem;font-family:var(--display);font-stretch:78%;font-weight:850;font-size:1.15rem;color:var(--c);background:var(--cb);padding:.2rem .6rem;border-radius:8px}
-.reasons{margin:.9rem 0 0;padding-left:1.1rem}
-.reasons li{margin:.2rem 0}
+dialog.sheet.short{height:auto;max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px)}
+.sheet-in{display:flex;flex-direction:column;height:100%;max-height:inherit}
+dialog.sheet.short .sheet-in{max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px)}
+.sheet-head{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;padding:14px 12px 10px}
+.sheet-head::before{content:"";position:absolute;top:6px;left:50%;width:36px;height:5px;margin-left:-18px;border-radius:3px;background:var(--line)}
+.sheet-head .t{text-align:center;font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet-head .iconbtn{width:36px;height:36px}
+.sheet-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 16px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.sheet-foot{padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 12px);background:var(--bg);box-shadow:0 -1px 0 var(--line)}
+
+.hero{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;align-items:center;margin-top:4px}
+.hero img,.hero .ph{width:88px;height:88px;border-radius:16px;object-fit:contain;background:#fff;box-shadow:0 0 0 1px var(--line) inset}
+.hero .ph{background:var(--sunk);box-shadow:none}
+.hero h2{font-size:22px;margin:0 0 2px}
+.vbanner{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;margin-top:14px;padding:14px;border-radius:var(--r);background:var(--cb)}
+.vicon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--c);color:#fff}
+.vicon svg{width:22px;height:22px}
+.bigverdict{font-family:var(--display);font-stretch:85%;font-weight:800;font-size:22px;line-height:1.15;color:var(--c);padding-top:7px}
+.reasons{margin:6px 0 0;padding-left:18px;font-size:15px}
+.reasons li{margin:2px 0}
 .r-no{color:var(--no)} .r-check{color:var(--warn)} .r-ok{color:var(--ok)}
-.ingr{font-size:.95rem;max-width:62ch}
-mark{background:var(--no-bg);color:var(--no);font-weight:700;border-radius:3px;padding:0 .1em}
-.tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.tag{font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.1rem .6rem;background:var(--surface)}
-.scores{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem}
-.score{display:flex;align-items:center;gap:.45rem;font-size:.92rem}
-.grade{display:inline-grid;place-items:center;min-width:2rem;height:2rem;padding:0 .3rem;border-radius:6px;font-family:var(--display);font-weight:850;color:#fff}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.act{display:grid;justify-items:center;gap:4px;padding:10px 4px;border:0;border-radius:12px;background:var(--surface);font-size:13px;font-weight:600;color:var(--ink)}
+.act svg{width:22px;height:22px}
+.act[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
+.card{margin-top:12px;padding:14px 16px;border-radius:var(--r);background:var(--surface)}
+.card h3 + h3{margin-top:14px}
+.card .sub{margin-top:14px}
+.ingr{font-size:15px;line-height:1.5}
+mark{background:var(--no-bg);color:var(--no);font-weight:700;border-radius:3px;padding:0 2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:14px;border-radius:8px;padding:3px 9px;background:var(--sunk)}
+.scores{display:flex;flex-wrap:wrap;gap:10px 18px}
+.score{display:flex;align-items:center;gap:8px;font-size:15px}
+.grade{display:inline-grid;place-items:center;min-width:32px;height:32px;padding:0 6px;border-radius:8px;font-weight:800;color:#fff}
 .g-a,.g-a-plus{background:#038141}.g-b{background:#85BB2F}.g-c{background:#FECB02;color:#222}.g-d{background:#EE8100}.g-e,.g-f{background:#E63E11}
 .n1{background:#038141}.n2{background:#85BB2F}.n3{background:#EE8100}.n4{background:#E63E11}
-table.nut{width:100%;border-collapse:collapse;font-size:.95rem}
-table.nut td{padding:.35rem 0;border-bottom:1px solid var(--line)}
+table.nut{width:100%;border-collapse:collapse;font-size:15px}
+table.nut td{padding:7px 0;border-top:1px solid var(--line)}
+table.nut tr:first-child td{border-top:0}
 table.nut td:nth-child(2){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-table.nut tr.sub td:first-child{padding-left:1rem;color:var(--muted)}
-.lvl{display:inline-block;width:.65rem;height:.65rem;border-radius:50%;margin-left:.4rem;vertical-align:middle}
+table.nut tr.sub td:first-child{padding-left:14px;color:var(--muted)}
+.lvl{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:6px;vertical-align:middle}
 .lvl-low{background:#2FA36B}.lvl-moderate{background:#E8A11A}.lvl-high{background:#D9432F}
-.alts{margin-top:.6rem}
-.recall-alert{margin-top:.9rem;padding:.75rem .9rem;border-left:5px solid var(--no);background:var(--no-bg);border-radius:8px;color:var(--ink);font-size:.95rem}
-.recall-alert b{color:var(--no);font-family:var(--display);font-stretch:85%;font-size:1.05rem}
-.recall-alert p{margin:.25rem 0 0}
-.recall-alert a{color:var(--ink);font-weight:700}
-.prices{list-style:none;padding:0;margin:.5rem 0 0;display:grid;gap:.35rem}
-.prices li{display:flex;justify-content:space-between;gap:.75rem;padding:.45rem .6rem;border-radius:8px;background:var(--surface);border:1px solid var(--line);font-size:.92rem}
-.prices li.here{border-color:var(--ok)}
+.alts .list{margin-top:10px;box-shadow:0 0 0 1px var(--line) inset}
+.prices{list-style:none;padding:0;margin:8px 0 0}
+.prices li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.prices li:first-child{border-top:0}
+.prices li.here b{color:var(--ok)}
 .prices b{font-variant-numeric:tabular-nums;white-space:nowrap}
-.links{margin-top:1.25rem;font-size:.95rem;display:grid;gap:.35rem}
-.links a{color:var(--ink);font-weight:700}
+.links{display:grid;gap:2px;margin-top:6px;font-size:15px}
+.links a{color:var(--ink);font-weight:600;padding:8px 0;text-decoration:none;border-top:1px solid var(--line)}
+.links a::after{content:" ›";color:var(--muted)}
+.links span{color:var(--muted);font-size:13px;padding-bottom:6px}
+.recall-alert{margin-top:12px;padding:14px;border-radius:var(--r);background:var(--no-bg);font-size:15px}
+.recall-alert b{display:block;color:var(--no);font-size:17px}
+.recall-alert p{margin:4px 0 0}
+.recall-alert a{color:var(--ink);font-weight:700}
 
 /* sélecteur de rayon */
-.aisle{margin-top:1rem}
-.aisle h3{margin:0 0 .45rem;color:var(--muted);font-size:.95rem}
-.aisle .chips .chip{font-size:.92rem}
+.aisle{margin-top:18px}
+.aisle h3{margin:0 0 8px 2px;color:var(--muted);font-size:14px;font-weight:600}
 
-.info{margin-top:.9rem;background:var(--surface);border:1px solid var(--line);border-radius:16px}
-.info>summary{cursor:pointer;padding:.9rem 1rem;font-weight:700}
-.info .inner{padding:0 1rem 1rem;font-size:.95rem}
-.info .inner p{margin:.5rem 0;max-width:62ch}
-footer{margin-top:1.5rem;font-size:.85rem;color:var(--muted)}
+/* accueil */
+.ob-ill{width:72px;height:72px;margin:10px auto 14px;border-radius:20px;display:grid;place-items:center;background:var(--ok-bg);color:var(--ok)}
+.ob-ill svg{width:38px;height:38px}
+.ob-title{text-align:center;font-family:var(--display);font-stretch:75%;font-weight:800;font-size:28px;line-height:1.1;margin:0;outline:none}
+[tabindex="-1"]:focus{outline:none}
+.ob-text{text-align:center;color:var(--muted);font-size:15px;max-width:32ch;margin:8px auto 18px}
+
+.info{margin-top:14px;background:var(--surface);border-radius:var(--r)}
+.info>summary{cursor:pointer;padding:14px 16px;font-weight:600;font-size:16px;list-style:none;display:flex;justify-content:space-between}
+.info>summary::-webkit-details-marker{display:none}
+.info>summary::after{content:"›";color:var(--muted);transition:transform .2s}
+.info[open]>summary::after{transform:rotate(90deg)}
+.info .inner{padding:0 16px 16px;font-size:15px}
+.info .inner p{margin:8px 0}
+footer{margin:20px 4px 0;font-size:13px;color:var(--muted)}
 footer a{color:inherit}
 
-.toast{position:fixed;left:1rem;right:1rem;bottom:calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + .75rem);z-index:30;max-width:30rem;margin:0 auto;padding:.75rem 1rem;border-radius:12px;background:var(--ink);color:var(--surface);font-size:.95rem;box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 12px);z-index:30;max-width:28rem;margin:0 auto;padding:12px 16px;border-radius:14px;background:rgba(15,34,51,.94);color:#fff;font-size:15px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.22);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:none}
-.spin{width:1.1em;height:1.1em;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;vertical-align:-.15em}
+.spin{width:1em;height:1em;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;vertical-align:-.12em}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></g></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></g></symbol>
+    <symbol id="i-ok" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M12 5v9"/><path d="M12 19h.01"/></g></symbol>
+    <symbol id="i-no" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-barcode" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></g></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></g></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></g></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></g></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h10.2L20 8H7"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></g></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-basket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1.6 9H5.6z"/><path d="m9 10 3-6 3 6"/></g></symbol>
+  </defs>
+</svg>
 <div class="wrap">
 
   <!-- RECHERCHE -->
   <section class="screen" id="screen-search" aria-labelledby="t-search">
     <header class="top">
       <h1 id="t-search">Rayon sûr</h1>
-      <p class="profile-line" id="profileLine"></p>
+      <button class="pchip" type="button" id="profileLine" data-go="profile" aria-label="Mon profil"></button>
     </header>
 
-    <form class="panel" id="searchForm" autocomplete="off">
-      <div class="row2">
-        <div class="field">
-          <label class="lbl" for="store">Magasin</label>
+    <form id="searchForm" autocomplete="off" role="search">
+      <div class="searchbar">
+        <div class="sfield">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <label class="sr" for="terms">Nom ou marque</label>
+          <input id="terms" type="search" placeholder="Nom ou marque" enterkeyhint="search">
+        </div>
+        <button class="primary" id="go" type="submit">Rechercher</button>
+      </div>
+      <div class="chiprow" aria-label="Magasin, rayon et filtres">
+        <span class="selchip">
+          <label class="sr" for="store">Magasin</label>
           <select id="store"></select>
-        </div>
-        <div class="field">
-          <span class="lbl" id="rayonLbl">Rayon</span>
-          <button type="button" class="picker" id="rayonBtn" aria-haspopup="dialog" aria-describedby="rayonLbl">
-            <span id="rayonName"></span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
-        </div>
+          <svg aria-hidden="true"><use href="#i-down"/></svg>
+        </span>
+        <button type="button" class="btnchip" id="rayonBtn" aria-haspopup="dialog"><span id="rayonName"></span><svg aria-hidden="true"><use href="#i-down"/></svg></button>
+        <button type="button" class="btnchip" id="filtersBtn" aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-filter"/></svg>Filtres<span id="filterCount"></span></button>
       </div>
-      <label class="check" style="margin:0 0 .9rem">
-        <input type="checkbox" id="wide">
-        <span>Inclure les marques nationales vendues en France, même si personne ne les a encore signalées dans ce magasin</span>
-      </label>
-      <div class="field">
-        <label class="lbl" for="terms">Nom ou marque (facultatif)</label>
-        <input id="terms" type="search" placeholder="ex. sorbet, Alpro, Marque Repère" enterkeyhint="search">
-      </div>
+      <div class="chiprow quick" id="quick" aria-label="Rayons rapides"></div>
+    </form>
 
-      <details class="filters" id="filters">
-        <summary>Filtres et tri<span id="filterCount"></span></summary>
-        <div class="inner">
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <section id="results" hidden aria-label="Résultats">
+      <p class="summary" id="summary"></p>
+      <p class="banner" id="dirty" hidden></p>
+      <div class="segwrap">
+        <div class="tabs" role="tablist" aria-label="Verdicts">
+          <button class="tab" role="tab" data-s="ok" aria-selected="true">Compatibles <b id="n-ok">0</b></button>
+          <button class="tab" role="tab" data-s="check" aria-selected="false">À vérifier <b id="n-check">0</b></button>
+          <button class="tab" role="tab" data-s="no" aria-selected="false">Exclus <b id="n-no">0</b></button>
+        </div>
+      </div>
+      <ul class="list" id="list"></ul>
+      <div class="morerow" id="moreRow" hidden>
+        <button class="ghost" id="more" type="button">Charger plus</button>
+        <button class="ghost" id="all" type="button">Tout le rayon</button>
+      </div>
+    </section>
+
+    <div class="welcome" id="intro">
+      <div class="ill"><svg aria-hidden="true"><use href="#i-basket"/></svg></div>
+      <h2>Choisis un rayon</h2>
+      <p>L'appli trie ses produits en compatibles, à vérifier et exclus selon ton profil. En magasin, utilise l'onglet Scanner.</p>
+    </div>
+  </section>
+
+  <!-- SCANNER -->
+  <section class="screen" id="screen-scan" hidden aria-labelledby="t-scan">
+    <header class="top"><h1 id="t-scan">Scanner</h1></header>
+
+    <div class="viewer" id="viewer" hidden>
+      <video id="video" playsinline muted autoplay></video>
+      <div class="frame" aria-hidden="true"></div>
+      <p class="viewer-msg" id="viewerMsg">Place le code-barres dans le cadre</p>
+      <div class="viewer-bar">
+        <button class="ghost small" id="torchBtn" type="button" hidden aria-pressed="false"><svg width="18" height="18" aria-hidden="true"><use href="#i-bolt"/></svg>Lampe</button>
+        <button class="ghost small" id="stopScan" type="button">Arrêter</button>
+      </div>
+    </div>
+
+    <div class="scanidle" id="scanIdle">
+      <div class="ill"><svg aria-hidden="true"><use href="#i-barcode"/></svg></div>
+      <h2>Vérifie un produit en rayon</h2>
+      <p>Vise le code-barres : le verdict s'affiche selon ton profil.</p>
+      <button class="primary wide" id="startScan" type="button"><svg width="22" height="22" aria-hidden="true"><use href="#i-barcode"/></svg>Scanner avec la caméra</button>
+    </div>
+    <div class="scanalt">
+      <label class="ghost filebtn"><svg width="20" height="20" aria-hidden="true"><use href="#i-photo"/></svg>Prendre une photo du code-barres<input type="file" id="photo" accept="image/*" capture="environment"></label>
+      <form class="inrow" id="codeForm" autocomplete="off">
+        <label class="sr" for="code">Code-barres</label>
+        <input id="code" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ou tape le code-barres">
+        <button class="ghost" type="submit">Vérifier</button>
+      </form>
+    </div>
+    <p class="status" id="scanStatus" aria-live="polite"></p>
+
+    <div class="sec"><h2>Derniers scans</h2><button class="textbtn" id="clearHistory" type="button" hidden>Effacer</button></div>
+    <ul class="list" id="history"></ul>
+  </section>
+
+  <!-- MA LISTE -->
+  <section class="screen" id="screen-list" hidden aria-labelledby="t-list">
+    <header class="top"><h1 id="t-list">Ma liste</h1></header>
+
+    <div class="sec" style="margin-top:4px"><h2>À acheter</h2><button class="textbtn" id="shareList" type="button">Partager</button></div>
+    <ul class="list" id="shopList"></ul>
+    <div class="btnrow" id="shopActions">
+      <button class="ghost small" id="clearDone" type="button">Retirer les produits cochés</button>
+      <button class="ghost small" id="uncheckAll" type="button">Tout décocher</button>
+    </div>
+
+    <div class="sec"><h2>Favoris</h2></div>
+    <ul class="list" id="favList"></ul>
+
+    <details class="info">
+      <summary>Sauvegarder ou transférer</summary>
+      <div class="inner">
+        <p>Tes listes sont enregistrées sur ce téléphone. Exporte-les dans un fichier pour les garder ou les ouvrir ailleurs.</p>
+        <div class="btnrow">
+          <button class="ghost small" id="exportBtn" type="button">Exporter</button>
+          <label class="ghost small filebtn">Importer<input type="file" id="importFile" accept="application/json,.json"></label>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- PROFIL -->
+  <section class="screen" id="screen-profile" hidden aria-labelledby="t-profile">
+    <header class="top"><h1 id="t-profile">Mon profil</h1></header>
+    <p class="lede">Enregistré sur ton téléphone, rien n'est envoyé.</p>
+
+    <div class="group">
+      <div class="gpad">
+        <p class="lbl" id="l-alg" style="margin-bottom:4px">Allergènes à éviter</p>
+        <p class="hint" style="margin-bottom:12px">Lactose : les produits « sans lactose » restent proposés. Pour une allergie au lait, choisis « Lait (allergie) ».</p>
+        <div class="chips" id="chips" role="group" aria-labelledby="l-alg"></div>
+      </div>
+      <div class="grow">
+        <label for="traces">Exclure les traces possibles<small>« Peut contenir des traces de… »</small></label>
+        <input type="checkbox" class="switch" id="traces" role="switch">
+      </div>
+    </div>
+
+    <div class="group">
+      <form class="gpad" id="wordForm" autocomplete="off">
+        <label class="lbl" for="word">Autres ingrédients à éviter</label>
+        <p class="hint" style="margin:4px 0 10px">Par exemple : huile de palme, aspartame, porc.</p>
+        <div class="inrow">
+          <input id="word" type="text" placeholder="Ajouter un ingrédient" enterkeyhint="done">
+          <button class="ghost" type="submit">Ajouter</button>
+        </div>
+        <div class="chips" id="words" style="margin-top:10px"></div>
+      </form>
+    </div>
+
+    <details class="info">
+      <summary>Installer sur l'écran d'accueil</summary>
+      <div class="inner"><p>Sur iPhone, ouvre cette page dans Safari, touche Partager puis « Sur l'écran d'accueil ». Sur Android : menu de Chrome, puis « Ajouter à l'écran d'accueil ».</p></div>
+    </details>
+    <details class="info">
+      <summary>D'où viennent les données ?</summary>
+      <div class="inner">
+        <p>L'appli assemble quatre bases ouvertes :</p>
+        <p><b>Open Food Facts</b> : fiches produits (ingrédients, allergènes, traces, labels, scores), saisies par la communauté et des fabricants à partir des emballages.</p>
+        <p><b>Search-a-licious</b> : le moteur de recherche d'Open Food Facts. Il retrouve les produits par nom, par magasin ou par marque distributeur, et prend le relais si Open Food Facts limite les recherches.</p>
+        <p><b>RappelConso</b> : la base officielle des rappels de produits du gouvernement. Chaque fiche produit est vérifiée.</p>
+        <p><b>Open Prices</b> : prix relevés en magasin par la communauté.</p>
+        <p>« Chez E.Leclerc » veut dire qu'un contributeur l'a vu dans cette enseigne, pas qu'il est en stock dans ton magasin. Certaines fiches sont incomplètes : c'est le rôle de l'onglet « À vérifier ».</p>
+        <p>Open Food Facts accepte 10 recherches par minute. Au-delà, l'appli fait une courte pause toute seule.</p>
+        <p>Les recettes changent : l'étiquette du produit que tu as en main fait toujours foi.</p>
+      </div>
+    </details>
+
+    <button class="ghost wide danger" id="resetAll" type="button" style="margin-top:14px">Effacer toutes mes données</button>
+    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr 3.0.</footer>
+  </section>
+</div>
+
+<nav class="tabbar" aria-label="Navigation">
+  <button type="button" data-go="search" aria-current="page"><svg aria-hidden="true"><use href="#i-search"/></svg>Rechercher</button>
+  <button type="button" data-go="scan"><svg aria-hidden="true"><use href="#i-barcode"/></svg>Scanner</button>
+  <button type="button" data-go="list"><svg aria-hidden="true"><use href="#i-list"/></svg>Ma liste<span class="badge" id="listBadge" hidden></span></button>
+  <button type="button" data-go="profile"><svg aria-hidden="true"><use href="#i-user"/></svg>Profil</button>
+</nav>
+
+<dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <button class="iconbtn" id="sheetBack" type="button" hidden aria-label="Retour"><svg aria-hidden="true"><use href="#i-back"/></svg></button>
+      <span class="t" id="sheetTitle" style="grid-column:2">Produit</span>
+      <button class="iconbtn" id="sheetClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="rayonSheet" aria-labelledby="rayonTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="rayonTitle" style="grid-column:2">Choisir un rayon</span>
+      <button class="iconbtn" id="rayonClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="sfield">
+        <svg aria-hidden="true"><use href="#i-search"/></svg>
+        <label class="sr" for="rayonFilter">Filtrer les rayons</label>
+        <input id="rayonFilter" type="search" placeholder="Yaourt, pain, chips…" autocomplete="off">
+      </div>
+      <div id="rayonList"></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet short" id="filtersSheet" aria-labelledby="filtersTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="filtersTitle" style="grid-column:2">Filtres et tri</span>
+      <button class="iconbtn" id="filtersClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="group">
+        <div class="grow">
+          <label for="wide">Marques nationales<small>Inclure les produits vendus en France pas encore signalés dans ce magasin</small></label>
+          <input type="checkbox" class="switch" id="wide" role="switch">
+        </div>
+      </div>
+      <div class="group">
+        <div class="gpad">
           <div class="field" role="group" aria-labelledby="l-nutri">
             <span class="lbl" id="l-nutri">Nutri-Score</span>
             <div class="seg" id="fNutri">
@@ -286,7 +567,7 @@ footer a{color:inherit}
           </div>
           <div class="field">
             <label class="lbl" for="sort">Trier par</label>
-            <select id="sort">
+            <select id="sort" class="plain">
               <option value="popularity">Les plus scannés</option>
               <option value="nutriscore">Meilleur Nutri-Score</option>
               <option value="nova">Les moins transformés</option>
@@ -295,190 +576,23 @@ footer a{color:inherit}
             </select>
           </div>
         </div>
-      </details>
-
-      <button class="primary" id="go" type="submit">Rechercher</button>
-    </form>
-
-    <p class="status" id="status" aria-live="polite"></p>
-
-    <section id="results" hidden aria-label="Résultats">
-      <p class="summary" id="summary"></p>
-      <p class="banner" id="dirty" hidden></p>
-      <div class="tabs" role="tablist" aria-label="Verdicts">
-        <button class="tab" role="tab" data-s="ok" aria-selected="true"><b id="n-ok">0</b>Compatibles</button>
-        <button class="tab" role="tab" data-s="check" aria-selected="false"><b id="n-check">0</b>À vérifier</button>
-        <button class="tab" role="tab" data-s="no" aria-selected="false"><b id="n-no">0</b>Exclus</button>
-      </div>
-      <ul class="list" id="list"></ul>
-      <div class="btnrow" id="moreRow" hidden>
-        <button class="ghost" id="more" type="button">Charger plus</button>
-        <button class="ghost" id="all" type="button">Charger tout le rayon</button>
-      </div>
-    </section>
-
-    <div class="empty-card" id="intro" style="margin-top:1rem">
-      Choisis un rayon : l'appli trie ses produits en compatibles, à vérifier et exclus selon ton profil. En magasin, utilise l'onglet Scanner.
-    </div>
-  </section>
-
-  <!-- SCANNER -->
-  <section class="screen" id="screen-scan" hidden aria-labelledby="t-scan">
-    <header class="top">
-      <h1 class="h-screen" id="t-scan">Scanner</h1>
-      <p class="lede">Vise le code-barres d'un produit : il est vérifié avec ton profil.</p>
-    </header>
-
-    <div class="viewer" id="viewer" hidden>
-      <video id="video" playsinline muted autoplay></video>
-      <div class="frame" aria-hidden="true"></div>
-      <p class="viewer-msg" id="viewerMsg">Place le code-barres dans le cadre</p>
-      <div class="viewer-bar">
-        <button class="ghost small" id="torchBtn" type="button" hidden aria-pressed="false">Lampe</button>
-        <button class="ghost small" id="stopScan" type="button">Arrêter</button>
       </div>
     </div>
-
-    <button class="primary" id="startScan" type="button">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>
-      Scanner avec la caméra
-    </button>
-    <label class="ghost wide filebtn">
-      Prendre une photo du code-barres
-      <input type="file" id="photo" accept="image/*" capture="environment">
-    </label>
-    <form class="scanrow" id="codeForm" autocomplete="off">
-      <label class="sr" for="code">Code-barres</label>
-      <input id="code" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ou tape le code-barres">
-      <button class="ghost" type="submit">Vérifier</button>
-    </form>
-    <p class="status" id="scanStatus" aria-live="polite"></p>
-
-    <div class="sec-head"><h2>Derniers scans</h2><button class="ghost small" id="clearHistory" type="button" hidden>Effacer</button></div>
-    <ul class="list" id="history"></ul>
-  </section>
-
-  <!-- MA LISTE -->
-  <section class="screen" id="screen-list" hidden aria-labelledby="t-list">
-    <header class="top">
-      <h1 class="h-screen" id="t-list">Ma liste</h1>
-      <p class="lede">Ta liste de courses et tes produits favoris, vérifiés avec ton profil actuel.</p>
-    </header>
-
-    <div class="sec-head"><h2>À acheter</h2><button class="ghost small" id="shareList" type="button">Partager</button></div>
-    <ul class="list" id="shopList"></ul>
-    <div class="btnrow" id="shopActions">
-      <button class="ghost small" id="clearDone" type="button">Retirer les produits cochés</button>
-      <button class="ghost small" id="uncheckAll" type="button">Tout décocher</button>
-    </div>
-
-    <div class="sec-head"><h2>Favoris</h2></div>
-    <ul class="list" id="favList"></ul>
-
-    <details class="info">
-      <summary>Sauvegarder ou transférer mes données</summary>
-      <div class="inner">
-        <p>Tes listes sont enregistrées sur ce téléphone. Exporte-les en fichier pour les garder ou les ouvrir sur un autre appareil.</p>
-        <div class="btnrow">
-          <button class="ghost small" id="exportBtn" type="button">Exporter</button>
-          <label class="ghost small filebtn">Importer<input type="file" id="importFile" accept="application/json,.json"></label>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- PROFIL -->
-  <section class="screen" id="screen-profile" hidden aria-labelledby="t-profile">
-    <header class="top">
-      <h1 class="h-screen" id="t-profile">Mon profil</h1>
-      <p class="lede">Ce que tu dois éviter. Tout est enregistré sur ton téléphone, rien n'est envoyé.</p>
-    </header>
-
-    <div class="panel">
-      <div class="field" role="group" aria-labelledby="l-alg">
-        <span class="lbl" id="l-alg">Allergènes à éviter</span>
-        <p class="hint">Lactose : les produits étiquetés « sans lactose » restent proposés. Pour une allergie au lait, choisis plutôt « Lait (allergie) ».</p>
-        <div class="chips" id="chips" style="margin-top:.4rem"></div>
-      </div>
-      <label class="check">
-        <input type="checkbox" id="traces">
-        <span>Exclure aussi les produits qui « peuvent contenir des traces »</span>
-      </label>
-    </div>
-
-    <div class="panel">
-      <form class="field" id="wordForm" style="margin:0" autocomplete="off">
-        <label class="lbl" for="word">Autres ingrédients à éviter</label>
-        <p class="hint">Par exemple : huile de palme, aspartame, porc, fraise. Un produit qui en contient passe en « Exclu ».</p>
-        <div class="scanrow" style="margin-top:.3rem">
-          <input id="word" type="text" placeholder="Ajouter un ingrédient" enterkeyhint="done">
-          <button class="ghost" type="submit">Ajouter</button>
-        </div>
-        <div class="chips" id="words" style="margin-top:.6rem"></div>
-      </form>
-    </div>
-
-    <details class="info">
-      <summary>Installer l'appli sur l'écran d'accueil</summary>
-      <div class="inner">
-        <p>Sur iPhone, ouvre cette page dans Safari, touche Partager puis « Sur l'écran d'accueil ». Sur Android, ouvre le menu de Chrome puis « Ajouter à l'écran d'accueil ».</p>
-      </div>
-    </details>
-    <details class="info">
-      <summary>D'où viennent les données ?</summary>
-      <div class="inner">
-        <p>L'appli assemble quatre bases ouvertes :</p>
-        <p><b>Open Food Facts</b> : fiches produits (ingrédients, allergènes, traces, labels, scores), saisies par la communauté et des fabricants à partir des emballages.</p>
-        <p><b>Search-a-licious</b> : le moteur de recherche d'Open Food Facts. Il retrouve les produits par nom, par magasin ou par marque distributeur, et prend le relais si Open Food Facts limite les recherches.</p>
-        <p><b>RappelConso</b> : la base officielle des rappels de produits du gouvernement. Chaque fiche produit est vérifiée.</p>
-        <p><b>Open Prices</b> : prix relevés en magasin par la communauté.</p>
-        <p>« Signalé chez Leclerc » veut dire qu'un contributeur l'a vu dans une enseigne Leclerc, pas qu'il est en stock dans ton magasin. Certaines fiches sont incomplètes : c'est le rôle de l'onglet « À vérifier ».</p>
-        <p>Open Food Facts accepte 10 recherches par minute. Au-delà, l'appli fait une courte pause toute seule.</p>
-        <p>Les recettes changent : l'étiquette du produit que tu as en main fait toujours foi.</p>
-      </div>
-    </details>
-
-    <button class="ghost wide danger" id="resetAll" type="button">Effacer toutes mes données</button>
-    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licence ODbL. Rayon sûr, version 2.0.</footer>
-  </section>
-</div>
-
-<nav class="tabbar" aria-label="Navigation">
-  <button type="button" data-go="search" aria-current="page">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Rechercher
-  </button>
-  <button type="button" data-go="scan">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>Scanner
-  </button>
-  <button type="button" data-go="list">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></svg>Ma liste<span class="badge" id="listBadge" hidden></span>
-  </button>
-  <button type="button" data-go="profile">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profil
-  </button>
-</nav>
-
-<dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
-  <div class="sheet-in">
-    <div class="sheet-head">
-      <button class="ghost small" id="sheetBack" type="button" hidden>Retour</button>
-      <span class="t" id="sheetTitle">Produit</span>
-      <button class="ghost small" id="sheetClose" type="button">Fermer</button>
-    </div>
-    <div class="sheet-body" id="sheetBody"></div>
+    <div class="sheet-foot"><button class="primary wide" id="filtersDone" type="button">Voir les résultats</button></div>
   </div>
 </dialog>
 
-<dialog class="sheet" id="rayonSheet" aria-labelledby="rayonTitle">
+<dialog class="sheet" id="onboard" aria-labelledby="obTitle">
   <div class="sheet-in">
-    <div class="sheet-head">
-      <span class="t" id="rayonTitle">Choisir un rayon</span>
-      <button class="ghost small" id="rayonClose" type="button">Fermer</button>
+    <div class="sheet-body" style="padding-top:20px">
+      <div class="ob-ill"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+      <h2 class="ob-title" id="obTitle" tabindex="-1" autofocus>Bienvenue dans Rayon sûr</h2>
+      <p class="ob-text">Qu'est-ce que tu dois éviter ? L'appli triera chaque produit pour toi. Tu pourras changer ça plus tard dans Profil.</p>
+      <div class="chips" id="obChips" style="justify-content:center"></div>
     </div>
-    <div class="sheet-body">
-      <label class="sr" for="rayonFilter">Filtrer les rayons</label>
-      <input id="rayonFilter" type="search" placeholder="Chercher un rayon : yaourt, pain, chips…" autocomplete="off">
-      <div id="rayonList"></div>
+    <div class="sheet-foot">
+      <button class="primary wide" id="obGo" type="button">C'est parti</button>
+      <button class="textbtn" id="obSkip" type="button" style="display:block;margin:6px auto 0">Plus tard</button>
     </div>
   </div>
 </dialog>
@@ -598,7 +712,8 @@ const ls = {
 };
 const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history' };
 
-const profile = Object.assign({ sel:['lactose'], traces:false, words:[] }, ls.get(K.profile, {}));
+const FIRST_RUN = ls.get(K.profile, null) === null;
+const profile = Object.assign({ sel:[], traces:false, words:[] }, ls.get(K.profile, {}));
 profile.sel = new Set((profile.sel || []).filter(k => ALLERGENS.some(a => a.key === k)));
 profile.words = Array.isArray(profile.words) ? profile.words.filter(w => typeof w === 'string' && w.trim()).slice(0, 30) : [];
 const saveProfile = () => ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words });
@@ -688,7 +803,7 @@ function fromSAL(h){
     if (SAL_MAP[k] && Array.isArray(v)){ p[SAL_MAP[k]] = v; continue; }
     p[k] = v;
   }
-  p.code = String(h.code);
+  p.code = String(h.code); p._sal = true;
   if (p.brands_tags && typeof p.brands !== 'string') p.brands = p.brands_tags.map(humanTag).join(', ');
   if (p.stores_tags && !p.stores) p.stores = p.stores_tags.map(humanTag).join(', ');
   if (!p.ecoscore_grade && p.environmental_score_grade) p.ecoscore_grade = p.environmental_score_grade;
@@ -921,13 +1036,14 @@ document.addEventListener('click', e => { const g = e.target.closest('[data-go]:
 let R = null; // résultats en cours
 function renderProfileLine(){
   const names = ALLERGENS.filter(a => profile.sel.has(a.key) && !(a.key === 'lactose' && profile.sel.has('milk'))).map(a => a.label);
-  const extra = [];
-  if (profile.words.length) extra.push(profile.words.length === 1 ? `« ${profile.words[0]} »` : `${profile.words.length} autres ingrédients`);
-  if (profile.traces) extra.push('traces exclues');
-  const all = [...names, ...extra];
-  $('#profileLine').innerHTML = all.length
-    ? `Tu évites : <b>${esc(all.join(', '))}</b> <button class="link" type="button" data-go="profile">Modifier</button>`
-    : `Ton profil est vide : rien n'est exclu. <button class="link" type="button" data-go="profile">Choisir mes allergènes</button>`;
+  const n = names.length + profile.words.length;
+  const txt = !n ? 'Choisir mes allergies' : names.length ? names.slice(0, 2).join(', ') + (n > 2 ? ` +${n - 2}` : '') : `${n} ingrédient${n > 1 ? 's' : ''} évité${n > 1 ? 's' : ''}`;
+  $('#profileLine').innerHTML = `<svg aria-hidden="true"><use href="#i-shield"/></svg><span>${esc(txt)}</span>`;
+  $('#profileLine').setAttribute('aria-label', 'Mon profil : ' + (n ? [...names, ...profile.words].join(', ') + (profile.traces ? ', traces exclues' : '') : 'vide'));
+}
+const QUICK = ['en:ice-creams-and-sorbets','en:yogurts','en:cheeses','en:biscuits','en:breakfast-cereals','en:breads','en:fresh-meals','en:plant-based-milk-alternatives','en:chocolates','en:crisps','en:pizzas','en:dairy-desserts','en:fruit-juices'];
+function renderQuick(){
+  $('#quick').innerHTML = QUICK.map(id => `<button type="button" class="chip" data-q="${id}" aria-pressed="${id === S.rayon}">${esc(RAYON_NAME[id])}</button>`).join('');
 }
 $('#store').innerHTML = STORES.map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join('');
 $('#store').value = S.store; $('#terms').value = S.terms || ''; $('#sort').value = S.sort; $('#wide').checked = !!S.wide;
@@ -938,15 +1054,26 @@ function syncFilterUI(){
   $$('#fNova button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === String(S.nova || '')));
   $$('#fLabels .chip').forEach(b => b.setAttribute('aria-pressed', !!S[b.dataset.k]));
   const n = (S.nutri ? 1 : 0) + (S.nova ? 1 : 0) + ['bio','vegan','vegetarian','palm'].filter(k => S[k]).length;
-  $('#filterCount').textContent = n ? ` (${n} actif${n > 1 ? 's' : ''})` : '';
+  const fc = $('#filterCount'); fc.textContent = n ? String(n) : ''; fc.className = n ? 'count' : '';
 }
 syncFilterUI();
 function filtersChanged(){ saveSearch(); syncFilterUI(); if (R){ markDirty('Filtres appliqués aux produits déjà chargés. Relance la recherche pour en trouver davantage.'); render(); } }
 $('#fNutri').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.nutri = b.dataset.v; filtersChanged(); });
 $('#fNova').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.nova = b.dataset.v; filtersChanged(); });
 $('#fLabels').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; S[b.dataset.k] = !S[b.dataset.k]; filtersChanged(); });
+$('#filtersBtn').addEventListener('click', () => openDialog($('#filtersSheet')));
+$('#filtersClose').addEventListener('click', () => closeDialog($('#filtersSheet')));
+$('#filtersDone').addEventListener('click', () => closeDialog($('#filtersSheet')));
+$('#quick').addEventListener('click', e => {
+  const b = e.target.closest('[data-q]'); if (!b) return;
+  S.rayon = b.dataset.q; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick();
+  b.scrollIntoView({ inline:'center', block:'nearest', behavior:'smooth' });
+  runSearch({ scroll:true });
+});
 $('#sort').addEventListener('change', e => { S.sort = e.target.value; saveSearch(); if (R) render(); });
-$('#store').addEventListener('change', e => { S.store = e.target.value; saveSearch(); if (R) runSearch(); });
+function fitStore(){ const sel = $('#store'); const t = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : ''; sel.style.width = `calc(${Math.min(t.length, 22)}ch + 44px)`; }
+fitStore();
+$('#store').addEventListener('change', e => { S.store = e.target.value; saveSearch(); fitStore(); if (R) runSearch(); });
 $('#terms').addEventListener('input', e => { S.terms = e.target.value; saveSearch(); });
 $('#searchForm').addEventListener('submit', e => { e.preventDefault(); $('#terms').blur(); runSearch({ scroll:true }); });
 function markDirty(msg){ const d = $('#dirty'); d.textContent = msg; d.hidden = false; }
@@ -988,7 +1115,8 @@ async function loadSet(set, first){
         if (!p || !p.code) continue;
         const code = String(p.code);
         const cur = myR.products.get(code);
-        if (cur) cur.sets.add(set.kind); else myR.products.set(code, { p, sets:new Set([set.kind]) });
+        if (cur){ cur.sets.add(set.kind); if (cur.p._sal && !p._sal) cur.p = p; }
+        else myR.products.set(code, { p, sets:new Set([set.kind]) });
       }
       okN++;
     } catch (e) {
@@ -1082,14 +1210,15 @@ function thumb(p, cls = 'thumb'){
     : `<span class="${cls} empty" aria-hidden="true"></span>`;
 }
 const inShop = code => shop.some(x => x.code === code);
-const ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
-const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+const ICON_PLUS = '<svg aria-hidden="true"><use href="#i-plus"/></svg>';
+const ICON_CHECK = '<svg aria-hidden="true"><use href="#i-ok"/></svg>';
+const BADGE = { ok:'i-ok', check:'i-check', no:'i-no' };
 function itemHTML(p, ev, where){
   const code = esc(p.code); const added = inShop(String(p.code));
   const reason = ev.no[0] || ev.check[0] || ev.ok[0] || '';
   return `<li class="item s-${ev.status}">
     <button class="rowbtn" type="button" data-open="${code}">
-      ${thumb(p)}
+      <span class="tw">${thumb(p)}<span class="sbadge" aria-hidden="true"><svg><use href="#${BADGE[ev.status]}"/></svg></span></span>
       <span><span class="name">${esc(nameOf(p))}</span>${metaOf(p) ? `<span class="meta">${esc(metaOf(p))}</span>` : ''}
       <span class="vline"><span class="verdict">${VERDICT[ev.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span>${where ? `<span class="where${where.startsWith('Chez') ? ' yes' : ''}">${esc(where)}</span>` : ''}</span>
     </button>
@@ -1123,18 +1252,19 @@ function renderRayons(q){
   $('#rayonList').innerHTML = groups || `<p class="empty-card" style="margin-top:1rem">Aucun rayon ne correspond. Choisis « Tous les rayons » et tape le nom du produit dans la recherche.</p>`;
 }
 function openDialog(d){ if (typeof d.showModal === 'function'){ if (!d.open) d.showModal(); } else d.setAttribute('open', ''); document.documentElement.classList.add('locked'); }
-function closeDialog(d){ if (d.open){ if (typeof d.close === 'function') d.close(); else d.removeAttribute('open'); } if (!$('#sheet').open && !rayonSheet.open) document.documentElement.classList.remove('locked'); }
+const anyOpen = () => $$('dialog').some(x => x.open);
+function closeDialog(d){ if (d.open){ if (typeof d.close === 'function') d.close(); else d.removeAttribute('open'); } if (!anyOpen()) document.documentElement.classList.remove('locked'); }
 $('#rayonBtn').addEventListener('click', () => { $('#rayonFilter').value = ''; renderRayons(''); openDialog(rayonSheet); });
 $('#rayonFilter').addEventListener('input', e => renderRayons(e.target.value));
 $('#rayonClose').addEventListener('click', () => closeDialog(rayonSheet));
 $('#rayonList').addEventListener('click', e => {
   const b = e.target.closest('[data-r]'); if (!b) return;
-  S.rayon = b.dataset.r; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon];
+  S.rayon = b.dataset.r; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick();
   closeDialog(rayonSheet); runSearch({ scroll:true });
 });
-[rayonSheet, $('#sheet')].forEach(d => {
-  d.addEventListener('close', () => { if (!$('#sheet').open && !rayonSheet.open) document.documentElement.classList.remove('locked'); });
-  d.addEventListener('click', e => { if (e.target === d) closeDialog(d); });
+$$('dialog.sheet').forEach(d => {
+  d.addEventListener('close', () => { if (!anyOpen()) document.documentElement.classList.remove('locked'); });
+  if (d.id !== 'onboard') d.addEventListener('click', e => { if (e.target === d) closeDialog(d); });
 });
 
 /* ================= Fiche produit ================= */
@@ -1162,8 +1292,11 @@ async function checkRecall(p){
     if (stack[stack.length - 1] !== p || !$('#recall')) return;
     $('#recall').innerHTML = recs.length ? recs.map(recallHTML).join('') : '<p class="hint" style="margin-top:.6rem">Aucun rappel officiel trouvé pour ce code-barres (RappelConso).</p>';
     if (recs.length){
-      const v = $('#sheetBody .bigverdict');
-      if (v){ v.textContent = 'Rappel officiel : vérifie le lot'; const w = v.closest('[class^="s-"]'); if (w && !w.classList.contains('s-no')) w.className = 's-check'; }
+      const vb = $('#sheetBody .vbanner');
+      if (vb){
+        vb.querySelector('.bigverdict').textContent = 'Rappel officiel : vérifie le lot';
+        if (!vb.classList.contains('s-no')){ vb.classList.remove('s-ok'); vb.classList.add('s-check'); const u = vb.querySelector('.vicon use'); if (u) u.setAttribute('href', '#i-check'); }
+      }
     }
   };
   if (recallCache.has(code)){ show(recallCache.get(code)); return; }
@@ -1228,7 +1361,7 @@ function nutritionHTML(p){
     const v = Number(n[k + '_100g']); const level = lk && lv[lk];
     return `<tr${sub ? ' class="sub"' : ''}><td>${esc(l)}${level ? `<span class="lvl lvl-${esc(level)}" title="${esc(LV[level] || '')}"></span><span class="sr"> (${esc(LV[level] || '')})</span>` : ''}</td><td>${fmtNum(v, k === 'salt' ? 2 : 1)} ${u}</td></tr>`;
   }).join('');
-  return tr ? `<h3>Valeurs nutritionnelles pour 100 g</h3><table class="nut"><tbody>${tr}</tbody></table>` : '';
+  return tr ? `<h3>Valeurs nutritionnelles (100 g)</h3><table class="nut"><tbody>${tr}</tbody></table>` : '';
 }
 function productHTML(p){
   const ev = evaluate(p); const code = String(p.code);
@@ -1246,33 +1379,36 @@ function productHTML(p){
   const scores = [gradeBadge(p.nutriscore_grade, 'Nutri-Score'), nova >= 1 && nova <= 4 ? `<span class="score"><span class="grade n${nova}">${nova}</span>NOVA : ${esc(NOVA_FR[nova])}</span>` : '', gradeBadge(p.ecoscore_grade, 'Green-Score')].filter(Boolean).join('');
   const adds = (p.additives_tags || []).map(t => String(t).replace(/^en:/, '').toUpperCase());
   const fav = !!favs[code], added = inShop(code);
-  const altLabel = ev.status === 'ok' ? 'Voir d\'autres produits compatibles du même rayon' : 'Trouver des équivalents compatibles';
-  return `<div class="s-${ev.status}">
-    <div class="hero">${p.image_front_url || p.image_front_small_url ? `<img src="${esc(p.image_front_url || p.image_front_small_url)}" alt="" referrerpolicy="no-referrer">` : '<span class="ph" aria-hidden="true"></span>'}
-      <div><h2>${esc(nameOf(p))}</h2>${metaOf(p) ? `<p class="meta">${esc(metaOf(p))}</p>` : ''}<span class="bigverdict">${VERDICT[ev.status]}</span></div></div>
-    ${reasons ? `<ul class="reasons">${reasons}</ul>` : ''}
+  const altLabel = ev.status === 'ok' ? 'Autres produits compatibles du rayon' : 'Trouver des équivalents compatibles';
+  const card = (title, html) => html ? `<section class="card"><h3>${title}</h3>${html}</section>` : '';
+  const nut = nutritionHTML(p);
+  return `
+  <div class="hero">${p.image_front_url || p.image_front_small_url ? `<img src="${esc(p.image_front_url || p.image_front_small_url)}" alt="" referrerpolicy="no-referrer">` : '<span class="ph" aria-hidden="true"></span>'}
+    <div><h2>${esc(nameOf(p))}</h2>${metaOf(p) ? `<p class="meta">${esc(metaOf(p))}</p>` : ''}</div></div>
+  <div class="vbanner s-${ev.status}">
+    <span class="vicon" aria-hidden="true"><svg><use href="#${BADGE[ev.status]}"/></svg></span>
+    <div><p class="bigverdict">${VERDICT[ev.status]}</p>${reasons ? `<ul class="reasons">${reasons}</ul>` : ''}</div>
   </div>
   <div id="recall" aria-live="polite"></div>
-  <div class="btnrow">
-    <button class="ghost small" type="button" data-act="shop" aria-pressed="${added}">${added ? 'Dans ma liste' : 'Ajouter à ma liste'}</button>
-    <button class="ghost small" type="button" data-act="fav" aria-pressed="${fav}">${fav ? 'Favori enregistré' : 'Ajouter aux favoris'}</button>
-    <button class="ghost small" type="button" data-act="share">Partager</button>
+  <div class="actions">
+    <button class="act" type="button" data-act="shop" aria-pressed="${added}"><svg aria-hidden="true"><use href="#i-cart"/></svg>${added ? 'Dans ma liste' : 'Ajouter à la liste'}</button>
+    <button class="act" type="button" data-act="fav" aria-pressed="${fav}"><svg aria-hidden="true"><use href="#i-star"/></svg>${fav ? 'En favori' : 'Favori'}</button>
+    <button class="act" type="button" data-act="share"><svg aria-hidden="true"><use href="#i-share"/></svg>Partager</button>
   </div>
-  <h3>Ingrédients</h3>${raw ? `<p class="ingr">${renderIngredients(raw)}</p>` : '<p class="ingr">Non renseignés sur Open Food Facts : vérifie l\'emballage.</p>'}
-  <h3>Allergènes déclarés</h3>${list(p.allergens_tags)}
-  <h3>Peut contenir des traces de</h3>${list(p.traces_tags)}
-  ${labels.length || anTags.length ? `<h3>Labels et régimes</h3><div class="tags">${[...labels, ...anTags].map(l => `<span class="tag">${esc(l)}</span>`).join('')}</div>` : ''}
-  ${scores ? `<h3>Scores</h3><div class="scores">${scores}</div>` : ''}
-  ${nutritionHTML(p)}
-  ${adds.length ? `<h3>Additifs</h3><div class="tags">${adds.map(a => `<span class="tag">${esc(a)}</span>`).join('')}</div>` : ''}
-  ${p.stores ? `<h3>Signalé chez</h3><p>${esc(p.stores)}</p>` : ''}
-  <section><h3>Équivalents</h3><button class="ghost small" type="button" data-act="alts">${esc(altLabel)}</button><div class="alts" id="alts"></div></section>
-  <section><h3>Prix relevés</h3><button class="ghost small" type="button" data-act="prices">Voir les prix relevés</button><div id="prices"></div></section>
-  <div class="links">
+  ${card('Ingrédients', raw ? `<p class="ingr">${renderIngredients(raw)}</p>` : '<p class="ingr">Non renseignés sur Open Food Facts : vérifie l\'emballage.</p>')}
+  <section class="card"><h3>Allergènes déclarés</h3>${list(p.allergens_tags)}<h3 class="sub">Peut contenir des traces de</h3>${list(p.traces_tags)}</section>
+  ${labels.length || anTags.length ? card('Labels et régimes', `<div class="tags">${[...labels, ...anTags].map(l => `<span class="tag">${esc(l)}</span>`).join('')}</div>`) : ''}
+  ${scores ? card('Scores', `<div class="scores">${scores}</div>`) : ''}
+  ${nut ? `<section class="card">${nut}</section>` : ''}
+  ${adds.length ? card('Additifs', `<div class="tags">${adds.map(a => `<span class="tag">${esc(a)}</span>`).join('')}</div>`) : ''}
+  ${p.stores ? card('Signalé chez', `<p>${esc(p.stores)}</p>`) : ''}
+  <section class="card"><h3>Équivalents</h3><button class="ghost small" type="button" data-act="alts">${esc(altLabel)}</button><div class="alts" id="alts"></div></section>
+  <section class="card"><h3>Prix relevés</h3><button class="ghost small" type="button" data-act="prices">Voir les prix relevés</button><div id="prices"></div></section>
+  <section class="card"><h3>Plus d'infos</h3><div class="links">
     <span>Code-barres ${esc(code)}</span>
     <a href="${OFF_FR}/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir la fiche sur Open Food Facts</a>
     <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">Compléter ou corriger la fiche</a>
-  </div>`;
+  </div></section>`;
 }
 $('#sheetBody').addEventListener('click', async e => {
   const p = stack[stack.length - 1]; if (!p) return;
@@ -1425,7 +1561,7 @@ async function startCamera(){
     return;
   }
   const v = $('#video'); v.srcObject = SC.stream;
-  $('#viewer').hidden = false; $('#startScan').hidden = true; SC.running = true;
+  $('#viewer').hidden = false; $('#scanIdle').hidden = true; SC.running = true;
   scanMsg('Préparation du scanner…');
   try { await v.play(); } catch (e) {}
   SC.track = SC.stream.getVideoTracks()[0];
@@ -1462,7 +1598,7 @@ function stopCamera(){
   SC.running = false;
   if (SC.stream){ SC.stream.getTracks().forEach(t => t.stop()); SC.stream = null; }
   const v = $('#video'); if (v) v.srcObject = null;
-  $('#viewer').hidden = true; $('#startScan').hidden = false;
+  $('#viewer').hidden = true; $('#scanIdle').hidden = false;
   SC.torch = false; $('#torchBtn').setAttribute('aria-pressed', 'false');
 }
 function onScanned(code){
@@ -1521,13 +1657,13 @@ function renderLists(){
     return `<li class="item s-${ev.status}"><div class="shop${x.done ? ' done' : ''}">
       <input type="checkbox" data-done="${esc(x.code)}" ${x.done ? 'checked' : ''} aria-label="Pris : ${esc(nameOf(x.p))}">
       <button class="open" type="button" data-open="${esc(x.code)}"><span class="name">${esc(nameOf(x.p))}</span>${metaOf(x.p) ? `<span class="meta">${esc(metaOf(x.p))}</span>` : ''}<span class="vline"><span class="verdict">${VERDICT[ev.status]}</span></span></button>
-      <button class="iconbtn" type="button" data-del="${esc(x.code)}" aria-label="Retirer de la liste : ${esc(nameOf(x.p))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <button class="iconbtn" type="button" data-del="${esc(x.code)}" aria-label="Retirer de la liste : ${esc(nameOf(x.p))}"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </div></li>`;
-  }).join('') : '<li class="empty-card">Ta liste est vide. Touche + sur un produit pour l\'ajouter.</li>';
+  }).join('') : '<li class="empty-card">Ta liste est vide. Touche + à côté d\'un produit pour l\'ajouter.</li>';
   $('#shopActions').hidden = !shop.length; $('#shareList').hidden = !shop.length;
   $('#clearDone').hidden = !shop.some(x => x.done); $('#uncheckAll').hidden = !shop.some(x => x.done);
   const fl = Object.entries(favs).sort((a, b) => (b[1].at || 0) - (a[1].at || 0));
-  $('#favList').innerHTML = fl.length ? fl.map(([code, f]) => itemHTML(f.p, evaluate(f.p))).join('') : '<li class="empty-card">Aucun favori. Dans la fiche d\'un produit, touche « Ajouter aux favoris ».</li>';
+  $('#favList').innerHTML = fl.length ? fl.map(([code, f]) => itemHTML(f.p, evaluate(f.p))).join('') : '<li class="empty-card">Aucun favori. Dans la fiche d\'un produit, touche l\'étoile.</li>';
   updateBadge();
 }
 $('#shopList').addEventListener('change', e => {
@@ -1604,8 +1740,24 @@ $('#resetAll').addEventListener('click', () => {
   location.reload();
 });
 
+/* ================= Accueil ================= */
+const onboard = $('#onboard');
+function renderOnboard(){
+  $('#obChips').innerHTML = ALLERGENS.map(a => `<button type="button" class="chip" data-k="${a.key}" aria-pressed="${profile.sel.has(a.key)}">${esc(a.label)}</button>`).join('');
+  $('#obGo').textContent = profile.sel.size ? 'C\'est parti' : 'Continuer sans allergène';
+}
+$('#obChips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  const k = b.dataset.k; profile.sel.has(k) ? profile.sel.delete(k) : profile.sel.add(k); renderOnboard();
+});
+function finishOnboard(){ saveProfile(); renderProfile(); closeDialog(onboard); }
+$('#obGo').addEventListener('click', finishOnboard);
+$('#obSkip').addEventListener('click', finishOnboard);
+onboard.addEventListener('cancel', e => { e.preventDefault(); });
+
 /* ================= Démarrage ================= */
-renderProfile(); updateBadge();
+renderProfile(); updateBadge(); renderQuick();
+if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
 go(SCREENS.includes(start) ? start : 'search');
 if (S.ran && (!start || start === 'search')) runSearch();
