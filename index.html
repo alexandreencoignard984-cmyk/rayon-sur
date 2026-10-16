@@ -604,7 +604,7 @@ footer a{color:inherit}
     </details>
 
     <button class="ghost wide danger" id="resetAll" type="button" style="margin-top:14px">Effacer toutes mes données</button>
-    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr 3.3.</footer>
+    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr <span id="appVersion"></span>.</footer>
   </section>
 </div>
 
@@ -2441,6 +2441,29 @@ function showRecipes(){
   recView('home'); renderRecHome();
 }
 
+/* ================= Mise à jour =================
+   GitHub Pages garde l'ancienne page en cache jusqu'à 10 minutes : au lancement (et au retour
+   dans l'appli), on compare avec version.json et on recharge la nouvelle version si besoin. */
+const APP_VERSION = '3.4';
+$('#appVersion').textContent = APP_VERSION;
+let hiddenAt = 0;
+async function checkUpdate(){
+  try {
+    const r = await fetch('version.json?t=' + Date.now(), { cache:'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (!j || !j.v || j.v === APP_VERSION) return;
+    const key = 'rs2:upd-' + j.v;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
+    location.replace(location.pathname + '?v=' + encodeURIComponent(j.v) + location.hash);
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden){ hiddenAt = Date.now(); return; }
+  if (hiddenAt && Date.now() - hiddenAt > 120000 && !anyOpen() && !SC.running) checkUpdate();
+});
+
 /* ================= Apparence ================= */
 const THEME_COLOR = { light:'#FFFFFF', dark:'#101211' };
 function applyTheme(t){
@@ -2461,7 +2484,7 @@ renderProfile(); updateBadge(); renderQuick();
 if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
 go(SCREENS.includes(start) ? start : 'search');
-loadIndex();
+loadIndex(); checkUpdate();
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
