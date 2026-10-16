@@ -4,4 +4,4 @@ Appli web pour trouver, rayon par rayon, les produits compatibles avec tes aller
 
 Ouvrir l'appli : https://alexandreencoignard984-cmyk.github.io/rayon-sur/
 
-Données : [Open Food Facts](https://fr.openfoodfacts.org) et [Open Prices](https://prices.openfoodfacts.org), licence ODbL. L'étiquette du produit fait toujours foi.
+Sources assemblées : [Open Food Facts](https://fr.openfoodfacts.org) (fiches produits), [Search-a-licious](https://search.openfoodfacts.org) (moteur de recherche d'Open Food Facts), [RappelConso](https://rappel.conso.gouv.fr) (rappels officiels) et [Open Prices](https://prices.openfoodfacts.org) (prix), licences ouvertes. L'étiquette du produit fait toujours foi.

@@ -197,6 +197,10 @@ table.nut tr.sub td:first-child{padding-left:1rem;color:var(--muted)}
 .lvl{display:inline-block;width:.65rem;height:.65rem;border-radius:50%;margin-left:.4rem;vertical-align:middle}
 .lvl-low{background:#2FA36B}.lvl-moderate{background:#E8A11A}.lvl-high{background:#D9432F}
 .alts{margin-top:.6rem}
+.recall-alert{margin-top:.9rem;padding:.75rem .9rem;border-left:5px solid var(--no);background:var(--no-bg);border-radius:8px;color:var(--ink);font-size:.95rem}
+.recall-alert b{color:var(--no);font-family:var(--display);font-stretch:85%;font-size:1.05rem}
+.recall-alert p{margin:.25rem 0 0}
+.recall-alert a{color:var(--ink);font-weight:700}
 .prices{list-style:none;padding:0;margin:.5rem 0 0;display:grid;gap:.35rem}
 .prices li{display:flex;justify-content:space-between;gap:.75rem;padding:.45rem .6rem;border-radius:8px;background:var(--surface);border:1px solid var(--line);font-size:.92rem}
 .prices li.here{border-color:var(--ok)}
@@ -423,7 +427,11 @@ footer a{color:inherit}
     <details class="info">
       <summary>D'où viennent les données ?</summary>
       <div class="inner">
-        <p>Les produits viennent d'Open Food Facts, une base collaborative et ouverte : ingrédients, allergènes déclarés, traces, labels et scores sont saisis à partir des photos d'emballage. Les prix viennent d'Open Prices, relevés par la communauté.</p>
+        <p>L'appli assemble quatre bases ouvertes :</p>
+        <p><b>Open Food Facts</b> : fiches produits (ingrédients, allergènes, traces, labels, scores), saisies par la communauté et des fabricants à partir des emballages.</p>
+        <p><b>Search-a-licious</b> : le moteur de recherche d'Open Food Facts. Il retrouve les produits par nom, par magasin ou par marque distributeur, et prend le relais si Open Food Facts limite les recherches.</p>
+        <p><b>RappelConso</b> : la base officielle des rappels de produits du gouvernement. Chaque fiche produit est vérifiée.</p>
+        <p><b>Open Prices</b> : prix relevés en magasin par la communauté.</p>
         <p>« Signalé chez Leclerc » veut dire qu'un contributeur l'a vu dans une enseigne Leclerc, pas qu'il est en stock dans ton magasin. Certaines fiches sont incomplètes : c'est le rôle de l'onglet « À vérifier ».</p>
         <p>Open Food Facts accepte 10 recherches par minute. Au-delà, l'appli fait une courte pause toute seule.</p>
         <p>Les recettes changent : l'étiquette du produit que tu as en main fait toujours foi.</p>
@@ -485,6 +493,13 @@ footer a{color:inherit}
 const OFF = 'https://world.openfoodfacts.org';
 const OFF_FR = 'https://fr.openfoodfacts.org';
 const PRICES = 'https://prices.openfoodfacts.org/api/v1/prices';
+const SAL = 'https://search.openfoodfacts.org/search';
+const SAL_DOC = 'https://search.openfoodfacts.org/document/';
+const RAPPEL = 'https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/rappelconso-v2-gtin-trie/records';
+const SAL_FIELDS = ['code','product_name','product_name_fr','generic_name','generic_name_fr','brands','quantity','image_front_small_url','image_front_url',
+  'allergens','traces','labels','categories','stores','countries','ingredients_text','ingredients_text_fr','ingredients_analysis_tags','additives',
+  'nutriscore_grade','nutriscore_score','nova_group','environmental_score_grade','environmental_score_score','nutriments','nutrient_levels',
+  'compared_to_category','popularity_key','unique_scans_n'].join(',');
 const POLYFILL_URL = 'https://cdn.jsdelivr.net/npm/barcode-detector@3.2.2/dist/iife/ponyfill.js';
 const PAGE = 100;
 const FIELDS = ['code','product_name','product_name_fr','generic_name_fr','brands','quantity','image_front_small_url','image_front_url',
@@ -495,22 +510,22 @@ const FIELDS = ['code','product_name','product_name_fr','generic_name_fr','brand
 const MOUSQ = ['intermarche','chabrior','paturages','monique ranou','saint eloi','fiorini','itineraire des saveurs','top budget','capitaine cook'];
 const STORES = [
   { id:'leclerc', label:'E.Leclerc', tags:['e-leclerc','leclerc','e-leclerc-drive','leclerc-drive','e-leclerc-express'], match:/leclerc/i,
-    mdd:['marque repere','eco+','eco +','bio village','nos regions ont du talent','eskiss','smicy','pommette','delisse','turini','repere'] },
-  { id:'carrefour', label:'Carrefour', tags:['carrefour','carrefour-market','carrefour-city','carrefour-express'], match:/carrefour/i, mdd:['carrefour','reflets de france','simpl'] },
-  { id:'auchan', label:'Auchan', tags:['auchan','auchan-supermarche','auchan-drive'], match:/auchan/i, mdd:['auchan','pouce'] },
-  { id:'intermarche', label:'Intermarché', tags:['intermarche','intermarche-super','intermarche-contact'], match:/intermarch/i, mdd:MOUSQ },
-  { id:'u', label:'Super U, Hyper U', tags:['magasins-u','super-u','hyper-u','u-express','systeme-u'], match:/(^|\W)u(\W|$)|super u|hyper u|système u/i, mdd:['u','systeme u','bien vu'] },
-  { id:'lidl', label:'Lidl', tags:['lidl'], match:/lidl/i, mdd:['lidl','gelatelli','milbona','crownfield','chef select','deluxe','bellarom','fin carre','freeway','solevita','combino','alesto','snack day','pilos','vemondo','saint alby'] },
-  { id:'aldi', label:'Aldi', tags:['aldi'], match:/aldi/i, mdd:['aldi','moser roth','choceur','gut bio','cucina nobile','brooklea','milsani'] },
-  { id:'monoprix', label:'Monoprix', tags:['monoprix'], match:/monoprix/i, mdd:['monoprix'] },
-  { id:'casino', label:'Casino', tags:['casino','geant-casino'], match:/casino/i, mdd:['casino'] },
-  { id:'franprix', label:'Franprix', tags:['franprix'], match:/franprix/i, mdd:['franprix'] },
-  { id:'cora', label:'Cora', tags:['cora'], match:/cora/i, mdd:['cora'] },
-  { id:'netto', label:'Netto', tags:['netto'], match:/netto/i, mdd:['netto', ...MOUSQ] },
-  { id:'biocoop', label:'Biocoop', tags:['biocoop'], match:/biocoop/i, mdd:['biocoop'] },
-  { id:'picard', label:'Picard', tags:['picard'], match:/picard/i, mdd:['picard'] },
-  { id:'grandfrais', label:'Grand Frais', tags:['grand-frais'], match:/grand frais/i, mdd:['grand frais'] },
-  { id:'all', label:'Tous les magasins (France)', tags:[], match:null, mdd:[] },
+    mdd:['marque repere','eco+','eco +','bio village','nos regions ont du talent','eskiss','smicy','pommette','delisse','turini','repere'], sal:['marque-repere','bio-village','nos-regions-ont-du-talent','eskiss','pommette','delisse'] },
+  { id:'carrefour', label:'Carrefour', tags:['carrefour','carrefour-market','carrefour-city','carrefour-express'], match:/carrefour/i, mdd:['carrefour','reflets de france','simpl'], sal:['carrefour','carrefour-bio','carrefour-classic','carrefour-extra','carrefour-sensation','reflets-de-france'] },
+  { id:'auchan', label:'Auchan', tags:['auchan','auchan-supermarche','auchan-drive'], match:/auchan/i, mdd:['auchan','pouce'], sal:['auchan','pouce'] },
+  { id:'intermarche', label:'Intermarché', tags:['intermarche','intermarche-super','intermarche-contact'], match:/intermarch/i, mdd:MOUSQ, sal:['chabrior','paturages','monique-ranou','itineraire-des-saveurs','top-budget'] },
+  { id:'u', label:'Super U, Hyper U', tags:['magasins-u','super-u','hyper-u','u-express','systeme-u'], match:/(^|\W)u(\W|$)|super u|hyper u|système u/i, mdd:['u','systeme u','bien vu'], sal:['u','u-bio','u-saveurs'] },
+  { id:'lidl', label:'Lidl', tags:['lidl'], match:/lidl/i, mdd:['lidl','gelatelli','milbona','crownfield','chef select','deluxe','bellarom','fin carre','freeway','solevita','combino','alesto','snack day','pilos','vemondo','saint alby'], sal:['lidl','gelatelli','milbona','crownfield','chef-select','bellarom','fin-carre','solevita','alesto','vemondo'] },
+  { id:'aldi', label:'Aldi', tags:['aldi'], match:/aldi/i, mdd:['aldi','moser roth','choceur','gut bio','cucina nobile','brooklea','milsani'], sal:['aldi','moser-roth','choceur','gut-bio','cucina-nobile'] },
+  { id:'monoprix', label:'Monoprix', tags:['monoprix'], match:/monoprix/i, mdd:['monoprix'], sal:['monoprix','monoprix-bio','monoprix-gourmet'] },
+  { id:'casino', label:'Casino', tags:['casino','geant-casino'], match:/casino/i, mdd:['casino'], sal:['casino','casino-bio'] },
+  { id:'franprix', label:'Franprix', tags:['franprix'], match:/franprix/i, mdd:['franprix'], sal:['franprix'] },
+  { id:'cora', label:'Cora', tags:['cora'], match:/cora/i, mdd:['cora'], sal:['cora'] },
+  { id:'netto', label:'Netto', tags:['netto'], match:/netto/i, mdd:['netto', ...MOUSQ], sal:['netto','top-budget','chabrior'] },
+  { id:'biocoop', label:'Biocoop', tags:['biocoop'], match:/biocoop/i, mdd:['biocoop'], sal:['biocoop'] },
+  { id:'picard', label:'Picard', tags:['picard'], match:/picard/i, mdd:['picard'], sal:['picard'] },
+  { id:'grandfrais', label:'Grand Frais', tags:['grand-frais'], match:/grand frais/i, mdd:['grand frais'], sal:['grand-frais'] },
+  { id:'all', label:'Tous les magasins (France)', tags:[], match:null, mdd:[], sal:[] },
 ];
 
 const AISLES = [
@@ -660,6 +675,28 @@ function slim(p){
   if (o.nutriments){ const n = {}; for (const k of ['energy-kcal_100g','fat_100g','saturated-fat_100g','carbohydrates_100g','sugars_100g','fiber_100g','proteins_100g','salt_100g']) if (o.nutriments[k] != null) n[k] = o.nutriments[k]; o.nutriments = n; }
   o.code = String(p.code); return o;
 }
+const SAL_MAP = { allergens:'allergens_tags', traces:'traces_tags', labels:'labels_tags', categories:'categories_tags', stores:'stores_tags', countries:'countries_tags', additives:'additives_tags', brands:'brands_tags' };
+const humanTag = t => { const x = String(t).replace(/^[a-z]{2}:/, '').replace(/-/g, ' '); return x.charAt(0).toUpperCase() + x.slice(1); };
+function fromSAL(h){
+  const p = {};
+  for (const [k, v] of Object.entries(h || {})){
+    if (v && typeof v === 'object' && !Array.isArray(v) && /^(product_name|generic_name|ingredients_text)$/.test(k)){
+      if (v.main) p[k] = v.main;
+      for (const [l, t] of Object.entries(v)) if (l !== 'main' && typeof t === 'string') p[k + '_' + l] = t;
+      continue;
+    }
+    if (SAL_MAP[k] && Array.isArray(v)){ p[SAL_MAP[k]] = v; continue; }
+    p[k] = v;
+  }
+  p.code = String(h.code);
+  if (p.brands_tags && typeof p.brands !== 'string') p.brands = p.brands_tags.map(humanTag).join(', ');
+  if (p.stores_tags && !p.stores) p.stores = p.stores_tags.map(humanTag).join(', ');
+  if (!p.ecoscore_grade && p.environmental_score_grade) p.ecoscore_grade = p.environmental_score_grade;
+  if (p.ecoscore_score == null && p.environmental_score_score != null) p.ecoscore_score = p.environmental_score_score;
+  if (!p.image_front_small_url && p.image_small_url) p.image_front_small_url = p.image_small_url;
+  if (!p.image_front_url && p.image_url) p.image_front_url = p.image_url;
+  return p;
+}
 function gtinOK(code, format){
   if (format === 'upc_e') return /^\d{6,8}$/.test(code);
   if (!/^(\d{8}|\d{12,14})$/.test(code)) return false;
@@ -749,7 +786,28 @@ function cgiUrl(o, page){
   for (const t of (o.excludeTraces || [])) add('traces', 'does_not_contain', t);
   return OFF + '/cgi/search.pl?' + p.toString();
 }
-function variant(urlFn){ return { urlFn, page:0, more:true, count:null }; }
+const luq = w => w.replace(/([+\-=&|><!(){}\[\]^"~*?:\\/])/g, '\\$1');
+function salUrl(o, page){
+  const parts = [];
+  const words = (o.terms || '').split(/\s+/).filter(w => w.length > 0).map(luq);
+  if (words.length) parts.push(words.join(' AND '));
+  parts.push('countries:"en:france"');
+  if (o.category) parts.push(`categories:"${o.category}"`);
+  const ors = [];
+  for (const t of (o.storeTags || [])) ors.push(`stores:"${t}"`);
+  for (const b of (o.brands || [])) ors.push(`brands:"xx:${b}"`, `brands:"${b}"`);
+  if (ors.length) parts.push('(' + ors.join(' OR ') + ')');
+  for (const t of (o.exclude || [])) parts.push(`NOT allergens:"${t}"`);
+  for (const t of (o.excludeTraces || [])) parts.push(`NOT traces:"${t}"`);
+  for (const l of (o.labels || [])) parts.push(`labels:"${l}"`);
+  for (const a of (o.analysis || [])) parts.push(`ingredients_analysis_tags:"${a}"`);
+  if (o.nutri && NUTRI_OK[o.nutri]) parts.push('(' + NUTRI_OK[o.nutri].map(g => `nutriscore_grade:"${g}"`).join(' OR ') + ')');
+  const p = new URLSearchParams({ q:parts.join(' AND '), langs:'fr,en', page_size:String(o.size || PAGE), page:String(page), fields:SAL_FIELDS });
+  const sk = { popularity:'-popularity_key', nutriscore:'nutriscore_score', nova:'nova_group', green:'-environmental_score_score' }[o.sort];
+  if (sk && !(words.length && o.sort === 'popularity')) p.set('sort_by', sk);
+  return SAL + '?' + p.toString();
+}
+function variant(urlFn, kind = 'off'){ return { urlFn, kind, page:0, more:true, count:null }; }
 function buildSet(kind, ctx){
   const st = storeById(ctx.store);
   const hard = kind === 'safe' ? hardTags() : [];
@@ -760,6 +818,7 @@ function buildSet(kind, ctx){
       labels: ctx.bio ? ['en:organic'] : [],
       analysis: [ctx.vegan && 'en:vegan', ctx.vegetarian && !ctx.vegan && 'en:vegetarian', ctx.palm && 'en:palm-oil-free'].filter(Boolean) };
     const wide = ctx.wide && st.tags.length;
+    if (st.tags.length) vars.push(variant(pg => salUrl(Object.assign({}, base, { brands:st.sal, exclude:hard, excludeTraces:traces }), pg), 'sal'));
     vars.push(variant(pg => v2Url(Object.assign({}, base, { exclude:hard, excludeTraces:traces }), pg)));
     if (wide) vars.push(variant(pg => v2Url(Object.assign({}, base, { storeTags:[], exclude:hard, excludeTraces:traces }), pg)));
     if (kind === 'safe' && lactoseOnly()){
@@ -767,12 +826,19 @@ function buildSet(kind, ctx){
       vars.push(variant(pg => v2Url(Object.assign({}, base, { storeTags: wide ? [] : base.storeTags, labels:[...base.labels, 'en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [] }), pg)));
     }
   } else {
+    const exT = kind === 'safe' && !lactoseOnly() ? hard : hard.filter(t => t !== 'en:milk');
+    const exTr = kind === 'safe' && profile.traces ? exT : [];
+    const strict = !ctx.wide && st.tags.length;
+    vars.push(variant(pg => salUrl({ terms:ctx.terms, category:ctx.rayon, sort:ctx.sort, storeTags: strict ? st.tags : [], brands: strict ? st.sal : [],
+      exclude:exT, excludeTraces:exTr, labels: ctx.bio ? ['en:organic'] : [] }, pg), 'sal'));
+    const fallback = [];
     const tags = st.tags.length ? (ctx.wide ? [st.tags[0], null] : st.tags.slice(0, 2)) : [null];
     for (const tag of tags){
-      vars.push(variant(pg => cgiUrl({ storeTag:tag, category:ctx.rayon, terms:ctx.terms, sort:ctx.sort, bio:ctx.bio,
+      fallback.push(variant(pg => cgiUrl({ storeTag:tag, category:ctx.rayon, terms:ctx.terms, sort:ctx.sort, bio:ctx.bio,
         exclude: kind === 'safe' && !lactoseOnly() ? hard : hard.filter(t => t !== 'en:milk'),
         excludeTraces: kind === 'safe' && profile.traces ? (lactoseOnly() ? hard.filter(t => t !== 'en:milk') : hard) : [] }, pg)));
     }
+    return { kind, vars, fallback, loaded:false, loading:false };
   }
   return { kind, vars, loaded:false, loading:false };
 }
@@ -912,9 +978,10 @@ async function loadSet(set, first){
   let okN = 0, lastErr = null;
   for (const v of todo){
     try {
-      const j = await getJSON(v.urlFn(v.page + 1), { bucket:'search' });
+      const j = await getJSON(v.urlFn(v.page + 1), { bucket: v.kind === 'sal' ? 'free' : 'search' });
       if (myR !== R) return;
-      const prods = Array.isArray(j.products) ? j.products : [];
+      if (v.kind === 'sal' && !Array.isArray(j.hits)) throw err('format');
+      const prods = v.kind === 'sal' ? j.hits.map(fromSAL) : (Array.isArray(j.products) ? j.products : []);
       v.page++; v.count = Number(j.count) || 0;
       v.more = prods.length > 0 && v.page * PAGE < v.count;
       for (const p of prods){
@@ -924,12 +991,20 @@ async function loadSet(set, first){
         if (cur) cur.sets.add(set.kind); else myR.products.set(code, { p, sets:new Set([set.kind]) });
       }
       okN++;
-    } catch (e) { lastErr = e; v.more = v.page === 0 ? true : v.more; if (e.code === 'rate' || e.code === 'offline') break; }
+    } catch (e) {
+      if (v.kind === 'sal'){
+        v.more = false;
+        if (set.fallback && !set.usedFallback){ set.usedFallback = true; set.vars = set.vars.filter(x => x !== v).concat(set.fallback); todo.push(...set.fallback); }
+        continue;
+      }
+      lastErr = e; v.more = v.page === 0 ? true : v.more; if (e.code === 'rate' || e.code === 'offline') break;
+    }
   }
   if (myR !== R) return;
   set.loading = false; set.loaded = set.loaded || okN > 0;
   $('#go').disabled = false; $('#more').disabled = false; $('#all').disabled = false;
   if (!okN && lastErr){ setStatus(esc(errorText(lastErr)), true); if (!myR.products.size) $('#results').hidden = true; else render(); return; }
+  if (lastErr) toast('Résultats partiels : ' + errorText(lastErr), 4500);
   if (!myR.loadingAll) setStatus('');
   render();
 }
@@ -1077,6 +1152,52 @@ function drawSheet(){
   $('#sheetBack').hidden = stack.length < 2;
   $('#sheetTitle').textContent = nameOf(p);
   $('#sheetBody').innerHTML = productHTML(p);
+  checkRecall(p);
+}
+const recallCache = new Map();
+async function checkRecall(p){
+  const code = String(p.code || '').replace(/\D/g, '');
+  const box = $('#recall'); if (!box || code.length < 8) return;
+  const show = recs => {
+    if (stack[stack.length - 1] !== p || !$('#recall')) return;
+    $('#recall').innerHTML = recs.length ? recs.map(recallHTML).join('') : '<p class="hint" style="margin-top:.6rem">Aucun rappel officiel trouvé pour ce code-barres (RappelConso).</p>';
+    if (recs.length){
+      const v = $('#sheetBody .bigverdict');
+      if (v){ v.textContent = 'Rappel officiel : vérifie le lot'; const w = v.closest('[class^="s-"]'); if (w && !w.classList.contains('s-no')) w.className = 's-check'; }
+    }
+  };
+  if (recallCache.has(code)){ show(recallCache.get(code)); return; }
+  try {
+    let j;
+    try { j = await getJSON(`${RAPPEL}?where=${encodeURIComponent('"' + code + '"')}&limit=10`, { ttl:6 * 3600e3 }); }
+    catch (e) { if (e.code !== 'http') throw e; j = await getJSON(`${RAPPEL}?q=${encodeURIComponent(code)}&limit=10`, { ttl:6 * 3600e3 }); }
+    const seen = new Set();
+    const recs = (j.results || []).filter(r => JSON.stringify(r).includes(code)).filter(r => {
+      const k = pickField(r, /lien.*fiche|fiche.*rappel/) || pickField(r, /^id$|reference/) || JSON.stringify(r);
+      if (seen.has(k)) return false; seen.add(k); return true;
+    });
+    recallCache.set(code, recs); show(recs);
+  } catch (e) { if ($('#recall') && stack[stack.length - 1] === p) $('#recall').innerHTML = ''; }
+}
+function pickField(r, re, not){
+  for (const [k, v] of Object.entries(r || {})){
+    if (!re.test(k) || (not && not.test(k)) || v == null || v === '') continue;
+    return Array.isArray(v) ? v.join(', ') : String(v);
+  }
+  return '';
+}
+function recallHTML(r){
+  const title = pickField(r, /^(libelle|titre)/) || pickField(r, /modele|reference_?produit|nom.*produit/);
+  const brand = pickField(r, /marque/, /salubrite/);
+  const motif = pickField(r, /motif/);
+  const risk = pickField(r, /risque/);
+  const date = pickField(r, /date.*publication|publication.*date/);
+  const link = pickField(r, /lien.*fiche|fiche.*rappel/);
+  const url = (link.match(/https?:\/\/\S+/) || [])[0];
+  return `<div class="recall-alert"><b>Rappel officiel${date ? ' du ' + esc(fmtDate(date) || date) : ''}</b>
+    ${title || brand ? `<p>${esc([title, brand].filter(Boolean).join(', '))}</p>` : ''}
+    ${motif ? `<p>Motif : ${esc(motif)}</p>` : ''}${risk ? `<p>Risque : ${esc(risk)}</p>` : ''}
+    <p>Vérifie le numéro de lot et la date sur l'emballage.${url ? ` <a href="${esc(url)}" target="_blank" rel="noopener">Voir la fiche RappelConso</a>` : ''}</p></div>`;
 }
 $('#sheetClose').addEventListener('click', () => { closeDialog(sheet); stack = []; });
 $('#sheetBack').addEventListener('click', () => { stack.pop(); drawSheet(); $('#sheetBody').scrollTop = 0; });
@@ -1131,6 +1252,7 @@ function productHTML(p){
       <div><h2>${esc(nameOf(p))}</h2>${metaOf(p) ? `<p class="meta">${esc(metaOf(p))}</p>` : ''}<span class="bigverdict">${VERDICT[ev.status]}</span></div></div>
     ${reasons ? `<ul class="reasons">${reasons}</ul>` : ''}
   </div>
+  <div id="recall" aria-live="polite"></div>
   <div class="btnrow">
     <button class="ghost small" type="button" data-act="shop" aria-pressed="${added}">${added ? 'Dans ma liste' : 'Ajouter à ma liste'}</button>
     <button class="ghost small" type="button" data-act="fav" aria-pressed="${fav}">${fav ? 'Favori enregistré' : 'Ajouter aux favoris'}</button>
@@ -1240,7 +1362,12 @@ async function lookup(code, { source = 'saisie' } = {}){
   if (code.length < 6){ st.textContent = 'Un code-barres fait en général 8 ou 13 chiffres.'; return; }
   st.innerHTML = '<span class="spin" aria-hidden="true"></span> Recherche du produit…';
   try {
-    const j = await getJSON(`${OFF}/api/v2/product/${code}?fields=${FIELDS}`);
+    let j;
+    try { j = await getJSON(`${OFF}/api/v2/product/${code}?fields=${FIELDS}`); }
+    catch (e) {
+      try { const d = await getJSON(SAL_DOC + code); j = { status:1, product:fromSAL(d) }; }
+      catch (e2) { if (e2.code === 'http' && e2.status === 404) j = { status:0 }; else throw e; }
+    }
     if (j.status !== 1 || !j.product){
       st.innerHTML = `Produit ${esc(code)} absent d'Open Food Facts : fie-toi à l'étiquette. <a href="${OFF_FR}/produit/${esc(code)}" target="_blank" rel="noopener">L'ajouter à la base</a>`;
       return;
