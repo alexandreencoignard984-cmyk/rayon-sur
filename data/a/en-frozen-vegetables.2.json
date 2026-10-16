@@ -295,7 +295,7 @@
 ["3596710566273","Auchan croquettes 1kg","Auchan","1 kg","","","","","","","",null,null,"",null,"",0,null,[57]],
 ["3596721400306","Pois doux","Auchan","","","","","","","","",null,null,"",null,"359/672/140/0306/front_en.3",0,null,[57,98]],
 ["3599740008638","Choux-fleurs en fleurettes","Findus","400 g","","","","","Choux-fleurs","en:palm-oil-free,en:vegan,en:vegetarian","a",-1,1,"a",83,"359/974/000/8638/front_fr.16",0,[25,0.5,0.1,2.8,2.1,2.2,1.8,1],[57]],
-["3599740008645","Haricots verts extra fins","Findus","400 g","","","","","Haricots verts extra fins, surgelés","","a",-2,1,"b",73,"359/974/000/8645/front_fr.6",1,[30,0.2,0,3.5,1,3,1.5,0],[57,98,102]],
+["3599740008645","Haricots verts extra fins","Findus","400 g","","","","","Haricots verts extra fins, surgelés","","a",-2,1,"b",73,"359/974/000/8645/front_fr.6",1,[30,0.2,0,3.5,1,3,1.5,0],[57,98,102,178]],
 ["3599740008706","Epinards en branches à la crème","Findus","700 g","","en:gluten,en:milk","en:celery,en:crustaceans,en:eggs,en:fish,en:mustard","en:no-preservatives,en:no-colorings","Epinards 69%, eau, crème fraîche 7,5%, farine de blé, lait écrémé en poudre, sel, sucre, arômes naturels (contient : muscade).","en:palm-oil-free,en:non-vegan","a",-2,4,"",null,"359/974/000/8706/front_fr.22",1,null,[57]],
 ["3599740009789","Jeunettes carottes","Findus","300 g","","","","","Jeunes carottes","en:palm-oil-free,en:vegan,en:vegetarian","a",-4,1,"a",83,"359/974/000/9789/front_fr.5",1,[30,0.4,0.1,4.5,4,2.5,0.6,0.01],[57]],
 ["3599741004721","Epinards branches à la mozzarella","Findus","","u","","","","","","a",-2,null,"",null,"359/974/100/4721/front_fr.4",1,null,[57]],
