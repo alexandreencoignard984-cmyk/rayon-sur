@@ -39,7 +39,9 @@ def fold(s):
     return re.sub(r'\s+', ' ', re.sub(r"[^a-z0-9+&]+", ' ', s)).strip()
 
 
-AISLES = [a['tag'] for a in CFG['aisles']]
+# rayons affichés dans l'appli, puis catégories utilisées par les recettes (une seule page chacune)
+AISLES = [a['tag'] for a in CFG['aisles']] + [a['tag'] for a in CFG.get('extra', [])]
+PAGES_OF = {a['tag']: a.get('pages', MAX_PAGES) for a in CFG['aisles'] + CFG.get('extra', [])}
 AISLE_IDX = {t: i for i, t in enumerate(AISLES)}
 STORES = []
 for s in CFG['stores']:
@@ -167,7 +169,7 @@ def main():
     for tag in AISLES:
         items = by_aisle[tag]
         items.sort(key=lambda x: (-x[0], -x[1], x[2]))
-        kept = items[:PAGE_ROWS * MAX_PAGES]
+        kept = items[:PAGE_ROWS * PAGES_OF.get(tag, MAX_PAGES)]
         pages = [kept[i:i + PAGE_ROWS] for i in range(0, len(kept), PAGE_ROWS)] or [[]]
         slug = tag.replace(':', '-')
         for pi, page in enumerate(pages, 1):

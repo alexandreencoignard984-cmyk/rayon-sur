@@ -906,5 +906,297 @@
    "name": "Goûters et desserts bébé",
    "group": "Bébé"
   }
+ ],
+ "extra": [
+  {
+   "tag": "en:spaghetti",
+   "name": "Spaghetti",
+   "pages": 1
+  },
+  {
+   "tag": "en:lasagna-sheets",
+   "name": "Feuilles de lasagne",
+   "pages": 1
+  },
+  {
+   "tag": "en:basmati-rices",
+   "name": "Riz basmati",
+   "pages": 1
+  },
+  {
+   "tag": "en:rices-for-risotto",
+   "name": "Riz à risotto",
+   "pages": 1
+  },
+  {
+   "tag": "en:durum-wheat-semolinas-for-couscous",
+   "name": "Semoule",
+   "pages": 1
+  },
+  {
+   "tag": "en:wheat-flours",
+   "name": "Farine",
+   "pages": 1
+  },
+  {
+   "tag": "en:vanilla-sugars",
+   "name": "Sucre vanillé",
+   "pages": 1
+  },
+  {
+   "tag": "en:baking-powder-or-raising-agent",
+   "name": "Levure chimique",
+   "pages": 1
+  },
+  {
+   "tag": "en:ground-beef-preparations",
+   "name": "Viande hachée de bœuf",
+   "pages": 1
+  },
+  {
+   "tag": "en:ground-beef-steaks",
+   "name": "Viande hachée de bœuf",
+   "pages": 1
+  },
+  {
+   "tag": "en:lardons",
+   "name": "Lardons",
+   "pages": 1
+  },
+  {
+   "tag": "en:cured-hams",
+   "name": "Jambon cru",
+   "pages": 1
+  },
+  {
+   "tag": "en:chicken-breasts",
+   "name": "Filets de poulet",
+   "pages": 1
+  },
+  {
+   "tag": "en:beef",
+   "name": "Bœuf à braiser",
+   "pages": 1
+  },
+  {
+   "tag": "en:salmon-steaks",
+   "name": "Pavés de saumon",
+   "pages": 1
+  },
+  {
+   "tag": "en:salmon-fillets",
+   "name": "Pavés de saumon",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-tunas",
+   "name": "Thon en boîte",
+   "pages": 1
+  },
+  {
+   "tag": "en:margarines",
+   "name": "Beurre",
+   "pages": 1
+  },
+  {
+   "tag": "en:plant-based-creams-for-cooking",
+   "name": "Crème fraîche",
+   "pages": 1
+  },
+  {
+   "tag": "en:coconut-milks-and-creams",
+   "name": "Lait de coco",
+   "pages": 1
+  },
+  {
+   "tag": "en:shredded-cheese-substitutes",
+   "name": "Fromage râpé",
+   "pages": 1
+  },
+  {
+   "tag": "en:cheese-substitutes",
+   "name": "Fromage râpé",
+   "pages": 1
+  },
+  {
+   "tag": "en:parmigiano-reggiano",
+   "name": "Parmesan",
+   "pages": 1
+  },
+  {
+   "tag": "en:grana-padano",
+   "name": "Parmesan",
+   "pages": 1
+  },
+  {
+   "tag": "en:mozzarella",
+   "name": "Mozzarella",
+   "pages": 1
+  },
+  {
+   "tag": "en:cheddar-slices",
+   "name": "Cheddar en tranches",
+   "pages": 1
+  },
+  {
+   "tag": "en:cheddar-cheese",
+   "name": "Cheddar en tranches",
+   "pages": 1
+  },
+  {
+   "tag": "en:sliced-cheese-substitutes",
+   "name": "Cheddar en tranches",
+   "pages": 1
+  },
+  {
+   "tag": "en:raclette",
+   "name": "Fromage à raclette",
+   "pages": 1
+  },
+  {
+   "tag": "en:peeled-tomatoes",
+   "name": "Tomates pelées",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-tomatoes",
+   "name": "Tomates pelées",
+   "pages": 1
+  },
+  {
+   "tag": "en:tomato-pastes",
+   "name": "Concentré de tomate",
+   "pages": 1
+  },
+  {
+   "tag": "en:olive-oils",
+   "name": "Huile d'olive",
+   "pages": 1
+  },
+  {
+   "tag": "en:vinegars",
+   "name": "Vinaigre",
+   "pages": 1
+  },
+  {
+   "tag": "en:soy-sauces",
+   "name": "Sauce soja",
+   "pages": 1
+  },
+  {
+   "tag": "en:bouillon-cubes",
+   "name": "Bouillon cube",
+   "pages": 1
+  },
+  {
+   "tag": "en:broths",
+   "name": "Bouillon cube",
+   "pages": 1
+  },
+  {
+   "tag": "en:curry-powder",
+   "name": "Curry en poudre",
+   "pages": 1
+  },
+  {
+   "tag": "en:cumin",
+   "name": "Cumin",
+   "pages": 1
+  },
+  {
+   "tag": "en:herbes-de-provence",
+   "name": "Herbes de Provence",
+   "pages": 1
+  },
+  {
+   "tag": "en:chili-peppers",
+   "name": "Piment",
+   "pages": 1
+  },
+  {
+   "tag": "en:gherkins",
+   "name": "Cornichons",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-red-kidney-beans",
+   "name": "Haricots rouges",
+   "pages": 1
+  },
+  {
+   "tag": "en:red-beans",
+   "name": "Haricots rouges",
+   "pages": 1
+  },
+  {
+   "tag": "en:red-lentils",
+   "name": "Lentilles corail",
+   "pages": 1
+  },
+  {
+   "tag": "en:lentils",
+   "name": "Lentilles corail",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-peas",
+   "name": "Petits pois",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-green-beans",
+   "name": "Haricots verts",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-champignon-mushrooms",
+   "name": "Champignons en boîte",
+   "pages": 1
+  },
+  {
+   "tag": "en:canned-mushrooms",
+   "name": "Champignons en boîte",
+   "pages": 1
+  },
+  {
+   "tag": "en:shortcrust-pastry",
+   "name": "Pâte brisée",
+   "pages": 1
+  },
+  {
+   "tag": "en:pizza-dough",
+   "name": "Pâte à pizza",
+   "pages": 1
+  },
+  {
+   "tag": "en:hamburger-buns",
+   "name": "Pains à burger",
+   "pages": 1
+  },
+  {
+   "tag": "en:plain-buckwheat-crepes",
+   "name": "Galettes de sarrasin",
+   "pages": 1
+  },
+  {
+   "tag": "en:apple-compotes",
+   "name": "Compote de pommes",
+   "pages": 1
+  },
+  {
+   "tag": "en:red-wines",
+   "name": "Vin rouge",
+   "pages": 1
+  },
+  {
+   "tag": "en:white-wines",
+   "name": "Vin blanc sec",
+   "pages": 1
+  },
+  {
+   "tag": "en:pestos",
+   "name": "Pesto",
+   "pages": 1
+  }
  ]
 }

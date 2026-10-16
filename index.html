@@ -204,7 +204,7 @@ input[type=text],select.plain{font-size:16px;background:var(--sunk);border:0;bor
 .filebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
 
 /* barre d'onglets */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);max-width:40rem;margin:0 auto;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 var(--line)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);max-width:40rem;margin:0 auto;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 var(--line)}
 .tabbar button{display:grid;justify-items:center;align-content:center;gap:2px;height:var(--tabbar);border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:600;position:relative}
 .tabbar button svg{width:26px;height:26px}
 .tabbar button[aria-current="page"]{color:var(--ok)}
@@ -280,6 +280,36 @@ table.nut tr.sub td:first-child{padding-left:14px;color:var(--muted)}
 .recall-alert a{color:var(--ink);font-weight:700}
 
 /* sélecteur de rayon */
+/* recettes */
+.reclist .rrow{display:grid;grid-template-columns:44px minmax(0,1fr) 16px;gap:14px;align-items:center;width:100%;min-height:64px;padding:10px 14px;border:0;background:transparent;text-align:left;color:inherit}
+.reclist .rrow:active{background:var(--sunk)}
+.reclist li + li{border-top:1px solid var(--line)}
+.rico{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--ok-bg);color:var(--ok)}
+.rico svg{width:24px;height:24px}
+.chev{width:16px;height:16px;transform:rotate(-90deg);color:var(--muted)}
+.rtop{justify-content:space-between;padding-bottom:4px}
+.backbtn{display:inline-flex;align-items:center;gap:2px;margin-left:-6px;border:0;background:none;color:var(--ink);font-weight:600;font-size:17px;padding:6px 4px;min-height:44px}
+.backbtn svg{width:22px;height:22px}
+.rtitle{margin:0 0 12px}
+.recbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.stepper{display:inline-flex;align-items:center;gap:2px;height:36px;padding:0 3px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-weight:600;font-size:15px}
+.stepper button{width:30px;height:30px;border-radius:50%;border:0;background:var(--sunk);color:var(--ink);font-size:18px;font-weight:700;line-height:1}
+.stepper span{min-width:96px;text-align:center}
+.rsum{margin-top:12px;background:var(--sunk)}
+.rsum.s-ok{background:var(--ok-bg)} .rsum.s-check{background:var(--warn-bg)} .rsum.s-no{background:var(--no-bg)}
+.rsum .spin{margin-right:6px;vertical-align:-2px}
+.iname{display:block;margin-bottom:3px;font-size:13px;font-weight:700;color:var(--muted)}
+.item.rec .rowbtn{align-items:start}
+.item.rec .tw{margin-top:2px}
+div.rowbtn{cursor:default}
+.fresh{display:grid;place-items:center;color:var(--ok);background:var(--ok-bg)}
+.fresh svg{width:26px;height:26px}
+.pending .fresh{color:var(--muted);background:var(--sunk)}
+.ralt{grid-column:1/-1;padding:0 12px 8px 78px;margin-top:-10px}
+.ralt .textbtn{min-height:36px;padding:4px 0;color:var(--ok)}
+.item.cur{background:var(--ok-bg)}
+.edall{margin-top:12px;max-height:260px;overflow-y:auto}
+.shop .meta.for{font-size:13px}
 .aisle{margin-top:18px}
 .aisle h3{margin:0 0 8px 2px;color:var(--muted);font-size:14px;font-weight:600}
 
@@ -328,6 +358,9 @@ footer a{color:inherit}
     <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h10.2L20 8H7"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></g></symbol>
     <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-basket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1.6 9H5.6z"/><path d="m9 10 3-6 3 6"/></g></symbol>
+    <symbol id="i-pot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M2 10h2M20 10h2M9 3c0 1.5 1 1.5 1 3M14 3c0 1.5 1 1.5 1 3"/></g></symbol>
+    <symbol id="i-cake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21v-8h14v8"/><path d="M5 15c2.3 1.5 4.7 1.5 7 0s4.7-1.5 7 0"/><path d="M12 13V9M12 6.5c-.9-.9-.9-2 0-3 .9 1 .9 2.1 0 3z"/></g></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/></g></symbol>
   </defs>
 </svg>
 <div class="wrap">
@@ -383,6 +416,62 @@ footer a{color:inherit}
       <div class="ill"><svg aria-hidden="true"><use href="#i-basket"/></svg></div>
       <h2>Choisis un rayon</h2>
       <p>L'appli trie ses produits en compatibles, à vérifier et exclus selon ton profil. En magasin, utilise l'onglet Scanner.</p>
+    </div>
+  </section>
+
+  <!-- RECETTES -->
+  <section class="screen" id="screen-recipes" hidden aria-labelledby="t-recipes">
+    <div id="recHome">
+      <header class="top"><h1 id="t-recipes">Recettes</h1></header>
+      <p class="lede">Choisis un plat : l'appli trouve chaque ingrédient sans tes allergènes, dans ton magasin.</p>
+      <form id="recForm" role="search" autocomplete="off">
+        <div class="sfield">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <label class="sr" for="recQ">Chercher un plat</label>
+          <input id="recQ" type="search" placeholder="Un plat : bolognaise, crêpes…" enterkeyhint="search">
+        </div>
+      </form>
+      <div id="recCatalog"></div>
+      <button class="ghost wide" id="recNew" type="button" style="margin-top:18px"><svg aria-hidden="true" style="width:18px;height:18px"><use href="#i-plus"/></svg>Créer ma recette</button>
+    </div>
+
+    <div id="recDetail" hidden>
+      <div class="top rtop"><button class="backbtn" id="recBack" type="button"><svg aria-hidden="true"><use href="#i-back"/></svg>Recettes</button><button class="textbtn" id="recEdit" type="button" hidden>Modifier</button></div>
+      <h1 class="rtitle" id="recTitle"></h1>
+      <div class="recbar">
+        <span class="stepper" id="recServ"><button type="button" id="servMinus" aria-label="Une personne de moins">−</button><span id="servN" aria-live="polite">4 personnes</span><button type="button" id="servPlus" aria-label="Une personne de plus">+</button></span>
+        <span class="selchip"><label class="sr" for="recStore">Magasin</label><select id="recStore"></select><svg aria-hidden="true"><use href="#i-down"/></svg></span>
+      </div>
+      <p class="banner rsum" id="recSummary" aria-live="polite"></p>
+      <ul class="list" id="recIngr" style="margin-top:12px"></ul>
+      <button class="primary wide" id="recAddAll" type="button" style="margin-top:14px">Ajouter à ma liste</button>
+      <p class="hint" style="margin-top:12px">Produits tirés de la base de l'appli : ceux vus dans ton magasin d'abord. Les ingrédients facultatifs et le sel ne sont pas ajoutés d'office. L'étiquette fait toujours foi.</p>
+      <a class="ghost wide" id="recLink" href="#" target="_blank" rel="noopener">Voir la préparation sur Marmiton</a>
+    </div>
+
+    <div id="recEditor" hidden>
+      <div class="top rtop"><button class="backbtn" id="edBack" type="button"><svg aria-hidden="true"><use href="#i-back"/></svg>Annuler</button></div>
+      <h1 class="rtitle">Ma recette</h1>
+      <div class="group">
+        <div class="gpad">
+          <label class="lbl" for="edName">Nom du plat</label>
+          <input id="edName" type="text" maxlength="60" placeholder="Ex. : gratin de pâtes" style="margin-top:8px">
+        </div>
+      </div>
+      <div class="group">
+        <div class="gpad">
+          <p class="lbl" style="margin-bottom:8px">Ingrédients choisis</p>
+          <div class="chips" id="edChosen"></div>
+          <div class="sfield" style="margin-top:14px">
+            <svg aria-hidden="true"><use href="#i-search"/></svg>
+            <label class="sr" for="edFilter">Ajouter un ingrédient</label>
+            <input id="edFilter" type="search" placeholder="Ajouter : lait, pâtes, lardons…" autocomplete="off">
+          </div>
+          <div class="chips edall" id="edAll"></div>
+        </div>
+      </div>
+      <button class="primary wide" id="edSave" type="button" style="margin-top:14px">Enregistrer</button>
+      <button class="ghost wide danger" id="edDelete" type="button" hidden>Supprimer cette recette</button>
     </div>
   </section>
 
@@ -509,6 +598,7 @@ footer a{color:inherit}
 
 <nav class="tabbar" aria-label="Navigation">
   <button type="button" data-go="search" aria-current="page"><svg aria-hidden="true"><use href="#i-search"/></svg>Rechercher</button>
+  <button type="button" data-go="recipes"><svg aria-hidden="true"><use href="#i-pot"/></svg>Recettes</button>
   <button type="button" data-go="scan"><svg aria-hidden="true"><use href="#i-barcode"/></svg>Scanner</button>
   <button type="button" data-go="list"><svg aria-hidden="true"><use href="#i-list"/></svg>Ma liste<span class="badge" id="listBadge" hidden></span></button>
   <button type="button" data-go="profile"><svg aria-hidden="true"><use href="#i-user"/></svg>Profil</button>
@@ -522,6 +612,19 @@ footer a{color:inherit}
       <button class="iconbtn" id="sheetClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
     <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="pickSheet" aria-labelledby="pickTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="pickTitle" style="grid-column:2"></span>
+      <button class="iconbtn" id="pickClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint" style="margin:0 4px 10px">Produits compatibles avec ton profil. Touche celui que tu préfères.</p>
+      <ul class="list" id="pickList"></ul>
+    </div>
   </div>
 </dialog>
 
@@ -720,7 +823,7 @@ const ls = {
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
   del(k){ try { localStorage.removeItem(k); } catch (e) {} },
 };
-const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history' };
+const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history', recipes:'rs2:recipes' };
 
 const FIRST_RUN = ls.get(K.profile, null) === null;
 const profile = Object.assign({ sel:[], traces:false, words:[] }, ls.get(K.profile, {}));
@@ -797,6 +900,7 @@ function seenAt(p, st){
 }
 const otherChainOnly = (p, st) => st.id !== 'all' && !seenAt(p, st) && STORES.some(o => o.id !== st.id && o.id !== 'all' && isMdd(p, o));
 function slim(p){
+  if (p._fresh) return { code:String(p.code), product_name:p.product_name, quantity:p.quantity || '', _fresh:true, _al:p._al || [] };
   const o = {}; for (const f of FIELDS.split(',')) if (p[f] != null && p[f] !== '') o[f] = p[f];
   if (o.nutriments){ const n = {}; for (const k of ['energy-kcal_100g','fat_100g','saturated-fat_100g','carbohydrates_100g','sugars_100g','fiber_100g','proteins_100g','salt_100g']) if (o.nutriments[k] != null) n[k] = o.nutriments[k]; o.nutriments = n; }
   o.code = String(p.code); return o;
@@ -997,6 +1101,10 @@ function buildSet(kind, ctx){
 const isLactoseFree = p => (p.labels_tags || []).some(l => /(no-lactose|lactose-free|sans-lactose)/.test(l));
 const hasCriteria = () => profile.sel.size > 0 || profile.words.length > 0;
 function evaluate(p){
+  if (p && p._fresh){
+    const bad = (p._al || []).filter(k => profile.sel.has(k)).map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k);
+    return bad.length ? { status:'no', no:['Contient ' + bad.join(', ')], check:[], ok:[], info:[] } : { status:'ok', no:[], check:[], ok:['Produit frais'], info:[] };
+  }
   const al = new Set(p.allergens_tags || []);
   const tr = new Set(p.traces_tags || []);
   const raw = ingredientsOf(p);
@@ -1052,7 +1160,7 @@ function sorter(key){
 }
 
 /* ================= Navigation ================= */
-const SCREENS = ['search','scan','list','profile'];
+const SCREENS = ['search','recipes','scan','list','profile'];
 function go(name){
   if (!SCREENS.includes(name)) name = 'search';
   SCREENS.forEach(s => { $('#screen-' + s).hidden = s !== name; });
@@ -1061,6 +1169,7 @@ function go(name){
   if (name === 'list') renderLists();
   if (name === 'scan') renderHistory();
   if (name === 'search') renderProfileLine();
+  if (name === 'recipes') showRecipes();
   try { history.replaceState(null, '', name === 'search' ? location.pathname + location.search : '#' + name); } catch (e) {}
   window.scrollTo(0, 0);
 }
@@ -1106,7 +1215,8 @@ $('#quick').addEventListener('click', e => {
   runSearch({ scroll:true });
 });
 $('#sort').addEventListener('change', e => { S.sort = e.target.value; saveSearch(); if (R) render(); });
-function fitStore(){ const sel = $('#store'); const t = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : ''; sel.style.width = `calc(${Math.min(t.length, 22)}ch + 44px)`; }
+function fitSel(sel){ const t = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : ''; sel.style.width = `calc(${Math.min(t.length, 22)}ch + 44px)`; }
+function fitStore(){ fitSel($('#store')); }
 fitStore();
 $('#store').addEventListener('change', e => { S.store = e.target.value; saveSearch(); fitStore(); if (R) runSearch(); });
 $('#terms').addEventListener('input', e => { S.terms = e.target.value; saveSearch(); });
@@ -1789,7 +1899,7 @@ function renderLists(){
     const ev = evaluate(x.p);
     return `<li class="item s-${ev.status}"><div class="shop${x.done ? ' done' : ''}">
       <input type="checkbox" data-done="${esc(x.code)}" ${x.done ? 'checked' : ''} aria-label="Pris : ${esc(nameOf(x.p))}">
-      <button class="open" type="button" data-open="${esc(x.code)}"><span class="name">${esc(nameOf(x.p))}</span>${metaOf(x.p) ? `<span class="meta">${esc(metaOf(x.p))}</span>` : ''}<span class="vline"><span class="verdict">${VERDICT[ev.status]}</span></span></button>
+      ${x.p._fresh ? '<div class="open">' : `<button class="open" type="button" data-open="${esc(x.code)}">`}<span class="name">${esc(nameOf(x.p))}</span>${metaOf(x.p) ? `<span class="meta">${esc(metaOf(x.p))}</span>` : ''}${x.for ? `<span class="meta for">Pour : ${esc(x.for)}</span>` : ''}<span class="vline"><span class="verdict">${x.p._fresh ? (ev.status === 'ok' ? 'Produit frais' : 'Exclu') : VERDICT[ev.status]}</span></span>${x.p._fresh ? '</div>' : '</button>'}
       <button class="iconbtn" type="button" data-del="${esc(x.code)}" aria-label="Retirer de la liste : ${esc(nameOf(x.p))}"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </div></li>`;
   }).join('') : '<li class="empty-card">Ta liste est vide. Touche + à côté d\'un produit pour l\'ajouter.</li>';
@@ -1888,6 +1998,406 @@ $('#obGo').addEventListener('click', finishOnboard);
 $('#obSkip').addEventListener('click', finishOnboard);
 onboard.addEventListener('cancel', e => { e.preventDefault(); });
 
+/* ================= Recettes =================
+   Chaque ingrédient pointe vers des catégories de la base de l'appli (data/).
+   c : catégories dans l'ordre de préférence ; « ~ » devant = produit de remplacement
+       (boisson végétale à la place du lait, margarine à la place du beurre…).
+   kw : mots cherchés dans le nom ; si rien ne convient, toute la catégorie (sauf strict).
+   f : produit frais (pas de recherche) ; b : fond de placard ; al : allergènes d'un produit frais. */
+const ING = {
+  spaghetti:{ n:'Spaghetti', c:['en:spaghetti','en:pastas'], kw:'spaghett' },
+  pates:{ n:'Pâtes', c:['en:pastas'] },
+  lasagnes:{ n:'Feuilles de lasagne', c:['en:lasagna-sheets','en:pastas'], kw:'lasagn' },
+  riz:{ n:'Riz', c:['en:rices'] },
+  riz_basmati:{ n:'Riz basmati', c:['en:basmati-rices','en:rices'], kw:'basmati' },
+  riz_risotto:{ n:'Riz à risotto', c:['en:rices-for-risotto','en:rices'], kw:'risotto|arborio|carnaroli' },
+  riz_rond:{ n:'Riz rond', c:['en:rices'], kw:'rond|dessert|au lait' },
+  semoule:{ n:'Semoule', c:['en:durum-wheat-semolinas-for-couscous'] },
+  farine:{ n:'Farine', c:['en:wheat-flours','~en:flours'] },
+  sucre:{ n:'Sucre', c:['en:sugars'] },
+  sucre_vanille:{ n:'Sucre vanillé', c:['en:vanilla-sugars'] },
+  levure:{ n:'Levure chimique', c:['en:baking-powder-or-raising-agent'] },
+  chocolat_patissier:{ n:'Chocolat noir pâtissier', c:['en:dark-chocolates'], kw:'p[aâ]tiss|dessert|cuisine|cors[eé]' },
+  pepites:{ n:'Pépites de chocolat', c:['en:chocolates','en:dark-chocolates'], kw:'p[eé]pite|chips|drops' },
+  viande_hachee:{ n:'Viande hachée de bœuf', c:['en:ground-beef-preparations','en:ground-beef-steaks'] },
+  steaks_haches:{ n:'Steaks hachés', c:['en:ground-beef-steaks'] },
+  lardons:{ n:'Lardons', c:['en:lardons'] },
+  jambon:{ n:'Jambon blanc', c:['en:white-hams'] },
+  jambon_cru:{ n:'Jambon cru', c:['en:cured-hams'] },
+  poulet:{ n:'Filets de poulet', c:['en:chicken-breasts'], kw:'filet|aiguillette|escalope|blanc' },
+  boeuf:{ n:'Bœuf à braiser', c:['en:beef'], kw:'bourguignon|braiser|mijoter|morceaux|cube|paleron|joue' },
+  saumon:{ n:'Pavés de saumon', c:['en:salmon-steaks','en:salmon-fillets'] },
+  thon:{ n:'Thon en boîte', c:['en:canned-tunas'] },
+  oeufs:{ n:'Œufs', c:['en:eggs'], kw:'œuf|oeuf' },
+  lait:{ n:'Lait', c:['en:milks','~en:plant-based-milk-alternatives'] },
+  beurre:{ n:'Beurre', c:['en:butters','~en:margarines'] },
+  creme:{ n:'Crème fraîche', c:['en:creams','~en:plant-based-creams-for-cooking'] },
+  lait_coco:{ n:'Lait de coco', c:['en:coconut-milks-and-creams'] },
+  fromage_rape:{ n:'Fromage râpé', c:['en:grated-cheese','~en:shredded-cheese-substitutes','~en:cheese-substitutes'] },
+  parmesan:{ n:'Parmesan', c:['en:parmigiano-reggiano','en:grana-padano','~en:cheese-substitutes'] },
+  mozzarella:{ n:'Mozzarella', c:['en:mozzarella','~en:cheese-substitutes'] },
+  cheddar:{ n:'Cheddar en tranches', c:['en:cheddar-slices','en:cheddar-cheese','~en:sliced-cheese-substitutes'] },
+  raclette:{ n:'Fromage à raclette', c:['en:raclette','~en:cheese-substitutes'] },
+  sauce_tomate:{ n:'Sauce tomate', c:['en:tomato-sauces'] },
+  tomates_pelees:{ n:'Tomates pelées', c:['en:peeled-tomatoes','en:canned-tomatoes'] },
+  concentre_tomate:{ n:'Concentré de tomate', c:['en:tomato-pastes'] },
+  huile_olive:{ n:'Huile d\'olive', c:['en:olive-oils'] },
+  huile:{ n:'Huile', c:['en:vegetable-oils'] },
+  vinaigre:{ n:'Vinaigre', c:['en:vinegars'] },
+  sauce_soja:{ n:'Sauce soja', c:['en:soy-sauces'] },
+  ketchup:{ n:'Ketchup', c:['en:ketchup'] },
+  bouillon:{ n:'Bouillon cube', c:['en:bouillon-cubes','en:broths'] },
+  curry:{ n:'Curry en poudre', c:['en:curry-powder'] },
+  cumin:{ n:'Cumin', c:['en:cumin'] },
+  herbes_provence:{ n:'Herbes de Provence', c:['en:herbes-de-provence'] },
+  piment:{ n:'Piment', c:['en:chili-peppers'] },
+  muscade:{ n:'Muscade', c:['en:spices'], kw:'muscade', strict:1 },
+  olives:{ n:'Olives', c:['en:olives'] },
+  cornichons:{ n:'Cornichons', c:['en:gherkins'] },
+  haricots_rouges:{ n:'Haricots rouges', c:['en:canned-red-kidney-beans','en:red-beans'] },
+  lentilles_corail:{ n:'Lentilles corail', c:['en:red-lentils','en:lentils'], kw:'corail' },
+  petits_pois:{ n:'Petits pois', c:['en:canned-peas'] },
+  haricots_verts:{ n:'Haricots verts', c:['en:canned-green-beans'] },
+  champignons_boite:{ n:'Champignons en boîte', c:['en:canned-champignon-mushrooms','en:canned-mushrooms'] },
+  pate_brisee:{ n:'Pâte brisée', c:['en:shortcrust-pastry','en:pie-dough'], kw:'bris' },
+  pate_pizza:{ n:'Pâte à pizza', c:['en:pizza-dough'] },
+  pain_de_mie:{ n:'Pain de mie', c:['en:sliced-breads'] },
+  pains_burger:{ n:'Pains à burger', c:['en:hamburger-buns'] },
+  galettes_sarrasin:{ n:'Galettes de sarrasin', c:['en:plain-buckwheat-crepes'] },
+  frites:{ n:'Frites surgelées', c:['en:frozen-fries'] },
+  compote:{ n:'Compote de pommes', c:['en:applesauces','en:apple-compotes'] },
+  vin_rouge:{ n:'Vin rouge', c:['en:red-wines'] },
+  vin_blanc:{ n:'Vin blanc sec', c:['en:white-wines'] },
+  pesto:{ n:'Pesto', c:['en:pestos'] },
+  pruneaux:{ n:'Pruneaux', c:['en:dried-fruits'], kw:'pruneau', strict:1 },
+  oignon:{ n:'Oignon', f:1 }, ail:{ n:'Ail', f:1 }, carotte:{ n:'Carotte', f:1 }, tomate:{ n:'Tomate', f:1 },
+  courgette:{ n:'Courgette', f:1 }, aubergine:{ n:'Aubergine', f:1 }, poivron:{ n:'Poivron', f:1 },
+  champignons:{ n:'Champignons de Paris', f:1 }, pdt:{ n:'Pommes de terre', f:1 }, salade:{ n:'Salade', f:1 },
+  concombre:{ n:'Concombre', f:1 }, citron:{ n:'Citron', f:1 }, pommes:{ n:'Pommes', f:1 }, poireau:{ n:'Poireau', f:1 },
+  persil:{ n:'Persil', f:1 }, menthe:{ n:'Menthe', f:1 }, bouquet_garni:{ n:'Thym et laurier', f:1 },
+  celeri:{ n:'Céleri', f:1, al:['celery'] },
+  sel_poivre:{ n:'Sel et poivre', b:1 },
+};
+const SUBNAME = { 'en:plant-based-milk-alternatives':'une boisson végétale', 'en:margarines':'une margarine', 'en:plant-based-creams-for-cooking':'une crème végétale',
+  'en:shredded-cheese-substitutes':'une alternative végétale', 'en:cheese-substitutes':'une alternative végétale', 'en:sliced-cheese-substitutes':'une alternative végétale', 'en:flours':'une autre farine' };
+const RECIPES = [
+  { id:'bolognaise', n:'Pâtes bolognaise', g:'Plats', syn:'spaghetti bolo bolognese sauce viande', i:[['spaghetti',400,'g'],['viande_hachee',400,'g'],['tomates_pelees',800,'g'],['oignon',1],['carotte',1],['ail',2,'gousse'],['huile_olive',2,'c. à s.'],['concentre_tomate',1,'c. à s.',1],['herbes_provence',1,'c. à c.',1],['parmesan',60,'g',1],['sel_poivre']] },
+  { id:'carbonara', n:'Pâtes carbonara', g:'Plats', syn:'spaghetti lardons', i:[['spaghetti',400,'g'],['lardons',200,'g'],['oeufs',4],['parmesan',80,'g'],['creme',20,'cl',1],['sel_poivre']] },
+  { id:'lasagnes', n:'Lasagnes à la bolognaise', g:'Plats', syn:'lasagne bechamel', i:[['lasagnes',250,'g'],['viande_hachee',500,'g'],['tomates_pelees',800,'g'],['oignon',1],['ail',2,'gousse'],['huile_olive',2,'c. à s.'],['lait',75,'cl'],['beurre',60,'g'],['farine',60,'g'],['fromage_rape',100,'g'],['muscade',1,'pincée',1],['sel_poivre']] },
+  { id:'pesto', n:'Pâtes au pesto', g:'Plats', syn:'basilic', i:[['pates',400,'g'],['pesto',190,'g'],['parmesan',40,'g',1],['tomate',2,'',1]] },
+  { id:'hachis', n:'Hachis parmentier', g:'Plats', syn:'puree viande hachee', i:[['pdt',1,'kg'],['viande_hachee',500,'g'],['oignon',2],['lait',20,'cl'],['beurre',50,'g'],['fromage_rape',80,'g'],['sel_poivre']] },
+  { id:'gratin', n:'Gratin dauphinois', g:'Plats', syn:'pommes de terre creme', i:[['pdt',1,'kg'],['creme',40,'cl'],['lait',40,'cl'],['ail',1,'gousse'],['beurre',20,'g'],['muscade',1,'pincée',1],['sel_poivre']] },
+  { id:'quiche', n:'Quiche lorraine', g:'Plats', syn:'tarte salee lardons', i:[['pate_brisee',1,'rouleau'],['lardons',200,'g'],['oeufs',3],['creme',20,'cl'],['lait',20,'cl'],['fromage_rape',80,'g',1],['muscade',1,'pincée',1],['sel_poivre']] },
+  { id:'croque', n:'Croque-monsieur', g:'Plats', syn:'jambon fromage pain de mie', i:[['pain_de_mie',8,'tranche'],['jambon',4,'tranche'],['fromage_rape',120,'g'],['beurre',40,'g']] },
+  { id:'galettes', n:'Galettes complètes', g:'Plats', syn:'galette sarrasin ble noir bretonne crepe salee jambon oeuf fromage', i:[['galettes_sarrasin',4],['jambon',4,'tranche'],['oeufs',4],['fromage_rape',120,'g'],['beurre',30,'g']] },
+  { id:'curry_poulet', n:'Poulet au curry et lait de coco', g:'Plats', syn:'curry coco poulet riz', i:[['poulet',600,'g'],['lait_coco',40,'cl'],['curry',2,'c. à s.'],['oignon',1],['ail',2,'gousse'],['tomates_pelees',400,'g',1],['huile',1,'c. à s.'],['riz_basmati',300,'g']] },
+  { id:'chili', n:'Chili con carne', g:'Plats', syn:'haricots rouges mexicain', i:[['viande_hachee',500,'g'],['haricots_rouges',500,'g'],['tomates_pelees',800,'g'],['oignon',1],['ail',2,'gousse'],['poivron',1],['cumin',1,'c. à c.'],['piment',1,'pincée',1],['huile',1,'c. à s.'],['riz',300,'g']] },
+  { id:'curry_lentilles', n:'Curry de lentilles corail', g:'Plats', syn:'dahl dhal vegetarien vegan lentilles', i:[['lentilles_corail',300,'g'],['lait_coco',40,'cl'],['tomates_pelees',400,'g'],['oignon',1],['ail',2,'gousse'],['curry',2,'c. à s.'],['huile',1,'c. à s.'],['riz_basmati',300,'g']] },
+  { id:'riz_cantonais', n:'Riz cantonais', g:'Plats', syn:'riz frit chinois', i:[['riz',300,'g'],['oeufs',3],['jambon',150,'g'],['petits_pois',150,'g'],['oignon',1],['sauce_soja',2,'c. à s.'],['huile',2,'c. à s.']] },
+  { id:'risotto', n:'Risotto aux champignons', g:'Plats', syn:'riz champignons parmesan', i:[['riz_risotto',300,'g'],['champignons',300,'g'],['bouillon',2,'cube'],['parmesan',60,'g'],['beurre',40,'g'],['oignon',1],['vin_blanc',10,'cl',1],['huile_olive',1,'c. à s.']] },
+  { id:'bourguignon', n:'Bœuf bourguignon', g:'Plats', syn:'boeuf vin rouge mijote', i:[['boeuf',1,'kg'],['lardons',150,'g'],['vin_rouge',75,'cl'],['champignons',250,'g'],['carotte',3],['oignon',2],['ail',2,'gousse'],['farine',2,'c. à s.'],['bouillon',1,'cube'],['huile',2,'c. à s.'],['bouquet_garni',1,'bouquet'],['sel_poivre']] },
+  { id:'saumon', n:'Saumon, riz et sauce citron', g:'Plats', syn:'poisson pave saumon creme', i:[['saumon',4,'pavé'],['riz',300,'g'],['creme',20,'cl'],['citron',1],['beurre',20,'g'],['persil',1,'bouquet',1],['sel_poivre']] },
+  { id:'nicoise', n:'Salade niçoise', g:'Plats', syn:'salade thon oeuf', i:[['thon',200,'g'],['oeufs',4],['tomate',4],['haricots_verts',400,'g'],['olives',80,'g'],['salade',1],['poivron',1,'',1],['huile_olive',4,'c. à s.'],['vinaigre',1,'c. à s.'],['sel_poivre']] },
+  { id:'pizza', n:'Pizza jambon-champignons', g:'Plats', syn:'pizza maison reine', i:[['pate_pizza',1],['sauce_tomate',200,'g'],['mozzarella',250,'g'],['jambon',4,'tranche'],['champignons_boite',1,'boîte'],['olives',50,'g',1],['herbes_provence',1,'c. à c.',1]] },
+  { id:'burger', n:'Burgers maison', g:'Plats', syn:'hamburger cheeseburger frites', i:[['pains_burger',4],['steaks_haches',4],['cheddar',4,'tranche'],['salade',1],['tomate',1],['oignon',1],['ketchup',4,'c. à s.',1],['frites',750,'g',1]] },
+  { id:'raclette', n:'Raclette', g:'Plats', syn:'fromage fondu montagne charcuterie', i:[['raclette',800,'g'],['pdt',1.2,'kg'],['jambon_cru',200,'g'],['jambon',200,'g'],['cornichons',1,'bocal',1]] },
+  { id:'soupe', n:'Soupe de légumes', g:'Plats', syn:'potage veloute legumes', i:[['pdt',300,'g'],['carotte',3],['poireau',1],['oignon',1],['bouillon',1,'cube'],['creme',10,'cl',1],['sel_poivre']] },
+  { id:'ratatouille', n:'Ratatouille', g:'Plats', syn:'legumes provencal', i:[['aubergine',1],['courgette',2],['poivron',2],['tomate',4],['oignon',1],['ail',2,'gousse'],['huile_olive',4,'c. à s.'],['herbes_provence',1,'c. à c.'],['sel_poivre']] },
+  { id:'taboule', n:'Taboulé', g:'Plats', syn:'semoule salade', i:[['semoule',250,'g'],['tomate',3],['concombre',1],['menthe',1,'bouquet'],['persil',1,'bouquet'],['citron',2],['huile_olive',5,'c. à s.'],['sel_poivre']] },
+  { id:'omelette', n:'Omelette au fromage', g:'Plats', syn:'oeufs', i:[['oeufs',8],['fromage_rape',80,'g'],['lait',5,'cl',1],['beurre',20,'g'],['sel_poivre']] },
+  { id:'crepes', n:'Crêpes', g:'Desserts et goûter', syn:'crepe sucree chandeleur pate', i:[['farine',250,'g'],['oeufs',4],['lait',50,'cl'],['sucre',2,'c. à s.'],['beurre',50,'g'],['sucre_vanille',1,'sachet',1]] },
+  { id:'gateau_chocolat', n:'Gâteau au chocolat', g:'Desserts et goûter', syn:'fondant moelleux brownie', i:[['chocolat_patissier',200,'g'],['beurre',150,'g'],['sucre',150,'g'],['oeufs',4],['farine',50,'g']] },
+  { id:'mousse', n:'Mousse au chocolat', g:'Desserts et goûter', syn:'dessert chocolat', i:[['chocolat_patissier',200,'g'],['oeufs',6],['sucre',1,'c. à s.',1]] },
+  { id:'pancakes', n:'Pancakes', g:'Desserts et goûter', syn:'crepes americaines', i:[['farine',250,'g'],['oeufs',2],['lait',30,'cl'],['sucre',2,'c. à s.'],['levure',1,'sachet'],['beurre',30,'g']] },
+  { id:'cookies', n:'Cookies aux pépites de chocolat', g:'Desserts et goûter', syn:'biscuits', i:[['farine',250,'g'],['beurre',125,'g'],['sucre',150,'g'],['oeufs',1],['pepites',150,'g'],['levure',0.5,'sachet'],['sucre_vanille',1,'sachet',1]] },
+  { id:'tarte_pommes', n:'Tarte aux pommes', g:'Desserts et goûter', syn:'tarte fruits', i:[['pate_brisee',1,'rouleau'],['pommes',5],['compote',200,'g',1],['sucre',50,'g'],['beurre',30,'g']] },
+  { id:'riz_lait', n:'Riz au lait', g:'Desserts et goûter', syn:'dessert riz', i:[['riz_rond',150,'g'],['lait',1,'l'],['sucre',100,'g'],['sucre_vanille',1,'sachet']] },
+  { id:'far', n:'Far breton', g:'Desserts et goûter', syn:'bretagne pruneaux', i:[['farine',250,'g'],['oeufs',4],['lait',75,'cl'],['sucre',150,'g'],['pruneaux',200,'g',1],['beurre',20,'g']] },
+];
+const REC_GROUPS = ['Mes recettes', 'Plats', 'Desserts et goûter'];
+let myRecipes = ls.get(K.recipes, []); if (!Array.isArray(myRecipes)) myRecipes = [];
+const saveMyRecipes = () => ls.set(K.recipes, myRecipes);
+const allRecipes = () => [...myRecipes.map(r => Object.assign({ g:'Mes recettes', mine:true }, r)), ...RECIPES];
+
+const NOUNIT = ['g', 'kg', 'cl', 'l', 'ml', 'c. à s.', 'c. à c.'];
+function fmtQty(q, u, f){
+  if (q == null) return '';
+  let x = q * f;
+  if (u === 'g' || u === 'ml') x = x >= 100 ? Math.round(x / 10) * 10 : Math.max(5, Math.round(x / 5) * 5);
+  else if (u === 'cl') x = Math.max(1, Math.round(x));
+  else x = Math.max(0.5, Math.round(x * 2) / 2);
+  const n = x.toLocaleString('fr-FR', { maximumFractionDigits:1 });
+  if (!u) return n;
+  return `${n} ${u}${x > 1 && !NOUNIT.includes(u) && !/s$/.test(u) ? 's' : ''}`;
+}
+
+/* --- choix du meilleur produit pour un ingrédient --- */
+const evCache = new WeakMap();
+function evalP(p){ const c = evCache.get(p); if (c && c.pv === PV) return c.ev; const ev = evaluate(p); evCache.set(p, { pv:PV, ev }); return ev; }
+const popOf = p => Number(p.unique_scans_n) || Number(p.popularity_key) || 0;
+const pickCache = new Map();
+function freshResult(ing){
+  const bad = (ing.al || []).filter(k => profile.sel.has(k)).map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k);
+  return bad.length ? { status:'no', fresh:true, note:'Contient ' + bad.join(', ') } : { status:'ok', fresh:true, note: ing.b ? 'Dans tes placards' : 'Rayon fruits et légumes' };
+}
+function pickFor(id, st){
+  const ing = ING[id];
+  if (!ing) return Promise.resolve({ status:'no', note:'Ingrédient inconnu' });
+  if (ing.f || ing.b) return Promise.resolve(freshResult(ing));
+  const key = `${id}|${st.id}|${PV}`;
+  if (!pickCache.has(key)){
+    const job = pickProducts(ing, st).catch(e => { pickCache.delete(key); throw e; });
+    pickCache.set(key, job);
+  }
+  return pickCache.get(key);
+}
+async function pickProducts(ing, st){
+  await loadIndex();
+  if (!dataIndex) throw err('nodata');
+  const main = ing.c.filter(t => t[0] !== '~'), subs = ing.c.filter(t => t[0] === '~').map(t => t.slice(1));
+  const rx = ing.kw ? new RegExp(ing.kw, 'i') : null;
+  const steps = [];
+  if (rx) steps.push({ cats:main, rx });
+  if (!rx || !ing.strict) steps.push({ cats:main, rx:null });
+  for (const t of subs) steps.push({ cats:[t], rx:null, sub:t });
+  let checks = [];
+  for (const step of steps){
+    const found = [];
+    for (const tag of step.cats){
+      const a = aisleOf(tag); if (!a || !a.n) continue;
+      for (let i = 0; i < a.pages && found.length < 12; i++){
+        const prods = (await aislePage(a, i)).filter(p => (!step.rx || step.rx.test(nameOf(p))) && !otherChainOnly(p, st));
+        for (const p of prods){
+          const ev = evalP(p);
+          if (ev.status === 'ok') found.push(p);
+          else if (ev.status === 'check' && checks.length < 30) checks.push(p);
+        }
+      }
+      if (found.length >= 12) break;
+    }
+    if (found.length){
+      const seen = new Set();
+      const alts = found.filter(p => !seen.has(p.code) && seen.add(p.code))
+        .sort((x, y) => (seenAt(y, st) - seenAt(x, st)) || (popOf(y) - popOf(x))).slice(0, 40);
+      return { status:'ok', p:alts[0], alts, sub: step.sub ? (SUBNAME[step.sub] || 'un produit de remplacement') : null };
+    }
+  }
+  checks.sort((x, y) => (seenAt(y, st) - seenAt(x, st)) || (popOf(y) - popOf(x)));
+  return { status: checks.length ? 'check' : 'no', p:checks[0] || null, alts:[], checks:checks.length };
+}
+
+/* --- écran Recettes --- */
+let RV = null;
+const recView = name => { $('#recHome').hidden = name !== 'home'; $('#recDetail').hidden = name !== 'detail'; $('#recEditor').hidden = name !== 'edit'; window.scrollTo(0, 0); };
+function renderRecHome(){
+  const q = $('#recQ').value.trim();
+  const words = fold(q).split(/\s+/).filter(Boolean);
+  const hay = r => fold([r.n, r.syn || '', ...r.i.map(x => (ING[x[0]] || {}).n || '')].join(' '));
+  const all = allRecipes().filter(r => !words.length || words.every(w => hay(r).includes(w)));
+  let html = '';
+  for (const g of REC_GROUPS){
+    const rs = all.filter(r => r.g === g); if (!rs.length) continue;
+    html += `<div class="sec"><h2>${esc(g)}</h2></div><ul class="list reclist">${rs.map(r => `<li><button class="rrow" type="button" data-rec="${esc(r.id)}">
+      <span class="rico" aria-hidden="true"><svg><use href="#${g === 'Desserts et goûter' ? 'i-cake' : 'i-pot'}"/></svg></span>
+      <span><span class="name">${esc(r.n)}</span><span class="meta">${r.i.filter(x => !(ING[x[0]] || {}).b).length} ingrédients</span></span>
+      <svg class="chev" aria-hidden="true"><use href="#i-down"/></svg></button></li>`).join('')}</ul>`;
+  }
+  if (!html) html = `<div class="empty-card group" style="margin-top:14px">« ${esc(q)} » n'est pas encore dans l'appli. Crée ta recette : choisis ses ingrédients, l'appli trouve les produits.<br><button class="ghost" type="button" data-newrec="${esc(q)}">Créer « ${esc(q)} »</button></div>`;
+  $('#recCatalog').innerHTML = html;
+}
+function openRecipe(id){
+  const r = allRecipes().find(x => x.id === id); if (!r) return;
+  RV = { r, serv:4, res:r.i.map(() => null), pick:{}, tok:null };
+  $('#recStore').value = S.store; fitSel($('#recStore'));
+  $('#recServ').hidden = !r.i.some(x => x[1] != null);
+  $('#recEdit').hidden = !r.mine;
+  $('#recLink').href = 'https://www.marmiton.org/recettes/recherche.aspx?aqt=' + encodeURIComponent(r.n);
+  recView('detail');
+  computeRecipe();
+}
+async function computeRecipe(){
+  const v = RV; if (!v) return;
+  const tok = v.tok = Symbol();
+  const st = storeById(S.store);
+  v.res = v.r.i.map(([id]) => { const ing = ING[id]; return ing && (ing.f || ing.b) ? freshResult(ing) : null; });
+  renderRecipe();
+  const todo = v.r.i.map((x, k) => k).filter(k => !v.res[k]);
+  let next = 0;
+  const worker = async () => {
+    while (next < todo.length){
+      const k = todo[next++];
+      let res;
+      try { res = await pickFor(v.r.i[k][0], st); } catch (e) { res = { status:'err', err:e }; }
+      if (v.tok !== tok || RV !== v) return;
+      v.res[k] = res; renderRecipe();
+    }
+  };
+  await Promise.all([worker(), worker(), worker()]);
+}
+const curPick = k => { const res = RV.res[k]; if (!res) return null; const c = RV.pick[k]; return (c && res.alts && res.alts.find(p => p.code === c)) || res.p || null; };
+const freshCode = id => 'f:' + id;
+function shopEntry(k){
+  const [id, q, u] = RV.r.i[k]; const ing = ING[id]; const res = RV.res[k];
+  if (!res || !ing) return null;
+  if (res.fresh){
+    if (res.status !== 'ok') return null;
+    return { code:freshCode(id), p:{ code:freshCode(id), product_name:ing.n, quantity:fmtQty(q, u, RV.serv / 4), _fresh:true, _al:ing.al || [] } };
+  }
+  const p = curPick(k); return p ? { code:String(p.code), p } : null;
+}
+function addEntry(e){
+  if (!e || inShop(e.code)) return false;
+  shop.unshift({ code:e.code, p:e.p._fresh ? e.p : slim(e.p), done:false, at:Date.now(), for:RV.r.n });
+  return true;
+}
+function renderRecipe(){
+  const v = RV; if (!v) return;
+  const r = v.r, f = v.serv / 4, st = storeById(S.store);
+  $('#recTitle').textContent = r.n;
+  $('#servN').textContent = `${v.serv} personne${v.serv > 1 ? 's' : ''}`;
+  let ok = 0, subs = 0, pend = 0; const bad = [], toCheck = [];
+  const rows = r.i.map(([id, q, u, opt], k) => {
+    const ing = ING[id] || { n:id }; const res = v.res[k];
+    const label = `${ing.n}${q != null ? ' · ' + fmtQty(q, u, f) : ''}${opt ? ' · facultatif' : ''}`;
+    if (!res){
+      pend++;
+      return `<li class="item s-check rec pending"><div class="rowbtn"><span class="tw"><span class="thumb empty fresh"><span class="spin" aria-hidden="true"></span></span></span>
+        <span><span class="iname">${esc(label)}</span><span class="meta">Recherche d'un produit compatible…</span></span></div></li>`;
+    }
+    if (res.status === 'ok'){ ok++; if (res.sub) subs++; }
+    else if (!opt && !ing.b){ (res.status === 'check' ? toCheck : bad).push(ing.n); }
+    const st2 = res.status === 'err' ? 'check' : res.status;
+    const e = res.fresh || res.status === 'err' ? null : curPick(k);
+    const entry = shopEntry(k);
+    const added = entry ? inShop(entry.code) : false;
+    const addBtn = entry && !ing.b ? `<span class="side"><button class="iconbtn" type="button" data-radd="${k}" aria-pressed="${added}" aria-label="${added ? 'Retirer de ma liste' : 'Ajouter à ma liste'} : ${esc(ing.n)}">${added ? ICON_CHECK : ICON_PLUS}</button></span>` : '';
+    let body, pic;
+    if (res.fresh){
+      pic = `<span class="thumb empty fresh" aria-hidden="true"><svg><use href="#${ing.b ? 'i-basket' : 'i-leaf'}"/></svg></span>`;
+      body = `<span class="iname">${esc(label)}</span><span class="name">${esc(ing.n)}</span><span class="vline"><span class="verdict">${res.status === 'ok' ? 'Compatible' : 'Exclu'}</span><span class="reason">${esc(res.note)}</span></span>`;
+    } else if (res.status === 'err'){
+      pic = `<span class="thumb empty" aria-hidden="true"></span>`;
+      body = `<span class="iname">${esc(label)}</span><span class="vline"><span class="verdict">Indisponible</span><span class="reason">${esc(res.err && res.err.code === 'nodata' ? 'La base de l\'appli ne répond pas.' : errorText(res.err))}</span></span>`;
+    } else if (e){
+      const reason = res.status === 'ok' ? (res.sub ? `Remplacé par ${res.sub}` : (evalP(e).ok.find(x => /sans lactose|étiqueté/i.test(x)) || '')) : `Aucun produit sûr : ${res.checks} à vérifier`;
+      pic = thumb(e);
+      body = `<span class="iname">${esc(label)}</span><span class="name">${esc(nameOf(e))}</span>${metaOf(e) ? `<span class="meta">${esc(metaOf(e))}</span>` : ''}
+        <span class="vline"><span class="verdict">${VERDICT[res.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span>${st.id === 'all' ? '' : `<span class="where${seenAt(e, st) ? ' yes' : ''}">${seenAt(e, st) ? 'Chez ' + esc(st.label) : 'Marque nationale'}</span>`}`;
+    } else {
+      pic = `<span class="thumb empty" aria-hidden="true"></span>`;
+      body = `<span class="iname">${esc(label)}</span><span class="vline"><span class="verdict">Aucun produit compatible</span><span class="reason">${opt ? 'Facultatif : tu peux t\'en passer.' : 'Rien de sûr dans la base pour ton profil.'}</span></span>`;
+    }
+    const more = res.alts && res.alts.length > 1 ? `<div class="ralt"><button class="textbtn" type="button" data-ralts="${k}">Autres choix (${res.alts.length - 1})</button></div>` : '';
+    const tag = e ? `button class="rowbtn" type="button" data-rp="${k}"` : 'div class="rowbtn"';
+    return `<li class="item s-${st2} rec"><${tag}><span class="tw">${pic}<span class="sbadge" aria-hidden="true"><svg><use href="#${BADGE[st2]}"/></svg></span></span><span>${body}</span></${e ? 'button' : 'div'}>${addBtn}${more}</li>`;
+  });
+  $('#recIngr').innerHTML = rows.join('');
+  const sum = $('#recSummary');
+  const where = st.id === 'all' ? 'en France' : 'chez ' + st.label;
+  if (pend){ sum.className = 'banner rsum'; sum.innerHTML = `${SPIN}Recherche des produits ${esc(where)}… (${r.i.length - pend} sur ${r.i.length})`; }
+  else if (!bad.length && !toCheck.length){ sum.className = 'banner rsum s-ok'; sum.textContent = `Tous les ingrédients ont une version compatible ${where}.${subs ? ` ${subs} remplacé${subs > 1 ? 's' : ''} par une alternative.` : ''}`; }
+  else { sum.className = 'banner rsum ' + (bad.length ? 's-no' : 's-check'); sum.textContent = [bad.length ? `Pas de version compatible pour : ${bad.join(', ')}.` : '', toCheck.length ? `À vérifier sur l'étiquette : ${toCheck.join(', ')}.` : ''].filter(Boolean).join(' '); }
+  const entries = r.i.map((x, k) => (!x[3] && !(ING[x[0]] || {}).b) ? shopEntry(k) : null).filter(Boolean);
+  const missing = entries.filter(e => !inShop(e.code)).length;
+  const btn = $('#recAddAll');
+  btn.disabled = !!pend || !missing;
+  btn.textContent = pend ? 'Recherche en cours…' : missing ? `Ajouter ${missing} ingrédient${missing > 1 ? 's' : ''} à ma liste` : 'Tout est dans ta liste';
+}
+$('#recQ').addEventListener('input', renderRecHome);
+$('#recForm').addEventListener('submit', e => { e.preventDefault(); $('#recQ').blur(); const first = $('#recCatalog [data-rec]'); if (first && $('#recCatalog [data-rec]').length === 1) openRecipe(first.dataset.rec); });
+$('#recCatalog').addEventListener('click', e => {
+  const b = e.target.closest('[data-rec]'); if (b){ openRecipe(b.dataset.rec); return; }
+  const n = e.target.closest('[data-newrec]'); if (n) openEditor(null, n.dataset.newrec);
+});
+$('#recBack').addEventListener('click', () => { RV = null; recView('home'); renderRecHome(); });
+$('#servMinus').addEventListener('click', () => { if (RV && RV.serv > 1){ RV.serv--; renderRecipe(); } });
+$('#servPlus').addEventListener('click', () => { if (RV && RV.serv < 12){ RV.serv++; renderRecipe(); } });
+$('#recStore').addEventListener('change', e => {
+  S.store = e.target.value; saveSearch(); $('#store').value = S.store; fitStore(); fitSel(e.target);
+  if (RV){ RV.pick = {}; computeRecipe(); }
+});
+$('#recIngr').addEventListener('click', e => {
+  const a = e.target.closest('[data-radd]');
+  if (a){
+    const k = Number(a.dataset.radd); const en = shopEntry(k); if (!en) return;
+    if (inShop(en.code)){ shop = shop.filter(x => x.code !== en.code); toast('Retiré de ta liste'); }
+    else { addEntry(en); toast('Ajouté à ta liste'); }
+    saveShop(); updateBadge(); renderRecipe(); return;
+  }
+  const m = e.target.closest('[data-ralts]'); if (m){ openPicker(Number(m.dataset.ralts)); return; }
+  const o = e.target.closest('[data-rp]'); if (o){ const p = curPick(Number(o.dataset.rp)); if (p) openProduct(p); }
+});
+$('#recAddAll').addEventListener('click', () => {
+  if (!RV) return;
+  let n = 0;
+  RV.r.i.forEach((x, k) => { if (!x[3] && !(ING[x[0]] || {}).b && addEntry(shopEntry(k))) n++; });
+  saveShop(); updateBadge(); renderRecipe();
+  toast(n ? `${n} ingrédient${n > 1 ? 's' : ''} ajouté${n > 1 ? 's' : ''} à ta liste` : 'Déjà dans ta liste');
+});
+const pickSheet = $('#pickSheet');
+function openPicker(k){
+  const res = RV.res[k]; const ing = ING[RV.r.i[k][0]]; if (!res || !res.alts) return;
+  const st = storeById(S.store); const cur = curPick(k);
+  $('#pickTitle').textContent = ing.n;
+  $('#pickList').innerHTML = res.alts.map(p => `<li class="item s-ok${p === cur ? ' cur' : ''}"><button class="rowbtn" type="button" data-pick="${esc(p.code)}" aria-pressed="${p === cur}">
+    <span class="tw">${thumb(p)}<span class="sbadge" aria-hidden="true"><svg><use href="#${BADGE.ok}"/></svg></span></span>
+    <span><span class="name">${esc(nameOf(p))}</span>${metaOf(p) ? `<span class="meta">${esc(metaOf(p))}</span>` : ''}${p === cur ? '<span class="vline"><span class="verdict">Ton choix actuel</span></span>' : ''}${st.id === 'all' ? '' : `<span class="where${seenAt(p, st) ? ' yes' : ''}">${seenAt(p, st) ? 'Chez ' + esc(st.label) : 'Marque nationale'}</span>`}</span></button></li>`).join('');
+  pickSheet.dataset.k = k;
+  openDialog(pickSheet); $('#pickSheet .sheet-body').scrollTop = 0;
+}
+$('#pickList').addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]'); if (!b || !RV) return;
+  const k = Number(pickSheet.dataset.k);
+  const old = shopEntry(k); const was = old && inShop(old.code);
+  RV.pick[k] = b.dataset.pick;
+  if (was){ shop = shop.filter(x => x.code !== old.code); addEntry(shopEntry(k)); saveShop(); updateBadge(); }
+  closeDialog(pickSheet); renderRecipe();
+});
+$('#pickClose').addEventListener('click', () => closeDialog(pickSheet));
+
+/* --- mes recettes --- */
+let ED = null;
+const ING_IDS = Object.keys(ING).sort((a, b) => ING[a].n.localeCompare(ING[b].n, 'fr'));
+function openEditor(r, name){
+  ED = { id:r ? r.id : null, items:r ? r.i.map(x => x[0]) : [] };
+  $('#edName').value = r ? r.n : (name || '');
+  $('#edFilter').value = '';
+  $('#edDelete').hidden = !r;
+  recView('edit'); renderEditor();
+}
+function renderEditor(){
+  $('#edChosen').innerHTML = ED.items.length ? ED.items.map(id => `<button type="button" class="chip" aria-pressed="true" data-edrm="${id}" aria-label="Retirer ${esc(ING[id].n)}">${esc(ING[id].n)}<span class="x" aria-hidden="true">×</span></button>`).join('') : '<p class="hint">Aucun ingrédient pour l\'instant.</p>';
+  const f = fold($('#edFilter').value).trim();
+  const list = ING_IDS.filter(id => !ED.items.includes(id) && (!f || fold(ING[id].n).includes(f)));
+  $('#edAll').innerHTML = list.map(id => `<button type="button" class="chip" data-edadd="${id}">${esc(ING[id].n)}</button>`).join('') || '<p class="hint">Aucun ingrédient de ce nom dans l\'appli.</p>';
+  $('#edSave').disabled = !ED.items.length || !$('#edName').value.trim();
+}
+$('#edFilter').addEventListener('input', renderEditor);
+$('#edName').addEventListener('input', () => { $('#edSave').disabled = !ED.items.length || !$('#edName').value.trim(); });
+$('#edChosen').addEventListener('click', e => { const b = e.target.closest('[data-edrm]'); if (b){ ED.items = ED.items.filter(x => x !== b.dataset.edrm); renderEditor(); } });
+$('#edAll').addEventListener('click', e => { const b = e.target.closest('[data-edadd]'); if (b){ ED.items.push(b.dataset.edadd); $('#edFilter').value = ''; renderEditor(); } });
+$('#edBack').addEventListener('click', () => { if (ED && ED.id) openRecipe(ED.id); else { recView('home'); renderRecHome(); } });
+$('#edSave').addEventListener('click', () => {
+  const n = $('#edName').value.trim().slice(0, 60); if (!n || !ED.items.length) return;
+  const rec = { id:ED.id || 'm' + Date.now().toString(36), n, i:ED.items.map(id => [id]) };
+  myRecipes = [rec, ...myRecipes.filter(x => x.id !== rec.id)]; saveMyRecipes();
+  $('#recQ').value = ''; toast('Recette enregistrée'); openRecipe(rec.id);
+});
+$('#edDelete').addEventListener('click', () => {
+  if (!ED || !ED.id || !confirm('Supprimer cette recette ?')) return;
+  myRecipes = myRecipes.filter(x => x.id !== ED.id); saveMyRecipes(); recView('home'); renderRecHome();
+});
+$('#recNew').addEventListener('click', () => openEditor(null, ''));
+$('#recEdit').addEventListener('click', () => { if (RV && RV.r.mine) openEditor(myRecipes.find(x => x.id === RV.r.id)); });
+function showRecipes(){
+  const sel = $('#recStore');
+  if (!sel.options.length) sel.innerHTML = $('#store').innerHTML;
+  sel.value = S.store; fitSel(sel);
+  if (RV && !$('#recDetail').hidden){ computeRecipe(); return; }
+  if (!$('#recEditor').hidden) return;
+  recView('home'); renderRecHome();
+}
+
 /* ================= Démarrage ================= */
 renderProfile(); updateBadge(); renderQuick();
 if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
@@ -1897,7 +2407,7 @@ loadIndex();
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex };
+window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES };
 })();
 </script>
 </body>
