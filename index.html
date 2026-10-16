@@ -7,6 +7,7 @@
 <meta name="description" content="Trouve les produits compatibles avec tes allergies dans ton magasin, scanne un code-barres en rayon et garde ta liste de courses.">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#101211" media="(prefers-color-scheme: dark)">
+<script>(function(){var t="light";try{var v=localStorage.getItem("rs2:theme");if(v)t=JSON.parse(v);}catch(e){}if(t!=="auto"){document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");var c=t==="dark"?"#101211":"#FFFFFF";document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.setAttribute("content",c);});}})();</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -566,6 +567,17 @@ footer a{color:inherit}
 
     <div class="group">
       <div class="gpad">
+        <p class="lbl" id="l-theme" style="margin-bottom:10px">Apparence</p>
+        <div class="chips" id="themeChips" role="group" aria-labelledby="l-theme">
+          <button type="button" class="chip" data-theme-set="light">Clair</button>
+          <button type="button" class="chip" data-theme-set="dark">Sombre</button>
+          <button type="button" class="chip" data-theme-set="auto">Comme l'iPhone</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="gpad">
         <p class="lbl" style="margin-bottom:4px">Connexion aux bases</p>
         <p class="hint" style="margin-bottom:10px">Si une recherche échoue, lance ce test et envoie une capture d'écran.</p>
         <button class="ghost" type="button" id="diagBtn">Tester la connexion</button>
@@ -592,7 +604,7 @@ footer a{color:inherit}
     </details>
 
     <button class="ghost wide danger" id="resetAll" type="button" style="margin-top:14px">Effacer toutes mes données</button>
-    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr 3.2.</footer>
+    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr 3.3.</footer>
   </section>
 </div>
 
@@ -823,7 +835,7 @@ const ls = {
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
   del(k){ try { localStorage.removeItem(k); } catch (e) {} },
 };
-const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history', recipes:'rs2:recipes' };
+const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history', recipes:'rs2:recipes', theme:'rs2:theme' };
 
 const FIRST_RUN = ls.get(K.profile, null) === null;
 const profile = Object.assign({ sel:[], traces:false, words:[] }, ls.get(K.profile, {}));
@@ -2428,6 +2440,21 @@ function showRecipes(){
   if (!$('#recEditor').hidden) return;
   recView('home'); renderRecHome();
 }
+
+/* ================= Apparence ================= */
+const THEME_COLOR = { light:'#FFFFFF', dark:'#101211' };
+function applyTheme(t){
+  const root = document.documentElement;
+  if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+  $$('meta[name="theme-color"]').forEach(m => m.setAttribute('content', t === 'auto' ? (/dark/.test(m.media) ? THEME_COLOR.dark : THEME_COLOR.light) : THEME_COLOR[t]));
+  $$('#themeChips [data-theme-set]').forEach(b => b.setAttribute('aria-pressed', b.dataset.themeSet === t));
+}
+let theme = ls.get(K.theme, 'light'); if (!['light', 'dark', 'auto'].includes(theme)) theme = 'light';
+applyTheme(theme);
+$('#themeChips').addEventListener('click', e => {
+  const b = e.target.closest('[data-theme-set]'); if (!b) return;
+  theme = b.dataset.themeSet; ls.set(K.theme, theme); applyTheme(theme);
+});
 
 /* ================= Démarrage ================= */
 renderProfile(); updateBadge(); renderQuick();
