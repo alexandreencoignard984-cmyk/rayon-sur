@@ -750,6 +750,7 @@ footer a{color:inherit}
       <h2 class="ob-title" id="obTitle" tabindex="-1" autofocus>Bienvenue dans Rayon sûr</h2>
       <p class="ob-text">Qu'est-ce que tu dois éviter ? L'appli triera chaque produit pour toi. Tu pourras changer ça plus tard dans Profil.</p>
       <div class="chips" id="obChips" style="justify-content:center"></div>
+      <p class="ob-text" style="margin-top:18px">Ensuite, autorise ta position : l'appli s'adapte aux magasins près de chez toi.</p>
     </div>
     <div class="sheet-foot">
       <button class="primary wide" id="obGo" type="button">C'est parti</button>
@@ -877,7 +878,7 @@ let PV = 0;
 const saveProfile = () => { PV++; ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words }); };
 
 const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', wide:true, ran:false }, ls.get(K.search, {}));
-if (!STORES.some(s => s.id === S.store)) S.store = 'leclerc';
+if (S.store !== 'near' && !STORES.some(s => s.id === S.store)) S.store = 'leclerc';
 if (!(S.rayon in RAYON_NAME)) S.rayon = 'en:ice-creams-and-sorbets';
 const saveSearch = () => ls.set(K.search, S);
 
@@ -934,7 +935,29 @@ const nameOf = p => p.product_name_fr || p.generic_name_fr || p.product_name || 
 const brandOf = p => (p.brands || '').split(',').slice(0, 2).map(s => s.trim()).filter(Boolean).join(', ');
 const metaOf = p => [brandOf(p), p.quantity].filter(Boolean).join(', ');
 const ingredientsOf = p => (p.ingredients_text_fr || p.ingredients_text || '').trim();
-const storeById = id => STORES.find(s => s.id === id) || STORES[0];
+const NEAR_KEY = 'rs2:near';
+let near = ls.get(NEAR_KEY, null);
+const shortLabel = s => s.label.split(',')[0];
+// « Près de moi » : toutes les enseignes trouvées autour de la position, réunies en un seul magasin
+function nearStore(){
+  const ids = near && near.stores ? Object.keys(near.stores).filter(id => STORES.some(s => s.id === id && id !== 'all'))
+    .sort((a, b) => near.stores[a].dist - near.stores[b].dist) : [];
+  if (!ids.length) return null;
+  const cs = ids.map(id => STORES.find(s => s.id === id));
+  return { id:'near', label:'Magasins près de moi', near:true, chains:ids, tags:cs.flatMap(c => c.tags), mdd:cs.flatMap(c => c.mdd), sal:[],
+    match:new RegExp(cs.filter(c => c.match).map(c => '(?:' + c.match.source + ')').join('|'), 'i') };
+}
+let NEAR_ST = null;
+const storeById = id => id === 'near' ? (NEAR_ST || (NEAR_ST = nearStore()) || STORES.find(s => s.id === 'all')) : (STORES.find(s => s.id === id) || STORES[0]);
+// « Chez E.Leclerc (2 km) » : où le produit a été vu, parmi les magasins choisis
+function hereLabel(p, st){
+  if (!st.near) return seenAt(p, st) ? 'Chez ' + st.label : 'Marque nationale';
+  const ids = st.chains.filter(id => seenAt(p, STORES.find(s => s.id === id)));
+  if (!ids.length) return 'Marque nationale';
+  return 'Chez ' + ids.slice(0, 2).map(id => shortLabel(STORES.find(s => s.id === id)) + ' (' + fmtKm(near.stores[id].dist) + ')').join(', ') + (ids.length > 2 ? '…' : '');
+}
+const whereName = st => st.id === 'all' ? 'tous magasins' : st.near ? 'dans les magasins près de toi' : 'chez ' + st.label;
+const fmtKm = d => d < 1 ? `${Math.round(d * 1000 / 50) * 50} m` : `${d.toLocaleString('fr-FR', { maximumFractionDigits:1 })} km`;
 const brandList = p => p._bl || (p._bl = (p.brands || '').split(',').map(b => fold(b).trim().replace(/\s+/g, ' ')).filter(Boolean));
 const isMdd = (p, st) => !!(st.mdd && st.mdd.length) && brandList(p).some(b => st.mdd.some(m => b === m || b.startsWith(m + ' ')));
 function seenAt(p, st){
@@ -1271,7 +1294,15 @@ const QUICK = ['en:ice-creams-and-sorbets','en:yogurts','en:cheeses','en:biscuit
 function renderQuick(){
   $('#quick').innerHTML = QUICK.map(id => `<button type="button" class="chip" data-q="${id}" aria-pressed="${id === S.rayon}">${esc(RAYON_NAME[id])}</button>`).join('');
 }
-$('#store').innerHTML = STORES.map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join('');
+function storeOptions(){
+  const ns = nearStore();
+  const lab = ns ? 'Près de moi : ' + ns.chains.map(id => shortLabel(STORES.find(s => s.id === id))).join(', ') : 'Magasins près de moi…';
+  return `<option value="near">${esc(lab)}</option>` + STORES.map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join('');
+}
+function refreshStoreSelects(){
+  for (const id of ['#store', '#recStore']){ const sel = $(id); if (!sel) continue; sel.innerHTML = storeOptions(); sel.value = S.store; fitSel(sel); }
+}
+$('#store').innerHTML = storeOptions();
 $('#store').value = S.store; $('#terms').value = S.terms || ''; $('#sort').value = S.sort; $('#wide').checked = !!S.wide;
 $('#wide').addEventListener('change', e => { S.wide = e.target.checked; saveSearch(); if (R) runSearch(); });
 $('#rayonName').textContent = RAYON_NAME[S.rayon];
@@ -1300,7 +1331,16 @@ $('#sort').addEventListener('change', e => { S.sort = e.target.value; saveSearch
 function fitSel(sel){ const t = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : ''; sel.style.width = `calc(${Math.min(t.length, 22)}ch + 44px)`; }
 function fitStore(){ fitSel($('#store')); }
 fitStore();
-$('#store').addEventListener('change', e => { S.store = e.target.value; saveSearch(); fitStore(); if (R) runSearch(); });
+$('#store').addEventListener('change', e => chooseStore(e.target.value, e.target));
+async function chooseStore(id, sel){
+  const prev = S.store;
+  if (id === 'near' && !nearStore()){
+    const ok = await useNearby();
+    if (!ok){ S.store = prev; refreshStoreSelects(); return; }
+  } else { S.store = id; saveSearch(); refreshStoreSelects(); }
+  if (RV) { RV.pick = {}; computeRecipe(); }
+  if (R) runSearch();
+}
 $('#terms').addEventListener('input', e => { S.terms = e.target.value; saveSearch(); });
 $('#searchForm').addEventListener('submit', e => { e.preventDefault(); $('#terms').blur(); runSearch({ scroll:true }); });
 function markDirty(msg){ const d = $('#dirty'); d.textContent = msg; d.hidden = false; }
@@ -1426,13 +1466,13 @@ function render(){
   $('#n-no').textContent = allLoaded ? c.no : (c.no ? c.no + '+' : '…');
   $$('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.s === R.tab));
   const st = storeById(R.ctx.store);
-  const where = st.id === 'all' ? 'tous magasins' : 'chez ' + st.label;
+  const where = whereName(st);
   const safeCount = R.sets.safe ? R.sets.safe.vars.reduce((s, v) => s + (v.count || 0), 0) : null;
   const allCount = R.sets.all.vars.reduce((s, v) => s + (v.count || 0), 0);
   const hereN = rows.filter(r => r.here).length;
   let sum = `${rows.length} produits analysés, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}`;
   const wideNow = local ? S.wide : R.ctx.wide;
-  sum += st.id === 'all' ? '.' : wideNow ? ` : ${hereN} signalés dans ce magasin, les autres sont des marques nationales vendues en France.` : '.';
+  sum += st.id === 'all' ? '.' : wideNow ? ` : ${hereN} signalés dans ${st.near ? 'ces magasins' : 'ce magasin'}, les autres sont des marques nationales vendues en France.` : '.';
   if (local && dataIndex && dataIndex.built) sum += ` Base de l'appli du ${esc(dataDate())}.`;
   const curSet = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
   const total = Math.max(0, ...curSet.vars.map(v => v.count || 0));
@@ -1442,7 +1482,7 @@ function render(){
   const shown = rows.filter(r => r.ev.status === R.tab);
   const lim = R.limit || LIMIT;
   R.hiddenN = Math.max(0, shown.length - lim);
-  let html = shown.slice(0, lim).map(r => itemHTML(r.p, r.ev, stR.id === 'all' ? null : (r.here ? 'Chez ' + stR.label : 'Marque nationale'))).join('');
+  let html = shown.slice(0, lim).map(r => itemHTML(r.p, r.ev, stR.id === 'all' ? null : hereLabel(r.p, stR))).join('');
   if (R.tab === 'no' && !allLoaded) html += `<li class="empty-card">Les produits qui contiennent tes allergènes ne sont pas encore chargés.<br><button class="ghost" type="button" id="loadExcluded">Afficher les produits exclus</button></li>`;
   else if (!shown.length) html = `<li class="empty-card">${esc(emptyMsg(R.tab))}</li>`;
   $('#list').innerHTML = html;
@@ -1687,7 +1727,7 @@ function productHTML(p){
     <span>Code-barres ${esc(code)}</span>
     <a href="${OFF_FR}/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir la fiche sur Open Food Facts</a>
     <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">Compléter ou corriger la fiche</a>
-    ${[...new Set([S.store, ...chainInfo(p).seen])].filter(id => DRIVE_SITE[id]).slice(0, 3).map(id => `<a href="${esc(siteSearch(p, id))}" target="_blank" rel="noopener">Chercher sur le site ${esc(shortLabel(storeById(id)))}</a>`).join('')}
+    ${linkChains(p).map(id => `<a href="${esc(siteSearch(p, id))}" target="_blank" rel="noopener">Chercher sur le site ${esc(shortLabel(storeById(id)))}</a>`).join('')}
   </div></section>`;
 }
 $('#sheetBody').addEventListener('click', async e => {
@@ -1749,8 +1789,8 @@ async function findAlternatives(p, btn, everywhere){
     const catShown = la ? mine[0] : cat;
     const inCat = RAYON_NAME[catShown] ? `dans « ${esc(RAYON_NAME[catShown])} »` : 'dans la même catégorie';
     box.innerHTML = rows.length
-      ? `<p class="hint">${rows.length} produit${rows.length > 1 ? 's' : ''} compatible${rows.length > 1 ? 's' : ''} ${inCat}, ${esc(st.id === 'all' ? 'tous magasins' : wideAlt ? 'chez ' + st.label + ' et marques nationales' : 'chez ' + st.label)} :</p><ul class="list" style="margin-top:.5rem">${rows.map(r => itemHTML(r.p, r.ev, st0.id === 'all' || everywhere ? null : (r.here ? 'Chez ' + st0.label : 'Marque nationale'))).join('')}</ul>`
-      : `<p class="hint">Aucun équivalent compatible trouvé ${inCat}${st.id === 'all' ? '' : ' chez ' + esc(st.label)}.</p>${st.id === 'all' || wideAlt ? '' : '<button class="ghost small" type="button" id="altsAll" style="margin-top:.5rem">Chercher dans tous les magasins</button>'}`;
+      ? `<p class="hint">${rows.length} produit${rows.length > 1 ? 's' : ''} compatible${rows.length > 1 ? 's' : ''} ${inCat}, ${esc(st.id === 'all' ? 'tous magasins' : whereName(st) + (wideAlt ? ' et marques nationales' : ''))} :</p><ul class="list" style="margin-top:.5rem">${rows.map(r => itemHTML(r.p, r.ev, st0.id === 'all' || everywhere ? null : hereLabel(r.p, st0))).join('')}</ul>`
+      : `<p class="hint">Aucun équivalent compatible trouvé ${inCat}${st.id === 'all' ? '' : ' ' + esc(whereName(st))}.</p>${st.id === 'all' || wideAlt ? '' : '<button class="ghost small" type="button" id="altsAll" style="margin-top:.5rem">Chercher dans tous les magasins</button>'}`;
   } catch (e) { box.innerHTML = `<p class="status err">${esc(errorText(e))}</p>`; }
   finally { btn.disabled = false; }
 }
@@ -2077,7 +2117,7 @@ $('#obChips').addEventListener('click', e => {
   const b = e.target.closest('.chip'); if (!b) return;
   const k = b.dataset.k; profile.sel.has(k) ? profile.sel.delete(k) : profile.sel.add(k); renderOnboard();
 });
-function finishOnboard(){ saveProfile(); renderProfile(); closeDialog(onboard); }
+function finishOnboard(){ saveProfile(); renderProfile(); closeDialog(onboard); ls.set('rs2:geoAsked', 1); useNearby(); }
 $('#obGo').addEventListener('click', finishOnboard);
 $('#obSkip').addEventListener('click', finishOnboard);
 onboard.addEventListener('cancel', e => { e.preventDefault(); });
@@ -2230,7 +2270,7 @@ function pickFor(id, st){
   const ing = ING[id];
   if (!ing) return Promise.resolve({ status:'no', note:'Ingrédient inconnu' });
   if (ing.f || ing.b) return Promise.resolve(freshResult(ing));
-  const key = `${id}|${st.id}|${PV}`;
+  const key = `${id}|${st.id}${st.chains ? ':' + st.chains.join('.') : ''}|${PV}`;
   if (!pickCache.has(key)){
     const job = pickProducts(ing, st).catch(e => { pickCache.delete(key); throw e; });
     pickCache.set(key, job);
@@ -2397,7 +2437,7 @@ function renderRecipe(){
       const reason = res.status === 'ok' ? (subLbl ? `Remplacé par ${subLbl}` : ((res.noteOf && res.noteOf.get(e.code)) || evalP(e).ok.find(x => /sans lactose|étiqueté/i.test(x)) || '')) : `Aucun produit sûr : ${res.checks} à vérifier`;
       pic = thumb(e);
       body = `<span class="iname">${esc(label)}</span><span class="name">${esc(nameOf(e))}</span>${metaOf(e) ? `<span class="meta">${esc(metaOf(e))}</span>` : ''}
-        <span class="vline"><span class="verdict">${VERDICT[res.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span>${st.id === 'all' ? '' : `<span class="where${seenAt(e, st) ? ' yes' : ''}">${seenAt(e, st) ? 'Chez ' + esc(st.label) : 'Marque nationale'}</span>`}`;
+        <span class="vline"><span class="verdict">${VERDICT[res.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span>${st.id === 'all' ? '' : `<span class="where${seenAt(e, st) ? ' yes' : ''}">${esc(hereLabel(e, st))}</span>`}`;
     } else {
       pic = `<span class="thumb empty" aria-hidden="true"></span>`;
       body = `<span class="iname">${esc(label)}</span><span class="vline"><span class="verdict">Aucun produit compatible</span><span class="reason">${opt ? 'Facultatif : tu peux t\'en passer.' : res.inh ? 'Il contient un de tes allergènes : retire-le ou remplace-le.' : 'Rien de sûr dans la base pour ton profil.'}</span></span>`;
@@ -2408,7 +2448,7 @@ function renderRecipe(){
   });
   $('#recIngr').innerHTML = rows.join('');
   const sum = $('#recSummary');
-  const where = st.id === 'all' ? 'en France' : 'chez ' + st.label;
+  const where = st.id === 'all' ? 'en France' : whereName(st);
   if (pend){ sum.className = 'banner rsum'; sum.innerHTML = `${SPIN}Recherche des produits ${esc(where)}… (${r.i.length - pend} sur ${r.i.length})`; }
   else if (!bad.length && !toCheck.length){ sum.className = 'banner rsum s-ok'; sum.textContent = `Tous les ingrédients ont une version compatible ${where}.${subs ? ` ${subs} remplacé${subs > 1 ? 's' : ''} par une alternative.` : ''}`; }
   else { sum.className = 'banner rsum ' + (bad.length ? 's-no' : 's-check'); sum.textContent = [bad.length ? `Pas de version compatible pour : ${bad.join(', ')}.` : '', toCheck.length ? `À vérifier sur l'étiquette : ${toCheck.join(', ')}.` : ''].filter(Boolean).join(' '); }
@@ -2427,10 +2467,7 @@ $('#recCatalog').addEventListener('click', e => {
 $('#recBack').addEventListener('click', () => { RV = null; recView('home'); renderRecHome(); });
 $('#servMinus').addEventListener('click', () => { if (RV && RV.serv > 1){ RV.serv--; renderRecipe(); } });
 $('#servPlus').addEventListener('click', () => { if (RV && RV.serv < 12){ RV.serv++; renderRecipe(); } });
-$('#recStore').addEventListener('change', e => {
-  S.store = e.target.value; saveSearch(); $('#store').value = S.store; fitStore(); fitSel(e.target);
-  if (RV){ RV.pick = {}; computeRecipe(); }
-});
+$('#recStore').addEventListener('change', e => chooseStore(e.target.value, e.target));
 $('#recIngr').addEventListener('click', e => {
   const a = e.target.closest('[data-radd]');
   if (a){
@@ -2456,7 +2493,7 @@ function openPicker(k){
   $('#pickTitle').textContent = ing.n;
   $('#pickList').innerHTML = res.alts.map(p => `<li class="item s-ok${p === cur ? ' cur' : ''}"><button class="rowbtn" type="button" data-pick="${esc(p.code)}" aria-pressed="${p === cur}">
     <span class="tw">${thumb(p)}<span class="sbadge" aria-hidden="true"><svg><use href="#${BADGE.ok}"/></svg></span></span>
-    <span><span class="name">${esc(nameOf(p))}</span>${metaOf(p) ? `<span class="meta">${esc(metaOf(p))}</span>` : ''}${p === cur ? '<span class="vline"><span class="verdict">Ton choix actuel</span></span>' : ''}${st.id === 'all' ? '' : `<span class="where${seenAt(p, st) ? ' yes' : ''}">${seenAt(p, st) ? 'Chez ' + esc(st.label) : 'Marque nationale'}</span>`}</span></button></li>`).join('');
+    <span><span class="name">${esc(nameOf(p))}</span>${metaOf(p) ? `<span class="meta">${esc(metaOf(p))}</span>` : ''}${p === cur ? '<span class="vline"><span class="verdict">Ton choix actuel</span></span>' : ''}${st.id === 'all' ? '' : `<span class="where${seenAt(p, st) ? ' yes' : ''}">${esc(hereLabel(p, st))}</span>`}</span></button></li>`).join('');
   pickSheet.dataset.k = k;
   openDialog(pickSheet); $('#pickSheet .sheet-body').scrollTop = 0;
 }
@@ -2506,7 +2543,7 @@ $('#recNew').addEventListener('click', () => openEditor(null, ''));
 $('#recEdit').addEventListener('click', () => { if (RV && RV.r.mine) openEditor(myRecipes.find(x => x.id === RV.r.id)); });
 function showRecipes(){
   const sel = $('#recStore');
-  if (!sel.options.length) sel.innerHTML = $('#store').innerHTML;
+  if (!sel.options.length) sel.innerHTML = storeOptions();
   sel.value = S.store; fitSel(sel);
   if (RV && !$('#recDetail').hidden){ computeRecipe(); return; }
   if (!$('#recEditor').hidden) return;
@@ -2518,7 +2555,6 @@ function showRecipes(){
    et marques distributeur), plus les marques nationales, vendues en général partout. Les marques
    distributeur d'une autre enseigne n'y sont pas. Les magasins proches viennent d'OpenStreetMap. */
 const CHAINS = () => STORES.filter(s => s.id !== 'all');
-const shortLabel = s => s.label.split(',')[0];
 function chainInfo(p){
   if (!p || p._fresh) return { fresh:true, seen:[], mdd:[] };
   const seen = CHAINS().filter(s => seenAt(p, s)).map(s => s.id);
@@ -2538,13 +2574,10 @@ function whereText(info){
   if (info.seen.length) return 'Vu chez ' + info.seen.map(lab).join(', ') + ', marque nationale';
   return 'Marque nationale, sans magasin renseigné';
 }
-const NEAR_KEY = 'rs2:near';
-let near = ls.get(NEAR_KEY, null);
 function km(a, b, c, d){
   const r = Math.PI / 180, x = Math.sin((c - a) * r / 2), y = Math.sin((d - b) * r / 2);
   return 12742 * Math.asin(Math.sqrt(x * x + Math.cos(a * r) * Math.cos(c * r) * y * y));
 }
-const fmtKm = d => d < 1 ? `${Math.round(d * 1000 / 50) * 50} m` : `${d.toLocaleString('fr-FR', { maximumFractionDigits:1 })} km`;
 const mapsUrl = (lat, lon, name) => /iPhone|iPad|Macintosh/.test(navigator.userAgent)
   ? `https://maps.apple.com/?daddr=${lat},${lon}&q=${encodeURIComponent(name)}`
   : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
@@ -2570,6 +2603,36 @@ async function nearbyStores(lat, lon){
   }
   return by;
 }
+async function updateNear(lat, lon, label){
+  const stores = await nearbyStores(lat, lon);
+  near = { lat, lon, label, at:Date.now(), stores };
+  ls.set(NEAR_KEY, near); NEAR_ST = null; refreshStoreSelects();
+  return stores;
+}
+const getPosition = () => new Promise((res, rej) => {
+  if (!('geolocation' in navigator)) return rej(new Error('nogeo'));
+  navigator.geolocation.getCurrentPosition(p => res({ lat:p.coords.latitude, lon:p.coords.longitude }), rej, { enableHighAccuracy:false, timeout:15000, maximumAge:600000 });
+});
+// Adapte l'appli aux magasins autour : position, enseignes à moins de 15 km, magasin « Près de moi »
+async function useNearby({ quiet = false } = {}){
+  try {
+    if (!quiet) toast('Recherche des magasins près de toi…', 0);
+    const pos = await getPosition();
+    const before = near && near.stores ? Object.keys(near.stores).sort().join() : '';
+    const stores = await updateNear(pos.lat, pos.lon, 'ta position');
+    const ns = nearStore();
+    if (!ns){ if (!quiet) toast('Aucune enseigne connue à moins de 15 km : choisis ton magasin dans la liste.', 4500); return false; }
+    const changed = before !== Object.keys(stores).sort().join();
+    S.store = 'near'; saveSearch(); refreshStoreSelects();
+    if (!quiet || changed) toast('Magasins près de toi : ' + ns.chains.map(id => shortLabel(STORES.find(s => s.id === id)) + ' ' + fmtKm(near.stores[id].dist)).slice(0, 4).join(', '), 4000);
+    if (!$('#screen-list').hidden) renderLists();
+    return true;
+  } catch (e) {
+    const geo = e && (typeof e.code === 'number' || e.message === 'nogeo');
+    if (!quiet) toast(geo ? 'Position non disponible : choisis ton magasin, ou indique ta ville dans Ma liste.' : 'Carte des magasins indisponible pour le moment : réessaie dans un instant.', 4500);
+    return false;
+  }
+}
 function locate(){
   const st = $('#nearStatus'); st.classList.remove('err');
   if (!('geolocation' in navigator)){ $('#cityForm').hidden = false; st.textContent = 'Indique ta ville pour trouver les magasins proches.'; return; }
@@ -2585,10 +2648,9 @@ async function setNear(lat, lon, label){
   const st = $('#nearStatus');
   st.innerHTML = SPIN + 'Recherche des magasins autour…'; $('#nearBtn').disabled = true;
   try {
-    const stores = await nearbyStores(lat, lon);
-    near = { lat, lon, label, at:Date.now(), stores };
-    ls.set(NEAR_KEY, near);
+    const stores = await updateNear(lat, lon, label);
     const n = Object.keys(stores).length;
+    if (n && S.store !== 'near'){ S.store = 'near'; saveSearch(); refreshStoreSelects(); }
     st.textContent = n ? '' : 'Aucune enseigne connue à moins de 15 km.';
     $('#cityForm').hidden = true;
   } catch (e) {
@@ -2599,8 +2661,15 @@ function renderWhere(){
   const box = $('#whereBox');
   const items = shop.filter(x => !x.done && x.p && !x.p._fresh);
   const fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
-  box.hidden = !items.length;
-  if (!items.length) return;
+  box.hidden = false;
+  const empty = !items.length;
+  $('#whereList').hidden = empty; $('#nearBtn').hidden = empty;
+  if (empty){
+    const bestEl = $('#whereBest'); bestEl.className = 'banner rsum';
+    bestEl.textContent = 'Ajoute des produits à ta liste avec le bouton +, depuis la recherche ou une recette : l\'appli te dira dans quel magasin tu en trouveras le plus.';
+    $('#cityForm').hidden = true; $('#nearStatus').textContent = ''; $('#nearWhere').textContent = '';
+    return;
+  }
   const infos = items.map(x => ({ x, info:chainInfo(x.p) }));
   const N = items.length;
   let rows = CHAINS().map(s => {
@@ -2662,10 +2731,16 @@ $('#cityForm').addEventListener('submit', async e => {
 });
 const DRIVE_SITE = { leclerc:'e.leclerc', carrefour:'carrefour.fr', auchan:'auchan.fr', intermarche:'intermarche.com', u:'coursesu.com', lidl:'lidl.fr',
   aldi:'aldi.fr', monoprix:'monoprix.fr', casino:'casino.fr', franprix:'franprix.fr', cora:'cora.fr', netto:'netto.fr', biocoop:'biocoop.fr', picard:'picard.fr', grandfrais:'grandfrais.com' };
+// sites à proposer : les enseignes proches où le produit a été vu, puis les plus proches
+function linkChains(p){
+  const st = storeById(S.store), seen = chainInfo(p).seen;
+  const base = st.near ? [...st.chains.filter(id => seen.includes(id)), ...st.chains] : [S.store, ...seen];
+  return [...new Set(base)].filter(id => DRIVE_SITE[id]).slice(0, 3);
+}
 const siteSearch = (p, id) => `https://www.google.com/search?q=${encodeURIComponent([nameOf(p), brandOf(p).split(',')[0], 'site:' + DRIVE_SITE[id]].filter(Boolean).join(' '))}`;
 
 /* ================= Version ================= */
-const APP_VERSION = '3.5';
+const APP_VERSION = '3.6';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -2689,6 +2764,12 @@ if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
 go(SCREENS.includes(start) ? start : 'search');
 loadIndex();
+(async () => {
+  let granted = false;
+  try { granted = navigator.permissions && (await navigator.permissions.query({ name:'geolocation' })).state === 'granted'; } catch (e) {}
+  if (!FIRST_RUN && !near && !ls.get('rs2:geoAsked', 0)){ ls.set('rs2:geoAsked', 1); if (await useNearby() && S.ran) runSearch(); }
+  else if (near && granted && Date.now() - (near.at || 0) > 3 * 86400e3){ if (await useNearby({ quiet:true }) && R) runSearch(); }
+})();
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
