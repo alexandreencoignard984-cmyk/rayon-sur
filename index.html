@@ -631,7 +631,7 @@ function toast(msg, ms = 2600){
 const hideToast = () => { clearTimeout(toastTimer); $('#toast').classList.remove('show'); };
 const fmtNum = (v, d = 1) => Number(v).toLocaleString('fr-FR', { maximumFractionDigits:d });
 const fmtDate = s => { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' }); };
-const nameOf = p => p.product_name_fr || p.product_name || p.generic_name_fr || 'Produit sans nom';
+const nameOf = p => p.product_name_fr || p.generic_name_fr || p.product_name || 'Produit sans nom';
 const brandOf = p => (p.brands || '').split(',').slice(0, 2).map(s => s.trim()).filter(Boolean).join(', ');
 const metaOf = p => [brandOf(p), p.quantity].filter(Boolean).join(', ');
 const ingredientsOf = p => (p.ingredients_text_fr || p.ingredients_text || '').trim();
@@ -707,7 +707,8 @@ const NUTRI_OK = { a:['a'], b:['a','b'], c:['a','b','c'], d:['a','b','c','d'] };
 
 function v2Url(o, page){
   const p = new URLSearchParams({ page_size:String(o.size || PAGE), page:String(page), sort_by:SORT_KEY[o.sort] || 'popularity_key', fields:FIELDS });
-  if (o.storeTags && o.storeTags.length) p.set('stores_tags', o.storeTags.join('|')); else p.set('countries_tags', 'en:france');
+  p.set('countries_tags', 'en:france');
+  if (o.storeTags && o.storeTags.length) p.set('stores_tags', o.storeTags.join('|'));
   if (o.category) p.set('categories_tags', o.category);
   if (o.exclude && o.exclude.length) p.set('allergens_tags', '-' + o.exclude.join('|'));
   if (o.excludeTraces && o.excludeTraces.length) p.set('traces_tags', '-' + o.excludeTraces.join('|'));
@@ -721,7 +722,8 @@ function cgiUrl(o, page){
   const p = new URLSearchParams({ action:'process', json:'1', page_size:String(o.size || PAGE), page:String(page), sort_by:SORT_KEY[o.sort] || 'popularity_key', fields:FIELDS, search_terms:o.terms });
   let i = 0;
   const add = (type, op, val) => { p.set('tagtype_' + i, type); p.set('tag_contains_' + i, op); p.set('tag_' + i, val); i++; };
-  if (o.storeTag) add('stores', 'contains', o.storeTag); else add('countries', 'contains', 'en:france');
+  add('countries', 'contains', 'en:france');
+  if (o.storeTag) add('stores', 'contains', o.storeTag);
   if (o.category) add('categories', 'contains', o.category);
   if (o.bio) add('labels', 'contains', 'en:organic');
   for (const t of (o.exclude || [])) add('allergens', 'does_not_contain', t);
