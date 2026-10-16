@@ -1,0 +1,910 @@
+{
+ "stores": [
+  {
+   "id": "leclerc",
+   "label": "E.Leclerc",
+   "tags": [
+    "e-leclerc",
+    "leclerc",
+    "e-leclerc-drive",
+    "leclerc-drive",
+    "e-leclerc-express"
+   ],
+   "match": "leclerc",
+   "flags": "i",
+   "mdd": [
+    "marque repere",
+    "eco+",
+    "eco +",
+    "bio village",
+    "nos regions ont du talent",
+    "eskiss",
+    "smicy",
+    "pommette",
+    "delisse",
+    "turini",
+    "repere"
+   ]
+  },
+  {
+   "id": "carrefour",
+   "label": "Carrefour",
+   "tags": [
+    "carrefour",
+    "carrefour-market",
+    "carrefour-city",
+    "carrefour-express"
+   ],
+   "match": "carrefour",
+   "flags": "i",
+   "mdd": [
+    "carrefour",
+    "reflets de france",
+    "simpl"
+   ]
+  },
+  {
+   "id": "auchan",
+   "label": "Auchan",
+   "tags": [
+    "auchan",
+    "auchan-supermarche",
+    "auchan-drive"
+   ],
+   "match": "auchan",
+   "flags": "i",
+   "mdd": [
+    "auchan",
+    "pouce"
+   ]
+  },
+  {
+   "id": "intermarche",
+   "label": "Intermarché",
+   "tags": [
+    "intermarche",
+    "intermarche-super",
+    "intermarche-contact"
+   ],
+   "match": "intermarch",
+   "flags": "i",
+   "mdd": [
+    "intermarche",
+    "chabrior",
+    "paturages",
+    "monique ranou",
+    "saint eloi",
+    "fiorini",
+    "itineraire des saveurs",
+    "top budget",
+    "capitaine cook"
+   ]
+  },
+  {
+   "id": "u",
+   "label": "Super U, Hyper U",
+   "tags": [
+    "magasins-u",
+    "super-u",
+    "hyper-u",
+    "u-express",
+    "systeme-u"
+   ],
+   "match": "(^|\\W)u(\\W|$)|super u|hyper u|système u",
+   "flags": "i",
+   "mdd": [
+    "u",
+    "systeme u",
+    "bien vu"
+   ]
+  },
+  {
+   "id": "lidl",
+   "label": "Lidl",
+   "tags": [
+    "lidl"
+   ],
+   "match": "lidl",
+   "flags": "i",
+   "mdd": [
+    "lidl",
+    "gelatelli",
+    "milbona",
+    "crownfield",
+    "chef select",
+    "deluxe",
+    "bellarom",
+    "fin carre",
+    "freeway",
+    "solevita",
+    "combino",
+    "alesto",
+    "snack day",
+    "pilos",
+    "vemondo",
+    "saint alby"
+   ]
+  },
+  {
+   "id": "aldi",
+   "label": "Aldi",
+   "tags": [
+    "aldi"
+   ],
+   "match": "aldi",
+   "flags": "i",
+   "mdd": [
+    "aldi",
+    "moser roth",
+    "choceur",
+    "gut bio",
+    "cucina nobile",
+    "brooklea",
+    "milsani"
+   ]
+  },
+  {
+   "id": "monoprix",
+   "label": "Monoprix",
+   "tags": [
+    "monoprix"
+   ],
+   "match": "monoprix",
+   "flags": "i",
+   "mdd": [
+    "monoprix"
+   ]
+  },
+  {
+   "id": "casino",
+   "label": "Casino",
+   "tags": [
+    "casino",
+    "geant-casino"
+   ],
+   "match": "casino",
+   "flags": "i",
+   "mdd": [
+    "casino"
+   ]
+  },
+  {
+   "id": "franprix",
+   "label": "Franprix",
+   "tags": [
+    "franprix"
+   ],
+   "match": "franprix",
+   "flags": "i",
+   "mdd": [
+    "franprix"
+   ]
+  },
+  {
+   "id": "cora",
+   "label": "Cora",
+   "tags": [
+    "cora"
+   ],
+   "match": "cora",
+   "flags": "i",
+   "mdd": [
+    "cora"
+   ]
+  },
+  {
+   "id": "netto",
+   "label": "Netto",
+   "tags": [
+    "netto"
+   ],
+   "match": "netto",
+   "flags": "i",
+   "mdd": [
+    "netto",
+    "intermarche",
+    "chabrior",
+    "paturages",
+    "monique ranou",
+    "saint eloi",
+    "fiorini",
+    "itineraire des saveurs",
+    "top budget",
+    "capitaine cook"
+   ]
+  },
+  {
+   "id": "biocoop",
+   "label": "Biocoop",
+   "tags": [
+    "biocoop"
+   ],
+   "match": "biocoop",
+   "flags": "i",
+   "mdd": [
+    "biocoop"
+   ]
+  },
+  {
+   "id": "picard",
+   "label": "Picard",
+   "tags": [
+    "picard"
+   ],
+   "match": "picard",
+   "flags": "i",
+   "mdd": [
+    "picard"
+   ]
+  },
+  {
+   "id": "grandfrais",
+   "label": "Grand Frais",
+   "tags": [
+    "grand-frais"
+   ],
+   "match": "grand frais",
+   "flags": "i",
+   "mdd": [
+    "grand frais"
+   ]
+  }
+ ],
+ "aisles": [
+  {
+   "tag": "en:yogurts",
+   "name": "Yaourts",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:fromages-blancs-petit-suisses-and-skyr",
+   "name": "Fromages blancs et skyr",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:dairy-desserts",
+   "name": "Desserts lactés",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:entremets-mousses-and-creamy-puddings",
+   "name": "Crèmes desserts et mousses",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:cheeses",
+   "name": "Fromages",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:grated-cheese",
+   "name": "Fromages râpés",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:cheese-spreads",
+   "name": "Fromages à tartiner",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:butters",
+   "name": "Beurres",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:creams",
+   "name": "Crèmes fraîches et crèmes",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:milks",
+   "name": "Laits",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:dairy-drinks",
+   "name": "Boissons lactées",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:eggs",
+   "name": "Œufs",
+   "group": "Crèmerie"
+  },
+  {
+   "tag": "en:plant-based-milk-alternatives",
+   "name": "Boissons végétales",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:oat-based-drinks",
+   "name": "Boissons à l'avoine",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:non-dairy-yogurts",
+   "name": "Yaourts végétaux",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:soy-desserts",
+   "name": "Desserts au soja",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:dairy-substitutes",
+   "name": "Substituts de produits laitiers",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:meat-analogues",
+   "name": "Substituts de viande",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:tofu",
+   "name": "Tofu",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:falafels",
+   "name": "Falafels",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:hummus",
+   "name": "Houmous",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:plant-based-spreads",
+   "name": "Pâtes à tartiner végétales",
+   "group": "Végétal"
+  },
+  {
+   "tag": "en:prepared-meats",
+   "name": "Charcuterie",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:hams",
+   "name": "Jambons",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:white-hams",
+   "name": "Jambons blancs",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:dry-sausages",
+   "name": "Saucissons",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:sausages",
+   "name": "Saucisses",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:rillettes",
+   "name": "Rillettes",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:fresh-meals",
+   "name": "Plats préparés frais",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:prepared-salads",
+   "name": "Salades composées",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:tabbouleh",
+   "name": "Taboulés",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:pizzas",
+   "name": "Pizzas",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:quiches",
+   "name": "Quiches",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:pies",
+   "name": "Tartes",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:fresh-pasta",
+   "name": "Pâtes fraîches",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:ravioli",
+   "name": "Raviolis",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:gnocchi",
+   "name": "Gnocchi",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:sandwiches",
+   "name": "Sandwichs",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:wraps",
+   "name": "Wraps",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:pie-dough",
+   "name": "Pâtes à tarte",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:salted-spreads",
+   "name": "Tartinables salés",
+   "group": "Traiteur et charcuterie"
+  },
+  {
+   "tag": "en:fresh-meats",
+   "name": "Viandes",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:poultries",
+   "name": "Volailles",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:cordons-bleus",
+   "name": "Cordons bleus",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:chicken-nuggets",
+   "name": "Nuggets de poulet",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:seafood",
+   "name": "Produits de la mer",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:smoked-fishes",
+   "name": "Poissons fumés",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:smoked-salmons",
+   "name": "Saumons fumés",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:surimi",
+   "name": "Surimi",
+   "group": "Boucherie et poissonnerie"
+  },
+  {
+   "tag": "en:ice-creams-and-sorbets",
+   "name": "Glaces et sorbets",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:ice-creams",
+   "name": "Crèmes glacées",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:sorbets",
+   "name": "Sorbets",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:ice-pops",
+   "name": "Glaces à l'eau",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-desserts",
+   "name": "Desserts glacés",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-ready-made-meals",
+   "name": "Plats préparés surgelés",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-pizzas",
+   "name": "Pizzas surgelées",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-lasagne",
+   "name": "Lasagnes surgelées",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-vegetables",
+   "name": "Légumes surgelés",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-fries",
+   "name": "Frites",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:breaded-fish",
+   "name": "Poissons panés",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:frozen-fishes",
+   "name": "Poissons surgelés",
+   "group": "Surgelés"
+  },
+  {
+   "tag": "en:breakfast-cereals",
+   "name": "Céréales",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:mueslis",
+   "name": "Mueslis",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:sweet-spreads",
+   "name": "Pâtes à tartiner",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:hazelnut-spreads",
+   "name": "Pâtes à tartiner aux noisettes",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:jams",
+   "name": "Confitures",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:honeys",
+   "name": "Miels",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:rusks",
+   "name": "Biscottes",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:coffees",
+   "name": "Cafés",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:teas",
+   "name": "Thés",
+   "group": "Petit-déjeuner"
+  },
+  {
+   "tag": "en:biscuits",
+   "name": "Biscuits",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:chocolate-biscuits",
+   "name": "Biscuits au chocolat",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:drop-cookies",
+   "name": "Cookies",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:dry-biscuits",
+   "name": "Biscuits secs",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:cakes",
+   "name": "Gâteaux",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:madeleines",
+   "name": "Madeleines",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:muffins",
+   "name": "Muffins",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:crepes-and-galettes",
+   "name": "Crêpes et galettes",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:cereal-bars",
+   "name": "Barres de céréales",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:protein-bars",
+   "name": "Barres protéinées",
+   "group": "Biscuits et gâteaux"
+  },
+  {
+   "tag": "en:chocolates",
+   "name": "Chocolats",
+   "group": "Chocolat et confiserie"
+  },
+  {
+   "tag": "en:dark-chocolates",
+   "name": "Chocolats noirs",
+   "group": "Chocolat et confiserie"
+  },
+  {
+   "tag": "en:milk-chocolates",
+   "name": "Chocolats au lait",
+   "group": "Chocolat et confiserie"
+  },
+  {
+   "tag": "en:candies",
+   "name": "Bonbons",
+   "group": "Chocolat et confiserie"
+  },
+  {
+   "tag": "en:confectioneries",
+   "name": "Confiseries",
+   "group": "Chocolat et confiserie"
+  },
+  {
+   "tag": "en:compotes",
+   "name": "Compotes",
+   "group": "Fruits et desserts"
+  },
+  {
+   "tag": "en:applesauces",
+   "name": "Compotes de pommes",
+   "group": "Fruits et desserts"
+  },
+  {
+   "tag": "en:dried-fruits",
+   "name": "Fruits secs",
+   "group": "Fruits et desserts"
+  },
+  {
+   "tag": "en:nuts",
+   "name": "Fruits à coque",
+   "group": "Fruits et desserts"
+  },
+  {
+   "tag": "en:breads",
+   "name": "Pains",
+   "group": "Boulangerie"
+  },
+  {
+   "tag": "en:sliced-breads",
+   "name": "Pains de mie",
+   "group": "Boulangerie"
+  },
+  {
+   "tag": "en:viennoiseries",
+   "name": "Viennoiseries",
+   "group": "Boulangerie"
+  },
+  {
+   "tag": "en:brioches",
+   "name": "Brioches",
+   "group": "Boulangerie"
+  },
+  {
+   "tag": "en:chocolate-croissant",
+   "name": "Pains au chocolat",
+   "group": "Boulangerie"
+  },
+  {
+   "tag": "en:milk-bread-rolls",
+   "name": "Pains au lait",
+   "group": "Boulangerie"
+  },
+  {
+   "tag": "en:pastas",
+   "name": "Pâtes",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:rices",
+   "name": "Riz",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:noodles",
+   "name": "Nouilles",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:legumes",
+   "name": "Légumineuses",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:flours",
+   "name": "Farines",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:sugars",
+   "name": "Sucres",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:vegetable-oils",
+   "name": "Huiles",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:canned-vegetables",
+   "name": "Légumes en conserve",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:canned-fishes",
+   "name": "Poissons en conserve",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:tunas",
+   "name": "Thons",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:canned-meals",
+   "name": "Plats en conserve",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:soups",
+   "name": "Soupes",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:olives",
+   "name": "Olives",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:pickles",
+   "name": "Pickles et cornichons",
+   "group": "Épicerie salée"
+  },
+  {
+   "tag": "en:sauces",
+   "name": "Sauces",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:tomato-sauces",
+   "name": "Sauces tomate",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:mayonnaises",
+   "name": "Mayonnaises",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:mustards",
+   "name": "Moutardes",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:ketchup",
+   "name": "Ketchup",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:condiments",
+   "name": "Condiments",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:spices",
+   "name": "Épices",
+   "group": "Sauces et condiments"
+  },
+  {
+   "tag": "en:crisps",
+   "name": "Chips",
+   "group": "Apéritif"
+  },
+  {
+   "tag": "en:appetizers",
+   "name": "Biscuits apéritif",
+   "group": "Apéritif"
+  },
+  {
+   "tag": "en:salty-snacks",
+   "name": "Snacks salés",
+   "group": "Apéritif"
+  },
+  {
+   "tag": "en:juices-and-nectars",
+   "name": "Jus et nectars",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:fruit-juices",
+   "name": "Jus de fruits",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:sodas",
+   "name": "Sodas",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:iced-teas",
+   "name": "Thés glacés",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:syrups",
+   "name": "Sirops",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:waters",
+   "name": "Eaux",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:energy-drinks",
+   "name": "Boissons énergisantes",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:beers",
+   "name": "Bières",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:wines",
+   "name": "Vins",
+   "group": "Boissons"
+  },
+  {
+   "tag": "en:baby-foods",
+   "name": "Alimentation bébé",
+   "group": "Bébé"
+  },
+  {
+   "tag": "en:baby-milks",
+   "name": "Laits pour bébé",
+   "group": "Bébé"
+  },
+  {
+   "tag": "en:snacks-and-desserts-for-babies",
+   "name": "Goûters et desserts bébé",
+   "group": "Bébé"
+  }
+ ]
+}

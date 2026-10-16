@@ -115,8 +115,8 @@ p{margin:0}
 /* contrôle segmenté */
 .segwrap{position:sticky;top:0;z-index:5;margin:10px -16px 0;padding:calc(env(safe-area-inset-top,0px) + 6px) 16px 8px;background:var(--bg)}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:3px;border-radius:12px;background:var(--sunk)}
-.tab{display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;white-space:nowrap}
-.tab b{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+.tab{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:6px;row-gap:0;min-width:0;min-height:46px;padding:4px 4px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;line-height:1.2;white-space:nowrap}
+.tab b{flex-basis:100%;text-align:center;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
 .tab::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--dot)}
 .tab[data-s="ok"]{--dot:var(--ok)} .tab[data-s="check"]{--dot:var(--warn)} .tab[data-s="no"]{--dot:var(--no)}
 .tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
@@ -264,6 +264,11 @@ table.nut tr.sub td:first-child{padding-left:14px;color:var(--muted)}
 .prices li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
 .prices li:first-child{border-top:0}
 .prices li.here b{color:var(--ok)}
+.diag{list-style:none;padding:0;margin:12px 0 0}
+.diag li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.diag li b{font-weight:600;text-align:right;white-space:nowrap}
+.diag li b.ok{color:var(--ok)} .diag li b.ko{color:var(--no)}
+.diag li.meta{color:var(--muted);font-size:13px}
 .prices b{font-variant-numeric:tabular-nums;white-space:nowrap}
 .links{display:grid;gap:2px;margin-top:6px;font-size:15px}
 .links a{color:var(--ink);font-weight:600;padding:8px 0;text-decoration:none;border-top:1px solid var(--line)}
@@ -470,6 +475,15 @@ footer a{color:inherit}
       </form>
     </div>
 
+    <div class="group">
+      <div class="gpad">
+        <p class="lbl" style="margin-bottom:4px">Connexion aux bases</p>
+        <p class="hint" style="margin-bottom:10px">Si une recherche échoue, lance ce test et envoie une capture d'écran.</p>
+        <button class="ghost" type="button" id="diagBtn">Tester la connexion</button>
+        <ul class="diag" id="diagList" hidden></ul>
+      </div>
+    </div>
+
     <details class="info">
       <summary>Installer sur l'écran d'accueil</summary>
       <div class="inner"><p>Sur iPhone, ouvre cette page dans Safari, touche Partager puis « Sur l'écran d'accueil ». Sur Android : menu de Chrome, puis « Ajouter à l'écran d'accueil ».</p></div>
@@ -477,19 +491,19 @@ footer a{color:inherit}
     <details class="info">
       <summary>D'où viennent les données ?</summary>
       <div class="inner">
-        <p>L'appli assemble quatre bases ouvertes :</p>
+        <p>L'appli assemble plusieurs bases ouvertes :</p>
         <p><b>Open Food Facts</b> : fiches produits (ingrédients, allergènes, traces, labels, scores), saisies par la communauté et des fabricants à partir des emballages.</p>
-        <p><b>Search-a-licious</b> : le moteur de recherche d'Open Food Facts. Il retrouve les produits par nom, par magasin ou par marque distributeur, et prend le relais si Open Food Facts limite les recherches.</p>
+        <p><b>Base de l'appli</b> : chaque semaine, l'appli récupère l'export complet d'Open Food Facts et garde les produits vendus en France, rayon par rayon. Parcourir un rayon ne dépend donc pas des serveurs d'Open Food Facts, souvent saturés.</p>
         <p><b>RappelConso</b> : la base officielle des rappels de produits du gouvernement. Chaque fiche produit est vérifiée.</p>
         <p><b>Open Prices</b> : prix relevés en magasin par la communauté.</p>
         <p>« Chez E.Leclerc » veut dire qu'un contributeur l'a vu dans cette enseigne, pas qu'il est en stock dans ton magasin. Certaines fiches sont incomplètes : c'est le rôle de l'onglet « À vérifier ».</p>
-        <p>Open Food Facts accepte 10 recherches par minute. Au-delà, l'appli fait une courte pause toute seule.</p>
+        <p>La recherche par nom dans tous les rayons et le scan interrogent Open Food Facts en direct. Quand ses serveurs sont saturés, l'appli réessaie toute seule.</p>
         <p>Les recettes changent : l'étiquette du produit que tu as en main fait toujours foi.</p>
       </div>
     </details>
 
     <button class="ghost wide danger" id="resetAll" type="button" style="margin-top:14px">Effacer toutes mes données</button>
-    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr 3.0.</footer>
+    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr 3.1.</footer>
   </section>
 </div>
 
@@ -607,13 +621,9 @@ footer a{color:inherit}
 const OFF = 'https://world.openfoodfacts.org';
 const OFF_FR = 'https://fr.openfoodfacts.org';
 const PRICES = 'https://prices.openfoodfacts.org/api/v1/prices';
-const SAL = 'https://search.openfoodfacts.org/search';
-const SAL_DOC = 'https://search.openfoodfacts.org/document/';
 const RAPPEL = 'https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/rappelconso-v2-gtin-trie/records';
-const SAL_FIELDS = ['code','product_name','product_name_fr','generic_name','generic_name_fr','brands','quantity','image_front_small_url','image_front_url',
-  'allergens','traces','labels','categories','stores','countries','ingredients_text','ingredients_text_fr','ingredients_analysis_tags','additives',
-  'nutriscore_grade','nutriscore_score','nova_group','environmental_score_grade','environmental_score_score','nutriments','nutrient_levels',
-  'compared_to_category','popularity_key','unique_scans_n'].join(',');
+const DATA = (() => { try { return new URL('data/', location.href).href; } catch (e) { return 'data/'; } })();
+const LIMIT = 60;
 const POLYFILL_URL = 'https://cdn.jsdelivr.net/npm/barcode-detector@3.2.2/dist/iife/ponyfill.js';
 const PAGE = 100;
 const FIELDS = ['code','product_name','product_name_fr','generic_name_fr','brands','quantity','image_front_small_url','image_front_url',
@@ -643,13 +653,13 @@ const STORES = [
 ];
 
 const AISLES = [
-  ['Crèmerie', [['en:yogurts','Yaourts'],['en:fromages-blancs-petit-suisses-and-skyr','Fromages blancs et skyr'],['en:dairy-desserts','Desserts lactés'],['en:entremets-mousses-and-creamy-puddings','Crèmes desserts et mousses'],['en:cheeses','Fromages'],['en:grated-cheese','Fromages râpés'],['en:cheese-spreads','Fromages à tartiner'],['en:butters','Beurres'],['en:cremes-fraiches','Crèmes fraîches'],['en:milks','Laits'],['en:dairy-drinks','Boissons lactées'],['en:eggs','Œufs']]],
+  ['Crèmerie', [['en:yogurts','Yaourts'],['en:fromages-blancs-petit-suisses-and-skyr','Fromages blancs et skyr'],['en:dairy-desserts','Desserts lactés'],['en:entremets-mousses-and-creamy-puddings','Crèmes desserts et mousses'],['en:cheeses','Fromages'],['en:grated-cheese','Fromages râpés'],['en:cheese-spreads','Fromages à tartiner'],['en:butters','Beurres'],['en:creams','Crèmes fraîches et crèmes'],['en:milks','Laits'],['en:dairy-drinks','Boissons lactées'],['en:eggs','Œufs']]],
   ['Végétal', [['en:plant-based-milk-alternatives','Boissons végétales'],['en:oat-based-drinks','Boissons à l\'avoine'],['en:non-dairy-yogurts','Yaourts végétaux'],['en:soy-desserts','Desserts au soja'],['en:dairy-substitutes','Substituts de produits laitiers'],['en:meat-analogues','Substituts de viande'],['en:tofu','Tofu'],['en:falafels','Falafels'],['en:hummus','Houmous'],['en:plant-based-spreads','Pâtes à tartiner végétales']]],
-  ['Traiteur et charcuterie', [['en:prepared-meats','Charcuterie'],['en:hams','Jambons'],['en:white-hams','Jambons blancs'],['en:dry-sausages','Saucissons'],['en:sausages','Saucisses'],['en:rillettes','Rillettes'],['en:fresh-meals','Plats préparés frais'],['en:prepared-salads','Salades composées'],['en:tabbouleh','Taboulés'],['en:pizzas','Pizzas'],['en:quiches','Quiches'],['en:pies','Tartes'],['en:fresh-pasta','Pâtes fraîches'],['en:raviolis','Raviolis'],['en:gnocchi','Gnocchi'],['en:sandwiches','Sandwichs'],['en:wraps','Wraps'],['en:pie-dough','Pâtes à tarte'],['en:salted-spreads','Tartinables salés']]],
+  ['Traiteur et charcuterie', [['en:prepared-meats','Charcuterie'],['en:hams','Jambons'],['en:white-hams','Jambons blancs'],['en:dry-sausages','Saucissons'],['en:sausages','Saucisses'],['en:rillettes','Rillettes'],['en:fresh-meals','Plats préparés frais'],['en:prepared-salads','Salades composées'],['en:tabbouleh','Taboulés'],['en:pizzas','Pizzas'],['en:quiches','Quiches'],['en:pies','Tartes'],['en:fresh-pasta','Pâtes fraîches'],['en:ravioli','Raviolis'],['en:gnocchi','Gnocchi'],['en:sandwiches','Sandwichs'],['en:wraps','Wraps'],['en:pie-dough','Pâtes à tarte'],['en:salted-spreads','Tartinables salés']]],
   ['Boucherie et poissonnerie', [['en:fresh-meats','Viandes'],['en:poultries','Volailles'],['en:cordons-bleus','Cordons bleus'],['en:chicken-nuggets','Nuggets de poulet'],['en:seafood','Produits de la mer'],['en:smoked-fishes','Poissons fumés'],['en:smoked-salmons','Saumons fumés'],['en:surimi','Surimi']]],
-  ['Surgelés', [['en:ice-creams-and-sorbets','Glaces et sorbets'],['en:ice-creams','Crèmes glacées'],['en:sorbets','Sorbets'],['en:ice-pops','Glaces à l\'eau'],['en:frozen-desserts','Desserts glacés'],['en:frozen-ready-made-meals','Plats préparés surgelés'],['en:frozen-pizzas','Pizzas surgelées'],['en:frozen-lasagne','Lasagnes surgelées'],['en:frozen-vegetables','Légumes surgelés'],['en:potato-fries','Frites'],['en:breaded-fish','Poissons panés'],['en:frozen-fishes','Poissons surgelés']]],
+  ['Surgelés', [['en:ice-creams-and-sorbets','Glaces et sorbets'],['en:ice-creams','Crèmes glacées'],['en:sorbets','Sorbets'],['en:ice-pops','Glaces à l\'eau'],['en:frozen-desserts','Desserts glacés'],['en:frozen-ready-made-meals','Plats préparés surgelés'],['en:frozen-pizzas','Pizzas surgelées'],['en:frozen-lasagne','Lasagnes surgelées'],['en:frozen-vegetables','Légumes surgelés'],['en:frozen-fries','Frites'],['en:breaded-fish','Poissons panés'],['en:frozen-fishes','Poissons surgelés']]],
   ['Petit-déjeuner', [['en:breakfast-cereals','Céréales'],['en:mueslis','Mueslis'],['en:sweet-spreads','Pâtes à tartiner'],['en:hazelnut-spreads','Pâtes à tartiner aux noisettes'],['en:jams','Confitures'],['en:honeys','Miels'],['en:rusks','Biscottes'],['en:coffees','Cafés'],['en:teas','Thés']]],
-  ['Biscuits et gâteaux', [['en:biscuits','Biscuits'],['en:chocolate-biscuits','Biscuits au chocolat'],['en:drop-cookies','Cookies'],['en:dry-biscuits','Biscuits secs'],['en:cakes','Gâteaux'],['en:madeleines','Madeleines'],['en:muffins','Muffins'],['en:crepes-and-pancakes','Crêpes et galettes'],['en:cereal-bars','Barres de céréales'],['en:protein-bars','Barres protéinées']]],
+  ['Biscuits et gâteaux', [['en:biscuits','Biscuits'],['en:chocolate-biscuits','Biscuits au chocolat'],['en:drop-cookies','Cookies'],['en:dry-biscuits','Biscuits secs'],['en:cakes','Gâteaux'],['en:madeleines','Madeleines'],['en:muffins','Muffins'],['en:crepes-and-galettes','Crêpes et galettes'],['en:cereal-bars','Barres de céréales'],['en:protein-bars','Barres protéinées']]],
   ['Chocolat et confiserie', [['en:chocolates','Chocolats'],['en:dark-chocolates','Chocolats noirs'],['en:milk-chocolates','Chocolats au lait'],['en:candies','Bonbons'],['en:confectioneries','Confiseries']]],
   ['Fruits et desserts', [['en:compotes','Compotes'],['en:applesauces','Compotes de pommes'],['en:dried-fruits','Fruits secs'],['en:nuts','Fruits à coque']]],
   ['Boulangerie', [['en:breads','Pains'],['en:sliced-breads','Pains de mie'],['en:viennoiseries','Viennoiseries'],['en:brioches','Brioches'],['en:chocolate-croissant','Pains au chocolat'],['en:milk-bread-rolls','Pains au lait']]],
@@ -716,7 +726,8 @@ const FIRST_RUN = ls.get(K.profile, null) === null;
 const profile = Object.assign({ sel:[], traces:false, words:[] }, ls.get(K.profile, {}));
 profile.sel = new Set((profile.sel || []).filter(k => ALLERGENS.some(a => a.key === k)));
 profile.words = Array.isArray(profile.words) ? profile.words.filter(w => typeof w === 'string' && w.trim()).slice(0, 30) : [];
-const saveProfile = () => ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words });
+let PV = 0;
+const saveProfile = () => { PV++; ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words }); };
 
 const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', wide:true, ran:false }, ls.get(K.search, {}));
 if (!STORES.some(s => s.id === S.store)) S.store = 'leclerc';
@@ -777,7 +788,7 @@ const brandOf = p => (p.brands || '').split(',').slice(0, 2).map(s => s.trim()).
 const metaOf = p => [brandOf(p), p.quantity].filter(Boolean).join(', ');
 const ingredientsOf = p => (p.ingredients_text_fr || p.ingredients_text || '').trim();
 const storeById = id => STORES.find(s => s.id === id) || STORES[0];
-const brandList = p => (p.brands || '').split(',').map(b => fold(b).trim().replace(/\s+/g, ' ')).filter(Boolean);
+const brandList = p => p._bl || (p._bl = (p.brands || '').split(',').map(b => fold(b).trim().replace(/\s+/g, ' ')).filter(Boolean));
 const isMdd = (p, st) => !!(st.mdd && st.mdd.length) && brandList(p).some(b => st.mdd.some(m => b === m || b.startsWith(m + ' ')));
 function seenAt(p, st){
   if (!st || st.id === 'all') return true;
@@ -789,28 +800,6 @@ function slim(p){
   const o = {}; for (const f of FIELDS.split(',')) if (p[f] != null && p[f] !== '') o[f] = p[f];
   if (o.nutriments){ const n = {}; for (const k of ['energy-kcal_100g','fat_100g','saturated-fat_100g','carbohydrates_100g','sugars_100g','fiber_100g','proteins_100g','salt_100g']) if (o.nutriments[k] != null) n[k] = o.nutriments[k]; o.nutriments = n; }
   o.code = String(p.code); return o;
-}
-const SAL_MAP = { allergens:'allergens_tags', traces:'traces_tags', labels:'labels_tags', categories:'categories_tags', stores:'stores_tags', countries:'countries_tags', additives:'additives_tags', brands:'brands_tags' };
-const humanTag = t => { const x = String(t).replace(/^[a-z]{2}:/, '').replace(/-/g, ' '); return x.charAt(0).toUpperCase() + x.slice(1); };
-function fromSAL(h){
-  const p = {};
-  for (const [k, v] of Object.entries(h || {})){
-    if (v && typeof v === 'object' && !Array.isArray(v) && /^(product_name|generic_name|ingredients_text)$/.test(k)){
-      if (v.main) p[k] = v.main;
-      for (const [l, t] of Object.entries(v)) if (l !== 'main' && typeof t === 'string') p[k + '_' + l] = t;
-      continue;
-    }
-    if (SAL_MAP[k] && Array.isArray(v)){ p[SAL_MAP[k]] = v; continue; }
-    p[k] = v;
-  }
-  p.code = String(h.code); p._sal = true;
-  if (p.brands_tags && typeof p.brands !== 'string') p.brands = p.brands_tags.map(humanTag).join(', ');
-  if (p.stores_tags && !p.stores) p.stores = p.stores_tags.map(humanTag).join(', ');
-  if (!p.ecoscore_grade && p.environmental_score_grade) p.ecoscore_grade = p.environmental_score_grade;
-  if (p.ecoscore_score == null && p.environmental_score_score != null) p.ecoscore_score = p.environmental_score_score;
-  if (!p.image_front_small_url && p.image_small_url) p.image_front_small_url = p.image_small_url;
-  if (!p.image_front_url && p.image_url) p.image_front_url = p.image_url;
-  return p;
 }
 function gtinOK(code, format){
   if (format === 'upc_e') return /^\d{6,8}$/.test(code);
@@ -834,11 +823,14 @@ async function searchSlot(){
   }
 }
 function err(code, extra){ const e = new Error(code); e.code = code; Object.assign(e, extra); return e; }
-async function getJSON(url, { bucket = 'product', ttl = 20 * 60e3 } = {}){
-  const hit = cache.get(url);
-  if (hit && Date.now() - hit.t < ttl) return hit.data;
-  if (bucket === 'search') await searchSlot();
-  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 25000);
+const inflight = new Map();
+/* Open Food Facts refuse une partie des recherches quand trop de monde cherche en même temps
+   (limite mondiale, réponse 503 sans en-tête CORS : le navigateur n'y voit qu'une erreur réseau).
+   Ces refus sont brefs : on relance quelques fois, avec une attente croissante. */
+const RETRY = { search:[500, 900, 1400, 2000, 2600, 3200], product:[1200, 3000], free:[1500] };
+const retryable = e => e && (e.code === 'network' || e.code === 'timeout' || (e.code === 'http' && e.status >= 500));
+async function fetchOnce(url, ms){
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), ms);
   try {
     const r = await fetch(url, { signal:ctl.signal });
     if (r.status === 429){
@@ -846,25 +838,99 @@ async function getJSON(url, { bucket = 'product', ttl = 20 * 60e3 } = {}){
       throw err('rate');
     }
     if (!r.ok) throw err('http', { status:r.status });
-    const data = await r.json();
-    cache.set(url, { t:Date.now(), data });
-    if (cache.size > 80) cache.delete(cache.keys().next().value);
-    return data;
+    return await r.json();
   } catch (e) {
     if (e.code) throw e;
     if (e.name === 'AbortError') throw err('timeout');
+    if (e instanceof SyntaxError) throw err('http', { status:'format' });
     throw err(navigator.onLine === false ? 'offline' : 'network');
   } finally { clearTimeout(tm); }
 }
+async function getJSON(url, { bucket = 'product', ttl = 20 * 60e3, onRetry = null, timeout = 20000, noCache = false } = {}){
+  const hit = cache.get(url);
+  if (hit && Date.now() - hit.t < ttl) return hit.data;
+  if (inflight.has(url)) return inflight.get(url);
+  const job = (async () => {
+    if (bucket === 'search') await searchSlot();
+    const waits = RETRY[bucket] || RETRY.free;
+    for (let i = 0; ; i++){
+      try {
+        const data = await fetchOnce(url, timeout);
+        if (noCache) return data;
+        cache.set(url, { t:Date.now(), data });
+        if (cache.size > 120) cache.delete(cache.keys().next().value);
+        return data;
+      } catch (e) {
+        if (!retryable(e) || i >= waits.length) throw e;
+        if (onRetry) onRetry(i + 1, waits.length);
+        await sleep(waits[i] + Math.random() * 400);
+      }
+    }
+  })();
+  inflight.set(url, job);
+  try { return await job; } finally { inflight.delete(url); }
+}
 function errorText(e){
   switch (e && e.code){
-    case 'rate': return 'Open Food Facts limite à 10 recherches par minute. Attends une minute et réessaie.';
+    case 'rate': return 'Open Food Facts limite le nombre de recherches. Attends une minute et réessaie.';
     case 'timeout': return 'Open Food Facts met trop de temps à répondre. Réessaie dans un instant.';
     case 'offline': return 'Pas de connexion internet. Réessaie quand tu as du réseau.';
-    case 'http': return `Open Food Facts est indisponible pour le moment (erreur ${e.status}). Réessaie plus tard.`;
-    default: return 'Connexion à Open Food Facts impossible. Vérifie ton réseau, puis réessaie. Dans l\'aperçu de Claude, c\'est normal : ouvre ton lien github.io.';
+    case 'http': return `Open Food Facts est indisponible pour le moment (erreur ${e.status}). Réessaie dans quelques minutes.`;
+    default: return 'Open Food Facts est saturé en ce moment : trop de monde cherche en même temps. Réessaie dans quelques secondes.';
   }
 }
+
+/* ================= Base de produits de l'appli (data/) =================
+   Construite chaque semaine sur GitHub à partir de l'export complet d'Open Food Facts
+   (tools/build_data.py). Parcourir un rayon ne dépend donc plus des recherches d'Open Food Facts. */
+let dataIndex = null, dataIndexP = null;
+function loadIndex(){
+  if (dataIndex) return Promise.resolve(dataIndex);
+  if (!dataIndexP) dataIndexP = getJSON(DATA + 'index.json', { bucket:'free', ttl:3 * 3600e3, timeout:10000 })
+    .then(j => (dataIndex = (j && j.aisles && Array.isArray(j.cols)) ? j : null))
+    .catch(() => null)
+    .finally(() => { if (!dataIndex) dataIndexP = null; });
+  return dataIndexP;
+}
+const aisleOf = tag => (dataIndex && tag && dataIndex.aisles[tag]) || null;
+const pageUrl = (a, i) => DATA + 'a/' + a.slug + (i ? '.' + (i + 1) : '') + '.json';
+const split = v => v ? String(v).split(',').filter(Boolean) : [];
+function fromRow(r){
+  const o = {}; dataIndex.cols.forEach((c, i) => { o[c] = r[i]; });
+  const p = { code:String(o.code), product_name:o.name || '', brands:o.brands || '', quantity:o.qty || '',
+    allergens_tags:split(o.allergens), traces_tags:split(o.traces), labels_tags:split(o.labels),
+    ingredients_text:o.ingr || '', ingredients_analysis_tags:split(o.analysis),
+    nutriscore_grade:o.nutri || '', nutriscore_score:o.nscore, nova_group:o.nova, ecoscore_grade:o.eco || '', ecoscore_score:o.escore,
+    unique_scans_n:o.scans || 0, _local:true };
+  const ss = split(o.stores).map(id => STORES.find(s => s.id === id)).filter(Boolean);
+  if (ss.length){ p.stores_tags = ss.map(s => s.tags[0]); p.stores = ss.map(s => s.label).join(', '); }
+  if (o.img){ const base = /^https?:/.test(o.img) ? null : (dataIndex.img || 'https://images.openfoodfacts.org/images/products/') + o.img;
+    p.image_front_small_url = base ? base + '.200.jpg' : o.img; p.image_front_url = base ? base + '.400.jpg' : o.img; }
+  if (Array.isArray(o.nut)){ const keys = dataIndex.nut || []; p.nutriments = {}; o.nut.forEach((v, i) => { if (v != null && keys[i]) p.nutriments[keys[i]] = v; }); }
+  if (Array.isArray(o.ai)){ p.categories_tags = o.ai.map(i => dataIndex.order[i]).filter(Boolean); }
+  return p;
+}
+const aisleCache = new Map();
+async function aislePage(a, i, onRetry){
+  const url = pageUrl(a, i);
+  if (aisleCache.has(url)){ const v = aisleCache.get(url); aisleCache.delete(url); aisleCache.set(url, v); return v; }
+  const j = await getJSON(url, { bucket:'free', timeout:30000, onRetry, noCache:true });
+  if (!j || !Array.isArray(j.rows)) throw err('http', { status:'format' });
+  const prods = j.rows.map(fromRow);
+  aisleCache.set(url, prods);
+  while (aisleCache.size > 10) aisleCache.delete(aisleCache.keys().next().value);
+  return prods;
+}
+async function aisleAll(a){ const out = []; for (let i = 0; i < a.pages; i++) out.push(...await aislePage(a, i)); return out; }
+function findCached(code){
+  for (const prods of aisleCache.values()){ const q = prods.find(x => x.code === code); if (q) return q; }
+  return null;
+}
+function localSet(ctx, a){
+  return { kind:'all', local:a, loaded:false, loading:false,
+    vars:Array.from({ length:a.pages }, (_, i) => ({ local:true, page:i, more:true, count:a.n })) };
+}
+const dataDate = () => { try { return new Date(dataIndex.built).toLocaleDateString('fr-FR', { day:'numeric', month:'long' }); } catch (e) { return ''; } };
 
 /* ================= Construction des requêtes ================= */
 function hardTags(){
@@ -901,27 +967,6 @@ function cgiUrl(o, page){
   for (const t of (o.excludeTraces || [])) add('traces', 'does_not_contain', t);
   return OFF + '/cgi/search.pl?' + p.toString();
 }
-const luq = w => w.replace(/([+\-=&|><!(){}\[\]^"~*?:\\/])/g, '\\$1');
-function salUrl(o, page){
-  const parts = [];
-  const words = (o.terms || '').split(/\s+/).filter(w => w.length > 0).map(luq);
-  if (words.length) parts.push(words.join(' AND '));
-  parts.push('countries:"en:france"');
-  if (o.category) parts.push(`categories:"${o.category}"`);
-  const ors = [];
-  for (const t of (o.storeTags || [])) ors.push(`stores:"${t}"`);
-  for (const b of (o.brands || [])) ors.push(`brands:"xx:${b}"`, `brands:"${b}"`);
-  if (ors.length) parts.push('(' + ors.join(' OR ') + ')');
-  for (const t of (o.exclude || [])) parts.push(`NOT allergens:"${t}"`);
-  for (const t of (o.excludeTraces || [])) parts.push(`NOT traces:"${t}"`);
-  for (const l of (o.labels || [])) parts.push(`labels:"${l}"`);
-  for (const a of (o.analysis || [])) parts.push(`ingredients_analysis_tags:"${a}"`);
-  if (o.nutri && NUTRI_OK[o.nutri]) parts.push('(' + NUTRI_OK[o.nutri].map(g => `nutriscore_grade:"${g}"`).join(' OR ') + ')');
-  const p = new URLSearchParams({ q:parts.join(' AND '), langs:'fr,en', page_size:String(o.size || PAGE), page:String(page), fields:SAL_FIELDS });
-  const sk = { popularity:'-popularity_key', nutriscore:'nutriscore_score', nova:'nova_group', green:'-environmental_score_score' }[o.sort];
-  if (sk && !(words.length && o.sort === 'popularity')) p.set('sort_by', sk);
-  return SAL + '?' + p.toString();
-}
 function variant(urlFn, kind = 'off'){ return { urlFn, kind, page:0, more:true, count:null }; }
 function buildSet(kind, ctx){
   const st = storeById(ctx.store);
@@ -933,7 +978,6 @@ function buildSet(kind, ctx){
       labels: ctx.bio ? ['en:organic'] : [],
       analysis: [ctx.vegan && 'en:vegan', ctx.vegetarian && !ctx.vegan && 'en:vegetarian', ctx.palm && 'en:palm-oil-free'].filter(Boolean) };
     const wide = ctx.wide && st.tags.length;
-    if (st.tags.length) vars.push(variant(pg => salUrl(Object.assign({}, base, { brands:st.sal, exclude:hard, excludeTraces:traces }), pg), 'sal'));
     vars.push(variant(pg => v2Url(Object.assign({}, base, { exclude:hard, excludeTraces:traces }), pg)));
     if (wide) vars.push(variant(pg => v2Url(Object.assign({}, base, { storeTags:[], exclude:hard, excludeTraces:traces }), pg)));
     if (kind === 'safe' && lactoseOnly()){
@@ -941,19 +985,10 @@ function buildSet(kind, ctx){
       vars.push(variant(pg => v2Url(Object.assign({}, base, { storeTags: wide ? [] : base.storeTags, labels:[...base.labels, 'en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [] }), pg)));
     }
   } else {
-    const exT = kind === 'safe' && !lactoseOnly() ? hard : hard.filter(t => t !== 'en:milk');
-    const exTr = kind === 'safe' && profile.traces ? exT : [];
-    const strict = !ctx.wide && st.tags.length;
-    vars.push(variant(pg => salUrl({ terms:ctx.terms, category:ctx.rayon, sort:ctx.sort, storeTags: strict ? st.tags : [], brands: strict ? st.sal : [],
-      exclude:exT, excludeTraces:exTr, labels: ctx.bio ? ['en:organic'] : [] }, pg), 'sal'));
-    const fallback = [];
+    const ex = kind === 'safe' && !lactoseOnly() ? hard : hard.filter(t => t !== 'en:milk');
+    const exTr = kind === 'safe' && profile.traces ? ex : [];
     const tags = st.tags.length ? (ctx.wide ? [st.tags[0], null] : st.tags.slice(0, 2)) : [null];
-    for (const tag of tags){
-      fallback.push(variant(pg => cgiUrl({ storeTag:tag, category:ctx.rayon, terms:ctx.terms, sort:ctx.sort, bio:ctx.bio,
-        exclude: kind === 'safe' && !lactoseOnly() ? hard : hard.filter(t => t !== 'en:milk'),
-        excludeTraces: kind === 'safe' && profile.traces ? (lactoseOnly() ? hard.filter(t => t !== 'en:milk') : hard) : [] }, pg)));
-    }
-    return { kind, vars, fallback, loaded:false, loading:false };
+    for (const tag of tags) vars.push(variant(pg => cgiUrl({ storeTag:tag, category:ctx.rayon, terms:ctx.terms, sort:ctx.sort, bio:ctx.bio, exclude:ex, excludeTraces:exTr }, pg)));
   }
   return { kind, vars, loaded:false, loading:false };
 }
@@ -1057,7 +1092,7 @@ function syncFilterUI(){
   const fc = $('#filterCount'); fc.textContent = n ? String(n) : ''; fc.className = n ? 'count' : '';
 }
 syncFilterUI();
-function filtersChanged(){ saveSearch(); syncFilterUI(); if (R){ markDirty('Filtres appliqués aux produits déjà chargés. Relance la recherche pour en trouver davantage.'); render(); } }
+function filtersChanged(){ saveSearch(); syncFilterUI(); if (R){ if (!R.sets.all.local) markDirty('Filtres appliqués aux produits déjà chargés. Relance la recherche pour en trouver davantage.'); render(); } }
 $('#fNutri').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.nutri = b.dataset.v; filtersChanged(); });
 $('#fNova').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.nova = b.dataset.v; filtersChanged(); });
 $('#fLabels').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; S[b.dataset.k] = !S[b.dataset.k]; filtersChanged(); });
@@ -1083,68 +1118,113 @@ async function runSearch({ scroll = false } = {}){
   S.terms = $('#terms').value.trim(); S.ran = true; saveSearch();
   const ctx = { store:S.store, rayon:S.rayon, terms:S.terms, sort:S.sort, nutri:S.nutri, bio:S.bio, vegan:S.vegan, vegetarian:S.vegetarian, palm:S.palm, wide:S.wide };
   const withSafe = profile.sel.size > 0;
-  R = { ctx, products:new Map(), sets:{}, tab:'ok', id:Symbol() };
-  if (withSafe) R.sets.safe = buildSet('safe', ctx);
-  R.sets.all = buildSet('all', ctx);
+  R = { ctx, products:new Map(), sets:{}, tab:'ok', id:Symbol(), limit:LIMIT };
   $('#dirty').hidden = true; $('#intro').hidden = true;
   $('#results').hidden = true; $('#list').innerHTML = '';
   const myR = R;
+  setStatus(SPIN + 'Recherche des produits…');
+  await loadIndex();
+  if (myR !== R) return;
+  const a = aisleOf(ctx.rayon);
+  if (a){ R.sets.all = localSet(ctx, a); if (withSafe) R.sets.safe = R.sets.all; }
+  else { if (withSafe) R.sets.safe = buildSet('safe', ctx); R.sets.all = buildSet('all', ctx); }
   await loadSet(withSafe ? R.sets.safe : R.sets.all, true);
   if (scroll && myR === R && !$('#results').hidden){
     const y = $('#results').getBoundingClientRect().top + window.scrollY - 12;
     try { window.scrollTo({ top:y, behavior:'smooth' }); } catch (e) { window.scrollTo(0, y); }
   }
 }
+const SPIN = '<span class="spin" aria-hidden="true"></span> ';
+const RETRY_BTN = ' <button class="ghost small" type="button" data-retry>Réessayer</button>';
+function busy(on){ $('#go').disabled = on; $('#more').disabled = on; $('#all').disabled = on; }
+function mergeProducts(myR, prods, kinds){
+  for (const p of prods){
+    if (!p || !p.code) continue;
+    const code = String(p.code);
+    const cur = myR.products.get(code);
+    if (cur) kinds.forEach(k => cur.sets.add(k));
+    else myR.products.set(code, { p, sets:new Set(kinds) });
+  }
+}
+async function loadLocal(set, first){
+  const myR = R;
+  const terms = fold(myR.ctx.terms).split(/\s+/).filter(w => w.length > 0);
+  const todo = set.vars.filter(v => v.more);
+  set.loading = true; $('#more').disabled = true;
+  let lastErr = null;
+  for (const v of todo){
+    if (myR !== R) return;
+    setStatus(SPIN + (set.loaded ? 'Chargement de tout le rayon…' : (first ? 'Recherche des produits…' : 'Chargement…')));
+    try {
+      const onRetry = () => { if (myR === R) setStatus(SPIN + 'Connexion lente, nouvel essai…'); };
+      let prods = await aislePage(set.local, v.page, onRetry);
+      if (myR !== R) return;
+      if (terms.length) prods = prods.filter(p => { const h = fold([nameOf(p), p.brands, p.quantity].join(' ')); return terms.every(w => h.includes(w)); });
+      mergeProducts(myR, prods, ['safe', 'all']);
+      v.more = false; set.loaded = true;
+      render();
+    } catch (e) { lastErr = e; break; }
+  }
+  if (myR !== R) return;
+  set.loading = false; $('#more').disabled = false;
+  if (!set.loaded && lastErr){
+    // la base de l'appli ne répond pas : on repasse par Open Food Facts
+    const withSafe = profile.sel.size > 0;
+    if (withSafe) R.sets.safe = buildSet('safe', R.ctx);
+    R.sets.all = buildSet('all', R.ctx);
+    return loadSet(withSafe ? R.sets.safe : R.sets.all, first);
+  }
+  setStatus(lastErr ? 'Une partie du rayon n\'a pas pu être chargée.' + RETRY_BTN : '');
+  render();
+}
 async function loadSet(set, first){
   if (!R || set.loading) return;
+  if (set.local) return loadLocal(set, first);
   const myR = R;
   const todo = set.vars.filter(v => v.more);
   if (!todo.length) return;
-  set.loading = true; $('#go').disabled = true; $('#more').disabled = true; $('#all').disabled = true;
-  setStatus(`<span class="spin" aria-hidden="true"></span> ${first ? 'Recherche dans Open Food Facts…' : 'Chargement…'}`);
+  set.loading = true; busy(true);
+  const label = first ? 'Recherche des produits…' : 'Chargement…';
+  setStatus(SPIN + label);
   let okN = 0, lastErr = null;
   for (const v of todo){
     try {
-      const j = await getJSON(v.urlFn(v.page + 1), { bucket: v.kind === 'sal' ? 'free' : 'search' });
+      const onRetry = (i, n) => { if (myR === R) setStatus(SPIN + `Open Food Facts est très sollicité, nouvel essai (${i}/${n})…`); };
+      const j = await getJSON(v.urlFn(v.page + 1), { bucket:'search', onRetry });
       if (myR !== R) return;
-      if (v.kind === 'sal' && !Array.isArray(j.hits)) throw err('format');
-      const prods = v.kind === 'sal' ? j.hits.map(fromSAL) : (Array.isArray(j.products) ? j.products : []);
+      const prods = Array.isArray(j.products) ? j.products : [];
       v.page++; v.count = Number(j.count) || 0;
       v.more = prods.length > 0 && v.page * PAGE < v.count;
-      for (const p of prods){
-        if (!p || !p.code) continue;
-        const code = String(p.code);
-        const cur = myR.products.get(code);
-        if (cur){ cur.sets.add(set.kind); if (cur.p._sal && !p._sal) cur.p = p; }
-        else myR.products.set(code, { p, sets:new Set([set.kind]) });
-      }
-      okN++;
+      mergeProducts(myR, prods, [set.kind]);
+      okN++; set.loaded = true;
+      render(); setStatus(SPIN + label);
     } catch (e) {
-      if (v.kind === 'sal'){
-        v.more = false;
-        if (set.fallback && !set.usedFallback){ set.usedFallback = true; set.vars = set.vars.filter(x => x !== v).concat(set.fallback); todo.push(...set.fallback); }
-        continue;
-      }
-      lastErr = e; v.more = v.page === 0 ? true : v.more; if (e.code === 'rate' || e.code === 'offline') break;
+      if (myR !== R) return;
+      lastErr = e;
+      if (e.code === 'rate' || e.code === 'offline') break;
     }
   }
   if (myR !== R) return;
-  set.loading = false; set.loaded = set.loaded || okN > 0;
-  $('#go').disabled = false; $('#more').disabled = false; $('#all').disabled = false;
-  if (!okN && lastErr){ setStatus(esc(errorText(lastErr)), true); if (!myR.products.size) $('#results').hidden = true; else render(); return; }
-  if (lastErr) toast('Résultats partiels : ' + errorText(lastErr), 4500);
-  if (!myR.loadingAll) setStatus('');
+  set.loading = false; busy(false);
+  if (!okN && lastErr){ setStatus(esc(errorText(lastErr)) + RETRY_BTN, true); if (!myR.products.size) $('#results').hidden = true; else render(); return; }
+  if (!myR.loadingAll) setStatus(lastErr ? 'Une partie des produits n\'a pas pu être chargée : Open Food Facts est saturé.' + RETRY_BTN : '');
   render();
 }
+$('#status').addEventListener('click', e => { if (e.target.closest('[data-retry]')) runSearch(); });
 function render(){
   if (!R) return;
   const rows = [];
   const stR = storeById(R.ctx.store);
-  for (const { p, sets } of R.products.values()){
+  const local = !!R.sets.all.local;
+  for (const e of R.products.values()){
+    const p = e.p;
     if (!passes(p)) continue;
-    if (otherChainOnly(p, stR)) continue;
-    const ev = evaluate(p);
-    rows.push({ p, ev, sets, here:seenAt(p, stR) });
+    if (e.sid !== stR.id){ e.sid = stR.id; e.here = seenAt(p, stR); e.oc = otherChainOnly(p, stR); }
+    if (e.oc) continue;
+    const here = e.here;
+    if (local && !S.wide && stR.id !== 'all' && !here) continue;
+    if (e.pv !== PV){ e.ev = evaluate(p); e.pv = PV; }
+    rows.push({ p, ev:e.ev, sets:e.sets, here });
   }
   const base = sorter(S.sort);
   rows.sort((a, b) => (b.here - a.here) || base(a, b));
@@ -1159,19 +1239,26 @@ function render(){
   const allCount = R.sets.all.vars.reduce((s, v) => s + (v.count || 0), 0);
   const hereN = rows.filter(r => r.here).length;
   let sum = `${rows.length} produits analysés, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}`;
-  sum += st.id === 'all' ? '.' : R.ctx.wide ? ` : ${hereN} signalés dans ce magasin, les autres sont des marques nationales vendues en France.` : '.';
+  const wideNow = local ? S.wide : R.ctx.wide;
+  sum += st.id === 'all' ? '.' : wideNow ? ` : ${hereN} signalés dans ce magasin, les autres sont des marques nationales vendues en France.` : '.';
+  if (local && dataIndex && dataIndex.built) sum += ` Base de l'appli du ${esc(dataDate())}.`;
   const curSet = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
   const total = Math.max(0, ...curSet.vars.map(v => v.count || 0));
-  if (curSet.vars.some(v => v.more) && total) sum += ` La base en compte environ ${total.toLocaleString('fr-FR')} : touche « Charger tout le rayon » pour tous les voir.`;
+  if (!local && curSet.vars.some(v => v.more) && total) sum += ` La base en compte environ ${total.toLocaleString('fr-FR')} : touche « Charger tout le rayon » pour tous les voir.`;
   $('#summary').innerHTML = sum;
   $('#results').hidden = false;
   const shown = rows.filter(r => r.ev.status === R.tab);
-  let html = shown.map(r => itemHTML(r.p, r.ev, stR.id === 'all' ? null : (r.here ? 'Chez ' + stR.label : 'Marque nationale'))).join('');
+  const lim = R.limit || LIMIT;
+  R.hiddenN = Math.max(0, shown.length - lim);
+  let html = shown.slice(0, lim).map(r => itemHTML(r.p, r.ev, stR.id === 'all' ? null : (r.here ? 'Chez ' + stR.label : 'Marque nationale'))).join('');
   if (R.tab === 'no' && !allLoaded) html += `<li class="empty-card">Les produits qui contiennent tes allergènes ne sont pas encore chargés.<br><button class="ghost" type="button" id="loadExcluded">Afficher les produits exclus</button></li>`;
   else if (!shown.length) html = `<li class="empty-card">${esc(emptyMsg(R.tab))}</li>`;
   $('#list').innerHTML = html;
   const set = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
-  $('#moreRow').hidden = !(set.loaded && set.vars.some(v => v.more)) || !!R.loadingAll;
+  const apiMore = !set.local && set.loaded && set.vars.some(v => v.more);
+  $('#moreRow').hidden = !(R.hiddenN > 0 || apiMore) || !!R.loadingAll || (set.loading && !set.local);
+  $('#more').textContent = R.hiddenN > 0 ? `Afficher plus (${R.hiddenN})` : 'Charger plus';
+  $('#all').hidden = R.hiddenN > 0 || !!set.local;
 }
 function emptyMsg(tab){
   const f = (S.nutri || S.nova || S.bio || S.vegan || S.vegetarian || S.palm) ? ' ou retire des filtres' : '';
@@ -1181,7 +1268,7 @@ function emptyMsg(tab){
 }
 $('.tabs').addEventListener('click', e => {
   const t = e.target.closest('.tab'); if (!t || !R) return;
-  R.tab = t.dataset.s; render();
+  R.tab = t.dataset.s; R.limit = LIMIT; render();
   if (R.tab === 'no' && R.sets.safe && !R.sets.all.loaded) loadSet(R.sets.all);
 });
 $('#list').addEventListener('click', e => {
@@ -1189,7 +1276,7 @@ $('#list').addEventListener('click', e => {
   handleItemClick(e, code => R && R.products.get(code) && R.products.get(code).p);
 });
 const currentSet = () => R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
-$('#more').addEventListener('click', () => { if (R) loadSet(currentSet()); });
+$('#more').addEventListener('click', () => { if (!R) return; if (R.hiddenN > 0){ R.limit += LIMIT; render(); } else loadSet(currentSet()); });
 $('#all').addEventListener('click', async () => {
   if (!R) return;
   const myR = R, set = currentSet(), CAP = 1000;
@@ -1450,17 +1537,24 @@ async function findAlternatives(p, btn, everywhere){
   btn.disabled = true; box.innerHTML = '<p class="hint"><span class="spin" aria-hidden="true"></span> Recherche d\'équivalents…</p>';
   const hard = hardTags();
   const tagsQ = wideAlt ? [] : st.tags;
-  const urls = [v2Url({ storeTags:tagsQ, category:cat, sort:'popularity', exclude:hard, excludeTraces:profile.traces ? hard : [], size:60 }, 1)];
-  if (lactoseOnly()){ const h2 = hard.filter(t => t !== 'en:milk'); urls.push(v2Url({ storeTags:tagsQ, category:cat, sort:'popularity', labels:['en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [], size:40 }, 1)); }
+  await loadIndex();
+  const mine = (p.categories_tags || []).filter(t => aisleOf(t)).sort((x, y) => aisleOf(x).total - aisleOf(y).total);
+  const la = aisleOf(mine[0]);
+  const urls = la ? [] : [v2Url({ storeTags:tagsQ, category:cat, sort:'popularity', exclude:hard, excludeTraces:profile.traces ? hard : [], size:60 }, 1)];
+  if (!la && lactoseOnly()){ const h2 = hard.filter(t => t !== 'en:milk'); urls.push(v2Url({ storeTags:tagsQ, category:cat, sort:'popularity', labels:['en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [], size:40 }, 1)); }
   try {
     const found = new Map();
+    if (la){
+      for (const q of await aisleAll(la)) if (q.code !== String(p.code) && (everywhere || wideAlt || st.id === 'all' || seenAt(q, st))) found.set(q.code, q);
+    }
     for (const u of urls){ const j = await getJSON(u, { bucket:'search' }); for (const q of (j.products || [])) if (q && q.code && String(q.code) !== String(p.code)) found.set(String(q.code), q); }
     const base = sorter('popularity');
     const rows = [...found.values()].filter(q => !(wideAlt && otherChainOnly(q, st0))).map(q => ({ p:q, ev:evaluate(q), here:seenAt(q, st0) }))
       .filter(r => r.ev.status === 'ok').sort((a, b) => (b.here - a.here) || base(a, b)).slice(0, 15);
     rows.forEach(r => altCache.set(String(r.p.code), r.p));
     if (!$('#alts') || stack[stack.length - 1] !== p) return;
-    const inCat = RAYON_NAME[cat] ? `dans « ${esc(RAYON_NAME[cat])} »` : 'dans la même catégorie';
+    const catShown = la ? mine[0] : cat;
+    const inCat = RAYON_NAME[catShown] ? `dans « ${esc(RAYON_NAME[catShown])} »` : 'dans la même catégorie';
     box.innerHTML = rows.length
       ? `<p class="hint">${rows.length} produit${rows.length > 1 ? 's' : ''} compatible${rows.length > 1 ? 's' : ''} ${inCat}, ${esc(st.id === 'all' ? 'tous magasins' : wideAlt ? 'chez ' + st.label + ' et marques nationales' : 'chez ' + st.label)} :</p><ul class="list" style="margin-top:.5rem">${rows.map(r => itemHTML(r.p, r.ev, st0.id === 'all' || everywhere ? null : (r.here ? 'Chez ' + st0.label : 'Marque nationale'))).join('')}</ul>`
       : `<p class="hint">Aucun équivalent compatible trouvé ${inCat}${st.id === 'all' ? '' : ' chez ' + esc(st.label)}.</p>${st.id === 'all' || wideAlt ? '' : '<button class="ghost small" type="button" id="altsAll" style="margin-top:.5rem">Chercher dans tous les magasins</button>'}`;
@@ -1491,6 +1585,44 @@ async function loadPrices(p, btn){
   } finally { btn.disabled = false; }
 }
 
+/* ================= Diagnostic de connexion ================= */
+async function runDiag(){
+  const ul = $('#diagList'), btn = $('#diagBtn');
+  const tests = [
+    ['Base de l\'appli', DATA + 'index.json', 1],
+    ['Open Food Facts : fiches produits', `${OFF}/api/v2/product/3017620422003?fields=code`, 2, true],
+    ['Open Food Facts : recherche', `${OFF}/api/v2/search?categories_tags=en:sorbets&countries_tags=en:france&page_size=1&fields=code`, 7],
+    ['RappelConso : rappels officiels', `${RAPPEL}?limit=1`, 2],
+    ['Open Prices : prix relevés', `${PRICES}?size=1`, 2],
+  ];
+  btn.disabled = true; ul.hidden = false;
+  ul.innerHTML = tests.map((t, i) => `<li><span>${esc(t[0])}</span><b id="dg${i}" class="hint">…</b></li>`).join('')
+    + `<li class="meta"><span>${esc(navigator.onLine === false ? 'Téléphone hors ligne' : 'Téléphone en ligne')}</span><span>${esc(new Date().toLocaleString('fr-FR'))}</span></li>`;
+  for (let i = 0; i < tests.length; i++){
+    const [, url, max, any404] = tests[i]; const b = $('#dg' + i);
+    b.innerHTML = SPIN.trim();
+    const t0 = performance.now(); let ok = false, why = '', n = 0, data = null;
+    while (n < max && !ok){
+      n++;
+      try { data = await fetchOnce(url, 15000); ok = true; }
+      catch (e) {
+        if (any404 && e.code === 'http' && e.status === 404){ ok = true; break; }
+        why = e.code === 'http' ? 'erreur ' + e.status : e.code === 'timeout' ? 'trop lent' : e.code === 'offline' ? 'hors ligne' : e.code === 'rate' ? 'limite atteinte' : 'refusé ou saturé';
+        if ((e.code === 'http' && e.status < 500) || e.code === 'offline') break;
+        if (n < max) await sleep(600 + n * 300);
+      }
+    }
+    const ms = Math.round(performance.now() - t0);
+    b.className = ok ? 'ok' : 'ko';
+    let txt = ok ? 'OK' : 'Échec, ' + why;
+    if (ok && i === 0 && data && data.built){ dataIndex = dataIndex || (data.aisles ? data : null); txt += ', base du ' + dataDate(); }
+    if (n > 1) txt += ` (${n} essais)`;
+    b.textContent = txt + ` · ${(ms / 1000).toLocaleString('fr-FR', { minimumFractionDigits:1, maximumFractionDigits:1 })} s`;
+  }
+  btn.disabled = false;
+}
+$('#diagBtn').addEventListener('click', runDiag);
+
 /* ================= Recherche par code-barres ================= */
 async function lookup(code, { source = 'saisie' } = {}){
   code = String(code || '').replace(/\D/g, '');
@@ -1499,10 +1631,11 @@ async function lookup(code, { source = 'saisie' } = {}){
   st.innerHTML = '<span class="spin" aria-hidden="true"></span> Recherche du produit…';
   try {
     let j;
-    try { j = await getJSON(`${OFF}/api/v2/product/${code}?fields=${FIELDS}`); }
+    const onRetry = () => { st.innerHTML = SPIN + 'Open Food Facts est très sollicité, nouvel essai…'; };
+    try { j = await getJSON(`${OFF}/api/v2/product/${code}?fields=${FIELDS}`, { onRetry }); }
     catch (e) {
-      try { const d = await getJSON(SAL_DOC + code); j = { status:1, product:fromSAL(d) }; }
-      catch (e2) { if (e2.code === 'http' && e2.status === 404) j = { status:0 }; else throw e; }
+      if (e.code === 'http' && e.status === 404) j = { status:0 };
+      else { const q = findCached(code) || (R && R.products.get(code) && R.products.get(code).p); if (q) j = { status:1, product:q }; else throw e; }
     }
     if (j.status !== 1 || !j.product){
       st.innerHTML = `Produit ${esc(code)} absent d'Open Food Facts : fie-toi à l'étiquette. <a href="${OFF_FR}/produit/${esc(code)}" target="_blank" rel="noopener">L'ajouter à la base</a>`;
@@ -1722,7 +1855,7 @@ function renderProfile(){
 }
 function profileChanged(){
   saveProfile(); renderProfile();
-  if (R){ markDirty('Profil modifié : les verdicts sont mis à jour. Relance la recherche pour charger des produits adaptés.'); render(); }
+  if (R){ if (!R.sets.all.local) markDirty('Profil modifié : les verdicts sont mis à jour. Relance la recherche pour charger des produits adaptés.'); render(); }
 }
 $('#chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; const k = b.dataset.k; profile.sel.has(k) ? profile.sel.delete(k) : profile.sel.add(k); profileChanged(); });
 $('#traces').addEventListener('change', e => { profile.traces = e.target.checked; profileChanged(); });
@@ -1760,10 +1893,11 @@ renderProfile(); updateBadge(); renderQuick();
 if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
 go(SCREENS.includes(start) ? start : 'search');
+loadIndex();
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S };
+window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex };
 })();
 </script>
 </body>
