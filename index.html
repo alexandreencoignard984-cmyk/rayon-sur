@@ -125,6 +125,8 @@ details.filters .inner{padding-top:.5rem}
 .vline{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .5rem;margin-top:.2rem}
 .verdict{font-family:var(--display);font-stretch:78%;font-weight:800;font-size:.9rem;color:var(--c);background:var(--cb);padding:.1rem .45rem;border-radius:6px;white-space:nowrap}
 .reason{font-size:.85rem;color:var(--c)}
+.where{display:inline-block;margin-top:.3rem;font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:0 .5rem;color:var(--muted)}
+.where.yes{border-color:var(--ink);color:var(--ink);font-weight:700}
 .side{display:flex;align-items:center;padding:0 .5rem 0 0}
 .iconbtn{display:grid;place-items:center;width:46px;height:46px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer}
 .iconbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
@@ -244,6 +246,10 @@ footer a{color:inherit}
           </button>
         </div>
       </div>
+      <label class="check" style="margin:0 0 .9rem">
+        <input type="checkbox" id="wide">
+        <span>Inclure les marques nationales vendues en France, même si personne ne les a encore signalées dans ce magasin</span>
+      </label>
       <div class="field">
         <label class="lbl" for="terms">Nom ou marque (facultatif)</label>
         <input id="terms" type="search" placeholder="ex. sorbet, Alpro, Marque Repère" enterkeyhint="search">
@@ -301,7 +307,10 @@ footer a{color:inherit}
         <button class="tab" role="tab" data-s="no" aria-selected="false"><b id="n-no">0</b>Exclus</button>
       </div>
       <ul class="list" id="list"></ul>
-      <button class="ghost wide" id="more" type="button" hidden>Charger plus de produits</button>
+      <div class="btnrow" id="moreRow" hidden>
+        <button class="ghost" id="more" type="button">Charger plus</button>
+        <button class="ghost" id="all" type="button">Charger tout le rayon</button>
+      </div>
     </section>
 
     <div class="empty-card" id="intro" style="margin-top:1rem">
@@ -483,23 +492,25 @@ const FIELDS = ['code','product_name','product_name_fr','generic_name_fr','brand
   'nutriscore_grade','nutriscore_score','nova_group','ecoscore_grade','ecoscore_score','nutriments','nutrient_levels',
   'stores','stores_tags','categories_tags','compared_to_category','popularity_key','unique_scans_n'].join(',');
 
+const MOUSQ = ['intermarche','chabrior','paturages','monique ranou','saint eloi','fiorini','itineraire des saveurs','top budget','capitaine cook'];
 const STORES = [
-  { id:'leclerc', label:'E.Leclerc', tags:['e-leclerc','leclerc','e-leclerc-drive','leclerc-drive','e-leclerc-express'], match:/leclerc/i },
-  { id:'carrefour', label:'Carrefour', tags:['carrefour','carrefour-market','carrefour-city','carrefour-express'], match:/carrefour/i },
-  { id:'auchan', label:'Auchan', tags:['auchan','auchan-supermarche','auchan-drive'], match:/auchan/i },
-  { id:'intermarche', label:'Intermarché', tags:['intermarche','intermarche-super','intermarche-contact'], match:/intermarch/i },
-  { id:'u', label:'Super U, Hyper U', tags:['magasins-u','super-u','hyper-u','u-express','systeme-u'], match:/(^|\W)u(\W|$)|super u|hyper u|système u/i },
-  { id:'lidl', label:'Lidl', tags:['lidl'], match:/lidl/i },
-  { id:'aldi', label:'Aldi', tags:['aldi'], match:/aldi/i },
-  { id:'monoprix', label:'Monoprix', tags:['monoprix'], match:/monoprix/i },
-  { id:'casino', label:'Casino', tags:['casino','geant-casino'], match:/casino/i },
-  { id:'franprix', label:'Franprix', tags:['franprix'], match:/franprix/i },
-  { id:'cora', label:'Cora', tags:['cora'], match:/cora/i },
-  { id:'netto', label:'Netto', tags:['netto'], match:/netto/i },
-  { id:'biocoop', label:'Biocoop', tags:['biocoop'], match:/biocoop/i },
-  { id:'picard', label:'Picard', tags:['picard'], match:/picard/i },
-  { id:'grandfrais', label:'Grand Frais', tags:['grand-frais'], match:/grand frais/i },
-  { id:'all', label:'Tous les magasins (France)', tags:[], match:null },
+  { id:'leclerc', label:'E.Leclerc', tags:['e-leclerc','leclerc','e-leclerc-drive','leclerc-drive','e-leclerc-express'], match:/leclerc/i,
+    mdd:['marque repere','eco+','eco +','bio village','nos regions ont du talent','eskiss','smicy','pommette','delisse','turini','repere'] },
+  { id:'carrefour', label:'Carrefour', tags:['carrefour','carrefour-market','carrefour-city','carrefour-express'], match:/carrefour/i, mdd:['carrefour','reflets de france','simpl'] },
+  { id:'auchan', label:'Auchan', tags:['auchan','auchan-supermarche','auchan-drive'], match:/auchan/i, mdd:['auchan','pouce'] },
+  { id:'intermarche', label:'Intermarché', tags:['intermarche','intermarche-super','intermarche-contact'], match:/intermarch/i, mdd:MOUSQ },
+  { id:'u', label:'Super U, Hyper U', tags:['magasins-u','super-u','hyper-u','u-express','systeme-u'], match:/(^|\W)u(\W|$)|super u|hyper u|système u/i, mdd:['u','systeme u','bien vu'] },
+  { id:'lidl', label:'Lidl', tags:['lidl'], match:/lidl/i, mdd:['lidl','gelatelli','milbona','crownfield','chef select','deluxe','bellarom','fin carre','freeway','solevita','combino','alesto','snack day','pilos','vemondo','saint alby'] },
+  { id:'aldi', label:'Aldi', tags:['aldi'], match:/aldi/i, mdd:['aldi','moser roth','choceur','gut bio','cucina nobile','brooklea','milsani'] },
+  { id:'monoprix', label:'Monoprix', tags:['monoprix'], match:/monoprix/i, mdd:['monoprix'] },
+  { id:'casino', label:'Casino', tags:['casino','geant-casino'], match:/casino/i, mdd:['casino'] },
+  { id:'franprix', label:'Franprix', tags:['franprix'], match:/franprix/i, mdd:['franprix'] },
+  { id:'cora', label:'Cora', tags:['cora'], match:/cora/i, mdd:['cora'] },
+  { id:'netto', label:'Netto', tags:['netto'], match:/netto/i, mdd:['netto', ...MOUSQ] },
+  { id:'biocoop', label:'Biocoop', tags:['biocoop'], match:/biocoop/i, mdd:['biocoop'] },
+  { id:'picard', label:'Picard', tags:['picard'], match:/picard/i, mdd:['picard'] },
+  { id:'grandfrais', label:'Grand Frais', tags:['grand-frais'], match:/grand frais/i, mdd:['grand frais'] },
+  { id:'all', label:'Tous les magasins (France)', tags:[], match:null, mdd:[] },
 ];
 
 const AISLES = [
@@ -577,7 +588,7 @@ profile.sel = new Set((profile.sel || []).filter(k => ALLERGENS.some(a => a.key 
 profile.words = Array.isArray(profile.words) ? profile.words.filter(w => typeof w === 'string' && w.trim()).slice(0, 30) : [];
 const saveProfile = () => ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words });
 
-const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', ran:false }, ls.get(K.search, {}));
+const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', wide:true, ran:false }, ls.get(K.search, {}));
 if (!STORES.some(s => s.id === S.store)) S.store = 'leclerc';
 if (!(S.rayon in RAYON_NAME)) S.rayon = 'en:ice-creams-and-sorbets';
 const saveSearch = () => ls.set(K.search, S);
@@ -636,6 +647,14 @@ const brandOf = p => (p.brands || '').split(',').slice(0, 2).map(s => s.trim()).
 const metaOf = p => [brandOf(p), p.quantity].filter(Boolean).join(', ');
 const ingredientsOf = p => (p.ingredients_text_fr || p.ingredients_text || '').trim();
 const storeById = id => STORES.find(s => s.id === id) || STORES[0];
+const brandList = p => (p.brands || '').split(',').map(b => fold(b).trim().replace(/\s+/g, ' ')).filter(Boolean);
+const isMdd = (p, st) => !!(st.mdd && st.mdd.length) && brandList(p).some(b => st.mdd.some(m => b === m || b.startsWith(m + ' ')));
+function seenAt(p, st){
+  if (!st || st.id === 'all') return true;
+  const tags = p.stores_tags || [];
+  return st.tags.some(t => tags.includes(t)) || isMdd(p, st) || !!(p.stores && st.match && st.match.test(p.stores));
+}
+const otherChainOnly = (p, st) => st.id !== 'all' && !seenAt(p, st) && STORES.some(o => o.id !== st.id && o.id !== 'all' && isMdd(p, o));
 function slim(p){
   const o = {}; for (const f of FIELDS.split(',')) if (p[f] != null && p[f] !== '') o[f] = p[f];
   if (o.nutriments){ const n = {}; for (const k of ['energy-kcal_100g','fat_100g','saturated-fat_100g','carbohydrates_100g','sugars_100g','fiber_100g','proteins_100g','salt_100g']) if (o.nutriments[k] != null) n[k] = o.nutriments[k]; o.nutriments = n; }
@@ -740,13 +759,15 @@ function buildSet(kind, ctx){
     const base = { storeTags:st.tags, category:ctx.rayon, sort:ctx.sort, nutri:ctx.nutri,
       labels: ctx.bio ? ['en:organic'] : [],
       analysis: [ctx.vegan && 'en:vegan', ctx.vegetarian && !ctx.vegan && 'en:vegetarian', ctx.palm && 'en:palm-oil-free'].filter(Boolean) };
+    const wide = ctx.wide && st.tags.length;
     vars.push(variant(pg => v2Url(Object.assign({}, base, { exclude:hard, excludeTraces:traces }), pg)));
+    if (wide) vars.push(variant(pg => v2Url(Object.assign({}, base, { storeTags:[], exclude:hard, excludeTraces:traces }), pg)));
     if (kind === 'safe' && lactoseOnly()){
       const h2 = hard.filter(t => t !== 'en:milk');
-      vars.push(variant(pg => v2Url(Object.assign({}, base, { labels:[...base.labels, 'en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [] }), pg)));
+      vars.push(variant(pg => v2Url(Object.assign({}, base, { storeTags: wide ? [] : base.storeTags, labels:[...base.labels, 'en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [] }), pg)));
     }
   } else {
-    const tags = st.tags.length ? st.tags.slice(0, 2) : [null];
+    const tags = st.tags.length ? (ctx.wide ? [st.tags[0], null] : st.tags.slice(0, 2)) : [null];
     for (const tag of tags){
       vars.push(variant(pg => cgiUrl({ storeTag:tag, category:ctx.rayon, terms:ctx.terms, sort:ctx.sort, bio:ctx.bio,
         exclude: kind === 'safe' && !lactoseOnly() ? hard : hard.filter(t => t !== 'en:milk'),
@@ -843,7 +864,8 @@ function renderProfileLine(){
     : `Ton profil est vide : rien n'est exclu. <button class="link" type="button" data-go="profile">Choisir mes allergènes</button>`;
 }
 $('#store').innerHTML = STORES.map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join('');
-$('#store').value = S.store; $('#terms').value = S.terms || ''; $('#sort').value = S.sort;
+$('#store').value = S.store; $('#terms').value = S.terms || ''; $('#sort').value = S.sort; $('#wide').checked = !!S.wide;
+$('#wide').addEventListener('change', e => { S.wide = e.target.checked; saveSearch(); if (R) runSearch(); });
 $('#rayonName').textContent = RAYON_NAME[S.rayon];
 function syncFilterUI(){
   $$('#fNutri button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === (S.nutri || '')));
@@ -866,7 +888,7 @@ function setStatus(msg, isErr){ const s = $('#status'); s.innerHTML = msg || '';
 
 async function runSearch({ scroll = false } = {}){
   S.terms = $('#terms').value.trim(); S.ran = true; saveSearch();
-  const ctx = { store:S.store, rayon:S.rayon, terms:S.terms, sort:S.sort, nutri:S.nutri, bio:S.bio, vegan:S.vegan, vegetarian:S.vegetarian, palm:S.palm };
+  const ctx = { store:S.store, rayon:S.rayon, terms:S.terms, sort:S.sort, nutri:S.nutri, bio:S.bio, vegan:S.vegan, vegetarian:S.vegetarian, palm:S.palm, wide:S.wide };
   const withSafe = profile.sel.size > 0;
   R = { ctx, products:new Map(), sets:{}, tab:'ok', id:Symbol() };
   if (withSafe) R.sets.safe = buildSet('safe', ctx);
@@ -885,7 +907,7 @@ async function loadSet(set, first){
   const myR = R;
   const todo = set.vars.filter(v => v.more);
   if (!todo.length) return;
-  set.loading = true; $('#go').disabled = true; $('#more').disabled = true;
+  set.loading = true; $('#go').disabled = true; $('#more').disabled = true; $('#all').disabled = true;
   setStatus(`<span class="spin" aria-hidden="true"></span> ${first ? 'Recherche dans Open Food Facts…' : 'Chargement…'}`);
   let okN = 0, lastErr = null;
   for (const v of todo){
@@ -906,20 +928,23 @@ async function loadSet(set, first){
   }
   if (myR !== R) return;
   set.loading = false; set.loaded = set.loaded || okN > 0;
-  $('#go').disabled = false; $('#more').disabled = false;
+  $('#go').disabled = false; $('#more').disabled = false; $('#all').disabled = false;
   if (!okN && lastErr){ setStatus(esc(errorText(lastErr)), true); if (!myR.products.size) $('#results').hidden = true; else render(); return; }
-  setStatus('');
+  if (!myR.loadingAll) setStatus('');
   render();
 }
 function render(){
   if (!R) return;
   const rows = [];
+  const stR = storeById(R.ctx.store);
   for (const { p, sets } of R.products.values()){
     if (!passes(p)) continue;
+    if (otherChainOnly(p, stR)) continue;
     const ev = evaluate(p);
-    rows.push({ p, ev, sets });
+    rows.push({ p, ev, sets, here:seenAt(p, stR) });
   }
-  rows.sort(sorter(S.sort));
+  const base = sorter(S.sort);
+  rows.sort((a, b) => (b.here - a.here) || base(a, b));
   const c = { ok:0, check:0, no:0 }; rows.forEach(r => c[r.ev.status]++);
   const allLoaded = R.sets.all.loaded || !R.sets.safe;
   $('#n-ok').textContent = c.ok; $('#n-check').textContent = c.check;
@@ -929,18 +954,21 @@ function render(){
   const where = st.id === 'all' ? 'tous magasins' : 'chez ' + st.label;
   const safeCount = R.sets.safe ? R.sets.safe.vars.reduce((s, v) => s + (v.count || 0), 0) : null;
   const allCount = R.sets.all.vars.reduce((s, v) => s + (v.count || 0), 0);
-  let sum = `${R.products.size} produits analysés, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}.`;
-  if (safeCount != null) sum += ` Environ ${safeCount.toLocaleString('fr-FR')} sans tes allergènes dans la base.`;
-  else if (allCount) sum += ` ${allCount.toLocaleString('fr-FR')} dans la base.`;
+  const hereN = rows.filter(r => r.here).length;
+  let sum = `${rows.length} produits analysés, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}`;
+  sum += st.id === 'all' ? '.' : R.ctx.wide ? ` : ${hereN} signalés dans ce magasin, les autres sont des marques nationales vendues en France.` : '.';
+  const curSet = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
+  const total = Math.max(0, ...curSet.vars.map(v => v.count || 0));
+  if (curSet.vars.some(v => v.more) && total) sum += ` La base en compte environ ${total.toLocaleString('fr-FR')} : touche « Charger tout le rayon » pour tous les voir.`;
   $('#summary').innerHTML = sum;
   $('#results').hidden = false;
   const shown = rows.filter(r => r.ev.status === R.tab);
-  let html = shown.map(r => itemHTML(r.p, r.ev)).join('');
+  let html = shown.map(r => itemHTML(r.p, r.ev, stR.id === 'all' ? null : (r.here ? 'Chez ' + stR.label : 'Marque nationale'))).join('');
   if (R.tab === 'no' && !allLoaded) html += `<li class="empty-card">Les produits qui contiennent tes allergènes ne sont pas encore chargés.<br><button class="ghost" type="button" id="loadExcluded">Afficher les produits exclus</button></li>`;
   else if (!shown.length) html = `<li class="empty-card">${esc(emptyMsg(R.tab))}</li>`;
   $('#list').innerHTML = html;
   const set = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
-  $('#more').hidden = !(set.loaded && set.vars.some(v => v.more));
+  $('#moreRow').hidden = !(set.loaded && set.vars.some(v => v.more)) || !!R.loadingAll;
 }
 function emptyMsg(tab){
   const f = (S.nutri || S.nova || S.bio || S.vegan || S.vegetarian || S.palm) ? ' ou retire des filtres' : '';
@@ -957,9 +985,20 @@ $('#list').addEventListener('click', e => {
   if (e.target.closest('#loadExcluded')) { loadSet(R.sets.all); return; }
   handleItemClick(e, code => R && R.products.get(code) && R.products.get(code).p);
 });
-$('#more').addEventListener('click', () => {
+const currentSet = () => R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
+$('#more').addEventListener('click', () => { if (R) loadSet(currentSet()); });
+$('#all').addEventListener('click', async () => {
   if (!R) return;
-  loadSet(R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all));
+  const myR = R, set = currentSet(), CAP = 1000;
+  myR.loadingAll = true; render();
+  while (R === myR && set.vars.some(v => v.more) && myR.products.size < CAP){
+    const before = myR.products.size;
+    await loadSet(set);
+    if (R !== myR || $('#status').classList.contains('err')) break;
+    setStatus(`<span class="spin" aria-hidden="true"></span> ${myR.products.size} produits chargés…`);
+    if (myR.products.size === before && !set.vars.some(v => v.more)) break;
+  }
+  if (R === myR){ myR.loadingAll = false; if (!$('#status').classList.contains('err')) setStatus(myR.products.size >= CAP ? `Limite de ${CAP} produits atteinte : affine avec un nom ou un sous-rayon.` : 'Tout le rayon est chargé.'); render(); }
 });
 
 function thumb(p, cls = 'thumb'){
@@ -970,14 +1009,14 @@ function thumb(p, cls = 'thumb'){
 const inShop = code => shop.some(x => x.code === code);
 const ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
-function itemHTML(p, ev){
+function itemHTML(p, ev, where){
   const code = esc(p.code); const added = inShop(String(p.code));
   const reason = ev.no[0] || ev.check[0] || ev.ok[0] || '';
   return `<li class="item s-${ev.status}">
     <button class="rowbtn" type="button" data-open="${code}">
       ${thumb(p)}
       <span><span class="name">${esc(nameOf(p))}</span>${metaOf(p) ? `<span class="meta">${esc(metaOf(p))}</span>` : ''}
-      <span class="vline"><span class="verdict">${VERDICT[ev.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span></span>
+      <span class="vline"><span class="verdict">${VERDICT[ev.status]}</span>${reason ? `<span class="reason">${esc(reason)}</span>` : ''}</span>${where ? `<span class="where${where.startsWith('Chez') ? ' yes' : ''}">${esc(where)}</span>` : ''}</span>
     </button>
     <span class="side"><button class="iconbtn" type="button" data-add="${code}" aria-pressed="${added}" aria-label="${added ? 'Retirer de ma liste' : 'Ajouter à ma liste'} : ${esc(nameOf(p))}">${added ? ICON_CHECK : ICON_PLUS}</button></span>
   </li>`;
@@ -1147,21 +1186,26 @@ async function findAlternatives(p, btn, everywhere){
   const cats = (p.categories_tags || []).filter(t => /^en:/.test(t));
   const cat = p.compared_to_category || cats[cats.length - 1];
   if (!cat){ box.innerHTML = '<p class="hint">Catégorie inconnue pour ce produit : impossible de chercher des équivalents.</p>'; return; }
-  const st = everywhere ? storeById('all') : storeById(S.store);
+  const st0 = storeById(S.store);
+  const st = everywhere ? storeById('all') : st0;
+  const wideAlt = S.wide && st0.id !== 'all';
   btn.disabled = true; box.innerHTML = '<p class="hint"><span class="spin" aria-hidden="true"></span> Recherche d\'équivalents…</p>';
   const hard = hardTags();
-  const urls = [v2Url({ storeTags:st.tags, category:cat, sort:'popularity', exclude:hard, excludeTraces:profile.traces ? hard : [], size:40 }, 1)];
-  if (lactoseOnly()){ const h2 = hard.filter(t => t !== 'en:milk'); urls.push(v2Url({ storeTags:st.tags, category:cat, sort:'popularity', labels:['en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [], size:40 }, 1)); }
+  const tagsQ = wideAlt ? [] : st.tags;
+  const urls = [v2Url({ storeTags:tagsQ, category:cat, sort:'popularity', exclude:hard, excludeTraces:profile.traces ? hard : [], size:60 }, 1)];
+  if (lactoseOnly()){ const h2 = hard.filter(t => t !== 'en:milk'); urls.push(v2Url({ storeTags:tagsQ, category:cat, sort:'popularity', labels:['en:no-lactose'], exclude:h2, excludeTraces:profile.traces ? h2 : [], size:40 }, 1)); }
   try {
     const found = new Map();
     for (const u of urls){ const j = await getJSON(u, { bucket:'search' }); for (const q of (j.products || [])) if (q && q.code && String(q.code) !== String(p.code)) found.set(String(q.code), q); }
-    const rows = [...found.values()].map(q => ({ p:q, ev:evaluate(q) })).filter(r => r.ev.status === 'ok').sort(sorter('popularity')).slice(0, 12);
+    const base = sorter('popularity');
+    const rows = [...found.values()].filter(q => !(wideAlt && otherChainOnly(q, st0))).map(q => ({ p:q, ev:evaluate(q), here:seenAt(q, st0) }))
+      .filter(r => r.ev.status === 'ok').sort((a, b) => (b.here - a.here) || base(a, b)).slice(0, 15);
     rows.forEach(r => altCache.set(String(r.p.code), r.p));
     if (!$('#alts') || stack[stack.length - 1] !== p) return;
     const inCat = RAYON_NAME[cat] ? `dans « ${esc(RAYON_NAME[cat])} »` : 'dans la même catégorie';
     box.innerHTML = rows.length
-      ? `<p class="hint">${rows.length} produit${rows.length > 1 ? 's' : ''} compatible${rows.length > 1 ? 's' : ''} ${inCat}, ${esc(st.id === 'all' ? 'tous magasins' : 'chez ' + st.label)} :</p><ul class="list" style="margin-top:.5rem">${rows.map(r => itemHTML(r.p, r.ev)).join('')}</ul>`
-      : `<p class="hint">Aucun équivalent compatible trouvé ${inCat}${st.id === 'all' ? '' : ' chez ' + esc(st.label)}.</p>${st.id === 'all' ? '' : '<button class="ghost small" type="button" id="altsAll" style="margin-top:.5rem">Chercher dans tous les magasins</button>'}`;
+      ? `<p class="hint">${rows.length} produit${rows.length > 1 ? 's' : ''} compatible${rows.length > 1 ? 's' : ''} ${inCat}, ${esc(st.id === 'all' ? 'tous magasins' : wideAlt ? 'chez ' + st.label + ' et marques nationales' : 'chez ' + st.label)} :</p><ul class="list" style="margin-top:.5rem">${rows.map(r => itemHTML(r.p, r.ev, st0.id === 'all' || everywhere ? null : (r.here ? 'Chez ' + st0.label : 'Marque nationale'))).join('')}</ul>`
+      : `<p class="hint">Aucun équivalent compatible trouvé ${inCat}${st.id === 'all' ? '' : ' chez ' + esc(st.label)}.</p>${st.id === 'all' || wideAlt ? '' : '<button class="ghost small" type="button" id="altsAll" style="margin-top:.5rem">Chercher dans tous les magasins</button>'}`;
   } catch (e) { box.innerHTML = `<p class="status err">${esc(errorText(e))}</p>`; }
   finally { btn.disabled = false; }
 }
