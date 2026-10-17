@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['tools/**', '.github/workflows/data.yml']
+    paths: ['tools/build_data.py', 'tools/config.json', '.github/workflows/data.yml']
 permissions:
   contents: write
   pages: write

@@ -318,6 +318,55 @@ div.rowbtn{cursor:default}
 .wtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .wtop b{font-size:16px}
 .wlist li.best .wtop b::after{content:"Meilleur choix";margin-left:8px;padding:1px 7px;border-radius:6px;background:var(--ok-bg);color:var(--ok);font-size:12px;font-weight:700;vertical-align:2px}
+.nearline{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:9px 12px;border:0;border-radius:12px;background:var(--ok-bg);color:var(--ink);font-size:14px;line-height:1.3;text-align:left}
+.nearline svg{flex:none;width:16px;height:16px;color:var(--ok)}
+.nearline span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nearline b{flex:none;color:var(--ok);font-weight:650}
+.nearline.warn{background:var(--warn-bg)} .nearline.warn svg,.nearline.warn b{color:var(--warn)}
+.locnow{display:flex;gap:12px;align-items:center}
+.locnow b{display:block;font-size:17px}
+.locnow .hint{display:block}
+.locico{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--ok-bg);color:var(--ok)}
+.locico svg{width:20px;height:20px}
+.banner.busy{background:var(--sunk)}
+.locsug{list-style:none;margin:8px 0 0;padding:0;border-radius:12px;box-shadow:0 0 0 1px var(--line) inset;overflow:hidden}
+.locsug li + li{border-top:1px solid var(--line)}
+.locsug button{display:flex;justify-content:space-between;gap:10px;width:100%;min-height:46px;padding:10px 14px;border:0;background:transparent;font-size:16px;text-align:left;color:var(--ink)}
+.locsug small{color:var(--muted);font-size:14px}
+.loclist{list-style:none;margin:0;padding:0}
+.loclist li{display:flex;gap:14px;align-items:center;padding:12px 16px}
+.loclist li + li{border-top:1px solid var(--line)}
+.loclist .locinfo{flex:1;min-width:0}
+.loclist .hint{margin-top:2px}
+.loclist li.off .locinfo{opacity:.5}
+.loclist .switch{flex:none}
+.loctop{display:flex;justify-content:space-between;gap:8px}
+.locd{font-weight:700;color:var(--ok);white-space:nowrap;font-variant-numeric:tabular-nums}
+.loclist a{color:var(--ok);font-weight:600;text-decoration:none}
+.oh.open{color:var(--ok);font-weight:600} .oh.closed{color:var(--no);font-weight:600}
+.rowbtn{width:100%;border:0;background:transparent;text-align:left;color:var(--ink)}
+.homerow{display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--sunk)}
+.homeinfo{flex:1;min-width:0}
+.homeinfo b{display:block;font-size:15px}
+.homeinfo .hint{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbtn.danger{color:var(--no)}
+.drives{display:grid;gap:8px;margin-top:10px}
+.drivebtn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--sunk);color:var(--ink);text-decoration:none}
+.drivebtn b{display:block;font-size:16px}
+.drivebtn small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
+.drivebtn .go{flex:none;color:var(--ok);font-weight:650;font-size:15px}
+.drivebtn .go::after{content:" ›"}
+.drivebtn.off .go{color:var(--muted);font-weight:500}
+.drivebtn.off .go::after{content:""}
+.dlist{list-style:none;margin:0;padding:0}
+.dlist li + li{border-top:1px solid var(--line)}
+.dlist a{display:flex;align-items:center;gap:12px;padding:12px 16px;color:var(--ink);text-decoration:none}
+.dlist a span:first-child{flex:1;min-width:0}
+.dlist .go{flex:none;color:var(--ok);font-weight:650}
+.dlist .go::after{content:" ›"}
+.wlinks{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
+.wlinks a,.wlinks button{font-size:14px;font-weight:650;color:var(--ok);text-decoration:none;background:none;border:0;padding:4px 0}
+.rowbtn .lbl{font-size:16px}
 .wcount{font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums;white-space:nowrap}
 .wbar{height:6px;border-radius:3px;background:var(--sunk);margin:7px 0 5px;overflow:hidden}
 .wbar span{display:block;height:100%;border-radius:3px;background:var(--ok)}
@@ -404,6 +453,7 @@ footer a{color:inherit}
         <button type="button" class="btnchip" id="rayonBtn" aria-haspopup="dialog"><span id="rayonName"></span><svg aria-hidden="true"><use href="#i-down"/></svg></button>
         <button type="button" class="btnchip" id="filtersBtn" aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-filter"/></svg>Filtres<span id="filterCount"></span></button>
       </div>
+      <button type="button" class="nearline" id="nearLine" hidden aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-pin"/></svg><span id="nearLineTxt"></span><b>Modifier</b></button>
       <div class="chiprow quick" id="quick" aria-label="Rayons rapides"></div>
     </form>
 
@@ -540,15 +590,9 @@ footer a{color:inherit}
         <div class="gpad">
           <p class="banner rsum" id="whereBest" style="margin-top:0" aria-live="polite"></p>
           <ul class="wlist" id="whereList"></ul>
-          <button class="ghost wide" id="nearBtn" type="button"><svg aria-hidden="true" style="width:18px;height:18px"><use href="#i-pin"/></svg>Magasins près de moi</button>
-          <form class="inrow" id="cityForm" hidden autocomplete="off" style="margin-top:10px">
-            <label class="sr" for="city">Ville ou code postal</label>
-            <input id="city" type="text" placeholder="Ta ville ou ton code postal" enterkeyhint="search">
-            <button class="ghost" type="submit">OK</button>
-          </form>
-          <p class="hint" id="nearStatus" style="margin-top:8px"></p>
-          <p class="hint" id="nearWhere"></p>
-          <p class="hint" style="margin-top:8px">« Vu dans l'enseigne » vient d'Open Food Facts, « marque nationale » veut dire vendue en général partout. Les stocks des drives ne sont pas publics : pour un magasin précis, ouvre le produit et touche « Chercher sur le site ». Ta position reste sur ton téléphone.</p>
+          <p class="hint" id="nearWhere" style="margin-bottom:10px"></p>
+          <button class="ghost wide" id="nearBtn" type="button" aria-haspopup="dialog"><svg aria-hidden="true" style="width:18px;height:18px"><use href="#i-pin"/></svg>Magasins près de moi</button>
+          <p class="hint" style="margin-top:10px">« Vu dans l'enseigne » vient d'Open Food Facts, « marque nationale » veut dire vendue en général partout. Les stocks des drives ne sont pas publics : touche « Vérifier ma liste au drive », ou « Voir le stock » dans la fiche d'un produit, pour ouvrir le site de l'enseigne sur tes produits. Ta position n'est enregistrée que sur ton téléphone.</p>
         </div>
       </div>
     </section>
@@ -598,6 +642,13 @@ footer a{color:inherit}
     </div>
 
     <div class="group">
+      <button class="grow rowbtn" id="profNear" type="button" aria-haspopup="dialog">
+        <span class="lbl">Magasins près de moi<small id="profNearTxt"></small></span>
+        <svg class="chev" aria-hidden="true"><use href="#i-down"/></svg>
+      </button>
+    </div>
+
+    <div class="group">
       <div class="gpad">
         <p class="lbl" id="l-theme" style="margin-bottom:10px">Apparence</p>
         <div class="chips" id="themeChips" role="group" aria-labelledby="l-theme">
@@ -629,6 +680,7 @@ footer a{color:inherit}
         <p><b>Base de l'appli</b> : chaque semaine, l'appli récupère l'export complet d'Open Food Facts et garde les produits vendus en France, rayon par rayon. Parcourir un rayon ne dépend donc pas des serveurs d'Open Food Facts, souvent saturés.</p>
         <p><b>RappelConso</b> : la base officielle des rappels de produits du gouvernement. Chaque fiche produit est vérifiée.</p>
         <p><b>Open Prices</b> : prix relevés en magasin par la communauté.</p>
+        <p><b>OpenStreetMap</b> : adresses et horaires des magasins, mis à jour chaque semaine. Les distances sont à vol d'oiseau.</p>
         <p>« Chez E.Leclerc » veut dire qu'un contributeur l'a vu dans cette enseigne, pas qu'il est en stock dans ton magasin. Certaines fiches sont incomplètes : c'est le rôle de l'onglet « À vérifier ».</p>
         <p>La recherche par nom dans tous les rayons et le scan interrogent Open Food Facts en direct. Quand ses serveurs sont saturés, l'appli réessaie toute seule.</p>
         <p>Les recettes changent : l'étiquette du produit que tu as en main fait toujours foi.</p>
@@ -636,7 +688,7 @@ footer a{color:inherit}
     </details>
 
     <button class="ghost wide danger" id="resetAll" type="button" style="margin-top:14px">Effacer toutes mes données</button>
-    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a>, licences ouvertes. Rayon sûr <span id="appVersion"></span>.</footer>
+    <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a> et © les contributeurs d'<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, licences ouvertes. Rayon sûr <span id="appVersion"></span>.</footer>
   </section>
 </div>
 
@@ -755,6 +807,71 @@ footer a{color:inherit}
     <div class="sheet-foot">
       <button class="primary wide" id="obGo" type="button">C'est parti</button>
       <button class="textbtn" id="obSkip" type="button" style="display:block;margin:6px auto 0">Plus tard</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="nearSheet" aria-labelledby="nearTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="nearTitle" style="grid-column:2">Magasins près de moi</span>
+      <button class="iconbtn" id="nearClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="group">
+        <div class="gpad">
+          <div class="locnow"><span class="locico"><svg aria-hidden="true"><use href="#i-pin"/></svg></span><div><b id="locWhere">Position inconnue</b><span class="hint" id="locWhen"></span></div></div>
+          <p class="banner" id="locMsg" hidden aria-live="polite"></p>
+          <button class="primary wide" id="locGps" type="button" style="margin-top:12px"><svg aria-hidden="true" style="width:18px;height:18px"><use href="#i-pin"/></svg><span>Utiliser ma position</span></button>
+          <form id="locCityForm" autocomplete="off" style="margin-top:14px" role="search">
+            <label class="lbl" for="locCity">Ou indique ton adresse</label>
+            <div class="inrow" style="margin-top:6px">
+              <input id="locCity" type="text" placeholder="Adresse, ville ou code postal" enterkeyhint="search" autocomplete="off" autocapitalize="words" spellcheck="false">
+              <button class="ghost" type="submit">OK</button>
+            </div>
+            <ul class="locsug" id="locSug" hidden></ul>
+          </form>
+          <div class="homerow" id="homeRow" hidden>
+            <div class="homeinfo"><b>Mon adresse</b><span class="hint" id="homeTxt"></span></div>
+            <button class="textbtn" id="homeUse" type="button">Utiliser</button>
+            <button class="textbtn danger" id="homeDel" type="button" aria-label="Effacer mon adresse">Effacer</button>
+          </div>
+          <p class="hint" style="margin-top:8px">Ton adresse reste sur ton téléphone. Si la position ne marche pas, l'appli s'en sert à la place.</p>
+        </div>
+      </div>
+      <div class="group">
+        <div class="gpad">
+          <p class="lbl" id="l-radius" style="margin-bottom:10px">Distance maximale</p>
+          <div class="chips" id="radiusChips" role="group" aria-labelledby="l-radius">
+            <button type="button" class="chip" data-r="0">Auto</button><button type="button" class="chip" data-r="5">5 km</button><button type="button" class="chip" data-r="10">10 km</button><button type="button" class="chip" data-r="20">20 km</button><button type="button" class="chip" data-r="40">40 km</button>
+          </div>
+          <p class="hint" id="radiusHint" style="margin-top:8px"></p>
+        </div>
+      </div>
+      <div class="sec"><h2 id="t-locs">Enseignes autour</h2></div>
+      <p class="hint" style="margin:-4px 4px 10px">Décoche une enseigne où tu ne vas jamais : elle ne sera plus proposée.</p>
+      <div class="group"><ul class="loclist" id="locList"></ul></div>
+      <div class="group">
+        <div class="grow">
+          <label for="locAuto">Suivre ma position<small>Les magasins s'actualisent quand tu changes de quartier ou de ville</small></label>
+          <input type="checkbox" class="switch" id="locAuto" role="switch">
+        </div>
+      </div>
+      <p class="hint" style="margin:10px 4px 0">Magasins : © les contributeurs d'OpenStreetMap, base mise à jour chaque semaine. Distances à vol d'oiseau, horaires indicatifs (jours fériés non pris en compte). Ta position n'est enregistrée que sur ton téléphone.</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="driveSheet" aria-labelledby="driveTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="driveTitle" style="grid-column:2">Stock au drive</span>
+      <button class="iconbtn" id="driveClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint" id="driveHint" style="margin:0 4px 12px"></p>
+      <div class="group"><ul class="dlist" id="driveList"></ul></div>
+      <p class="hint" style="margin:10px 4px 0">Les stocks des drives ne sont pas publics : l'appli ouvre le site de l'enseigne sur le produit, et c'est lui qui affiche le stock du drive choisi.</p>
     </div>
   </div>
 </dialog>
@@ -935,13 +1052,23 @@ const nameOf = p => p.product_name_fr || p.generic_name_fr || p.product_name || 
 const brandOf = p => (p.brands || '').split(',').slice(0, 2).map(s => s.trim()).filter(Boolean).join(', ');
 const metaOf = p => [brandOf(p), p.quantity].filter(Boolean).join(', ');
 const ingredientsOf = p => (p.ingredients_text_fr || p.ingredients_text || '').trim();
-const NEAR_KEY = 'rs2:near';
+const NEAR_KEY = 'rs2:near', LOC_KEY = 'rs2:loc';
 let near = ls.get(NEAR_KEY, null);
+// réglages : suivre la position, ville choisie ou GPS, distance (0 = auto), enseignes écartées
+const loc = Object.assign({ auto:true, mode:'gps', radius:0, off:[], okAt:0, pinned:false }, ls.get(LOC_KEY, null) || {});
+if (!Array.isArray(loc.off)) loc.off = [];
+// ancien format (avant la base des magasins) : gardé jusqu'à la prochaine mise à jour
+if (near && (!near.stores || typeof near.stores !== 'object')) near = null;
+if (near && !Array.isArray(near.places)){
+  const gps = !near.label || near.label === 'ta position';
+  near = Object.assign(near, { r:15, src:gps ? 'gps' : 'city', label:gps ? '' : near.label, plat:near.lat, plon:near.lon, fixAt:0, old:true });
+  if (!ls.get(LOC_KEY, null)){ loc.mode = gps ? 'gps' : 'city'; if (gps) loc.okAt = near.at || 1; }
+}
+let locState = { s:near ? 'ok' : 'idle', code:'' };
 const shortLabel = s => s.label.split(',')[0];
-// « Près de moi » : toutes les enseignes trouvées autour de la position, réunies en un seul magasin
+// « Près de moi » : les enseignes trouvées autour de la position, réunies en un seul magasin
 function nearStore(){
-  const ids = near && near.stores ? Object.keys(near.stores).filter(id => STORES.some(s => s.id === id && id !== 'all'))
-    .sort((a, b) => near.stores[a].dist - near.stores[b].dist) : [];
+  const ids = nearIds();
   if (!ids.length) return null;
   const cs = ids.map(id => STORES.find(s => s.id === id));
   return { id:'near', label:'Magasins près de moi', near:true, chains:ids, tags:cs.flatMap(c => c.tags), mdd:cs.flatMap(c => c.mdd), sal:[],
@@ -1296,11 +1423,12 @@ function renderQuick(){
 }
 function storeOptions(){
   const ns = nearStore();
-  const lab = ns ? 'Près de moi : ' + ns.chains.map(id => shortLabel(STORES.find(s => s.id === id))).join(', ') : 'Magasins près de moi…';
+  const lab = ns ? 'Près de moi' + (near.label ? ' (' + near.label + ')' : '') : 'Magasins près de moi…';
   return `<option value="near">${esc(lab)}</option>` + STORES.map(s => `<option value="${s.id}">${esc(s.label)}</option>`).join('');
 }
 function refreshStoreSelects(){
   for (const id of ['#store', '#recStore']){ const sel = $(id); if (!sel) continue; sel.innerHTML = storeOptions(); sel.value = S.store; fitSel(sel); }
+  renderNearUI();
 }
 $('#store').innerHTML = storeOptions();
 $('#store').value = S.store; $('#terms').value = S.terms || ''; $('#sort').value = S.sort; $('#wide').checked = !!S.wide;
@@ -1333,11 +1461,12 @@ function fitStore(){ fitSel($('#store')); }
 fitStore();
 $('#store').addEventListener('change', e => chooseStore(e.target.value, e.target));
 async function chooseStore(id, sel){
-  const prev = S.store;
-  if (id === 'near' && !nearStore()){
-    const ok = await useNearby();
-    if (!ok){ S.store = prev; refreshStoreSelects(); return; }
-  } else { S.store = id; saveSearch(); refreshStoreSelects(); }
+  if (id === 'near'){
+    loc.pinned = false; saveLoc();
+    // pas encore de magasins proches : la fiche s'ouvre, le choix se fait quand la position est trouvée
+    if (!nearStore()){ refreshStoreSelects(); openNear({ locate:!near }); return; }
+  } else { loc.pinned = true; saveLoc(); }
+  S.store = id; saveSearch(); refreshStoreSelects();
   if (RV) { RV.pick = {}; computeRecipe(); }
   if (R) runSearch();
 }
@@ -1714,6 +1843,7 @@ function productHTML(p){
     <button class="act" type="button" data-act="fav" aria-pressed="${fav}"><svg aria-hidden="true"><use href="#i-star"/></svg>${fav ? 'En favori' : 'Favori'}</button>
     <button class="act" type="button" data-act="share"><svg aria-hidden="true"><use href="#i-share"/></svg>Partager</button>
   </div>
+  ${driveCard(p)}
   ${card('Ingrédients', raw ? `<p class="ingr">${renderIngredients(raw)}</p>` : '<p class="ingr">Non renseignés sur Open Food Facts : vérifie l\'emballage.</p>')}
   <section class="card"><h3>Allergènes déclarés</h3>${list(p.allergens_tags)}<h3 class="sub">Peut contenir des traces de</h3>${list(p.traces_tags)}</section>
   ${labels.length || anTags.length ? card('Labels et régimes', `<div class="tags">${[...labels, ...anTags].map(l => `<span class="tag">${esc(l)}</span>`).join('')}</div>`) : ''}
@@ -1727,7 +1857,6 @@ function productHTML(p){
     <span>Code-barres ${esc(code)}</span>
     <a href="${OFF_FR}/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir la fiche sur Open Food Facts</a>
     <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">Compléter ou corriger la fiche</a>
-    ${linkChains(p).map(id => `<a href="${esc(siteSearch(p, id))}" target="_blank" rel="noopener">Chercher sur le site ${esc(shortLabel(storeById(id)))}</a>`).join('')}
   </div></section>`;
 }
 $('#sheetBody').addEventListener('click', async e => {
@@ -1827,6 +1956,8 @@ async function runDiag(){
     ['Open Food Facts : recherche', `${OFF}/api/v2/search?categories_tags=en:sorbets&countries_tags=en:france&page_size=1&fields=code`, 7],
     ['RappelConso : rappels officiels', `${RAPPEL}?limit=1`, 2],
     ['Open Prices : prix relevés', `${PRICES}?size=1`, 2],
+    ['Magasins près de moi (base)', DATA + 'stores/index.json', 2],
+    ['Villes et codes postaux', 'https://geo.api.gouv.fr/communes?codePostal=35000&fields=nom&format=json', 2],
   ];
   btn.disabled = true; ul.hidden = false;
   ul.innerHTML = tests.map((t, i) => `<li><span>${esc(t[0])}</span><b id="dg${i}" class="hint">…</b></li>`).join('')
@@ -2574,6 +2705,11 @@ function whereText(info){
   if (info.seen.length) return 'Vu chez ' + info.seen.map(lab).join(', ') + ', marque nationale';
   return 'Marque nationale, sans magasin renseigné';
 }
+/* ================= Magasins près de moi =================
+   Position : GPS du téléphone (deux essais : rapide, puis précis), ou une ville / un code postal
+   (geo.api.gouv.fr, sinon Nominatim). Magasins : base de l'appli (data/stores/, tirée chaque semaine
+   d'OpenStreetMap), sinon Overpass en direct. Rien ne quitte le téléphone, à part la position
+   envoyée à geo.api.gouv.fr pour afficher le nom de la ville. */
 function km(a, b, c, d){
   const r = Math.PI / 180, x = Math.sin((c - a) * r / 2), y = Math.sin((d - b) * r / 2);
   return 12742 * Math.asin(Math.sqrt(x * x + Math.cos(a * r) * Math.cos(c * r) * y * y));
@@ -2581,107 +2717,585 @@ function km(a, b, c, d){
 const mapsUrl = (lat, lon, name) => /iPhone|iPad|Macintosh/.test(navigator.userAgent)
   ? `https://maps.apple.com/?daddr=${lat},${lon}&q=${encodeURIComponent(name)}`
   : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
-async function nearbyStores(lat, lon){
-  const q = `[out:json][timeout:25];nwr["shop"~"^(supermarket|convenience|frozen_food|greengrocer|organic|department_store|general)$"](around:15000,${lat},${lon});out center tags 500;`;
-  let j = null, last = null;
-  for (const base of ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter']){
-    try { j = await getJSON(`${base}?data=${encodeURIComponent(q)}`, { bucket:'free', timeout:30000, noCache:true }); break; }
-    catch (e) { last = e; }
+const saveLoc = () => ls.set(LOC_KEY, loc);
+const RADII = [0, 5, 10, 20, 40];          // 0 : automatique (10 km, 25 km à la campagne)
+const loadKm = () => Math.max(25, loc.radius || 0);
+// enseigne d'un magasin OpenStreetMap : sa marque, sinon son nom (mêmes règles que tools/build_stores.py)
+const OSM_CHAINS = [
+  ['leclerc', /\b(e\.?\s?)?leclerc\b/i], ['carrefour', /^carrefour\b/i], ['auchan', /\bauchan\b/i], ['intermarche', /^interm(arch|arc)/i],
+  ['u', /^((super|hyper|march[ée])\s+u|u\s+express|utile|u)\b(?!\w)/i], ['lidl', /^lidl\b/i], ['aldi', /^aldi\b/i],
+  ['monoprix', /^monop(rix\b|'|’|\b)/i], ['casino', /^(petit\s+|g[ée]ant\s+|le\s+petit\s+)?casino\b/i], ['franprix', /^franprix\b/i],
+  ['cora', /^cora\b/i], ['netto', /^netto\b/i], ['biocoop', /^biocoop\b/i], ['picard', /^picard\b/i], ['grandfrais', /^grand\s+frais\b/i],
+];
+const OSM_SKIP = /\b(station|carburant|lavage|location|voyages?|optique|drive pi[ée]ton)\b/i;
+function osmChain(t){
+  for (const k of ['brand', 'name']){
+    const v = String(t[k] || '').trim(); if (!v) continue;
+    for (const [id, rx] of OSM_CHAINS) if (rx.test(v)) return id;
   }
-  if (!j) throw last || err('network');
-  const by = {};
-  for (const el of (j.elements || [])){
-    const t = el.tags || {}; const label = t.brand || t.name || '';
-    const s = CHAINS().find(c => c.match && c.match.test(label)); if (!s) continue;
-    const la = el.lat != null ? el.lat : el.center && el.center.lat, lo = el.lon != null ? el.lon : el.center && el.center.lon;
-    if (la == null || lo == null) continue;
-    const d = km(lat, lon, la, lo);
-    const name = [t.name || t.brand, t['addr:street'] || t['addr:city']].filter(Boolean).join(', ');
-    const cur = by[s.id];
-    if (!cur || d < cur.dist) by[s.id] = { name, dist:d, lat:la, lon:lo, n:(cur ? cur.n : 0) + 1 };
-    else cur.n++;
-  }
-  return by;
+  return null;
 }
-async function updateNear(lat, lon, label){
-  const stores = await nearbyStores(lat, lon);
-  near = { lat, lon, label, at:Date.now(), stores };
-  ls.set(NEAR_KEY, near); NEAR_ST = null; refreshStoreSelects();
-  return stores;
-}
-const getPosition = () => new Promise((res, rej) => {
-  if (!('geolocation' in navigator)) return rej(new Error('nogeo'));
-  navigator.geolocation.getCurrentPosition(p => res({ lat:p.coords.latitude, lon:p.coords.longitude }), rej, { enableHighAccuracy:false, timeout:15000, maximumAge:600000 });
-});
-// Adapte l'appli aux magasins autour : position, enseignes à moins de 15 km, magasin « Près de moi »
-async function useNearby({ quiet = false } = {}){
+// requêtes vers les serveurs de cartes : sans relance automatique ni effet sur le quota d'Open Food Facts
+async function fetchGeo(url, ms = 12000){
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), ms);
   try {
-    if (!quiet) toast('Recherche des magasins près de toi…', 0);
-    const pos = await getPosition();
-    const before = near && near.stores ? Object.keys(near.stores).sort().join() : '';
-    const stores = await updateNear(pos.lat, pos.lon, 'ta position');
-    const ns = nearStore();
-    if (!ns){ if (!quiet) toast('Aucune enseigne connue à moins de 15 km : choisis ton magasin dans la liste.', 4500); return false; }
-    const changed = before !== Object.keys(stores).sort().join();
-    S.store = 'near'; saveSearch(); refreshStoreSelects();
-    if (!quiet || changed) toast('Magasins près de toi : ' + ns.chains.map(id => shortLabel(STORES.find(s => s.id === id)) + ' ' + fmtKm(near.stores[id].dist)).slice(0, 4).join(', '), 4000);
-    if (!$('#screen-list').hidden) renderLists();
-    return true;
+    const r = await fetch(url, { signal:ctl.signal });
+    if (!r.ok) throw err('http', { status:r.status });
+    return await r.json();
   } catch (e) {
-    const geo = e && (typeof e.code === 'number' || e.message === 'nogeo');
-    if (!quiet) toast(geo ? 'Position non disponible : choisis ton magasin, ou indique ta ville dans Ma liste.' : 'Carte des magasins indisponible pour le moment : réessaie dans un instant.', 4500);
+    if (e.code) throw e;
+    if (e.name === 'AbortError') throw err('timeout');
+    if (e instanceof SyntaxError) throw err('http', { status:'format' });
+    throw err(navigator.onLine === false ? 'offline' : 'network');
+  } finally { clearTimeout(tm); }
+}
+const twice = async (f) => { try { return await f(); } catch (e) { if (e && e.code === 'offline') throw e; await sleep(800); return f(); } };
+
+/* --- Base des magasins de l'appli : tuiles de 0,5° --- */
+let storeIdx = null, storeIdxAt = 0;
+const tileCache = new Map();
+async function storeIndex(){
+  if (storeIdx && Date.now() - storeIdxAt < 6 * 3600e3) return storeIdx;
+  const j = await twice(() => fetchGeo(DATA + 'stores/index.json', 10000));
+  if (!j || !j.tiles || !j.date) throw err('http', { status:'format' });
+  storeIdx = j; storeIdxAt = Date.now(); return j;
+}
+async function tilesAround(lat, lon, R){
+  const idx = await storeIndex();
+  const dLat = R / 111, dLon = R / (111 * Math.max(0.2, Math.cos(lat * Math.PI / 180)));
+  const keys = [];
+  for (let a = Math.floor((lat - dLat) * 2); a <= Math.floor((lat + dLat) * 2); a++)
+    for (let b = Math.floor((lon - dLon) * 2); b <= Math.floor((lon + dLon) * 2); b++)
+      if (idx.tiles[a + '_' + b]) keys.push(a + '_' + b);
+  const parts = await Promise.all(keys.map(k => {
+    const u = `${DATA}stores/${k}.json?d=${idx.date}`;
+    if (!tileCache.has(u)) tileCache.set(u, twice(() => fetchGeo(u, 15000)).catch(e => { tileCache.delete(u); throw e; }));
+    return tileCache.get(u);
+  }));
+  return { rows:parts.flat(), from:'base', date:idx.date };
+}
+/* --- Repli : Overpass en direct (plusieurs serveurs) --- */
+const OVERPASS = ['https://overpass.private.coffee/api/interpreter', 'https://overpass-api.de/api/interpreter', 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
+const OSM_SHOPS = '^(supermarket|convenience|frozen_food|greengrocer|organic|health_food|department_store|general|deli|wholesale)$';
+const OSM_LOOSE = 'leclerc|carrefour|auchan|intermarch|super u|hyper u|u express|march. u|^u$|utile|lidl|aldi|monop|casino|franprix|cora|netto|biocoop|picard|grand frais';
+async function overpassAround(lat, lon, R){
+  const a = `(around:${Math.round(R * 1000)},${lat.toFixed(5)},${lon.toFixed(5)})`, sel = `["shop"~"${OSM_SHOPS}"]`;
+  const q = `[out:json][timeout:25];(nwr${sel}["brand"~"${OSM_LOOSE}",i]${a};nwr${sel}["name"~"${OSM_LOOSE}",i]${a};);out center tags;`;
+  let last = null;
+  for (const base of OVERPASS){
+    try {
+      const j = await fetchGeo(`${base}?data=${encodeURIComponent(q)}`, 30000);
+      // délai dépassé côté serveur : réponse 200 mais incomplète, signalée dans « remark »
+      if (!j || !Array.isArray(j.elements) || /error|timed out|out of memory/i.test(j.remark || '')) throw err('http', { status:'remark' });
+      const rows = [];
+      for (const el of j.elements){
+        const t = el.tags || {}; const c = osmChain(t); if (!c) continue;
+        const name = String(t.name || t.brand || '').trim(); if (OSM_SKIP.test(name)) continue;
+        const la = el.lat != null ? el.lat : el.center && el.center.lat, lo = el.lon != null ? el.lon : el.center && el.center.lon;
+        if (la == null || lo == null) continue;
+        const street = [t['addr:housenumber'], t['addr:street']].filter(Boolean).join(' ');
+        rows.push([c, la, lo, name, [street, t['addr:city']].filter(Boolean).join(', '), String(t.opening_hours || ''), String(t.website || t['contact:website'] || '').slice(0, 160)]);
+      }
+      return { rows, from:'osm' };
+    } catch (e) { last = e; if (e.code === 'offline') break; }
+  }
+  throw last || err('network');
+}
+// magasins autour d'un point : pour chaque enseigne, les 6 plus proches et le nombre par distance
+async function placesAround(lat, lon, R){
+  let got;
+  try { got = await tilesAround(lat, lon, R); }
+  catch (e) { if (e && e.code === 'offline') throw e; got = await overpassAround(lat, lon, R); }
+  const by = {};
+  for (const r of got.rows){
+    if (!CHAINS().some(s => s.id === r[0])) continue;
+    const d = km(lat, lon, r[1], r[2]); if (d > R) continue;
+    (by[r[0]] || (by[r[0]] = [])).push({ r, d });
+  }
+  const places = [], cnt = {};
+  for (const id in by){
+    by[id].sort((x, y) => x.d - y.d);
+    cnt[id] = {}; for (const k of [5, 10, 20, 25, 40]) cnt[id][k] = by[id].filter(x => x.d <= k).length;
+    by[id].slice(0, 6).forEach(x => places.push(x.r));
+  }
+  return { places, cnt, from:got.from, date:got.date || '' };
+}
+// distance retenue : celle choisie, sinon 10 km, ou 25 km quand moins de 3 enseignes sont à moins de 10 km
+function nearestOf(id){
+  let best = null;
+  for (const r of near.places) if (r[0] === id){ const d = km(near.lat, near.lon, r[1], r[2]); if (!best || d < best.dist) best = { name:r[3], addr:r[4], oh:r[5], web:r[6] || '', dist:d, lat:r[1], lon:r[2] }; }
+  return best;
+}
+function computeNear(){
+  if (!near || !Array.isArray(near.places)) return;
+  const all = {};
+  for (const id of new Set(near.places.map(r => r[0]))){ const b = nearestOf(id); if (b) all[id] = b; }
+  const on = Object.keys(all).filter(id => !loc.off.includes(id));
+  const R = loc.radius || (on.filter(id => all[id].dist <= 10).length >= 3 ? 10 : 25);
+  const stores = {};
+  for (const id in all) if (all[id].dist <= R){
+    const c = near.cnt && near.cnt[id] ? near.cnt[id] : {};
+    stores[id] = Object.assign(all[id], { n:c[R] || c[[5, 10, 20, 25, 40].find(k => k >= R)] || 1 });
+  }
+  near.stores = stores; near.r = R;
+}
+const persistNear = () => { ls.set(NEAR_KEY, near); NEAR_ST = null; };
+// enseignes retenues pour « Près de moi » : à portée et pas écartées par l'utilisateur, de la plus proche à la plus loin
+function nearIds(){
+  if (!near || !near.stores) return [];
+  return Object.keys(near.stores).filter(id => !loc.off.includes(id) && id !== 'all' && STORES.some(s => s.id === id))
+    .sort((a, b) => near.stores[a].dist - near.stores[b].dist);
+}
+const nearInfo = id => (near && near.stores && !loc.off.includes(id) ? near.stores[id] || null : null);
+const placeLabel = () => !near ? '' : near.label ? near.label : near.src === 'city' ? 'la ville choisie' : 'ta position';
+
+/* --- Horaires d'ouverture (format OpenStreetMap, cas courants) --- */
+const OH_D = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+const OH_FR = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+function parseOH(s){
+  s = String(s || '').trim();
+  if (!s) return null;
+  if (s === '24/7') return OH_D.map(() => [[0, 1440]]);
+  // saisons, semaines, dates, jours fériés scolaires, lever du soleil : non gérés, on n'affiche rien
+  if (/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|week|easter|sunrise|sunset|dawn|dusk|SH)\b|\d{4}|\[|"/.test(s)) return null;
+  const week = OH_D.map(() => []), spill = OH_D.map(() => []);
+  const rules = s.replace(/(\d|off|closed)\s*,\s*(?=(?:Mo|Tu|We|Th|Fr|Sa|Su|PH)\b)/g, '$1;').split(/\s*;\s*|\s*\|\|\s*/);
+  for (const rule of rules){
+    if (!rule) continue;
+    const m = rule.match(/^((?:(?:Mo|Tu|We|Th|Fr|Sa|Su|PH)(?:\s*-\s*(?:Mo|Tu|We|Th|Fr|Sa|Su))?\s*,?\s*)*)(.*)$/);
+    const dp = m[1].trim().replace(/,$/, ''), rest = m[2].trim();
+    const days = [];
+    if (!dp) days.push(0, 1, 2, 3, 4, 5, 6);
+    else for (const it of dp.split(/\s*,\s*/)){
+      if (!it || it === 'PH') continue;
+      const ab = it.split(/\s*-\s*/), i = OH_D.indexOf(ab[0]), j = ab[1] ? OH_D.indexOf(ab[1]) : i;
+      if (i < 0 || j < 0) return null;
+      for (let k = i; ; k = (k + 1) % 7){ days.push(k); if (k === j) break; }
+    }
+    if (dp && !days.length) continue;               // règle des seuls jours fériés
+    const ranges = [];
+    if (/^(off|closed)$/i.test(rest)) { /* fermé */ }
+    else if (/^open$/i.test(rest)) ranges.push([0, 1440]);
+    else {
+      if (!rest) return null;
+      for (const tr of rest.split(/\s*,\s*/)){
+        const t = tr.match(/^(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})\+?$/);
+        if (!t) return null;
+        ranges.push([+t[1] * 60 + +t[2], +t[3] * 60 + +t[4]]);
+      }
+    }
+    for (const d of days){
+      week[d] = [];
+      for (const [a, b] of ranges){
+        if (b > a){ week[d].push([a, Math.min(b, 1440)]); if (b > 1440) spill[(d + 1) % 7].push([0, b - 1440]); }
+        else { week[d].push([a, 1440]); if (b > 0) spill[(d + 1) % 7].push([0, b]); }
+      }
+    }
+  }
+  return week.map((w, d) => w.concat(spill[d]).sort((x, y) => x[0] - y[0]));
+}
+const hm = m => { const h = Math.floor(m / 60) % 24, mi = m % 60; return mi ? `${h} h ${String(mi).padStart(2, '0')}` : `${h} h`; };
+function ohStatus(s, now = new Date()){
+  const w = parseOH(s); if (!w) return null;
+  const dow = (now.getDay() + 6) % 7, m = now.getHours() * 60 + now.getMinutes();
+  const cur = w[dow].find(([a, b]) => m >= a && m < b);
+  if (cur){
+    let end = cur[1];
+    if (end >= 1440){ const nx = w[(dow + 1) % 7].find(([a]) => a === 0); if (nx) end = 1440 + nx[1]; }
+    if (end >= 2880) return { open:true, text:'Ouvert 24 h/24' };
+    return { open:true, text:'Ouvert jusqu\'à ' + (end >= 1440 ? (end === 1440 ? 'minuit' : hm(end - 1440)) : hm(end)) };
+  }
+  const later = w[dow].find(([a]) => a > m);
+  if (later) return { open:false, text:'Fermé, ouvre à ' + hm(later[0]) };
+  for (let i = 1; i <= 7; i++){
+    const d = (dow + i) % 7; const f = w[d][0];
+    if (f) return { open:false, text:'Fermé, ouvre ' + (i === 1 ? 'demain' : OH_FR[d]) + ' à ' + hm(f[0]) };
+  }
+  return { open:false, text:'Fermé' };
+}
+const ohHtml = oh => { const o = ohStatus(oh); return o ? `<span class="oh ${o.open ? 'open' : 'closed'}">${esc(o.text)}</span>` : ''; };
+
+/* --- Position du téléphone --- */
+const IN_APP = /Snapchat|Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|BytedanceWebview|LinkedInApp|Pinterest|Line\//i.test(navigator.userAgent);
+const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function geoOnce(o){
+  return new Promise((res, rej) => {
+    let done = false;
+    // la question de l'iPhone peut rester sans réponse : on n'attend pas indéfiniment
+    const guard = setTimeout(() => { if (!done){ done = true; rej({ code:3 }); } }, o.timeout + 40000);
+    try {
+      navigator.geolocation.getCurrentPosition(
+        p => { if (!done){ done = true; clearTimeout(guard); res(p); } },
+        e => { if (!done){ done = true; clearTimeout(guard); rej(e || { code:2 }); } }, o);
+    } catch (e) { done = true; clearTimeout(guard); rej({ code:2 }); }
+  });
+}
+async function getPosition({ fresh = false } = {}){
+  if (!('geolocation' in navigator)) throw err('unsupported');
+  if (window.isSecureContext === false) throw err('insecure');
+  const fix = p => ({ lat:p.coords.latitude, lon:p.coords.longitude, acc:p.coords.accuracy || 0 });
+  let rough = null, e1 = null;
+  try {
+    const p = fix(await geoOnce({ enableHighAccuracy:false, timeout:10000, maximumAge:fresh ? 0 : 5 * 60e3 }));
+    if (p.acc <= 3000) return p;
+    rough = p;                                   // position très approximative : on tente le GPS
+  } catch (e) { if (e && e.code === 1) throw err('denied'); e1 = e; }
+  try { return fix(await geoOnce({ enableHighAccuracy:true, timeout:20000, maximumAge:0 })); }
+  catch (e) {
+    if (rough) return rough;
+    if (e && e.code === 1) throw err('denied');
+    throw err((e && e.code === 3) || (e1 && e1.code === 3) ? 'timeout' : 'unavailable');
+  }
+}
+async function geoPerm(){
+  try { if (navigator.permissions && navigator.permissions.query) return (await navigator.permissions.query({ name:'geolocation' })).state; } catch (e) {}
+  return 'unknown';
+}
+async function placeName(lat, lon){
+  const la = lat.toFixed(5), lo = lon.toFixed(5);
+  try {
+    const j = await fetchGeo(`https://geo.api.gouv.fr/communes?lat=${la}&lon=${lo}&fields=nom&format=json`, 6000);
+    if (Array.isArray(j) && j[0] && j[0].nom) return j[0].nom;
+  } catch (e) {}
+  try {   // repli : géocodeur de l'IGN
+    const j = await fetchGeo(`https://data.geopf.fr/geocodage/reverse?lat=${la}&lon=${lo}&limit=1&index=address`, 6000);
+    const f = j && j.features && j.features[0]; if (f && f.properties && f.properties.city) return f.properties.city;
+  } catch (e) {}
+  return '';
+}
+function geoHelp(code, fb){
+  const then = fb ? ' En attendant, l\'appli utilise ton adresse enregistrée.' : ' En attendant, indique ton adresse ci-dessous.';
+  switch (code){
+    case 'denied':
+      if (IN_APP) return 'Ta position est bloquée dans le navigateur de l\'appli d\'où tu viens (Snapchat, Instagram…). Ouvre Rayon sûr dans Safari : menu ••• puis « Ouvrir dans le navigateur ».' + then;
+      return (IOS
+        ? 'Ta position est bloquée pour ce site. Sur iPhone : Réglages › Confidentialité et sécurité › Service de localisation : active-le, puis « Sites web Safari » › « Lorsque l\'app est active ». Dans Safari, menu de la page (aA ou •••) › Réglages du site web › Position › Autoriser.'
+        : 'Ta position est bloquée pour ce site : autorise-la dans les réglages du navigateur (icône à gauche de l\'adresse).') + then;
+    case 'timeout': case 'unavailable':
+      return 'Ton téléphone n\'a pas trouvé ta position (c\'est fréquent à l\'intérieur ou sans Wi-Fi). Réessaie.' + then;
+    case 'unsupported': case 'insecure':
+      return 'Ce navigateur ne donne pas la position.' + then;
+    case 'stores':
+      return 'La liste des magasins n\'a pas pu être chargée. Vérifie ta connexion et réessaie.';
+    case 'offline':
+      return 'Pas de connexion internet : les magasins proches ne peuvent pas être chargés.';
+    default: return '';
+  }
+}
+const geoShort = code => code === 'denied' ? 'Position bloquée : touche « Magasins près de moi » pour la débloquer ou indiquer ton adresse.'
+  : code === 'stores' || code === 'offline' ? 'Magasins proches indisponibles pour le moment : réessaie dans un instant.'
+  : 'Position introuvable pour le moment : réessaie, ou indique ton adresse dans « Magasins près de moi ».';
+
+/* --- État et mise à jour --- */
+function setLocState(s, code = '', fb = false){ locState = { s, code, fb }; renderNearUI(); }
+// charge les magasins autour d'un point (position ou ville) et les garde sur le téléphone
+async function setPlace(lat, lon, meta){
+  const R = loadKm();
+  const got = await placesAround(lat, lon, R);
+  near = Object.assign({ lat, lon, plat:lat, plon:lon, label:'', src:'gps', acc:0, at:Date.now(), fixAt:Date.now(), loadR:R, places:got.places, cnt:got.cnt, from:got.from, date:got.date }, meta);
+  computeNear(); persistNear();
+}
+// l'adresse enregistrée : utilisée au choix, ou d'office quand la position ne marche pas
+const homeMeta = () => ({ label:loc.home.city || loc.home.main, src:'city', full:loc.home.full, kind:loc.home.kind });
+const onHome = () => !!(near && loc.home && near.src === 'city' && Math.abs(near.plat - loc.home.lat) < 1e-4 && Math.abs(near.plon - loc.home.lon) < 1e-4);
+async function homeFallback(code, quiet){
+  const before = nearIds().join();
+  if (!onHome()){
+    try { await setPlace(loc.home.lat, loc.home.lon, homeMeta()); }
+    catch (e) { setLocState('error', e && e.code === 'offline' ? 'offline' : 'stores'); return false; }
+  }
+  const ok = afterNear(before, { quiet:true });
+  setLocState('error', code, true);
+  if (!quiet && !$('#nearSheet').open) toast('Position introuvable : l\'appli utilise ton adresse.', 4500);
+  return ok;
+}
+// après une mise à jour : magasin « Près de moi », listes, recherche
+function afterNear(before, { quiet, announce }){
+  const ids = nearIds(), changed = before !== ids.join();
+  const ns = nearStore();
+  setLocState(ns ? 'ok' : 'none');
+  if (!ns){ if (!quiet) toast(`Aucune enseigne connue à moins de ${near.r} km : augmente la distance dans « Magasins près de moi ».`, 5000); refreshStoreSelects(); return false; }
+  const switched = S.store !== 'near' && (!quiet || !loc.pinned);
+  if (switched){ S.store = 'near'; loc.pinned = false; saveLoc(); saveSearch(); }
+  refreshStoreSelects();
+  if (announce || !quiet || changed)
+    toast((near.label ? `Autour de ${near.label} : ` : 'Magasins près de toi : ') + ids.slice(0, 4).map(id => shortLabel(storeById(id)) + ' ' + fmtKm(near.stores[id].dist)).join(', '), 4500);
+  if ((changed || switched) && S.store === 'near'){
+    if ($('#nearSheet').open) nearDirty = true;   // relancé à la fermeture de la fiche
+    else {
+      if (R) runSearch();
+      if (RV && !$('#recDetail').hidden){ RV.pick = {}; computeRecipe(); }
+    }
+  }
+  if (!$('#screen-list').hidden) renderLists();
+  return true;
+}
+let locBusy = null;
+const locateMe = (o = {}) => locBusy || (locBusy = doLocate(o).finally(() => { locBusy = null; }));
+async function doLocate({ quiet = false } = {}){
+  setLocState('locating');
+  let p;
+  try { p = await getPosition({ fresh:!quiet }); }
+  catch (e) {
+    loc.lastErr = e.code; saveLoc();
+    // pas de position : l'adresse enregistrée, si la dernière position manque ou date de plus de 6 h
+    if (loc.home && (!near || near.src !== 'gps' || Date.now() - (near.fixAt || 0) > 6 * 3600e3)) return homeFallback(e.code, quiet);
+    setLocState('error', e.code);
+    if (!quiet && !$('#nearSheet').open) toast(geoShort(e.code), 5000);
     return false;
   }
-}
-function locate(){
-  const st = $('#nearStatus'); st.classList.remove('err');
-  if (!('geolocation' in navigator)){ $('#cityForm').hidden = false; st.textContent = 'Indique ta ville pour trouver les magasins proches.'; return; }
-  st.innerHTML = SPIN + 'Localisation…'; $('#nearBtn').disabled = true;
-  navigator.geolocation.getCurrentPosition(pos => {
-    setNear(pos.coords.latitude, pos.coords.longitude, 'ta position');
-  }, () => {
-    $('#nearBtn').disabled = false; $('#cityForm').hidden = false;
-    st.textContent = 'Position non disponible : indique ta ville ou ton code postal.';
-  }, { enableHighAccuracy:false, timeout:15000, maximumAge:600000 });
-}
-async function setNear(lat, lon, label){
-  const st = $('#nearStatus');
-  st.innerHTML = SPIN + 'Recherche des magasins autour…'; $('#nearBtn').disabled = true;
+  loc.okAt = Date.now(); loc.lastErr = ''; loc.mode = 'gps'; saveLoc();
+  const before = nearIds().join();
+  setLocState('loading');
+  const moved = near && near.src === 'gps' && near.plat != null ? km(near.plat, near.plon, p.lat, p.lon) : Infinity;
+  const fresh = near && near.places && Date.now() - (near.at || 0) < 7 * 86400e3 && (near.loadR || 0) >= loadKm();
   try {
-    const stores = await updateNear(lat, lon, label);
-    const n = Object.keys(stores).length;
-    if (n && S.store !== 'near'){ S.store = 'near'; saveSearch(); refreshStoreSelects(); }
-    st.textContent = n ? '' : 'Aucune enseigne connue à moins de 15 km.';
-    $('#cityForm').hidden = true;
+    if (fresh && moved < 3){
+      // même quartier : on recalcule les distances sans rien télécharger
+      Object.assign(near, { lat:p.lat, lon:p.lon, acc:p.acc, fixAt:Date.now() });
+      computeNear(); persistNear();
+    } else {
+      const old = near && near.src === 'gps' && moved < 8 ? near.label : '';
+      const nameP = placeName(p.lat, p.lon);
+      await setPlace(p.lat, p.lon, { label:old, src:'gps', acc:p.acc });
+      const name = await nameP; if (name){ near.label = name; persistNear(); }
+    }
   } catch (e) {
-    st.textContent = 'Carte des magasins indisponible pour le moment. Réessaie dans un instant.'; st.classList.add('err');
-  } finally { $('#nearBtn').disabled = false; renderWhere(); }
+    setLocState('error', e && e.code === 'offline' ? 'offline' : 'stores');
+    if (!quiet && !$('#nearSheet').open) toast(geoShort('stores'), 5000);
+    return false;
+  }
+  return afterNear(before, { quiet, announce:moved !== Infinity && moved >= 8 });
 }
+async function useHome(){
+  loc.mode = 'city'; saveLoc();
+  const before = nearIds().join();
+  setLocState('loading');
+  try { await setPlace(loc.home.lat, loc.home.lon, homeMeta()); }
+  catch (e) { setLocState('error', e && e.code === 'offline' ? 'offline' : 'stores'); return false; }
+  return afterNear(before, { quiet:false });
+}
+// garde le nom utilisé ailleurs dans l'appli
+const useNearby = o => locateMe(o);
+// mise à jour automatique : à l'ouverture et au retour dans l'appli, si la position est suivie
+async function autoLocate(reason){
+  if (locBusy) return;
+  if (loc.mode === 'city'){ if (reason === 'start' && loc.home && (!near || near.old)) await homeFallback('', true); return; }
+  if (!loc.auto) return;
+  const perm = await geoPerm();
+  const age = near && !near.old ? Date.now() - (near.fixAt || near.at || 0) : Infinity;
+  if (perm === 'denied'){
+    if (loc.home && (!near || near.src !== 'gps' || age > 6 * 3600e3)) await homeFallback('denied', true);
+    else if (!near) setLocState('error', 'denied');
+    return;
+  }
+  if (perm === 'granted'){
+    if (age > (reason === 'visible' ? 15 : 3) * 60e3) await locateMe({ quiet:true });
+    return;
+  }
+  if (reason !== 'start') return;   // pas de question de l'iPhone au simple retour dans l'appli
+  if (loc.okAt && loc.lastErr !== 'denied'){ if (age > 12 * 3600e3) await locateMe({ quiet:true }); return; }
+  if (!loc.okAt && !ls.get('rs2:geoAsked', 0)){ ls.set('rs2:geoAsked', 1); await locateMe({ quiet:false }); return; }
+  if (loc.home && (!near || near.old)) await homeFallback('', true);   // position pas demandée : l'adresse
+}
+
+/* --- Affichage --- */
+const agoText = t => { const m = Math.round((Date.now() - t) / 60e3); return m < 2 ? 'à l\'instant' : m < 60 ? `il y a ${m} min` : m < 1440 ? `il y a ${Math.round(m / 60)} h` : `il y a ${Math.round(m / 1440)} j`; };
+function renderNearLine(){
+  const b = $('#nearLine'); if (!b) return;
+  const show = S.store === 'near';
+  b.hidden = !show; if (!show) return;
+  const ids = nearIds(), busy = locState.s === 'locating' || locState.s === 'loading';
+  let t;
+  if (busy && !ids.length) t = SPIN + (locState.s === 'locating' ? 'Recherche de ta position…' : 'Recherche des magasins…');
+  else if (ids.length) t = esc((near.label || (near.src === 'city' ? 'Ville choisie' : 'Autour de toi')) + ' · ' + ids.slice(0, 4).map(id => shortLabel(storeById(id))).join(', ') + (ids.length > 4 ? ` +${ids.length - 4}` : ''));
+  else t = 'Position inconnue : tous magasins';
+  b.classList.toggle('warn', !ids.length && !busy);
+  b.lastChild.textContent = ids.length ? 'Modifier' : 'Choisir';
+  b.setAttribute('aria-label', ids.length ? `Magasins près de moi : ${ids.length} enseigne${ids.length > 1 ? 's' : ''} à moins de ${near.r} km de ${placeLabel()}. Modifier` : 'Choisir mes magasins');
+  $('#nearLineTxt').innerHTML = t;
+}
+function renderNearSheet(){
+  const d = $('#nearSheet'); if (!d || !d.open) return;
+  const ids = near && near.stores ? Object.keys(near.stores).sort((a, b) => near.stores[a].dist - near.stores[b].dist) : [];
+  const busy = locState.s === 'locating' || locState.s === 'loading';
+  const addr = near && near.src === 'city' && near.kind && near.kind !== 'municipality';
+  $('#locWhere').textContent = near ? (near.src === 'city' ? near.full || near.label : near.label ? 'Près de ' + near.label : 'Autour de ta position') : 'Position inconnue';
+  $('#locWhen').textContent = near ? (near.src === 'city' ? (addr ? 'Ton adresse' : 'Ville choisie') : 'Ta position, ' + agoText(near.fixAt || near.at) + (near.acc > 1000 ? ` (à ${fmtKm(near.acc / 1000)} près)` : '')) : 'Autorise ta position ou indique ton adresse';
+  const hr = $('#homeRow'); hr.hidden = !loc.home;
+  if (loc.home){ $('#homeTxt').textContent = loc.home.full; $('#homeUse').hidden = onHome(); }
+  const msg = $('#locMsg');
+  const help = locState.s === 'error' ? geoHelp(locState.code, locState.fb) : locState.s === 'none' ? `Aucune enseigne connue à moins de ${near.r} km. Augmente la distance.` : '';
+  msg.hidden = !help && !busy;
+  msg.className = 'banner' + (busy ? ' busy' : '');
+  msg.innerHTML = busy ? SPIN + (locState.s === 'locating' ? (IOS ? 'Recherche de ta position… Si l\'iPhone te pose la question, touche « Autoriser ».' : 'Recherche de ta position…') : 'Recherche des magasins autour…') : esc(help);
+  const g = $('#locGps'); g.disabled = busy;
+  g.lastChild.textContent = near && near.src === 'gps' ? 'Actualiser ma position' : 'Utiliser ma position';
+  $$('#radiusChips [data-r]').forEach(c => c.setAttribute('aria-pressed', String(+c.dataset.r === (loc.radius || 0))));
+  $('#radiusHint').textContent = !loc.radius && near ? `Automatique : ${near.r} km ${near.r > 10 ? '(peu de magasins à moins de 10 km)' : 'autour de toi'}.` : '';
+  $('#locAuto').checked = !!loc.auto;
+  $('#t-locs').textContent = ids.length ? `Enseignes à moins de ${near.r} km` : 'Enseignes autour';
+  $('#locList').innerHTML = ids.length ? ids.map(id => {
+    const s = near.stores[id], off = loc.off.includes(id), st = storeById(id);
+    const oh = ohHtml(s.oh);
+    const more = s.n > 1 ? `${s.n} magasins à moins de ${near.r} km` : '';
+    return `<li class="${off ? 'off' : ''}"><div class="locinfo">
+      <div class="loctop"><b>${esc(st.label)}</b><span class="locd">${fmtKm(s.dist)}</span></div>
+      <p class="hint">${esc([s.name, s.addr].filter(Boolean).join(' · '))}</p>
+      <p class="hint">${[oh, esc(more)].filter(Boolean).join(' · ')}</p>
+      <p class="hint"><a href="${esc(mapsUrl(s.lat, s.lon, s.name))}" target="_blank" rel="noopener">Itinéraire</a>${/^https?:\/\//.test(s.web || '') ? ` · <a href="${esc(s.web)}" target="_blank" rel="noopener">Site du magasin</a>` : ''}</p></div>
+      <input type="checkbox" class="switch" data-chain="${id}" role="switch" aria-label="Utiliser ${esc(st.label)}" ${off ? '' : 'checked'}></li>`;
+  }).join('') : `<li><p class="hint">${near ? 'Aucune enseigne connue dans ce rayon.' : 'Les enseignes proches s\'afficheront ici.'}</p></li>`;
+}
+function renderNearUI(){
+  renderNearLine(); renderNearSheet();
+  const p = $('#profNearTxt');
+  if (p){ const ids = nearIds(); p.textContent = ids.length ? `${ids.length} enseigne${ids.length > 1 ? 's' : ''} près de ${placeLabel()}` : 'Position inconnue'; }
+}
+let nearDirty = false;
+function openNear({ locate = false } = {}){
+  openDialog($('#nearSheet')); renderNearSheet();
+  if (locate && !locBusy) locateMe({ quiet:false });
+}
+const closeNear = () => closeDialog($('#nearSheet'));
+// à la fermeture de la fiche (bouton, fond, geste) : on relance ce qui dépend des magasins
+$('#nearSheet').addEventListener('close', () => {
+  if (!nearDirty) return;
+  nearDirty = false;
+  if (S.store === 'near'){ if (R) runSearch(); if (RV && !$('#recDetail').hidden){ RV.pick = {}; computeRecipe(); } }
+  if (!$('#screen-list').hidden) renderLists();
+});
+function nearChanged(){ NEAR_ST = null; computeNear(); persistNear(); nearDirty = true; refreshStoreSelects(); renderNearUI(); }
+$('#nearClose').addEventListener('click', closeNear);
+$('#nearLine').addEventListener('click', () => openNear({ locate:!near && !locBusy }));
+$('#profNear').addEventListener('click', () => openNear());
+$('#locGps').addEventListener('click', async () => { loc.mode = 'gps'; saveLoc(); if (await locateMe({ quiet:false })) nearDirty = true; });
+$('#locAuto').addEventListener('change', e => { loc.auto = e.target.checked; saveLoc(); });
+$('#radiusChips').addEventListener('click', async e => {
+  const c = e.target.closest('[data-r]'); if (!c || !near) { if (c){ loc.radius = +c.dataset.r; saveLoc(); renderNearSheet(); } return; }
+  loc.radius = +c.dataset.r; saveLoc();
+  if (loadKm() > (near.loadR || 0)){
+    setLocState('loading');
+    try { const { lat, lon, fixAt } = near; await setPlace(near.plat, near.plon, { label:near.label, src:near.src, acc:near.acc, full:near.full, kind:near.kind }); Object.assign(near, { lat, lon, fixAt }); }
+    catch (er) { setLocState('error', 'stores'); return; }
+  }
+  nearChanged(); setLocState(nearStore() ? 'ok' : 'none');
+});
+$('#locList').addEventListener('change', e => {
+  const sw = e.target.closest('[data-chain]'); if (!sw) return;
+  const id = sw.dataset.chain;
+  loc.off = sw.checked ? loc.off.filter(x => x !== id) : [...new Set([...loc.off, id])]; saveLoc();
+  nearChanged();
+});
+// adresse, ville ou code postal, avec suggestions : Base Adresse Nationale (IGN), geo.api.gouv.fr, Nominatim
+const banItem = f => {
+  const p = f.properties || {}, town = p.type === 'municipality';
+  return { main:town ? p.city || p.name : p.name, sub:town ? p.postcode || '' : [p.postcode, p.city].filter(Boolean).join(' '),
+    city:p.city || p.name, full:p.label || p.name, kind:p.type || 'street', lat:f.geometry.coordinates[1], lon:f.geometry.coordinates[0] };
+};
+async function banSearch(q, extra = ''){
+  const qs = `q=${encodeURIComponent(q)}&limit=6&autocomplete=1${extra}`;
+  for (const base of ['https://data.geopf.fr/geocodage/search?', 'https://api-adresse.data.gouv.fr/search/?']){
+    try {
+      const j = await fetchGeo(base + qs, 6000);
+      if (j && Array.isArray(j.features)) return j.features.filter(f => f.geometry && f.geometry.coordinates).map(banItem);
+    } catch (e) {}
+  }
+  return null;
+}
+async function communes(param){
+  const j = await fetchGeo(`https://geo.api.gouv.fr/communes?${param}&fields=nom,codesPostaux,centre,population&format=json`, 6000);
+  return (Array.isArray(j) ? j : []).filter(c => c.centre && c.centre.coordinates).sort((a, b) => (b.population || 0) - (a.population || 0)).slice(0, 6)
+    .map(c => ({ main:c.nom, sub:(c.codesPostaux || [])[0] || '', city:c.nom, full:c.nom, kind:'municipality', lat:c.centre.coordinates[1], lon:c.centre.coordinates[0] }));
+}
+async function placeSearch(q){
+  if (/^\d{5}$/.test(q)){
+    try { const l = await communes('codePostal=' + q); if (l.length) return l.map(c => Object.assign(c, { sub:q, full:`${c.city} (${q})` })); } catch (e) {}
+    return banSearch(q, '&type=municipality');
+  }
+  if (/^\d*$/.test(q) || q.length < 2) return [];
+  if (q.length < 3){ try { return await communes('nom=' + encodeURIComponent(q) + '&boost=population&limit=6'); } catch (e) { return null; } }
+  const l = await banSearch(q);
+  if (l) return l;
+  try { return await communes('nom=' + encodeURIComponent(q) + '&boost=population&limit=6'); } catch (e) { return null; }
+}
+let sugSeq = 0, sugT = 0, sugList = [];
+async function citySuggest(q){
+  const seq = ++sugSeq;
+  const list = await placeSearch(q.trim());
+  if (seq !== sugSeq) return;
+  sugList = list || [];
+  const ul = $('#locSug');
+  ul.hidden = !sugList.length;
+  ul.innerHTML = sugList.map((c, i) => `<li><button type="button" data-i="${i}"><span>${esc(c.main)}</span><small>${esc(c.sub)}</small></button></li>`).join('');
+}
+$('#locCity').addEventListener('input', e => { clearTimeout(sugT); const v = e.target.value; sugT = setTimeout(() => citySuggest(v), 250); });
+$('#locSug').addEventListener('click', e => {
+  const b = e.target.closest('[data-i]'); if (!b) return;
+  pickCity(sugList[+b.dataset.i]);
+});
+async function pickCity(c){
+  if (!c) return;
+  ++sugSeq; $('#locCity').value = ''; $('#locSug').hidden = true; $('#locCity').blur();
+  loc.home = { main:c.main, city:c.city, full:c.full, kind:c.kind, lat:c.lat, lon:c.lon }; saveLoc();
+  if (await useHome()) nearDirty = true;
+}
+$('#homeUse').addEventListener('click', async () => { if (loc.home && await useHome()) nearDirty = true; });
+$('#homeDel').addEventListener('click', () => {
+  loc.home = null; if (loc.mode === 'city') loc.mode = 'gps'; saveLoc(); renderNearSheet();
+  toast('Adresse effacée.');
+});
+$('#locCityForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = $('#locCity').value.trim(); if (!q) return;
+  clearTimeout(sugT); await citySuggest(q);
+  if (sugList.length) return pickCity(sugList[0]);
+  setLocState('loading');
+  try {
+    const r = await fetchGeo(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=fr&limit=1&q=${encodeURIComponent(q)}`, 8000);
+    if (Array.isArray(r) && r.length){
+      const parts = String(r[0].display_name || q).split(',').map(x => x.trim());
+      return pickCity({ main:parts[0], city:parts[0], full:parts.slice(0, 2).join(', '), kind:'place', lat:Number(r[0].lat), lon:Number(r[0].lon) });
+    }
+    setLocState(near ? 'ok' : 'idle'); toast('Adresse introuvable : essaie avec la ville ou le code postal.', 4000);
+  } catch (er) { setLocState('error', er && er.code === 'offline' ? 'offline' : 'stores'); }
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') autoLocate('visible'); });
+window.addEventListener('pageshow', e => { if (e.persisted) autoLocate('visible'); });
+(async () => {
+  try {
+    const st = navigator.permissions && await navigator.permissions.query({ name:'geolocation' });
+    if (st) st.onchange = () => { if (st.state === 'granted' && loc.mode !== 'city' && !locBusy && (!near || near.src !== 'gps')) locateMe({ quiet:false }); };
+  } catch (e) {}
+})();
+
 function renderWhere(){
   const box = $('#whereBox');
   const items = shop.filter(x => !x.done && x.p && !x.p._fresh);
   const fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
   box.hidden = false;
   const empty = !items.length;
-  $('#whereList').hidden = empty; $('#nearBtn').hidden = empty;
+  $('#whereList').hidden = empty;
+  const nb = $('#nearBtn');
+  nb.lastChild.textContent = nearIds().length ? 'Modifier mes magasins' : 'Magasins près de moi';
+  $('#nearWhere').textContent = nearIds().length ? `Magasins à moins de ${near.r} km de ${placeLabel()}${fresh && !empty ? '. Produits frais : partout' : ''}.` : (fresh && !empty ? 'Produits frais : disponibles partout.' : '');
   if (empty){
     const bestEl = $('#whereBest'); bestEl.className = 'banner rsum';
     bestEl.textContent = 'Ajoute des produits à ta liste avec le bouton +, depuis la recherche ou une recette : l\'appli te dira dans quel magasin tu en trouveras le plus.';
-    $('#cityForm').hidden = true; $('#nearStatus').textContent = ''; $('#nearWhere').textContent = '';
     return;
   }
   const infos = items.map(x => ({ x, info:chainInfo(x.p) }));
   const N = items.length;
+  const hasNear = nearIds().length > 0;
   let rows = CHAINS().map(s => {
     let sure = 0, likely = 0; const miss = [];
     for (const { x, info } of infos){
       const a = availability(info, s.id);
       if (a === 'sure') sure++; else if (a === 'likely') likely++; else miss.push(x);
     }
-    const store = near && near.stores ? near.stores[s.id] : null;
-    return { s, sure, likely, avail:sure + likely, miss, store };
+    return { s, sure, likely, avail:sure + likely, miss, store:nearInfo(s.id) };
   });
-  if (near && near.stores && Object.keys(near.stores).length) rows = rows.filter(r => r.store);
+  if (hasNear) rows = rows.filter(r => r.store);
   rows.sort((a, b) => (b.avail - a.avail) || (b.sure - a.sure) || ((a.store ? a.store.dist : 99) - (b.store ? b.store.dist : 99)));
   const best = rows[0];
   const ties = best ? rows.filter(r => r.avail === best.avail && r.sure >= best.sure - 1) : [];
@@ -2706,41 +3320,76 @@ function renderWhere(){
     bestEl.className = 'banner rsum ' + (best.avail === N ? 's-ok' : 's-check');
     bestEl.innerHTML = t;
   }
-  $('#whereList').innerHTML = rows.slice(0, 6).map((r, i) => {
+  $('#whereList').innerHTML = rows.slice(0, 6).map(r => {
     const pct = Math.round(r.avail / N * 100);
     const parts = [r.sure ? `${r.sure} vu${r.sure > 1 ? 's' : ''} dans l'enseigne` : '', r.likely ? `${r.likely} marque${r.likely > 1 ? 's' : ''} nationale${r.likely > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
     const miss = r.miss.length ? `<p class="hint">Pas chez eux : ${r.miss.slice(0, 3).map(x => esc(nameOf(x.p))).join(', ')}${r.miss.length > 3 ? '…' : ''}</p>` : '';
-    const st = r.store ? `<p class="hint">Le plus proche : ${esc(r.store.name)}, ${fmtKm(r.store.dist)} · <a href="${esc(mapsUrl(r.store.lat, r.store.lon, r.store.name))}" target="_blank" rel="noopener">Itinéraire</a></p>` : '';
+    const st = r.store ? `<p class="hint">Le plus proche : ${esc(r.store.name)}, ${fmtKm(r.store.dist)}${r.store.oh && ohStatus(r.store.oh) ? ' · ' + ohHtml(r.store.oh) : ''}</p>` : '';
+    const links = [DRIVES[r.s.id] ? `<button type="button" data-drive="${r.s.id}">${DRIVES[r.s.id].noDrive ? 'Voir ma liste sur le site' : 'Vérifier ma liste au drive'}</button>` : '',
+      r.store ? `<a href="${esc(mapsUrl(r.store.lat, r.store.lon, r.store.name))}" target="_blank" rel="noopener">Itinéraire</a>` : '',
+      r.store && /^https?:\/\//.test(r.store.web || '') ? `<a href="${esc(r.store.web)}" target="_blank" rel="noopener">Site du magasin</a>` : ''].filter(Boolean).join('');
     return `<li class="${ties.includes(r) ? 'best' : ''}"><div class="wtop"><b>${esc(r.s.label)}</b><span class="wcount">${r.avail} / ${N}</span></div>
-      <div class="wbar" aria-hidden="true"><span style="width:${pct}%"></span></div><p class="hint">${parts || 'Aucun produit repéré'}</p>${miss}${st}</li>`;
+      <div class="wbar" aria-hidden="true"><span style="width:${pct}%"></span></div><p class="hint">${parts || 'Aucun produit repéré'}</p>${miss}${st}${links ? `<div class="wlinks">${links}</div>` : ''}</li>`;
   }).join('');
-  const nb = $('#nearBtn');
-  nb.lastChild.textContent = near ? 'Actualiser les magasins proches' : 'Magasins près de moi';
-  $('#nearWhere').textContent = near ? `Magasins à moins de 15 km de ${near.label}${fresh ? '. Produits frais : partout' : ''}.` : (fresh ? 'Produits frais : disponibles partout.' : '');
 }
-$('#nearBtn').addEventListener('click', locate);
-$('#cityForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const q = $('#city').value.trim(); if (!q) return;
-  const st = $('#nearStatus'); st.classList.remove('err'); st.innerHTML = SPIN + 'Recherche de la ville…';
-  try {
-    const r = await getJSON(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=fr&limit=1&q=${encodeURIComponent(q)}`, { bucket:'free', noCache:true });
-    if (!r || !r.length){ st.textContent = 'Ville introuvable. Essaie avec le code postal.'; return; }
-    setNear(Number(r[0].lat), Number(r[0].lon), q);
-  } catch (er) { st.textContent = 'Recherche de la ville impossible pour le moment.'; st.classList.add('err'); }
-});
-const DRIVE_SITE = { leclerc:'e.leclerc', carrefour:'carrefour.fr', auchan:'auchan.fr', intermarche:'intermarche.com', u:'coursesu.com', lidl:'lidl.fr',
-  aldi:'aldi.fr', monoprix:'monoprix.fr', casino:'casino.fr', franprix:'franprix.fr', cora:'cora.fr', netto:'netto.fr', biocoop:'biocoop.fr', picard:'picard.fr', grandfrais:'grandfrais.com' };
-// sites à proposer : les enseignes proches où le produit a été vu, puis les plus proches
+$('#nearBtn').addEventListener('click', () => openNear({ locate:!near && !locBusy }));
+/* ================= Stock au drive =================
+   Les stocks des drives ne sont pas publics : l'appli ouvre le site de l'enseigne sur le produit
+   (sa propre recherche), et c'est le site qui affiche la disponibilité dans le drive choisi. */
+const DRIVES = {
+  leclerc:{ site:'e.leclerc', q:'https://www.e.leclerc/recherche?q=' },
+  carrefour:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=' },
+  auchan:{ site:'auchan.fr', q:'https://www.auchan.fr/recherche?text=' },
+  intermarche:{ site:'intermarche.com', q:'https://www.intermarche.com/recherche/' },
+  u:{ site:'coursesu.com', q:'https://www.coursesu.com/recherche?q=' },
+  monoprix:{ site:'monoprix.fr' }, franprix:{ site:'franprix.fr' }, casino:{ site:'casino.fr' }, cora:{ site:'cora.fr' },
+  biocoop:{ site:'biocoop.fr' }, picard:{ site:'picard.fr' },
+  lidl:{ site:'lidl.fr', noDrive:true }, aldi:{ site:'aldi.fr', noDrive:true }, netto:{ site:'netto.fr', noDrive:true },
+};
+const driveName = id => shortLabel(storeById(id));
+const driveTerms = p => [nameOf(p), brandOf(p).split(',')[0]].filter(Boolean).join(' ').replace(/\s+/g, ' ').slice(0, 80);
+function driveUrl(p, id){
+  const d = DRIVES[id]; if (!d) return '';
+  if (d.q) return d.q + encodeURIComponent(d.ean && /^\d{8,14}$/.test(String(p.code)) ? String(p.code) : driveTerms(p));
+  return `https://www.google.com/search?q=${encodeURIComponent(driveTerms(p) + ' site:' + d.site)}`;
+}
+// enseignes à proposer : celles où le produit a été vu parmi les proches, puis les plus proches
 function linkChains(p){
-  const st = storeById(S.store), seen = chainInfo(p).seen;
-  const base = st.near ? [...st.chains.filter(id => seen.includes(id)), ...st.chains] : [S.store, ...seen];
-  return [...new Set(base)].filter(id => DRIVE_SITE[id]).slice(0, 3);
+  const st = storeById(S.store), info = chainInfo(p), close = nearIds();
+  let base = st.near ? [...st.chains.filter(id => info.seen.includes(id)), ...st.chains]
+    : S.store !== 'all' ? [S.store, ...close.filter(id => info.seen.includes(id)), ...close]
+    : [...close.filter(id => info.seen.includes(id)), ...close, ...info.seen];
+  if (info.mdd.length) base = base.filter(id => info.seen.includes(id));   // marque distributeur : sa seule enseigne
+  return [...new Set(base)].filter(id => DRIVES[id]).slice(0, 3);
 }
-const siteSearch = (p, id) => `https://www.google.com/search?q=${encodeURIComponent([nameOf(p), brandOf(p).split(',')[0], 'site:' + DRIVE_SITE[id]].filter(Boolean).join(' '))}`;
+function driveCard(p){
+  if (!p || p._fresh) return '';
+  const ids = linkChains(p); if (!ids.length) return '';
+  const rows = ids.map(id => {
+    const n = nearInfo(id), d = DRIVES[id];
+    const where = n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne';
+    return `<a class="drivebtn" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}${d.noDrive ? ' · pas de drive' : ''}</small></span><span class="go">${d.noDrive ? 'Voir sur le site' : 'Voir le stock'}</span></a>`;
+  }).join('');
+  return `<section class="card"><h3>Stock au drive</h3><p class="hint">Le site de l'enseigne s'ouvre sur ce produit, avec le stock du drive que tu y as choisi (il te le demande la première fois).</p><div class="drives">${rows}</div></section>`;
+}
+// « Ma liste chez Carrefour » : chaque produit de la liste, à ouvrir sur le site
+function openDriveList(id){
+  const items = shop.filter(x => !x.done && x.p && !x.p._fresh), fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
+  const n = nearInfo(id), d = DRIVES[id] || {};
+  $('#driveTitle').textContent = 'Ma liste chez ' + driveName(id);
+  $('#driveHint').textContent = `Touche un produit : le site ${driveName(id)} s'ouvre dessus${d.noDrive ? '' : ', avec le stock du drive que tu y as choisi'}.` + (n ? ` Ton magasin le plus proche : ${n.name}, ${fmtKm(n.dist)}.` : '') + (fresh ? ` Produits frais (${fresh}) : à choisir sur place.` : '');
+  $('#driveList').innerHTML = items.length ? items.map(x => {
+    const a = availability(chainInfo(x.p), id);
+    const note = a === 'sure' ? 'Vu dans l\'enseigne' : a === 'no' ? 'Marque d\'une autre enseigne : sûrement absent' : 'Marque nationale';
+    return `<li><a href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), note].filter(Boolean).join(' · '))}</small></span><span class="go">Voir</span></a></li>`;
+  }).join('') : '<li><p class="hint" style="padding:12px 16px">Ta liste est vide.</p></li>';
+  openDialog($('#driveSheet'));
+}
+$('#driveClose').addEventListener('click', () => closeDialog($('#driveSheet')));
+$('#whereList').addEventListener('click', e => { const b = e.target.closest('[data-drive]'); if (b) openDriveList(b.dataset.drive); });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.6';
+const APP_VERSION = '3.7';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -2764,16 +3413,13 @@ if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
 go(SCREENS.includes(start) ? start : 'search');
 loadIndex();
-(async () => {
-  let granted = false;
-  try { granted = navigator.permissions && (await navigator.permissions.query({ name:'geolocation' })).state === 'granted'; } catch (e) {}
-  if (!FIRST_RUN && !near && !ls.get('rs2:geoAsked', 0)){ ls.set('rs2:geoAsked', 1); if (await useNearby() && S.ran) runSearch(); }
-  else if (near && granted && Date.now() - (near.at || 0) > 3 * 86400e3){ if (await useNearby({ quiet:true }) && R) runSearch(); }
-})();
+renderNearUI();
+// l'accueil demande la position à la fin ; ensuite, mise à jour automatique à chaque ouverture
+if (!FIRST_RUN) autoLocate('start');
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES };
+window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds };
 })();
 </script>
 </body>

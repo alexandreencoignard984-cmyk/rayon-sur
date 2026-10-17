@@ -1,0 +1,49 @@
+name: Base magasins
+# Magasins des enseignes connues, partout en France, depuis OpenStreetMap (tools/build_stores.py) :
+# chaque lundi, à la demande, ou quand le script change. L'appli lit ensuite data/stores/ sur GitHub Pages.
+on:
+  schedule:
+    - cron: '47 4 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/build_stores.py', '.github/workflows/stores.yml']
+permissions:
+  contents: write
+concurrency:
+  group: base-magasins
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire la base des magasins
+        # extraits Geofabrik (France et outre-mer) filtrés par osmium ; Overpass si le téléchargement échoue
+        run: |
+          F='nwr/shop=supermarket,convenience,frozen_food,greengrocer,organic,health_food,department_store,general,deli,wholesale'
+          files=""
+          if sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool > /dev/null && pip install -q osmium; then
+            for r in france france/guadeloupe france/martinique france/guyane france/reunion france/mayotte; do
+              n=$(basename "$r")
+              if curl -sSfL --retry 3 -o "/tmp/$n.osm.pbf" "https://download.geofabrik.de/europe/$r-latest.osm.pbf" \
+                 && osmium tags-filter "/tmp/$n.osm.pbf" "$F" -o "/tmp/$n-shops.osm.pbf" --overwrite; then
+                files="$files /tmp/$n-shops.osm.pbf"
+              elif [ "$n" = france ]; then files=""; break; fi
+              rm -f "/tmp/$n.osm.pbf"
+            done
+          fi
+          if [ -n "$files" ]; then python3 tools/build_stores.py $files
+          else echo "Extraits Geofabrik indisponibles : Overpass"; python3 tools/build_stores.py; fi
+      - name: Publier
+        run: |
+          git config user.name "rayon-sur-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -d data/stores ]; then git add -A data/stores; fi
+          if git diff --cached --quiet; then echo "Magasins inchangés"; exit 0; fi
+          git commit -q -m "Mettre à jour les magasins ($(date -u +%F))"
+          git pull -q --rebase origin main
+          git push -q origin HEAD:main
+          curl -sS -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true
