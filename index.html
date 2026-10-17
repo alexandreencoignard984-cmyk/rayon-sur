@@ -2727,7 +2727,7 @@ const OSM_CHAINS = [
   ['monoprix', /^monop(rix\b|'|’|\b)/i], ['casino', /^(petit\s+|g[ée]ant\s+|le\s+petit\s+)?casino\b/i], ['franprix', /^franprix\b/i],
   ['cora', /^cora\b/i], ['netto', /^netto\b/i], ['biocoop', /^biocoop\b/i], ['picard', /^picard\b/i], ['grandfrais', /^grand\s+frais\b/i],
 ];
-const OSM_SKIP = /\b(station|carburant|lavage|location|voyages?|optique|drive pi[ée]ton)\b/i;
+const OSM_SKIP = /\b(station|carburant|lavage|location|voyages?|optique|drive pi[ée]ton|relais|casiers?|consignes?|locker)\b/i;
 function osmChain(t){
   for (const k of ['brand', 'name']){
     const v = String(t[k] || '').trim(); if (!v) continue;

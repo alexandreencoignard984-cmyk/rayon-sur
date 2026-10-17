@@ -48,7 +48,7 @@ CHAINS = [
 ]
 CHAINS = [(cid, re.compile(rx, re.I)) for cid, rx in CHAINS]
 # ce ne sont pas des magasins où l'on fait ses courses
-SKIP_NAME = re.compile(r'\b(station|carburant|lavage|location|voyages?|optique|drive pi[ée]ton)\b', re.I)
+SKIP_NAME = re.compile(r'\b(station|carburant|lavage|location|voyages?|optique|drive pi[ée]ton|relais|casiers?|consignes?|locker)\b', re.I)
 T0 = time.time()
 
 
