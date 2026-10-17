@@ -1,0 +1,51 @@
+name: Tests
+# Tests de l'appli à chaque modification, et chaque lundi après la mise à jour des bases :
+# localisation, liens drive, vraie base des magasins, recherche et recettes (tests/run.sh),
+# puis contrôle des recherches drive sur toute la base (tools/audit_drive.py).
+# Un échec affiche une croix rouge sur GitHub et envoie un e-mail.
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'tests/**', 'tools/audit_drive.py', '.github/workflows/tests.yml']
+  schedule:
+    - cron: '23 6 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: tests
+  cancel-in-progress: true
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installer Playwright et Chromium
+        run: |
+          pip install -q playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
+      - name: Tests de l'appli
+        run: bash tests/run.sh
+        env:
+          RS_OUT: ${{ runner.temp }}/captures
+      - name: Contrôle des recherches drive sur toute la base
+        id: audit
+        if: success() || failure()
+        run: python3 tools/audit_drive.py
+      - name: Captures d'écran et journaux
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: captures
+          path: ${{ runner.temp }}/captures
+          retention-days: 14
+      - name: Publier le rapport (chaque lundi ou à la demande)
+        if: always() && github.event_name != 'push' && steps.audit.outcome != 'skipped'
+        run: |
+          git config user.name "rayon-sur-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rapports/recherches-drive.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -q -m "Rapport des recherches drive ($(date -u +%F))"
+          git pull -q --rebase origin main && git push -q origin HEAD:main

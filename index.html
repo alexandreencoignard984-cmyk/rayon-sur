@@ -365,6 +365,18 @@ div.rowbtn{cursor:default}
 .dlist .dalt{display:block;margin-top:-6px;padding:0 16px 12px;font-size:13px;color:var(--muted)}
 .dlist .go{flex:none;color:var(--ok);font-weight:650}
 .dlist .go::after{content:" ›"}
+.dtlist{list-style:none;margin:12px 0 0;padding:0}
+.dtlist li{margin-bottom:10px;padding:12px 14px;border-radius:12px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset}
+.dtlist li > b{display:block;font-size:16px}
+.dtrow{margin-top:10px}
+.dttop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.dttop a{font-weight:650;color:var(--ok);text-decoration:none}
+.dttop a.dtbrand{font-weight:500;font-size:14px;color:var(--muted)}
+.dtrow .seg button{font-size:14px;min-height:34px}
+.dtrow .seg[data-v="ok"] button[aria-pressed="true"]{color:var(--ok)}
+.dtrow .seg[data-v="ko"] button[aria-pressed="true"]{color:var(--no)}
+.dtrow .seg[data-v="brand"] button[aria-pressed="true"]{color:var(--warn)}
+.dttext{width:100%;margin-top:10px;padding:10px;border:0;border-radius:10px;background:var(--sunk);font-size:13px}
 .wlinks{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
 .wlinks a,.wlinks button{font-size:14px;font-weight:650;color:var(--ok);text-decoration:none;background:none;border:0;padding:4px 0}
 .rowbtn .lbl{font-size:16px}
@@ -669,6 +681,13 @@ footer a{color:inherit}
       </div>
     </div>
 
+    <div class="group">
+      <button class="grow rowbtn" id="dtBtn" type="button" aria-haspopup="dialog">
+        <span class="lbl">Tester les liens drive<small>10 minutes pour vérifier que les sites des enseignes trouvent bien les produits</small></span>
+        <svg class="chev" aria-hidden="true"><use href="#i-down"/></svg>
+      </button>
+    </div>
+
     <details class="info">
       <summary>Installer sur l'écran d'accueil</summary>
       <div class="inner"><p>Sur iPhone, ouvre cette page dans Safari, touche Partager puis « Sur l'écran d'accueil ». Sur Android : menu de Chrome, puis « Ajouter à l'écran d'accueil ».</p></div>
@@ -873,6 +892,25 @@ footer a{color:inherit}
       <p class="hint" id="driveHint" style="margin:0 4px 12px"></p>
       <div class="group"><ul class="dlist" id="driveList"></ul></div>
       <p class="hint" style="margin:10px 4px 0">Les stocks des drives ne sont pas publics : l'appli ouvre le site de l'enseigne sur le produit, et c'est lui qui affiche le stock du drive choisi.</p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="dtSheet" aria-labelledby="dtTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="dtTitle" style="grid-column:2">Tester les liens drive</span>
+      <button class="iconbtn" id="dtClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint" style="margin:0 4px 10px">Touche une enseigne : son site s'ouvre sur la recherche de l'appli. Reviens ici et note ce que tu as vu. Si rien ne sort, essaie « marque seule ». Les sites bloquent les vérifications automatiques, c'est pour ça que ce test se fait à la main.</p>
+      <p class="banner rsum" id="dtProgress" style="margin-top:0" aria-live="polite"></p>
+      <ul class="dtlist" id="dtList"></ul>
+      <textarea id="dtText" class="dttext" hidden readonly rows="10" aria-label="Rapport"></textarea>
+    </div>
+    <div class="sheet-foot">
+      <button class="primary wide" id="dtCopy" type="button">Copier le rapport</button>
+      <button class="textbtn" id="dtNew" type="button" style="display:block;margin:6px auto 0">Nouvelle série de produits</button>
     </div>
   </div>
 </dialog>
@@ -3354,17 +3392,28 @@ const driveName = id => shortLabel(storeById(id));
 /* Recherche courte : la marque et les 2 premiers mots utiles du nom. Les moteurs des sites (et Google)
    ne trouvent rien avec un nom complet de fiche, souvent bilingue (« À la Grecque Greek Style Nature-Natural »). */
 const TERM_STOP = new Set('a au aux de du des la le les l d et en un une sans avec pour sur par ou'.split(' '));
-const TERM_EN = new Set('style natural plain with and the of flavour flavor flavoured original classic greek sweet light free organic pack big mini new'.split(' '));
-const driveBrand = p => (brandOf(p).split(',')[0] || '').trim();
+// mots anglais des fiches bilingues (« Amande Almond », « Sucre - Sugar ») ; pas « the », qui est aussi « thé »
+const TERM_EN = new Set('style natural plain with and of flavour flavor flavoured original classic greek sweet free organic pack big new almond water drink sugar'.split(' '));
+// marque : la première, sans parenthèses ni mots répétés, 3 mots au plus (« CMI (Carrefour Marchandises…) » devient Carrefour)
+function driveBrand(p){
+  let b = (brandOf(p).split(',')[0] || '').replace(/\(.*?\)/g, ' ').split(/\s+[-–]\s+/)[0].replace(/\s+/g, ' ').trim();
+  if (/^cmi\b/i.test(b)) b = 'Carrefour';
+  const seen = new Set();
+  return b.split(' ').filter(w => { const f = fold(w); if (!f || seen.has(f)) return false; seen.add(f); return true; }).slice(0, 3).join(' ');
+}
 function driveTerms(p){
-  const brand = driveBrand(p), bw = fold(brand).split(' ');
-  const name = String(nameOf(p)).replace(/\(.*?\)/g, ' ').replace(/\b\d+([.,]\d+)?\s*(g|kg|ml|cl|l|x|%)(?=\s|$)/gi, ' ').split(/\s+[-–|\/]\s+/)[0];
-  const words = name.split(/[\s,;:'’.\/+&–]+/).map(w => {
+  const brand = driveBrand(p), bw = fold(brand).split(/[^a-z0-9]+/);
+  const clean = String(nameOf(p)).replace(/\(.*?\)/g, ' ').replace(/\b\d+([.,]\d+)?\s*(g|kg|ml|cl|l|x|%|oz)(?=\s|,|$)/gi, ' ');
+  const tokens = (part, noEn) => part.split(/[\s,;:'’.\/+&–!?]+/).map(w => {
     w = w.replace(/^-+|-+$/g, '');
     if (!w.includes('-')) return w;
     const parts = w.split('-');   // « Nature-Natural » : on garde le français ; « demi-écrémé » reste entier
     return parts.some(x => TERM_EN.has(fold(x))) ? (parts.find(x => !TERM_EN.has(fold(x))) || '') : w;
-  }).filter(w => w.length > 1 && !/\d/.test(w) && !TERM_STOP.has(fold(w)) && !TERM_EN.has(fold(w)) && !bw.includes(fold(w)));
+  }).filter(w => w.length > 1 && !/\d/.test(w) && !TERM_STOP.has(fold(w)) && !(noEn && TERM_EN.has(fold(w))) && !bw.includes(fold(w)));
+  // « BN - Casse Croute Biscuits » : la partie qui ne répète pas la marque ; noms tout en anglais : sans filtre
+  const parts = clean.split(/\s+[-–|\/]\s+/);
+  let words = [];
+  for (const noEn of [true, false]){ for (const part of parts){ words = tokens(part, noEn); if (words.length) break; } if (words.length) break; }
   const seenW = new Set(); const pick = [], max = brand ? 2 : 3;
   for (const w of words){ const f = fold(w); if (!seenW.has(f)){ seenW.add(f); pick.push(w); } if (pick.length === max) break; }
   return [brand, ...pick].filter(Boolean).join(' ').slice(0, 60) || String(nameOf(p)).slice(0, 40);
@@ -3414,8 +3463,125 @@ function openDriveList(id){
 $('#driveClose').addEventListener('click', () => closeDialog($('#driveSheet')));
 $('#whereList').addEventListener('click', e => { const b = e.target.closest('[data-drive]'); if (b) openDriveList(b.dataset.drive); });
 
+/* ================= Tester les liens drive =================
+   Les sites des enseignes bloquent les vérifications automatiques : ce test se fait à la main.
+   Une vingtaine de produits choisis pour couvrir les cas difficiles (noms bilingues ou longs, sans
+   marque, marques distributeur, bio, sans gluten ou lactose), chacun ouvert sur les sites des
+   enseignes proches ; on note le résultat, puis on copie le rapport. */
+const DT_KEY = 'rs2:drivetest';
+const DT_AISLES = ['en:ice-creams-and-sorbets', 'en:non-dairy-yogurts', 'en:pastas', 'en:biscuits', 'en:breakfast-cereals', 'en:sauces',
+  'en:cheeses', 'en:chocolates', 'en:plant-based-milk-alternatives', 'en:breads', 'en:prepared-meats', 'en:crisps'];
+const DT_RES = { ok:'Trouvé', brand:'Marque seule', ko:'Rien' };
+let DT = ls.get(DT_KEY, null);
+if (DT && (!Array.isArray(DT.items) || !DT.res)) DT = null;
+const dtSave = () => ls.set(DT_KEY, DT);
+function rng(seed){ return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function dtChains(){
+  const close = nearIds().filter(id => DRIVES[id] && !DRIVES[id].noDrive);
+  return (close.length ? close : ['leclerc', 'carrefour', 'auchan', 'intermarche', 'u']).slice(0, 4);
+}
+function dtCases(p){
+  const n = String(nameOf(p)), words = fold(n).split(/[^a-z0-9]+/), labels = p.labels_tags || [], c = [];
+  if (words.some(w => TERM_EN.has(w))) c.push('nom bilingue');
+  if (n.length > 45) c.push('nom long');
+  if (!driveBrand(p)) c.push('sans marque');
+  if (chainInfo(p).mdd.length) c.push('marque distributeur');
+  if (labels.some(l => /organic|biologique/.test(l))) c.push('bio');
+  if (labels.some(l => /no-gluten|no-lactose|no-milk/.test(l))) c.push('sans gluten ou lactose');
+  return c;
+}
+async function dtBuild(){
+  await loadIndex();
+  const chains = dtChains(), pool = new Map();
+  for (const tag of DT_AISLES){
+    const a = aisleOf(tag); if (!a) continue;
+    try { for (const p of await aislePage(a, 0)) if (p.product_name && p.unique_scans_n > 0 && !pool.has(p.code)) pool.set(p.code, p); } catch (e) {}
+  }
+  const list = [...pool.values()], r = rng(Date.now() & 0x7fffffff);
+  for (let i = list.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; }
+  const pick = new Map();
+  const add = p => { if (pick.size < 20 && p && !pick.has(p.code)) pick.set(p.code, p); };
+  shop.filter(x => !x.done && x.p && !x.p._fresh).slice(0, 4).forEach(x => add(x.p));                  // ta liste d'abord
+  for (const id of chains){ const st = storeById(id); list.filter(p => seenAt(p, st)).slice(0, 3).forEach(add); }   // vus dans chaque enseigne
+  for (const k of ['nom bilingue', 'nom long', 'sans marque', 'marque distributeur', 'bio', 'sans gluten ou lactose'])
+    list.filter(p => dtCases(p).includes(k)).slice(0, 2).forEach(add);                                    // cas difficiles
+  list.slice().sort((a, b) => (b.unique_scans_n || 0) - (a.unique_scans_n || 0)).forEach(add);           // produits courants
+  const items = [...pick.values()].map(p => {
+    const q = { code:String(p.code), product_name:nameOf(p), brands:p.brands || '', stores_tags:p.stores_tags || [], labels_tags:p.labels_tags || [] };
+    const seen = chains.filter(id => seenAt(q, storeById(id)));
+    return { p:q, seen, chains:seen.length ? seen.slice(0, 2) : [chains[0]] };
+  });
+  DT = { v:1, at:Date.now(), place:placeLabel(), chains, items, res:{} };
+  dtSave();
+}
+function dtCount(){
+  const c = { ok:0, brand:0, ko:0, none:0, total:0 };
+  for (const it of DT.items) for (const id of it.chains){ c.total++; c[DT.res[it.p.code + '|' + id] || 'none']++; }
+  return c;
+}
+function dtProgress(){
+  const c = dtCount();
+  $('#dtProgress').textContent = `${c.total - c.none} / ${c.total} vérifiés · ${c.ok} trouvés, ${c.brand} avec la marque, ${c.ko} rien · enseignes : ${DT.chains.map(driveName).join(', ')}${DT.place ? ' · autour de ' + DT.place : ''}`;
+}
+function dtRender(){
+  if (!DT) return;
+  $('#dtList').innerHTML = DT.items.map(it => {
+    const p = it.p, terms = driveTerms(p), brand = driveBrand(p);
+    const rows = it.chains.map(id => {
+      const k = p.code + '|' + id, v = DT.res[k] || '';
+      return `<div class="dtrow"><div class="dttop"><a href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener">${esc(driveName(id))} ›</a>${brand && brand !== terms ? `<a class="dtbrand" href="${esc(driveUrl(p, id, true))}" target="_blank" rel="noopener">marque seule ›</a>` : ''}</div>
+        <div class="seg" data-k="${esc(k)}" data-v="${v}" role="group" aria-label="Résultat chez ${esc(driveName(id))}">${Object.entries(DT_RES).map(([val, lab]) => `<button type="button" data-v="${val}" aria-pressed="${v === val}">${lab}</button>`).join('')}</div></div>`;
+    }).join('');
+    return `<li><b>${esc(nameOf(p))}</b><small class="meta">${esc([brandOf(p), ...dtCases(p)].filter(Boolean).join(' · '))}</small>
+      <small class="meta">Recherche : « ${esc(terms)} » · ${it.seen.length ? 'vu chez ' + esc(it.seen.map(driveName).join(', ')) : 'pas signalé dans ces enseignes'}</small>${rows}</li>`;
+  }).join('');
+  dtProgress();
+}
+function dtReport(){
+  const L = { ok:[], brand:[], ko:[], none:[] }, by = {};
+  for (const it of DT.items) for (const id of it.chains){
+    const v = DT.res[it.p.code + '|' + id] || 'none';
+    (by[id] || (by[id] = { ok:0, brand:0, ko:0, none:0 }))[v]++;
+    L[v].push(`- ${driveName(id)} · « ${driveTerms(it.p)} » · ${nameOf(it.p)}${brandOf(it.p) ? ' (' + brandOf(it.p) + ')' : ''} · ${it.p.code} · ${it.seen.includes(id) ? 'vu dans l\'enseigne' : 'pas signalé dans l\'enseigne'}${dtCases(it.p).length ? ' · ' + dtCases(it.p).join(', ') : ''}`);
+  }
+  const c = dtCount();
+  const out = [`Rapport liens drive · Rayon sûr ${APP_VERSION} · ${new Date().toLocaleString('fr-FR')}`,
+    `Autour de : ${DT.place || 'position inconnue'} · enseignes : ${DT.chains.map(driveName).join(', ')}`,
+    `Résultat : ${c.ok} trouvés, ${c.brand} avec la marque seulement, ${c.ko} rien trouvé, ${c.none} non testés`, '', 'Par enseigne :'];
+  for (const id in by) out.push(`- ${driveName(id)} : ${by[id].ok} trouvés, ${by[id].brand} avec la marque, ${by[id].ko} rien, ${by[id].none} non testés`);
+  for (const [k, t] of [['ko', 'Rien trouvé'], ['brand', 'Trouvé seulement avec la marque'], ['ok', 'Trouvé']]) if (L[k].length) out.push('', t + ' :', ...L[k]);
+  return out.join('\n');
+}
+async function dtOpen(fresh = false){
+  openDialog($('#dtSheet')); $('#dtText').hidden = true;
+  if (fresh || !DT || Date.now() - DT.at > 30 * 86400e3){
+    $('#dtList').innerHTML = ''; $('#dtProgress').innerHTML = SPIN + 'Choix des produits à tester…';
+    await dtBuild();
+  }
+  dtRender();
+}
+$('#dtBtn').addEventListener('click', () => dtOpen());
+$('#dtClose').addEventListener('click', () => closeDialog($('#dtSheet')));
+$('#dtNew').addEventListener('click', () => { if (!DT || dtCount().none === dtCount().total || confirm('Commencer une nouvelle série ? Les résultats notés seront effacés.')) dtOpen(true); });
+$('#dtList').addEventListener('click', e => {
+  const b = e.target.closest('.seg [data-v]'); if (!b) return;
+  const seg = b.parentElement, k = seg.dataset.k, v = DT.res[k] === b.dataset.v ? '' : b.dataset.v;
+  if (v) DT.res[k] = v; else delete DT.res[k];
+  dtSave(); seg.dataset.v = v;
+  seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.v === v)));
+  dtProgress();
+});
+$('#dtCopy').addEventListener('click', async () => {
+  if (!DT) return;
+  const t = dtReport();
+  try { await navigator.clipboard.writeText(t); toast('Rapport copié : colle-le dans ta conversation avec Claude.', 4000); return; } catch (e) {}
+  try { if (navigator.share){ await navigator.share({ title:'Rapport liens drive', text:t }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+  const ta = $('#dtText'); ta.hidden = false; ta.value = t; ta.focus(); ta.select();
+  toast('Sélectionne le texte du rapport et copie-le.', 4000);
+});
+
 /* ================= Version ================= */
-const APP_VERSION = '3.8';
+const APP_VERSION = '3.9';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -3445,7 +3611,7 @@ if (!FIRST_RUN) autoLocate('start');
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, linkChains, driveUrl };
+window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, dtReport:() => DT && dtReport(), getDT:() => DT };
 })();
 </script>
 </body>
