@@ -82,7 +82,8 @@ p{margin:0}
 .iconbtn[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
 
 /* puce profil */
-.pchip{display:inline-flex;align-items:center;gap:6px;max-width:55%;min-height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:14px;font-weight:600}
+.top h1{white-space:nowrap;flex:none}
+.pchip{display:inline-flex;align-items:center;gap:6px;max-width:55%;min-width:0;flex:0 1 auto;min-height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:14px;font-weight:600}
 .pchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pchip svg{width:16px;height:16px;color:var(--ok)}
 
@@ -154,6 +155,9 @@ p{margin:0}
 .welcome .ill{width:64px;height:64px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;background:var(--ok-bg);color:var(--ok)}
 .welcome .ill svg{width:34px;height:34px}
 .welcome p{color:var(--muted);font-size:15px;max-width:30ch;margin:6px auto 0}
+.steps{list-style:none;counter-reset:st;margin:12px auto 6px;padding:0;max-width:30ch;text-align:left;font-size:15px}
+.steps li{counter-increment:st;position:relative;padding:6px 0 6px 36px}
+.steps li::before{content:counter(st);position:absolute;left:0;top:5px;width:24px;height:24px;border-radius:50%;background:var(--ok-bg);color:var(--ok);font-weight:700;font-size:13px;display:grid;place-items:center}
 
 /* liste de courses */
 .item>.shop{grid-column:1/-1}
@@ -244,6 +248,12 @@ dialog.sheet.short .sheet-in{max-height:calc(100dvh - env(safe-area-inset-top,0p
 .card{margin-top:12px;padding:14px 16px;border-radius:var(--r);background:var(--surface);box-shadow:var(--card)}
 .card h3 + h3{margin-top:14px}
 .card .sub{margin-top:14px}
+details.card.more > summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;font-weight:650;font-size:16px}
+details.card.more > summary::-webkit-details-marker{display:none}
+details.card.more > summary::after{content:"›";color:var(--muted);transition:transform .2s}
+details.card.more[open] > summary::after{transform:rotate(90deg)}
+details.card.more[open] > summary{margin-bottom:10px}
+details.card.more h3{margin-top:12px}
 .ingr{font-size:15px;line-height:1.5}
 mark{background:var(--no-bg);color:var(--no);font-weight:700;border-radius:3px;padding:0 2px}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
@@ -318,6 +328,10 @@ div.rowbtn{cursor:default}
 .wtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .wtop b{font-size:16px}
 .wlist li.best .wtop b::after{content:"Meilleur choix";margin-left:8px;padding:1px 7px;border-radius:6px;background:var(--ok-bg);color:var(--ok);font-size:12px;font-weight:700;vertical-align:2px}
+.listsum{display:flex;align-items:center;gap:10px;width:100%;margin:4px 0 6px;padding:12px 14px;border:0;border-radius:14px;background:var(--ok-bg);color:var(--ink);font-size:15px;text-align:left}
+.listsum span{flex:1;min-width:0}
+.listsum b{color:var(--ok)}
+.listsum .go{flex:none;color:var(--ok);font-weight:700;white-space:nowrap}
 .nearline{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:9px 12px;border:0;border-radius:12px;background:var(--ok-bg);color:var(--ink);font-size:14px;line-height:1.3;text-align:left}
 .nearline svg{flex:none;width:16px;height:16px;color:var(--ok)}
 .nearline span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -356,6 +370,8 @@ div.rowbtn{cursor:default}
 .drivebtn .dalt{display:block;margin-top:-6px;padding:0 14px 10px;font-size:13px;color:var(--muted)}
 .drivebtn b{display:block;font-size:16px}
 .drivebtn small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
+.drivebtn small.dseen{color:var(--ok);font-weight:600}
+.drivebtn small.dunk{color:var(--warn)}
 .drivebtn .go{flex:none;color:var(--ok);font-weight:650;font-size:15px}
 .drivebtn .go::after{content:" ›"}
 .dlist{list-style:none;margin:0;padding:0}
@@ -407,6 +423,9 @@ footer a{color:inherit}
 
 .toast{position:fixed;left:16px;right:16px;bottom:calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 12px);z-index:30;max-width:28rem;margin:0 auto;padding:12px 16px;border-radius:14px;background:var(--toastbg);color:#fff;font-size:15px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.22);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:none}
+.toast{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.toast.show.hasact{pointer-events:auto}
+.tact{flex:none;border:0;background:transparent;color:#8BE3B4;font-weight:700;font-size:15px;padding:6px 0;white-space:nowrap}
 .spin{width:1em;height:1em;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;vertical-align:-.12em}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -491,8 +510,13 @@ footer a{color:inherit}
 
     <div class="welcome" id="intro">
       <div class="ill"><svg aria-hidden="true"><use href="#i-basket"/></svg></div>
-      <h2>Choisis un rayon</h2>
-      <p>L'appli trie ses produits en compatibles, à vérifier et exclus selon ton profil. En magasin, utilise l'onglet Scanner.</p>
+      <h2>Comment ça marche</h2>
+      <ol class="steps">
+        <li><b>Choisis un rayon</b> ci-dessus, ou tape un produit.</li>
+        <li><b>Regarde les « Compatibles »</b> : triés selon tes allergies.</li>
+        <li><b>Ajoute à ta liste</b> avec le bouton +, puis vérifie le stock au drive.</li>
+      </ol>
+      <p>En magasin, scanne un code-barres avec l'onglet Scanner.</p>
     </div>
   </section>
 
@@ -589,6 +613,7 @@ footer a{color:inherit}
   <!-- MA LISTE -->
   <section class="screen" id="screen-list" hidden aria-labelledby="t-list">
     <header class="top"><h1 id="t-list">Ma liste</h1></header>
+    <button type="button" class="listsum" id="listSum" hidden></button>
 
     <div class="sec" style="margin-top:4px"><h2>À acheter</h2><button class="textbtn" id="shareList" type="button">Partager</button></div>
     <ul class="list" id="shopList"></ul>
@@ -1114,10 +1139,21 @@ function findHits(text, kw){
 const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 function wordKW(w){ const f = fold(w).trim().replace(/\s+/g, ' '); return f ? { re:new RegExp('\\b' + reEsc(f).replace(/ /g, '\\s+'), 'g') } : null; }
 let toastTimer = 0;
-function toast(msg, ms = 2600){
-  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer); if (ms) toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+// message en bas de l'écran, avec une action facultative (« Voir ma liste »)
+function toast(msg, ms = 2600, act = null){
+  const t = $('#toast'); t.textContent = '';
+  // une fiche ouverte passe au premier plan (« top layer ») : le message doit être dedans pour rester visible
+  const host = $$('dialog').filter(d => d.open).pop() || document.body;
+  if (t.parentElement !== host) host.appendChild(t);
+  const m = document.createElement('span'); m.textContent = msg; t.appendChild(m);
+  if (act){
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tact'; b.textContent = act.label;
+    b.addEventListener('click', () => { hideToast(); act.fn(); }); t.appendChild(b);
+  }
+  t.classList.toggle('hasact', !!act); t.classList.add('show');
+  clearTimeout(toastTimer); if (ms) toastTimer = setTimeout(() => t.classList.remove('show'), act ? Math.max(ms, 4500) : ms);
 }
+const SEE_LIST = { label:'Voir ma liste', fn:() => leaveSheetsTo('list') };
 const hideToast = () => { clearTimeout(toastTimer); $('#toast').classList.remove('show'); };
 const fmtNum = (v, d = 1) => Number(v).toLocaleString('fr-FR', { maximumFractionDigits:d });
 const fmtDate = s => { const d = new Date(s); return isNaN(d) ? '' : d.toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' }); };
@@ -1488,7 +1524,41 @@ function sorter(key){
 
 /* ================= Navigation ================= */
 const SCREENS = ['search','recipes','scan','list','profile'];
-function go(name){
+/* ================= Historique : le bouton ou le geste « retour » =================
+   Chaque écran, chaque fiche ouverte et chaque recette ajoute une étape à l'historique du navigateur :
+   le retour ferme la fiche ouverte, puis revient à l'écran précédent, au lieu de quitter l'appli. */
+let screenNow = 'search';
+const navDialogs = [];          // fiches ouvertes avec une étape d'historique
+let navIgnore = 0;
+const navUrl = name => name === 'search' ? location.pathname + location.search : '#' + name;
+function navPush(state, url){ try { history.pushState(Object.assign({ rs:1 }, state), '', url); } catch (e) {} }
+function navReplace(state, url){ try { history.replaceState(Object.assign({ rs:1 }, state), '', url); } catch (e) {} }
+function dialogClosed(d){       // à chaque fermeture d'une fiche (bouton, fond, Échap) : on retire son étape
+  const i = navDialogs.lastIndexOf(d.id); if (i < 0) return;
+  navDialogs.splice(i, 1);
+  navIgnore++; try { history.back(); } catch (e) { navIgnore--; }
+}
+// « Voir ma liste » depuis une fiche : la fiche est remplacée par l'écran demandé
+function leaveSheetsTo(name){
+  const open = $$('dialog').filter(d => d.open && d.id !== 'onboard');
+  if (!open.length) return go(name);
+  navDialogs.length = 0;
+  open.forEach(d => closeDialog(d));
+  go(name, { replace:true });
+}
+window.addEventListener('popstate', e => {
+  if (navIgnore > 0){ navIgnore--; return; }
+  const id = navDialogs.pop();
+  if (id){ const d = document.getElementById(id); if (d && d.open) closeDialog(d); return; }
+  const st = e.state || {};
+  const sc = SCREENS.includes(st.screen) ? st.screen : (SCREENS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'search');
+  if (sc === 'recipes'){
+    if (st.view === 'detail' && st.id){ recViewFromNav(st.id); return; }
+    if (!st.view){ RV = null; ED = null; recView('home'); }
+  }
+  go(sc, { pop:true });
+});
+function go(name, { pop = false, init = false, replace = false } = {}){
   if (!SCREENS.includes(name)) name = 'search';
   SCREENS.forEach(s => { $('#screen-' + s).hidden = s !== name; });
   $$('.tabbar button').forEach(b => { if (b.dataset.go === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
@@ -1497,7 +1567,9 @@ function go(name){
   if (name === 'scan') renderHistory();
   if (name === 'search') renderProfileLine();
   if (name === 'recipes') showRecipes();
-  try { history.replaceState(null, '', name === 'search' ? location.pathname + location.search : '#' + name); } catch (e) {}
+  if (init || replace) navReplace({ screen:name }, navUrl(name));
+  else if (!pop && name !== screenNow) navPush({ screen:name }, navUrl(name));
+  screenNow = name;
   window.scrollTo(0, 0);
 }
 $$('.tabbar button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
@@ -1782,7 +1854,7 @@ function handleItemClick(e, lookupFn){
 function toggleShop(p, btn){
   const code = String(p.code);
   if (inShop(code)){ shop = shop.filter(x => x.code !== code); toast('Retiré de ta liste'); }
-  else { shop.unshift({ code, p:slim(p), done:false, at:Date.now() }); toast('Ajouté à ta liste'); }
+  else { shop.unshift({ code, p:slim(p), done:false, at:Date.now() }); toast('Ajouté à ta liste', 3500, SEE_LIST); }
   saveShop(); updateBadge();
   if (btn){ const on = inShop(code); btn.setAttribute('aria-pressed', on); btn.innerHTML = on ? ICON_CHECK : ICON_PLUS; btn.setAttribute('aria-label', (on ? 'Retirer de ma liste' : 'Ajouter à ma liste') + ' : ' + nameOf(p)); }
 }
@@ -1799,9 +1871,17 @@ function renderRayons(q){
   }).join('');
   $('#rayonList').innerHTML = groups || `<p class="empty-card" style="margin-top:1rem">Aucun rayon ne correspond. Choisis « Tous les rayons » et tape le nom du produit dans la recherche.</p>`;
 }
-function openDialog(d){ if (typeof d.showModal === 'function'){ if (!d.open) d.showModal(); } else d.setAttribute('open', ''); document.documentElement.classList.add('locked'); }
+function openDialog(d){
+  const was = d.open;
+  if (typeof d.showModal === 'function'){ if (!d.open) d.showModal(); } else d.setAttribute('open', '');
+  document.documentElement.classList.add('locked');
+  if (!was && d.id !== 'onboard' && !navDialogs.includes(d.id)){ navDialogs.push(d.id); navPush({ dialog:d.id, screen:screenNow }, location.href); }
+}
 const anyOpen = () => $$('dialog').some(x => x.open);
-function closeDialog(d){ if (d.open){ if (typeof d.close === 'function') d.close(); else d.removeAttribute('open'); } if (!anyOpen()) document.documentElement.classList.remove('locked'); }
+function closeDialog(d){
+  if (d.open){ if (typeof d.close === 'function') d.close(); else { d.removeAttribute('open'); dialogClosed(d); } }
+  if (!anyOpen()) document.documentElement.classList.remove('locked');
+}
 $('#rayonBtn').addEventListener('click', () => { $('#rayonFilter').value = ''; renderRayons(''); openDialog(rayonSheet); });
 $('#rayonFilter').addEventListener('input', e => renderRayons(e.target.value));
 $('#rayonClose').addEventListener('click', () => closeDialog(rayonSheet));
@@ -1811,7 +1891,10 @@ $('#rayonList').addEventListener('click', e => {
   closeDialog(rayonSheet); runSearch({ scroll:true });
 });
 $$('dialog.sheet').forEach(d => {
-  d.addEventListener('close', () => { if (!anyOpen()) document.documentElement.classList.remove('locked'); });
+  d.addEventListener('close', () => {
+    const t = $('#toast'); if (t && d.contains(t)) document.body.appendChild(t);   // le message reste visible après la fermeture
+    dialogClosed(d); if (!anyOpen()) document.documentElement.classList.remove('locked');
+  });
   if (d.id !== 'onboard') d.addEventListener('click', e => { if (e.target === d) closeDialog(d); });
 });
 
@@ -1946,14 +2029,16 @@ function productHTML(p){
   ${driveCard(p)}
   ${card('Ingrédients', raw ? `<p class="ingr">${renderIngredients(raw)}</p>` : '<p class="ingr">Non renseignés sur Open Food Facts : vérifie l\'emballage.</p>')}
   <section class="card"><h3>Allergènes déclarés</h3>${list(p.allergens_tags)}<h3 class="sub">Peut contenir des traces de</h3>${list(p.traces_tags)}</section>
-  ${labels.length || anTags.length ? card('Labels et régimes', `<div class="tags">${[...labels, ...anTags].map(l => `<span class="tag">${esc(l)}</span>`).join('')}</div>`) : ''}
-  ${scores ? card('Scores', `<div class="scores">${scores}</div>`) : ''}
-  ${nut ? `<section class="card">${nut}</section>` : ''}
-  ${adds.length ? card('Additifs', `<div class="tags">${adds.map(a => `<span class="tag">${esc(a)}</span>`).join('')}</div>`) : ''}
-  ${p.stores ? card('Signalé chez', `<p>${esc(p.stores)}</p>`) : ''}
   <section class="card"><h3>Équivalents</h3><button class="ghost small" type="button" data-act="alts">${esc(altLabel)}</button><div class="alts" id="alts"></div></section>
-  <section class="card"><h3>Prix relevés</h3><button class="ghost small" type="button" data-act="prices">Voir les prix relevés</button><div id="prices"></div></section>
+  ${labels.length || anTags.length || scores || nut || adds.length ? `<details class="card more"><summary>Labels, scores et nutrition</summary>
+    ${labels.length || anTags.length ? `<h3>Labels et régimes</h3><div class="tags">${[...labels, ...anTags].map(l => `<span class="tag">${esc(l)}</span>`).join('')}</div>` : ''}
+    ${scores ? `<h3>Scores</h3><div class="scores">${scores}</div>` : ''}
+    ${nut}
+    ${adds.length ? `<h3>Additifs</h3><div class="tags">${adds.map(a => `<span class="tag">${esc(a)}</span>`).join('')}</div>` : ''}
+  </details>` : ''}
+  <details class="card more"><summary>Prix relevés en magasin</summary><button class="ghost small" type="button" data-act="prices">Voir les prix relevés</button><div id="prices"></div></details>
   <section class="card"><h3>Plus d'infos</h3><div class="links">
+    ${p.stores ? `<span>Signalé chez : ${esc(p.stores)}</span>` : ''}
     <span>Code-barres ${esc(code)}</span>
     <a href="${OFF_FR}/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir la fiche sur Open Food Facts</a>
     <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">Compléter ou corriger la fiche</a>
@@ -1969,14 +2054,21 @@ $('#sheetBody').addEventListener('click', async e => {
   const code = String(p.code);
   if (b.dataset.act === 'shop'){ toggleShop(p); drawKeepScroll(); refreshVisibleLists(); }
   if (b.dataset.act === 'fav'){
-    if (favs[code]){ delete favs[code]; toast('Retiré des favoris'); } else { favs[code] = { p:slim(p), at:Date.now() }; toast('Ajouté aux favoris'); }
+    if (favs[code]){ delete favs[code]; toast('Retiré des favoris'); } else { favs[code] = { p:slim(p), at:Date.now() }; toast('Ajouté aux favoris (dans Ma liste)', 3500, SEE_LIST); }
     saveFavs(); drawKeepScroll(); refreshVisibleLists();
   }
   if (b.dataset.act === 'share') shareProduct(p);
   if (b.dataset.act === 'alts') findAlternatives(p, b);
   if (b.dataset.act === 'prices') loadPrices(p, b);
 });
-function drawKeepScroll(){ const body = $('#sheetBody'); const y = body.scrollTop; const alts = $('#alts') && $('#alts').innerHTML; const pr = $('#prices') && $('#prices').innerHTML; drawSheet(); if (alts) $('#alts').innerHTML = alts; if (pr) $('#prices').innerHTML = pr; body.scrollTop = y; }
+function drawKeepScroll(){
+  const body = $('#sheetBody'); const y = body.scrollTop; const alts = $('#alts') && $('#alts').innerHTML; const pr = $('#prices') && $('#prices').innerHTML;
+  const open = $$('#sheetBody details.more').map(d => d.open);
+  drawSheet();
+  if (alts) $('#alts').innerHTML = alts; if (pr) $('#prices').innerHTML = pr;
+  $$('#sheetBody details.more').forEach((d, i) => { if (open[i]) d.open = true; });
+  body.scrollTop = y;
+}
 function refreshVisibleLists(){ if (R) render(); if (!$('#screen-list').hidden) renderLists(); if (!$('#screen-scan').hidden) renderHistory(); }
 async function shareProduct(p){
   const ev = evaluate(p);
@@ -2616,8 +2708,9 @@ function renderRecHome(){
   if (!html) html = `<div class="empty-card group" style="margin-top:14px">« ${esc(q)} » n'est pas encore dans l'appli. Crée ta recette : choisis ses ingrédients, l'appli trouve les produits.<br><button class="ghost" type="button" data-newrec="${esc(q)}">Créer « ${esc(q)} »</button></div>`;
   $('#recCatalog').innerHTML = html;
 }
-function openRecipe(id){
+function openRecipe(id, { nav = true, replace = false } = {}){
   const r = allRecipes().find(x => x.id === id); if (!r) return;
+  if (nav) (replace ? navReplace : navPush)({ screen:'recipes', view:'detail', id }, '#recipes');
   RV = { r, serv:4, res:r.i.map(() => null), pick:{}, tok:null };
   $('#recStore').value = S.store; fitSel($('#recStore'));
   $('#recServ').hidden = !r.i.some(x => x[1] != null);
@@ -2721,7 +2814,9 @@ $('#recCatalog').addEventListener('click', e => {
   const b = e.target.closest('[data-rec]'); if (b){ openRecipe(b.dataset.rec); return; }
   const n = e.target.closest('[data-newrec]'); if (n) openEditor(null, n.dataset.newrec);
 });
-$('#recBack').addEventListener('click', () => { RV = null; recView('home'); renderRecHome(); });
+function recViewFromNav(id){ if (screenNow !== 'recipes') go('recipes', { pop:true }); ED = null; openRecipe(id, { nav:false }); }
+// retour en haut à gauche = même effet que le geste retour
+$('#recBack').addEventListener('click', () => { if (history.state && history.state.view === 'detail'){ history.back(); return; } RV = null; recView('home'); renderRecHome(); });
 $('#servMinus').addEventListener('click', () => { if (RV && RV.serv > 1){ RV.serv--; renderRecipe(); } });
 $('#servPlus').addEventListener('click', () => { if (RV && RV.serv < 12){ RV.serv++; renderRecipe(); } });
 $('#recStore').addEventListener('change', e => chooseStore(e.target.value, e.target));
@@ -2730,7 +2825,7 @@ $('#recIngr').addEventListener('click', e => {
   if (a){
     const k = Number(a.dataset.radd); const en = shopEntry(k); if (!en) return;
     if (inShop(en.code)){ shop = shop.filter(x => x.code !== en.code); toast('Retiré de ta liste'); }
-    else { addEntry(en); toast('Ajouté à ta liste'); }
+    else { addEntry(en); toast('Ajouté à ta liste', 3500, SEE_LIST); }
     saveShop(); updateBadge(); renderRecipe(); return;
   }
   const m = e.target.closest('[data-ralts]'); if (m){ openPicker(Number(m.dataset.ralts)); return; }
@@ -2741,7 +2836,7 @@ $('#recAddAll').addEventListener('click', () => {
   let n = 0;
   RV.r.i.forEach((x, k) => { if (!x[3] && !(ING[x[0]] || {}).b && addEntry(shopEntry(k))) n++; });
   saveShop(); updateBadge(); renderRecipe();
-  toast(n ? `${n} ingrédient${n > 1 ? 's' : ''} ajouté${n > 1 ? 's' : ''} à ta liste` : 'Déjà dans ta liste');
+  toast(n ? `${n} ingrédient${n > 1 ? 's' : ''} ajouté${n > 1 ? 's' : ''} à ta liste` : 'Déjà dans ta liste', 3500, SEE_LIST);
 });
 const pickSheet = $('#pickSheet');
 function openPicker(k){
@@ -2769,6 +2864,7 @@ let ED = null;
 const ING_IDS = Object.keys(ING).sort((a, b) => ING[a].n.localeCompare(ING[b].n, 'fr'));
 function openEditor(r, name){
   ED = { id:r ? r.id : null, items:r ? r.i.map(x => x[0]).filter(id => ING[id]) : [] };
+  navPush({ screen:'recipes', view:'edit' }, '#recipes');
   $('#edName').value = r ? r.n : (name || '');
   $('#edFilter').value = '';
   $('#edDelete').hidden = !r;
@@ -2785,16 +2881,20 @@ $('#edFilter').addEventListener('input', renderEditor);
 $('#edName').addEventListener('input', () => { $('#edSave').disabled = !ED.items.length || !$('#edName').value.trim(); });
 $('#edChosen').addEventListener('click', e => { const b = e.target.closest('[data-edrm]'); if (b){ ED.items = ED.items.filter(x => x !== b.dataset.edrm); renderEditor(); } });
 $('#edAll').addEventListener('click', e => { const b = e.target.closest('[data-edadd]'); if (b){ ED.items.push(b.dataset.edadd); $('#edFilter').value = ''; renderEditor(); } });
-$('#edBack').addEventListener('click', () => { if (ED && ED.id) openRecipe(ED.id); else { recView('home'); renderRecHome(); } });
+$('#edBack').addEventListener('click', () => {
+  if (history.state && history.state.view === 'edit'){ history.back(); return; }
+  if (ED && ED.id) openRecipe(ED.id, { nav:false }); else { recView('home'); renderRecHome(); }
+});
 $('#edSave').addEventListener('click', () => {
   const n = $('#edName').value.trim().slice(0, 60); if (!n || !ED.items.length) return;
   const rec = { id:ED.id || 'm' + Date.now().toString(36), n, i:ED.items.map(id => [id]) };
   myRecipes = [rec, ...myRecipes.filter(x => x.id !== rec.id)]; saveMyRecipes();
-  $('#recQ').value = ''; toast('Recette enregistrée'); openRecipe(rec.id);
+  $('#recQ').value = ''; toast('Recette enregistrée'); openRecipe(rec.id, { replace:history.state && history.state.view === 'edit' });
 });
 $('#edDelete').addEventListener('click', () => {
   if (!ED || !ED.id || !confirm('Supprimer cette recette ?')) return;
-  myRecipes = myRecipes.filter(x => x.id !== ED.id); saveMyRecipes(); recView('home'); renderRecHome();
+  myRecipes = myRecipes.filter(x => x.id !== ED.id); saveMyRecipes(); RV = null; ED = null;
+  navReplace({ screen:'recipes' }, '#recipes'); recView('home'); renderRecHome(); toast('Recette supprimée');
 });
 $('#recNew').addEventListener('click', () => openEditor(null, ''));
 $('#recEdit').addEventListener('click', () => { if (RV && RV.r.mine) openEditor(myRecipes.find(x => x.id === RV.r.id)); });
@@ -3405,6 +3505,7 @@ function renderWhere(){
   const nb = $('#nearBtn');
   nb.lastChild.textContent = nearIds().length ? 'Modifier mes magasins' : 'Magasins près de moi';
   $('#nearWhere').textContent = nearIds().length ? `Magasins à moins de ${near.r} km de ${placeLabel()}${fresh && !empty ? '. Produits frais : partout' : ''}.` : (fresh && !empty ? 'Produits frais : disponibles partout.' : '');
+  const sumEl = $('#listSum'); sumEl.hidden = true;
   if (empty){
     const bestEl = $('#whereBest'); bestEl.className = 'banner rsum';
     bestEl.textContent = 'Ajoute des produits à ta liste avec le bouton +, depuis la recherche ou une recette : l\'appli te dira dans quel magasin tu en trouveras le plus.';
@@ -3445,6 +3546,9 @@ function renderWhere(){
     if (pair && pair.cover > best.avail) t += ` En deux magasins, ${lab(pair.a)} et ${lab(pair.b)}, tu en trouves ${pair.cover} sur ${N}.`;
     bestEl.className = 'banner rsum ' + (best.avail === N ? 's-ok' : 's-check');
     bestEl.innerHTML = t;
+    // résumé en haut de l'écran : où aller, et le stock au drive en un geste
+    sumEl.hidden = false; sumEl.dataset.drive = DRIVES[best.s.id] ? best.s.id : '';
+    sumEl.innerHTML = `<span>${N} produit${N > 1 ? 's' : ''} à acheter · meilleur choix : <b>${lab(best)}</b>, ${best.avail} sur ${N}</span><span class="go">${DRIVES[best.s.id] && !DRIVES[best.s.id].noDrive ? 'Vérifier au drive ›' : 'Détails ›'}</span>`;
   }
   $('#whereList').innerHTML = rows.slice(0, 6).map(r => {
     const pct = Math.round(r.avail / N * 100);
@@ -3462,16 +3566,19 @@ $('#nearBtn').addEventListener('click', () => openNear({ locate:!near && !locBus
 /* ================= Stock au drive =================
    Les stocks des drives ne sont pas publics : l'appli ouvre le site de l'enseigne sur le produit
    (sa propre recherche), et c'est le site qui affiche la disponibilité dans le drive choisi. */
+/* ean : le site retrouve le produit exact par son code-barres (même s'il lui donne un autre nom).
+   gean : Google retrouve la fiche du site par le code-barres (Intermarché : sa recherche ne s'ouvre pas depuis un lien).
+   Sinon : recherche par nom, avec la marque seule en secours. */
 const DRIVES = {
-  leclerc:{ site:'e.leclerc', q:'https://www.e.leclerc/recherche?q=' },
-  carrefour:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=' },
+  leclerc:{ site:'e.leclerc', q:'https://www.e.leclerc/recherche?q=', ean:true },
+  carrefour:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=', ean:true },
   auchan:{ site:'auchan.fr', q:'https://www.auchan.fr/recherche?text=' },
-  intermarche:{ site:'intermarche.com', q:'https://www.intermarche.com/recherche/' },
+  intermarche:{ site:'intermarche.com', gean:true },
   u:{ site:'coursesu.com', q:'https://www.coursesu.com/recherche?q=' },
   biocoop:{ site:'biocoop.fr', q:'https://www.biocoop.fr/catalogsearch/result/?q=' },
   monoprix:{ site:'monoprix.fr', q:'https://courses.monoprix.fr/search?q=' },
   picard:{ site:'picard.fr', q:'https://www.picard.fr/recherche?q=' },
-  cora:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=' },          // les Cora sont devenus des Carrefour
+  cora:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=', ean:true }, // les Cora sont devenus des Carrefour
   franprix:{ site:'franprix.fr' }, casino:{ site:'casino.fr' },
   lidl:{ site:'lidl.fr', q:'https://www.lidl.fr/q/search?q=', noDrive:true }, aldi:{ site:'aldi.fr', noDrive:true }, netto:{ site:'netto.fr', noDrive:true },
 };
@@ -3505,11 +3612,31 @@ function driveTerms(p){
   for (const w of words){ const f = fold(w); if (!seenW.has(f)){ seenW.add(f); pick.push(w); } if (pick.length === max) break; }
   return [brand, ...pick].filter(Boolean).join(' ').slice(0, 60) || String(nameOf(p)).slice(0, 40);
 }
-function driveUrl(p, id, brandOnly = false){
+const validEan = p => !!p && gtinOK(String(p.code || ''));
+// recherche principale chez une enseigne : 'ean', 'gean' ou 'nom'
+function driveMode(p, id){
   const d = DRIVES[id]; if (!d) return '';
-  const terms = brandOnly && driveBrand(p) ? driveBrand(p) : driveTerms(p);
-  if (d.q) return d.q + encodeURIComponent(terms);
-  return `https://www.google.com/search?q=${encodeURIComponent(terms + ' site:' + d.site)}`;
+  if (validEan(p) && d.ean && d.q) return 'ean';
+  if (validEan(p) && d.gean) return 'gean';
+  return 'nom';
+}
+// how : 'auto' (recherche principale), 'nom' (marque + nom), 'marque' (marque seule)
+function driveUrl(p, id, how = 'auto'){
+  const d = DRIVES[id]; if (!d) return '';
+  if (how === true) how = 'marque';
+  const mode = how === 'nom' || how === 'marque' ? how : driveMode(p, id);
+  const google = t => `https://www.google.com/search?q=${encodeURIComponent(t + ' site:' + d.site)}`;
+  if (mode === 'ean') return d.q + String(p.code);
+  if (mode === 'gean') return google(String(p.code));
+  const terms = mode === 'marque' && driveBrand(p) ? driveBrand(p) : driveTerms(p);
+  return d.q ? d.q + encodeURIComponent(terms) : google(terms);
+}
+// lien de secours : par nom si la recherche principale utilise le code-barres, sinon la marque seule
+function driveAlt(p, id){
+  const brand = driveBrand(p), terms = driveTerms(p);
+  if (driveMode(p, id) !== 'nom') return { href:driveUrl(p, id, 'nom'), text:`Pas le bon produit ? Chercher « ${terms} »` };
+  if (brand && brand !== terms) return { href:driveUrl(p, id, 'marque'), text:`Rien trouvé ? Toute la marque ${brand}` };
+  return null;
 }
 // enseignes à proposer : celles où le produit a été vu parmi les proches, puis les plus proches
 function linkChains(p){
@@ -3524,14 +3651,20 @@ function linkChains(p){
 function driveCard(p){
   if (!p || p._fresh) return '';
   const ids = linkChains(p); if (!ids.length) return '';
-  const info = chainInfo(p), brand = driveBrand(p), terms = driveTerms(p);
+  const info = chainInfo(p);
   const rows = ids.map(id => {
-    const n = nearInfo(id), d = DRIVES[id];
-    const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', info.seen.includes(id) ? 'vu dans l\'enseigne' : '', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
-    const alt = brand && brand !== terms ? `<a class="dalt" href="${esc(driveUrl(p, id, true))}" target="_blank" rel="noopener">Rien trouvé ? Toute la marque ${esc(brand)}</a>` : '';
-    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small></span><span class="go">${d.noDrive ? 'Voir sur le site' : 'Voir le stock'}</span></a>${alt}</div>`;
+    const n = nearInfo(id), d = DRIVES[id], mode = driveMode(p, id), alt = driveAlt(p, id);
+    const seen = info.seen.includes(id);
+    const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
+    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small>
+        <small class="${seen ? 'dseen' : 'dunk'}">${seen ? 'Vu dans cette enseigne' : 'Pas signalé ici : peut-être pas vendu'}</small></span>
+        <span class="go">${mode === 'nom' ? 'Chercher' : 'Voir le produit'}</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</div>`;
   }).join('');
-  return `<section class="card"><h3>Stock au drive</h3><p class="hint">Le site de l'enseigne s'ouvre sur la recherche « ${esc(terms)} », avec le stock du drive que tu y as choisi (il te le demande la première fois).</p><div class="drives">${rows}</div></section>`;
+  const id = [nameOf(p), brandOf(p), p.quantity].filter(Boolean).join(' · ');
+  const exact = ids.some(id2 => driveMode(p, id2) !== 'nom');
+  return `<section class="card"><h3>Stock au drive</h3>
+    <p class="hint">${exact ? '« Voir le produit » ouvre ce produit précis grâce à son code-barres. ' : ''}« Chercher » lance une recherche par nom : vérifie que c'est bien <b>${esc(id)}</b>. Le site affiche le stock du drive que tu y as choisi.</p>
+    <div class="drives">${rows}</div></section>`;
 }
 // « Ma liste chez Carrefour » : chaque produit de la liste, à ouvrir sur le site
 function openDriveList(id){
@@ -3540,15 +3673,19 @@ function openDriveList(id){
   $('#driveTitle').textContent = 'Ma liste chez ' + driveName(id);
   $('#driveHint').textContent = `Touche un produit : le site ${driveName(id)} s'ouvre dessus${d.noDrive ? '' : ', avec le stock du drive que tu y as choisi'}.` + (n ? ` Ton magasin le plus proche : ${n.name}, ${fmtKm(n.dist)}.` : '') + (fresh ? ` Produits frais (${fresh}) : à choisir sur place.` : '');
   $('#driveList').innerHTML = items.length ? items.map(x => {
-    const a = availability(chainInfo(x.p), id), terms = driveTerms(x.p), brand = driveBrand(x.p);
+    const a = availability(chainInfo(x.p), id), alt = driveAlt(x.p, id), mode = driveMode(x.p, id);
     const note = a === 'sure' ? 'Vu dans l\'enseigne' : a === 'no' ? 'Marque d\'une autre enseigne : sûrement absent' : `Marque nationale, pas encore signalée chez ${driveName(id)}`;
-    const alt = brand && brand !== terms ? `<a class="dalt" href="${esc(driveUrl(x.p, id, true))}" target="_blank" rel="noopener">Rien trouvé ? Toute la marque ${esc(brand)}</a>` : '';
-    return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), note].filter(Boolean).join(' · '))}</small><small class="meta">Recherche : « ${esc(terms)} »</small></span><span class="go">Voir</span></a>${alt}</li>`;
+    const how = mode === 'nom' ? `Recherche : « ${driveTerms(x.p)} »` : 'Recherche par le code-barres : le produit exact';
+    return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), x.p.quantity, note].filter(Boolean).join(' · '))}</small><small class="meta">${esc(how)}</small></span><span class="go">Voir</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</li>`;
   }).join('') : '<li><p class="hint" style="padding:12px 16px">Ta liste est vide.</p></li>';
   openDialog($('#driveSheet'));
 }
 $('#driveClose').addEventListener('click', () => closeDialog($('#driveSheet')));
 $('#whereList').addEventListener('click', e => { const b = e.target.closest('[data-drive]'); if (b) openDriveList(b.dataset.drive); });
+$('#listSum').addEventListener('click', () => {
+  const id = $('#listSum').dataset.drive;
+  if (id && !DRIVES[id].noDrive) openDriveList(id); else $('#whereBox').scrollIntoView({ behavior:'smooth', block:'start' });
+});
 
 /* ================= Tester les liens drive =================
    Les sites des enseignes bloquent les vérifications automatiques : ce test se fait à la main.
@@ -3558,7 +3695,7 @@ $('#whereList').addEventListener('click', e => { const b = e.target.closest('[da
 const DT_KEY = 'rs2:drivetest';
 const DT_AISLES = ['en:ice-creams-and-sorbets', 'en:non-dairy-yogurts', 'en:pastas', 'en:biscuits', 'en:breakfast-cereals', 'en:sauces',
   'en:cheeses', 'en:chocolates', 'en:plant-based-milk-alternatives', 'en:breads', 'en:prepared-meats', 'en:crisps'];
-const DT_RES = { ok:'Trouvé', brand:'Marque seule', ko:'Rien' };
+const DT_RES = { ok:'Trouvé', brand:'Avec l\'autre lien', ko:'Rien' };
 function cleanDT(d){
   if (!isObj(d) || !Array.isArray(d.items)) return null;
   const items = d.items.filter(isObj).map(it => {
@@ -3625,7 +3762,7 @@ function dtCount(){
 }
 function dtProgress(){
   const c = dtCount();
-  $('#dtProgress').textContent = `${c.total - c.none} / ${c.total} vérifiés · ${c.ok} trouvés, ${c.brand} avec la marque, ${c.ko} rien · enseignes : ${DT.chains.map(driveName).join(', ')}${DT.place ? ' · autour de ' + DT.place : ''}`;
+  $('#dtProgress').textContent = `${c.total - c.none} / ${c.total} vérifiés · ${c.ok} trouvés, ${c.brand} avec l'autre lien, ${c.ko} rien · enseignes : ${DT.chains.map(driveName).join(', ')}${DT.place ? ' · autour de ' + DT.place : ''}`;
 }
 function dtRender(){
   if (!DT) return;
@@ -3633,7 +3770,8 @@ function dtRender(){
     const p = it.p, terms = driveTerms(p), brand = driveBrand(p);
     const rows = it.chains.map(id => {
       const k = p.code + '|' + id, v = DT.res[k] || '';
-      return `<div class="dtrow"><div class="dttop"><a href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener">${esc(driveName(id))} ›</a>${brand && brand !== terms ? `<a class="dtbrand" href="${esc(driveUrl(p, id, true))}" target="_blank" rel="noopener">marque seule ›</a>` : ''}</div>
+      const alt = driveAlt(p, id), mode = driveMode(p, id);
+      return `<div class="dtrow"><div class="dttop"><a href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener">${esc(driveName(id))}${mode === 'nom' ? '' : ' (code-barres)'} ›</a>${alt ? `<a class="dtbrand" href="${esc(alt.href)}" target="_blank" rel="noopener">${mode === 'nom' ? 'marque seule' : 'par nom'} ›</a>` : ''}</div>
         <div class="seg" data-k="${esc(k)}" data-v="${v}" role="group" aria-label="Résultat chez ${esc(driveName(id))}">${Object.entries(DT_RES).map(([val, lab]) => `<button type="button" data-v="${val}" aria-pressed="${v === val}">${lab}</button>`).join('')}</div></div>`;
     }).join('');
     return `<li><b>${esc(nameOf(p))}</b><small class="meta">${esc([brandOf(p), ...dtCases(p)].filter(Boolean).join(' · '))}</small>
@@ -3646,14 +3784,14 @@ function dtReport(){
   for (const it of DT.items) for (const id of it.chains){
     const v = DT.res[it.p.code + '|' + id] || 'none';
     (by[id] || (by[id] = { ok:0, brand:0, ko:0, none:0 }))[v]++;
-    L[v].push(`- ${driveName(id)} · « ${driveTerms(it.p)} » · ${nameOf(it.p)}${brandOf(it.p) ? ' (' + brandOf(it.p) + ')' : ''} · ${it.p.code} · ${it.seen.includes(id) ? 'vu dans l\'enseigne' : 'pas signalé dans l\'enseigne'}${dtCases(it.p).length ? ' · ' + dtCases(it.p).join(', ') : ''}`);
+    L[v].push(`- ${driveName(id)} · ${driveMode(it.p, id) === 'nom' ? '« ' + driveTerms(it.p) + ' »' : 'code-barres'} · ${nameOf(it.p)}${brandOf(it.p) ? ' (' + brandOf(it.p) + ')' : ''} · ${it.p.code} · ${it.seen.includes(id) ? 'vu dans l\'enseigne' : 'pas signalé dans l\'enseigne'}${dtCases(it.p).length ? ' · ' + dtCases(it.p).join(', ') : ''}`);
   }
   const c = dtCount();
   const out = [`Rapport liens drive · Rayon sûr ${APP_VERSION} · ${new Date().toLocaleString('fr-FR')}`,
     `Autour de : ${DT.place || 'position inconnue'} · enseignes : ${DT.chains.map(driveName).join(', ')}`,
-    `Résultat : ${c.ok} trouvés, ${c.brand} avec la marque seulement, ${c.ko} rien trouvé, ${c.none} non testés`, '', 'Par enseigne :'];
-  for (const id in by) out.push(`- ${driveName(id)} : ${by[id].ok} trouvés, ${by[id].brand} avec la marque, ${by[id].ko} rien, ${by[id].none} non testés`);
-  for (const [k, t] of [['ko', 'Rien trouvé'], ['brand', 'Trouvé seulement avec la marque'], ['ok', 'Trouvé']]) if (L[k].length) out.push('', t + ' :', ...L[k]);
+    `Résultat : ${c.ok} trouvés, ${c.brand} seulement avec l'autre lien, ${c.ko} rien trouvé, ${c.none} non testés`, '', 'Par enseigne :'];
+  for (const id in by) out.push(`- ${driveName(id)} : ${by[id].ok} trouvés, ${by[id].brand} avec l'autre lien, ${by[id].ko} rien, ${by[id].none} non testés`);
+  for (const [k, t] of [['ko', 'Rien trouvé'], ['brand', 'Trouvé seulement avec l\'autre lien'], ['ok', 'Trouvé']]) if (L[k].length) out.push('', t + ' :', ...L[k]);
   return out.join('\n');
 }
 async function dtOpen(fresh = false){
@@ -3685,7 +3823,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.10';
+const APP_VERSION = '3.11';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -3707,7 +3845,7 @@ $('#themeChips').addEventListener('click', e => {
 renderProfile(); updateBadge(); renderQuick();
 if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
-go(SCREENS.includes(start) ? start : 'search');
+go(SCREENS.includes(start) ? start : 'search', { init:true });
 loadIndex();
 renderNearUI();
 // l'accueil demande la position à la fin ; ensuite, mise à jour automatique à chaque ouverture

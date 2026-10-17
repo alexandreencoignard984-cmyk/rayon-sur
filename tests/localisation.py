@@ -316,7 +316,7 @@ def main():
         page.wait_for_selector('#sheet[open] .drivebtn', timeout=8000)
         hrefs = page.eval_on_selector_all('#sheet .drivebtn .dmain', 'els => els.map(e => e.href)')
         txt = page.inner_text('#sheet .drives')
-        check(len(hrefs) >= 2 and 'Voir le stock' in txt, f'{len(hrefs)} liens « Voir le stock » : ' + txt.replace('\n', ' | ')[:120])
+        check(len(hrefs) >= 2 and ('Voir le produit' in txt or 'Chercher' in txt), f'{len(hrefs)} liens vers les drives : ' + txt.replace('\n', ' | ')[:120])
         check(any('carrefour.fr/s?q=' in h for h in hrefs) or any('e.leclerc/recherche?q=' in h for h in hrefs), 'recherche directe sur le site de l\'enseigne')
         page.click('#sheetClose')
         sojade = {'code': '3273220020018', 'product_name': 'À la Grecque Greek Style Nature-Natural', 'brands': 'Sojade', 'stores_tags': ['biocoop']}
@@ -328,7 +328,7 @@ def main():
         page.click('#whereList [data-drive="carrefour"]')
         page.wait_for_selector('#driveSheet[open]')
         dl = page.eval_on_selector_all('#driveList a.dmain', 'els => els.map(e => e.href)')
-        check(page.inner_text('#driveTitle') == 'Ma liste chez Carrefour' and len(dl) == 1 and "carrefour.fr/s?q=Carte%20d%27Or%20Glace%20vanille" in dl[0] and page.locator('#driveList .dalt').count() == 1, 'Ma liste chez Carrefour : ' + (dl[0] if dl else '∅'))
+        check(page.inner_text('#driveTitle') == 'Ma liste chez Carrefour' and len(dl) == 1 and "carrefour.fr/s?q=3017620422003" in dl[0] and page.locator('#driveList .dalt').count() == 1 and 'Carte' in page.inner_text('#driveList .dalt'), 'Ma liste chez Carrefour : ' + (dl[0] if dl else '∅'))
         check('Vu dans l\'enseigne' in page.inner_text('#driveList'), 'disponibilité indiquée')
         page.screenshot(path=os.path.join(OUT, 'drive-liste.png'))
         check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
