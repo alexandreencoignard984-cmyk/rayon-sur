@@ -46,6 +46,13 @@
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 html.locked,html.locked body{overflow:hidden}
+/* mise en page d'appli : seul le contenu défile, la page elle-même ne bouge jamais. Les barres du navigateur
+   ne se replient donc pas et la barre d'onglets reste collée en bas (iOS 26 décale les éléments « fixed »
+   quand la barre d'adresse se replie ou après le clavier) */
+html,body{height:100%}
+body{position:relative;overflow:hidden}
+.app{display:flex;flex-direction:column;height:100%}
+.scroller{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:17px;line-height:1.4;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-user-select:none;user-select:none}
@@ -55,7 +62,7 @@ button{cursor:pointer;-webkit-user-select:none;user-select:none}
 [hidden]{display:none!important}
 svg{flex:none}
 
-.wrap{max-width:40rem;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 28px)}
+.wrap{max-width:40rem;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 28px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0 12px}
 h1{font-family:var(--display);font-stretch:75%;font-weight:800;font-size:34px;line-height:1.05;letter-spacing:-.01em;margin:0}
 h2{font-size:20px;font-weight:700;line-height:1.2;margin:0}
@@ -209,7 +216,7 @@ input[type=text],select.plain{font-size:16px;background:var(--sunk);border:0;bor
 .filebtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
 
 /* barre d'onglets */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);max-width:40rem;margin:0 auto;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 var(--line)}
+.tabbar{position:relative;flex:none;width:100%;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);max-width:40rem;margin:0 auto;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -1px 0 var(--line)}
 .tabbar button{display:grid;justify-items:center;align-content:center;gap:2px;height:var(--tabbar);border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:600;position:relative}
 .tabbar button svg{width:26px;height:26px}
 .tabbar button[aria-current="page"]{color:var(--ok)}
@@ -370,6 +377,13 @@ div.rowbtn{cursor:default}
 .drivebtn .dalt{display:block;margin-top:-6px;padding:0 14px 10px;font-size:13px;color:var(--muted)}
 .drivebtn b{display:block;font-size:16px}
 .drivebtn small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
+.dhelp{margin-top:10px;font-size:14px;color:var(--muted)}
+.dhelp>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px;padding:6px 2px;color:var(--ink);font-weight:600}
+.dhelp>summary::-webkit-details-marker{display:none}
+.dhelp>summary::after{content:"›";color:var(--muted);transition:transform .2s}
+.dhelp[open]>summary::after{transform:rotate(90deg)}
+.dhelp p{margin:6px 2px}
+.dcopy{display:flex;flex-wrap:wrap;gap:8px;margin:10px 2px 2px}
 .drivebtn small.dseen{color:var(--ok);font-weight:600}
 .drivebtn small.dunk{color:var(--warn)}
 .drivebtn .go{flex:none;color:var(--ok);font-weight:650;font-size:15px}
@@ -421,8 +435,9 @@ div.rowbtn{cursor:default}
 footer{margin:20px 4px 0;font-size:13px;color:var(--muted)}
 footer a{color:inherit}
 
-.toast{position:fixed;left:16px;right:16px;bottom:calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 12px);z-index:30;max-width:28rem;margin:0 auto;padding:12px 16px;border-radius:14px;background:var(--toastbg);color:#fff;font-size:15px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.22);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(var(--tabbar) + env(safe-area-inset-bottom,0px) + 12px);z-index:30;max-width:28rem;margin:0 auto;padding:12px 16px;border-radius:14px;background:var(--toastbg);color:#fff;font-size:15px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.22);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:none}
+dialog .toast{position:fixed}
 .toast{display:flex;align-items:center;justify-content:space-between;gap:14px}
 .toast.show.hasact{pointer-events:auto}
 .tact{flex:none;border:0;background:transparent;color:#8BE3B4;font-weight:700;font-size:15px;padding:6px 0;white-space:nowrap}
@@ -458,6 +473,8 @@ footer a{color:inherit}
     <symbol id="i-leaf" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/></g></symbol>
   </defs>
 </svg>
+<div class="app">
+<main class="scroller" id="scroller">
 <div class="wrap">
 
   <!-- RECHERCHE -->
@@ -736,6 +753,7 @@ footer a{color:inherit}
     <footer>Données <a href="https://fr.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, <a href="https://rappel.conso.gouv.fr" target="_blank" rel="noopener">RappelConso</a> et <a href="https://prices.openfoodfacts.org" target="_blank" rel="noopener">Open Prices</a> et © les contributeurs d'<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, licences ouvertes. Rayon sûr <span id="appVersion"></span>.</footer>
   </section>
 </div>
+</main>
 
 <nav class="tabbar" aria-label="Navigation">
   <button type="button" data-go="search" aria-current="page"><svg aria-hidden="true"><use href="#i-search"/></svg>Rechercher</button>
@@ -744,6 +762,7 @@ footer a{color:inherit}
   <button type="button" data-go="list"><svg aria-hidden="true"><use href="#i-list"/></svg>Ma liste<span class="badge" id="listBadge" hidden></span></button>
   <button type="button" data-go="profile"><svg aria-hidden="true"><use href="#i-user"/></svg>Profil</button>
 </nav>
+</div>
 
 <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
   <div class="sheet-in">
@@ -917,6 +936,7 @@ footer a{color:inherit}
       <p class="hint" id="driveHint" style="margin:0 4px 12px"></p>
       <div class="group"><ul class="dlist" id="driveList"></ul></div>
       <p class="hint" style="margin:10px 4px 0">Les stocks des drives ne sont pas publics : l'appli ouvre le site de l'enseigne sur le produit, et c'est lui qui affiche le stock du drive choisi.</p>
+      <div id="driveHelp" style="margin:0 4px"></div>
     </div>
   </div>
 </dialog>
@@ -1558,8 +1578,12 @@ window.addEventListener('popstate', e => {
   }
   go(sc, { pop:true });
 });
+const scrollMem = {};
+function scrollBox(){ return document.getElementById('scroller'); }
 function go(name, { pop = false, init = false, replace = false } = {}){
   if (!SCREENS.includes(name)) name = 'search';
+  const prev = screenNow;
+  if (prev !== name) scrollMem[prev] = scrollBox().scrollTop;
   SCREENS.forEach(s => { $('#screen-' + s).hidden = s !== name; });
   $$('.tabbar button').forEach(b => { if (b.dataset.go === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   if (name !== 'scan') stopCamera();
@@ -1570,9 +1594,15 @@ function go(name, { pop = false, init = false, replace = false } = {}){
   if (init || replace) navReplace({ screen:name }, navUrl(name));
   else if (!pop && name !== screenNow) navPush({ screen:name }, navUrl(name));
   screenNow = name;
-  window.scrollTo(0, 0);
+  // chaque onglet retrouve sa position (comme dans une appli) ; un nouvel écran commence en haut
+  scrollBox().scrollTop = prev === name ? scrollBox().scrollTop : (scrollMem[name] || 0);
 }
-$$('.tabbar button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+$$('.tabbar button').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.go !== screenNow){ go(b.dataset.go); return; }
+  // onglet déjà ouvert : retour à la liste des recettes, sinon en haut de l'écran
+  if (screenNow === 'recipes' && !$('#recDetail').hidden){ $('#recBack').click(); return; }
+  try { scrollBox().scrollTo({ top:0, behavior:'smooth' }); } catch (e) { scrollBox().scrollTop = 0; }
+}));
 document.addEventListener('click', e => { const g = e.target.closest('[data-go]:not(.tabbar button)'); if (g) go(g.dataset.go); });
 
 /* ================= Écran recherche ================= */
@@ -1658,8 +1688,8 @@ async function runSearch({ scroll = false } = {}){
   else { if (withSafe) R.sets.safe = buildSet('safe', ctx); R.sets.all = buildSet('all', ctx); }
   await loadSet(withSafe ? R.sets.safe : R.sets.all, true);
   if (scroll && myR === R && !$('#results').hidden){
-    const y = $('#results').getBoundingClientRect().top + window.scrollY - 12;
-    try { window.scrollTo({ top:y, behavior:'smooth' }); } catch (e) { window.scrollTo(0, y); }
+    const box = scrollBox(), y = $('#results').getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 12;
+    try { box.scrollTo({ top:y, behavior:'smooth' }); } catch (e) { box.scrollTop = y; }
   }
 }
 const SPIN = '<span class="spin" aria-hidden="true"></span> ';
@@ -2063,10 +2093,10 @@ $('#sheetBody').addEventListener('click', async e => {
 });
 function drawKeepScroll(){
   const body = $('#sheetBody'); const y = body.scrollTop; const alts = $('#alts') && $('#alts').innerHTML; const pr = $('#prices') && $('#prices').innerHTML;
-  const open = $$('#sheetBody details.more').map(d => d.open);
+  const open = $$('#sheetBody details').map(d => d.open);
   drawSheet();
   if (alts) $('#alts').innerHTML = alts; if (pr) $('#prices').innerHTML = pr;
-  $$('#sheetBody details.more').forEach((d, i) => { if (open[i]) d.open = true; });
+  $$('#sheetBody details').forEach((d, i) => { if (open[i]) d.open = true; });
   body.scrollTop = y;
 }
 function refreshVisibleLists(){ if (R) render(); if (!$('#screen-list').hidden) renderLists(); if (!$('#screen-scan').hidden) renderHistory(); }
@@ -2691,7 +2721,7 @@ async function pickProducts(ing, st){
 
 /* --- écran Recettes --- */
 let RV = null;
-const recView = name => { $('#recHome').hidden = name !== 'home'; $('#recDetail').hidden = name !== 'detail'; $('#recEditor').hidden = name !== 'edit'; window.scrollTo(0, 0); };
+const recView = name => { $('#recHome').hidden = name !== 'home'; $('#recDetail').hidden = name !== 'detail'; $('#recEditor').hidden = name !== 'edit'; scrollBox().scrollTop = 0; };
 function renderRecHome(){
   const q = $('#recQ').value.trim();
   const words = fold(q).split(/\s+/).filter(Boolean);
@@ -3648,6 +3678,20 @@ function linkChains(p){
   // sans drive (Lidl, Aldi, Netto) : seulement si le produit y a été vu
   return [...new Set(base)].filter(id => DRIVES[id] && (!DRIVES[id].noDrive || info.seen.includes(id))).slice(0, 3);
 }
+// sites qui vérifient qu'on n'est pas un robot (Super U…) : la vérification échoue souvent en navigation privée
+function driveHelp(links = []){
+  return `<details class="dhelp"><summary>Le site bloque ou affiche « Vérification de sécurité » ?</summary>
+    <p>Certains sites (Super U notamment) vérifient que tu n'es pas un robot. Cette vérification échoue souvent en <b>navigation privée</b>, avec un <b>VPN</b>, « Masquer l'adresse IP » ou un bloqueur de publicités.</p>
+    <p>Ouvre Rayon sûr dans un onglet normal de Safari et réessaie${links.length ? ', ou copie le lien et colle-le dans Safari' : ''}. En navigation privée, ta liste et ton profil sont aussi effacés quand tu fermes l'onglet.</p>
+    ${links.length ? `<div class="dcopy">${links.map(l => `<button type="button" class="ghost small" data-copy="${esc(l.href)}">Copier le lien ${esc(driveName(l.id))}</button>`).join('')}</div>` : ''}</details>`;
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const url = b.dataset.copy;
+  try { await navigator.clipboard.writeText(url); toast('Lien copié : colle-le dans la barre d\'adresse de Safari.', 3500); return; } catch (err) {}
+  try { if (navigator.share){ await navigator.share({ url }); return; } } catch (err) { if (err && err.name === 'AbortError') return; }
+  window.prompt('Copie ce lien :', url);
+});
 function driveCard(p){
   if (!p || p._fresh) return '';
   const ids = linkChains(p); if (!ids.length) return '';
@@ -3664,7 +3708,7 @@ function driveCard(p){
   const exact = ids.some(id2 => driveMode(p, id2) !== 'nom');
   return `<section class="card"><h3>Stock au drive</h3>
     <p class="hint">${exact ? '« Voir le produit » ouvre ce produit précis grâce à son code-barres. ' : ''}« Chercher » lance une recherche par nom : vérifie que c'est bien <b>${esc(id)}</b>. Le site affiche le stock du drive que tu y as choisi.</p>
-    <div class="drives">${rows}</div></section>`;
+    <div class="drives">${rows}</div>${driveHelp(ids.map(id2 => ({ id:id2, href:driveUrl(p, id2) })))}</section>`;
 }
 // « Ma liste chez Carrefour » : chaque produit de la liste, à ouvrir sur le site
 function openDriveList(id){
@@ -3678,6 +3722,7 @@ function openDriveList(id){
     const how = mode === 'nom' ? `Recherche : « ${driveTerms(x.p)} »` : 'Recherche par le code-barres : le produit exact';
     return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), x.p.quantity, note].filter(Boolean).join(' · '))}</small><small class="meta">${esc(how)}</small></span><span class="go">Voir</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</li>`;
   }).join('') : '<li><p class="hint" style="padding:12px 16px">Ta liste est vide.</p></li>';
+  $('#driveHelp').innerHTML = d.noDrive ? '' : driveHelp();
   openDialog($('#driveSheet'));
 }
 $('#driveClose').addEventListener('click', () => closeDialog($('#driveSheet')));
@@ -3823,7 +3868,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.11';
+const APP_VERSION = '3.12';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -3851,6 +3896,15 @@ renderNearUI();
 // l'accueil demande la position à la fin ; ensuite, mise à jour automatique à chaque ouverture
 if (!FIRST_RUN) autoLocate('start');
 if (S.ran && (!start || start === 'search')) runSearch();
+// iOS : après le clavier, la page peut rester décalée vers le haut. Elle ne doit jamais défiler (seul le contenu
+// défile) : on la remet en place, sauf pendant une saisie ou un zoom avec deux doigts.
+function resetPage(){
+  const a = document.activeElement, typing = a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
+  const zoomed = window.visualViewport && visualViewport.scale > 1.01;
+  if (!typing && !zoomed && (window.scrollY || document.documentElement.scrollTop || document.body.scrollTop)) window.scrollTo(0, 0);
+}
+document.addEventListener('focusout', () => setTimeout(resetPage, 150));
+if (window.visualViewport) visualViewport.addEventListener('resize', () => setTimeout(resetPage, 150));
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
 window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, dtReport:() => DT && dtReport(), getDT:() => DT };

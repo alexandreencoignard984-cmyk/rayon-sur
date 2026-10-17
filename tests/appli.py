@@ -10,7 +10,10 @@ with sync_playwright() as p:
     print('A. Recherche glaces chez Leclerc')
     ctx, page, errs, _ = new_page(b, base, geo=None, granted=False, init={'rs2:search': {'store': 'leclerc', 'rayon': 'en:ice-creams-and-sorbets', 'ran': True}})
     page.wait_for_selector('#results:not([hidden])', timeout=20000)
-    n = int(page.inner_text('#n-ok'))
+    n, prev = -1, -2
+    for _ in range(40):                      # les verdicts arrivent par paquets : on attend que le compte ne bouge plus
+        if n == prev and n > 0: break
+        prev, n = n, int(page.inner_text('#n-ok') or 0); page.wait_for_timeout(500)
     check(n > 50, f'{n} glaces compatibles chez Leclerc')
     check(not page.is_visible('#nearLine'), 'pas de ligne « près de moi » pour un magasin choisi')
     print('B. Recette bolognaise')
