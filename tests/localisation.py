@@ -107,7 +107,8 @@ def setup_routes(ctx, mode):
     ctx.route(re.compile(r'.*data\.geopf\.fr.*'), geopf)
     ctx.route(re.compile(r'.*nominatim.*'), lambda r: j(r, [{'lat': '48.6844', 'lon': '-1.3569', 'display_name': 'Avranches, Manche'}]))
     # le reste d'internet : réponses vides
-    ctx.route(re.compile(r'.*(openfoodfacts|economie\.gouv|unpkg|jsdelivr|google).*'), lambda r: j(r, {'products': [], 'count': 0, 'results': [], 'items': [], 'total_count': 0}))
+    ctx.route(re.compile(r'.*(openfoodfacts|economie\.gouv|google).*'), lambda r: j(r, {'products': [], 'count': 0, 'results': [], 'items': [], 'total_count': 0}))
+    ctx.route(re.compile(r'.*(unpkg|jsdelivr|cdnjs).*'), lambda r: r.fulfill(status=404, body=''))   # scripts externes (lecteur de codes-barres) indisponibles
     return ov_calls
 
 

@@ -220,7 +220,7 @@ def main():
             chains[r[0]] = chains.get(r[0], 0) + 1
     total = sum(chains.values())
     log(f'{total} magasins, {len(tiles)} tuiles ({kept} reprises), {len(failed)} carrés en échec', chains)
-    if total < int(os.environ.get('MIN_STORES', 5000)):
+    if total < int(os.environ.get('MIN_STORES', 10000)):
         log('Trop peu de magasins : on garde les fichiers existants.')
         return 0
     tmp = OUT + '.tmp'

@@ -161,6 +161,11 @@ def main():
             by_aisle[AISLES[i]].append((rank, sc, code, row))
     del rows
     log('produits retenus :', kept_codes)
+    # export tronqué ou format changé chez Open Food Facts : on garde la base de la semaine précédente
+    min_products = int(os.environ.get('MIN_PRODUCTS', 100000))
+    if kept_codes < min_products:
+        log(f'ARRÊT : {kept_codes} produits seulement (minimum {min_products}), la base existante est conservée.')
+        sys.exit(1)
 
     os.makedirs(os.path.join(OUT, 'a'), exist_ok=True)
     written = set()

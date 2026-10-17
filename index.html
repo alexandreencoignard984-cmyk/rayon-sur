@@ -1026,21 +1026,55 @@ const ls = {
 };
 const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history', recipes:'rs2:recipes', theme:'rs2:theme' };
 
+/* Données enregistrées : ce qui est abîmé (ancienne version, mémoire corrompue, fichier importé) est
+   ignoré ou réparé au chargement, plutôt que de bloquer l'appli. */
+const isObj = v => !!v && typeof v === 'object' && !Array.isArray(v);
+const fin = v => typeof v === 'number' && isFinite(v);
+const P_TEXT = ['product_name', 'product_name_fr', 'generic_name_fr', 'brands', 'quantity', 'stores', 'ingredients_text', 'ingredients_text_fr',
+  'image_front_small_url', 'image_front_url', 'nutriscore_grade', 'ecoscore_grade', 'compared_to_category'];
+const P_TAGS = ['allergens_tags', 'traces_tags', 'labels_tags', 'ingredients_analysis_tags', 'additives_tags', 'stores_tags', 'categories_tags', '_al'];
+function cleanP(p){
+  if (!isObj(p) || p.code == null || p.code === '') return null;
+  const o = Object.assign({}, p, { code:String(p.code) });
+  for (const f of P_TEXT) if (o[f] != null && typeof o[f] !== 'string'){ if (typeof o[f] === 'number') o[f] = String(o[f]); else delete o[f]; }
+  for (const f of P_TAGS) if (o[f] != null) o[f] = Array.isArray(o[f]) ? o[f].filter(t => typeof t === 'string') : [];
+  if (o.nutriments != null && !isObj(o.nutriments)) delete o.nutriments;
+  if (o.nutrient_levels != null && !isObj(o.nutrient_levels)) delete o.nutrient_levels;
+  return o;
+}
+// élément de liste, de favoris ou d'historique : { code, p, ... }
+function cleanEntry(x){
+  if (!isObj(x)) return null;
+  const p = cleanP(x.p); if (!p) return null;
+  return Object.assign({}, x, { code:String(x.code != null && x.code !== '' ? x.code : p.code), p, done:x.done === true, at:fin(x.at) ? x.at : 0, for:typeof x.for === 'string' ? x.for : undefined });
+}
+const cleanList = a => (Array.isArray(a) ? a : []).map(cleanEntry).filter(Boolean);
+function cleanFavs(o){ const out = {}; if (isObj(o)) for (const [k, v] of Object.entries(o)){ const e = cleanEntry(Object.assign({ code:k }, isObj(v) ? v : {})); if (e) out[e.code] = { p:e.p, at:e.at }; } return out; }
+function cleanProfile(d){
+  const o = isObj(d) ? d : {};
+  return { sel:new Set((Array.isArray(o.sel) ? o.sel : []).filter(k => ALLERGENS.some(a => a.key === k))), traces:o.traces === true,
+    words:(Array.isArray(o.words) ? o.words : []).filter(w => typeof w === 'string' && w.trim()).map(w => w.trim().slice(0, 40)).slice(0, 30) };
+}
+
 const FIRST_RUN = ls.get(K.profile, null) === null;
-const profile = Object.assign({ sel:[], traces:false, words:[] }, ls.get(K.profile, {}));
-profile.sel = new Set((profile.sel || []).filter(k => ALLERGENS.some(a => a.key === k)));
-profile.words = Array.isArray(profile.words) ? profile.words.filter(w => typeof w === 'string' && w.trim()).slice(0, 30) : [];
+const profile = cleanProfile(ls.get(K.profile, {}));
 let PV = 0;
 const saveProfile = () => { PV++; ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words }); };
 
-const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', wide:true, ran:false }, ls.get(K.search, {}));
+const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', wide:true, ran:false },
+  isObj(ls.get(K.search, null)) ? ls.get(K.search, {}) : {});
 if (S.store !== 'near' && !STORES.some(s => s.id === S.store)) S.store = 'leclerc';
-if (!(S.rayon in RAYON_NAME)) S.rayon = 'en:ice-creams-and-sorbets';
+if (typeof S.rayon !== 'string' || !(S.rayon in RAYON_NAME)) S.rayon = 'en:ice-creams-and-sorbets';
+if (!['', 'a', 'b', 'c', 'd'].includes(S.nutri)) S.nutri = '';
+if (!['', '1', '2', '3'].includes(String(S.nova || ''))) S.nova = '';
+if (!['popularity', 'nutriscore', 'nova', 'green', 'name'].includes(S.sort)) S.sort = 'popularity';
+if (typeof S.terms !== 'string') S.terms = '';
+for (const k of ['bio', 'vegan', 'vegetarian', 'palm', 'wide', 'ran']) S[k] = !!S[k];
 const saveSearch = () => ls.set(K.search, S);
 
-let favs = ls.get(K.favs, {}); if (!favs || typeof favs !== 'object' || Array.isArray(favs)) favs = {};
-let shop = ls.get(K.shop, []); if (!Array.isArray(shop)) shop = [];
-let hist = ls.get(K.hist, []); if (!Array.isArray(hist)) hist = [];
+let favs = cleanFavs(ls.get(K.favs, {}));
+let shop = cleanList(ls.get(K.shop, []));
+let hist = cleanList(ls.get(K.hist, [])).slice(0, 40);
 const saveFavs = () => ls.set(K.favs, favs) || toast('Mémoire du téléphone pleine : favori non enregistré.');
 const saveShop = () => ls.set(K.shop, shop) || toast('Mémoire du téléphone pleine : liste non enregistrée.');
 const saveHist = () => ls.set(K.hist, hist);
@@ -1094,10 +1128,31 @@ const ingredientsOf = p => (p.ingredients_text_fr || p.ingredients_text || '').t
 const NEAR_KEY = 'rs2:near', LOC_KEY = 'rs2:loc';
 let near = ls.get(NEAR_KEY, null);
 // réglages : suivre la position, ville choisie ou GPS, distance (0 = auto), enseignes écartées
-const loc = Object.assign({ auto:true, mode:'gps', radius:0, off:[], okAt:0, pinned:false }, ls.get(LOC_KEY, null) || {});
-if (!Array.isArray(loc.off)) loc.off = [];
+const loc = Object.assign({ auto:true, mode:'gps', radius:0, off:[], okAt:0, pinned:false }, isObj(ls.get(LOC_KEY, null)) ? ls.get(LOC_KEY, {}) : {});
+loc.off = (Array.isArray(loc.off) ? loc.off : []).filter(x => typeof x === 'string');
+if (![0, 5, 10, 20, 40].includes(loc.radius)) loc.radius = 0;
+loc.auto = loc.auto !== false; loc.pinned = loc.pinned === true;
+if (!fin(loc.okAt)) loc.okAt = 0;
+if (!(isObj(loc.home) && fin(loc.home.lat) && fin(loc.home.lon))) loc.home = null;
+else for (const f of ['main', 'city', 'full', 'kind']) if (typeof loc.home[f] !== 'string') loc.home[f] = f === 'kind' ? 'place' : String(loc.home.city || loc.home.main || 'Mon adresse');
+function cleanNear(n){
+  if (!isObj(n) || !isObj(n.stores)) return null;
+  for (const [id, x] of Object.entries(n.stores)) if (!isObj(x) || !fin(x.dist) || !fin(x.lat) || !fin(x.lon)) delete n.stores[id];
+  if (!fin(n.lat) || !fin(n.lon)) return null;
+  if (typeof n.label !== 'string') n.label = '';
+  if (n.places != null){
+    if (!Array.isArray(n.places)) return null;
+    n.places = n.places.filter(r => Array.isArray(r) && typeof r[0] === 'string' && fin(r[1]) && fin(r[2]));
+    if (!isObj(n.cnt)) n.cnt = {};
+    if (!fin(n.plat) || !fin(n.plon)){ n.plat = n.lat; n.plon = n.lon; }
+    if (!fin(n.r)) n.r = 10;
+    if (!fin(n.loadR)) n.loadR = 25;
+  }
+  return n;
+}
+near = cleanNear(near);
+if (loc.mode !== 'city' || (!loc.home && !(near && near.src === 'city'))) loc.mode = 'gps';
 // ancien format (avant la base des magasins) : gardé jusqu'à la prochaine mise à jour
-if (near && (!near.stores || typeof near.stores !== 'object')) near = null;
 if (near && !Array.isArray(near.places)){
   const gps = !near.label || near.label === 'ta position';
   near = Object.assign(near, { r:15, src:gps ? 'gps' : 'city', label:gps ? '' : near.label, plat:near.lat, plon:near.lon, fixAt:0, old:true });
@@ -1149,7 +1204,7 @@ function gtinOK(code, format){
 /* ================= Réseau : cache et limite ================= */
 const cache = new Map();
 const WINDOW = 60000, BUDGET = 9;
-let stamps = (() => { try { return JSON.parse(sessionStorage.getItem('rs2:stamps') || '[]'); } catch (e) { return []; } })();
+let stamps = (() => { try { const a = JSON.parse(sessionStorage.getItem('rs2:stamps') || '[]'); return Array.isArray(a) ? a.filter(fin) : []; } catch (e) { return []; } })();
 async function searchSlot(){
   for (;;){
     const now = Date.now(); stamps = stamps.filter(t => now - t < WINDOW);
@@ -1171,6 +1226,7 @@ async function fetchOnce(url, ms){
   try {
     const r = await fetch(url, { signal:ctl.signal });
     if (r.status === 429){
+      if (!url.startsWith(OFF)) throw err('http', { status:429 });
       const now = Date.now(); stamps = Array.from({ length:BUDGET }, () => now);
       throw err('rate');
     }
@@ -1561,6 +1617,11 @@ async function loadLocal(set, first){
       if (myR !== R) return;
       if (terms.length) prods = prods.filter(p => { const h = fold([nameOf(p), p.brands, p.quantity].join(' ')); return terms.every(w => h.includes(w)); });
       mergeProducts(myR, prods, ['safe', 'all']);
+      // verdicts calculés par paquets : l'écran reste fluide pendant le chargement d'un gros rayon
+      for (let i = 0; i < prods.length; i += 300){
+        for (let k = i; k < Math.min(i + 300, prods.length); k++){ const e = myR.products.get(String(prods[k].code)); if (e && e.pv !== PV){ e.ev = evaluate(e.p); e.pv = PV; } }
+        await sleep(0); if (myR !== R) return;
+      }
       v.more = false; set.loaded = true;
       render();
     } catch (e) { lastErr = e; break; }
@@ -1976,7 +2037,8 @@ async function loadPrices(p, btn){
     const items = (j.items || []).filter(x => x && x.price != null);
     if (!items.length){ box.innerHTML = '<p class="hint">Aucun prix relevé pour ce produit dans Open Prices.</p>'; return; }
     const st = storeById(S.store);
-    const where = x => { const l = x.location || {}; return [l.osm_brand || l.osm_name || (l.website_url ? new URL(l.website_url).hostname : ''), l.osm_address_city].filter(Boolean).join(', ') || 'Magasin non précisé'; };
+    const host = u => { try { return new URL(u).hostname; } catch (e) { return ''; } };
+    const where = x => { const l = x.location || {}; return [l.osm_brand || l.osm_name || (l.website_url ? host(l.website_url) : ''), l.osm_address_city].filter(Boolean).join(', ') || 'Magasin non précisé'; };
     const here = x => st.match && st.match.test(((x.location || {}).osm_brand || '') + ' ' + ((x.location || {}).osm_name || ''));
     const sorted = [...items.filter(here), ...items.filter(x => !here(x))].slice(0, 10);
     const money = x => { try { return Number(x.price).toLocaleString('fr-FR', { style:'currency', currency:x.currency || 'EUR' }); } catch (e) { return fmtNum(x.price, 2) + ' ' + (x.currency || ''); } };
@@ -2061,7 +2123,7 @@ function refreshSnapshots(p){
 $('#codeForm').addEventListener('submit', e => { e.preventDefault(); $('#code').blur(); lookup($('#code').value); });
 
 /* ================= Scanner ================= */
-const SC = { stream:null, running:false, det:null, detP:null, track:null, torch:false };
+const SC = { stream:null, running:false, starting:false, det:null, detP:null, track:null, torch:false };
 function loadScript(src){
   return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.async = true; s.crossOrigin = 'anonymous'; s.onload = res; s.onerror = () => rej(new Error('script')); document.head.appendChild(s); });
 }
@@ -2084,6 +2146,11 @@ function getDetector(){
 }
 function scanMsg(t){ $('#viewerMsg').textContent = t; }
 async function startCamera(){
+  if (SC.running || SC.starting) return;
+  SC.starting = true;
+  try { await openCamera(); } finally { SC.starting = false; }
+}
+async function openCamera(){
   const st = $('#scanStatus'); st.textContent = ''; st.classList.remove('err');
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ st.textContent = 'Ce navigateur ne donne pas accès à la caméra. Prends une photo du code-barres ou tape les chiffres.'; return; }
   const detP = getDetector();
@@ -2096,6 +2163,7 @@ async function startCamera(){
       : e && e.name === 'NotFoundError' ? 'Aucune caméra trouvée sur cet appareil.' : 'Impossible d\'ouvrir la caméra. Prends une photo du code-barres ou tape les chiffres.';
     return;
   }
+  if ($('#screen-scan').hidden){ stopCamera(); return; }   // l'utilisateur a quitté l'écran pendant l'autorisation
   const v = $('#video'); v.srcObject = SC.stream;
   $('#viewer').hidden = false; $('#scanIdle').hidden = true; SC.running = true;
   scanMsg('Préparation du scanner…');
@@ -2158,8 +2226,11 @@ $('#photo').addEventListener('change', async e => {
   try {
     const det = await getDetector();
     const url = URL.createObjectURL(f);
-    const img = new Image(); img.src = url;
-    try { await img.decode(); } catch (er) { await new Promise((res, rej) => { img.onload = res; img.onerror = rej; }); }
+    const img = new Image();
+    const loaded = new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('image')); });
+    img.src = url;
+    try { await img.decode(); } catch (er) { if (!(img.complete && img.naturalWidth)) await Promise.race([loaded, sleep(8000).then(() => { throw new Error('image'); })]); }
+    if (!img.naturalWidth){ URL.revokeObjectURL(url); throw new Error('image'); }
     const tries = [1600, 1000, 2400];
     let found = null;
     for (const max of tries){
@@ -2231,7 +2302,8 @@ $('#shareList').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(text); toast('Liste copiée'); } catch (e) { toast('Partage impossible sur ce navigateur'); }
 });
 $('#exportBtn').addEventListener('click', () => {
-  const data = { app:'rayon-sur', version:2, exported:new Date().toISOString(), profile:{ sel:[...profile.sel], traces:profile.traces, words:profile.words }, favs, shop, history:hist };
+  const data = { app:'rayon-sur', version:3, exported:new Date().toISOString(), profile:{ sel:[...profile.sel], traces:profile.traces, words:profile.words }, favs, shop, history:hist,
+    recipes:myRecipes, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
   const blob = new Blob([JSON.stringify(data)], { type:'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rayon-sur-sauvegarde.json';
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
@@ -2242,11 +2314,20 @@ $('#importFile').addEventListener('change', async e => {
     const d = JSON.parse(await f.text());
     if (!d || d.app !== 'rayon-sur') throw new Error('format');
     if (!confirm('Remplacer ton profil, ta liste et tes favoris par ceux du fichier ?')) return;
-    if (d.profile){ profile.sel = new Set((d.profile.sel || []).filter(k => ALLERGENS.some(a => a.key === k))); profile.traces = !!d.profile.traces; profile.words = (d.profile.words || []).filter(w => typeof w === 'string').slice(0, 30); saveProfile(); }
-    if (d.favs && typeof d.favs === 'object') { favs = d.favs; saveFavs(); }
-    if (Array.isArray(d.shop)) { shop = d.shop.filter(x => x && x.code && x.p); saveShop(); }
-    if (Array.isArray(d.history)) { hist = d.history.filter(x => x && x.code && x.p).slice(0, 40); saveHist(); }
-    renderProfile(); renderLists(); toast('Données importées');
+    if (isObj(d.profile)){ Object.assign(profile, cleanProfile(d.profile)); saveProfile(); }
+    if (isObj(d.favs)){ favs = cleanFavs(d.favs); saveFavs(); }
+    if (Array.isArray(d.shop)){ shop = cleanList(d.shop); saveShop(); }
+    if (Array.isArray(d.history)){ hist = cleanList(d.history).slice(0, 40); saveHist(); }
+    if (Array.isArray(d.recipes)){ myRecipes = cleanRecipes(d.recipes); saveMyRecipes(); }
+    if (isObj(d.stores)){
+      const h = d.stores.home;
+      if (isObj(h) && fin(h.lat) && fin(h.lon)) loc.home = { main:String(h.main || h.city || 'Mon adresse'), city:String(h.city || h.main || ''), full:String(h.full || h.city || ''), kind:String(h.kind || 'place'), lat:h.lat, lon:h.lon };
+      if ([0, 5, 10, 20, 40].includes(d.stores.radius)) loc.radius = d.stores.radius;
+      if (Array.isArray(d.stores.off)) loc.off = d.stores.off.filter(x => typeof x === 'string');
+      if (typeof d.stores.auto === 'boolean') loc.auto = d.stores.auto;
+      saveLoc(); if (near){ computeNear(); persistNear(); } refreshStoreSelects();
+    }
+    PV++; renderProfile(); renderLists(); if (R) render(); if (!$('#recHome').hidden) renderRecHome(); toast('Données importées');
   } catch (er) { toast('Ce fichier n\'est pas une sauvegarde Rayon sûr.'); }
 });
 
@@ -2272,8 +2353,9 @@ $('#wordForm').addEventListener('submit', e => {
 });
 $('#words').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (!b) return; profile.words.splice(Number(b.dataset.w), 1); profileChanged(); });
 $('#resetAll').addEventListener('click', () => {
-  if (!confirm('Effacer ton profil, ta liste, tes favoris et l\'historique ? C\'est définitif.')) return;
-  Object.values(K).forEach(ls.del);
+  if (!confirm('Effacer ton profil, ta liste, tes favoris, tes recettes, l\'historique et ton adresse ? C\'est définitif.')) return;
+  try { Object.keys(localStorage).filter(k => k.startsWith('rs2:')).forEach(ls.del); } catch (e) { Object.values(K).forEach(ls.del); }
+  try { sessionStorage.clear(); } catch (e) {}
   location.reload();
 });
 
@@ -2411,7 +2493,10 @@ const RECIPES = [
   { id:'far', n:'Far breton', g:'Desserts et goûter', syn:'bretagne pruneaux', i:[['farine',250,'g'],['oeufs',4],['lait',75,'cl'],['sucre',150,'g'],['pruneaux',200,'g',1],['beurre',20,'g']] },
 ];
 const REC_GROUPS = ['Mes recettes', 'Plats', 'Desserts et goûter'];
-let myRecipes = ls.get(K.recipes, []); if (!Array.isArray(myRecipes)) myRecipes = [];
+// mes recettes : { id, n, i:[[ingrédient], …] } ; ingrédients inconnus retirés
+const cleanRecipes = a => (Array.isArray(a) ? a : []).filter(r => isObj(r) && typeof r.id === 'string' && typeof r.n === 'string' && r.n.trim() && Array.isArray(r.i))
+  .map(r => ({ id:r.id, n:r.n.slice(0, 60), i:r.i.filter(x => Array.isArray(x) && typeof x[0] === 'string' && ING[x[0]]).map(x => [x[0]]) })).filter(r => r.i.length);
+let myRecipes = cleanRecipes(ls.get(K.recipes, []));
 const saveMyRecipes = () => ls.set(K.recipes, myRecipes);
 const allRecipes = () => [...myRecipes.map(r => Object.assign({ g:'Mes recettes', mine:true }, r)), ...RECIPES];
 
@@ -2471,8 +2556,10 @@ async function pickProducts(ing, st){
     for (const tag of cats){
       const a = aisleOf(tag); if (!a || !a.n) continue;
       for (let i = 0; i < a.pages && out.length < 12; i++){
-        for (const p of await aislePage(a, i)){
-          const nm = nameOf(p);
+        const page = await aislePage(a, i);
+        for (let k = 0; k < page.length; k++){
+          const p = page[k], nm = nameOf(p);
+          if (k % 400 === 399) await sleep(0);          // l'écran reste fluide
           if ((nrx && nrx.test(nm)) || !keep(p, nm) || otherChainOnly(p, st)) continue;
           const ev = evalP(p);
           if (ev.status === 'ok') out.push(p);
@@ -2681,7 +2768,7 @@ $('#pickClose').addEventListener('click', () => closeDialog(pickSheet));
 let ED = null;
 const ING_IDS = Object.keys(ING).sort((a, b) => ING[a].n.localeCompare(ING[b].n, 'fr'));
 function openEditor(r, name){
-  ED = { id:r ? r.id : null, items:r ? r.i.map(x => x[0]) : [] };
+  ED = { id:r ? r.id : null, items:r ? r.i.map(x => x[0]).filter(id => ING[id]) : [] };
   $('#edName').value = r ? r.n : (name || '');
   $('#edFilter').value = '';
   $('#edDelete').hidden = !r;
@@ -3044,7 +3131,7 @@ async function homeFallback(code, quiet){
     catch (e) { setLocState('error', e && e.code === 'offline' ? 'offline' : 'stores'); return false; }
   }
   const ok = afterNear(before, { quiet:true });
-  setLocState('error', code, true);
+  if (code && ok) setLocState('error', code, true);
   if (!quiet && !$('#nearSheet').open) toast('Position introuvable : l\'appli utilise ton adresse.', 4500);
   return ok;
 }
@@ -3472,8 +3559,18 @@ const DT_KEY = 'rs2:drivetest';
 const DT_AISLES = ['en:ice-creams-and-sorbets', 'en:non-dairy-yogurts', 'en:pastas', 'en:biscuits', 'en:breakfast-cereals', 'en:sauces',
   'en:cheeses', 'en:chocolates', 'en:plant-based-milk-alternatives', 'en:breads', 'en:prepared-meats', 'en:crisps'];
 const DT_RES = { ok:'Trouvé', brand:'Marque seule', ko:'Rien' };
-let DT = ls.get(DT_KEY, null);
-if (DT && (!Array.isArray(DT.items) || !DT.res)) DT = null;
+function cleanDT(d){
+  if (!isObj(d) || !Array.isArray(d.items)) return null;
+  const items = d.items.filter(isObj).map(it => {
+    const p = cleanP(it.p); if (!p) return null;
+    const chains = (Array.isArray(it.chains) ? it.chains : []).filter(id => DRIVES[id]);
+    return chains.length ? { p, chains, seen:(Array.isArray(it.seen) ? it.seen : []).filter(id => DRIVES[id]) } : null;
+  }).filter(Boolean);
+  if (!items.length) return null;
+  const res = {}; if (isObj(d.res)) for (const [k, v] of Object.entries(d.res)) if (DT_RES[v]) res[k] = v;
+  return { v:1, at:fin(d.at) ? d.at : 0, place:typeof d.place === 'string' ? d.place : '', chains:(Array.isArray(d.chains) ? d.chains : []).filter(id => DRIVES[id]), items, res };
+}
+let DT = cleanDT(ls.get(DT_KEY, null));
 const dtSave = () => ls.set(DT_KEY, DT);
 function rng(seed){ return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function dtChains(){
@@ -3497,22 +3594,29 @@ async function dtBuild(){
     const a = aisleOf(tag); if (!a) continue;
     try { for (const p of await aislePage(a, 0)) if (p.product_name && p.unique_scans_n > 0 && !pool.has(p.code)) pool.set(p.code, p); } catch (e) {}
   }
-  const list = [...pool.values()], r = rng(Date.now() & 0x7fffffff);
-  for (let i = list.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; }
+  const all = [...pool.values()], r = rng(Date.now() & 0x7fffffff);
+  for (let i = all.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
+  // 2 500 produits tirés au hasard suffisent, et le téléphone ne se fige pas pendant le tri
+  const list = all.slice(0, 2500);
+  await sleep(0);
+  const cases = new Map(list.map(p => [p.code, dtCases(p)]));
+  await sleep(0);
   const pick = new Map();
   const add = p => { if (pick.size < 20 && p && !pick.has(p.code)) pick.set(p.code, p); };
   shop.filter(x => !x.done && x.p && !x.p._fresh).slice(0, 4).forEach(x => add(x.p));                  // ta liste d'abord
   for (const id of chains){ const st = storeById(id); list.filter(p => seenAt(p, st)).slice(0, 3).forEach(add); }   // vus dans chaque enseigne
   for (const k of ['nom bilingue', 'nom long', 'sans marque', 'marque distributeur', 'bio', 'sans gluten ou lactose'])
-    list.filter(p => dtCases(p).includes(k)).slice(0, 2).forEach(add);                                    // cas difficiles
+    list.filter(p => cases.get(p.code).includes(k)).slice(0, 2).forEach(add);                             // cas difficiles
   list.slice().sort((a, b) => (b.unique_scans_n || 0) - (a.unique_scans_n || 0)).forEach(add);           // produits courants
   const items = [...pick.values()].map(p => {
     const q = { code:String(p.code), product_name:nameOf(p), brands:p.brands || '', stores_tags:p.stores_tags || [], labels_tags:p.labels_tags || [] };
     const seen = chains.filter(id => seenAt(q, storeById(id)));
     return { p:q, seen, chains:seen.length ? seen.slice(0, 2) : [chains[0]] };
   });
+  if (!items.length) return false;       // base de l'appli injoignable et liste vide
   DT = { v:1, at:Date.now(), place:placeLabel(), chains, items, res:{} };
   dtSave();
+  return true;
 }
 function dtCount(){
   const c = { ok:0, brand:0, ko:0, none:0, total:0 };
@@ -3556,7 +3660,7 @@ async function dtOpen(fresh = false){
   openDialog($('#dtSheet')); $('#dtText').hidden = true;
   if (fresh || !DT || Date.now() - DT.at > 30 * 86400e3){
     $('#dtList').innerHTML = ''; $('#dtProgress').innerHTML = SPIN + 'Choix des produits à tester…';
-    await dtBuild();
+    if (!await dtBuild()){ $('#dtProgress').textContent = 'La base de l\'appli ne répond pas : vérifie ta connexion et rouvre cette page.'; return; }
   }
   dtRender();
 }
@@ -3581,7 +3685,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.9';
+const APP_VERSION = '3.10';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
