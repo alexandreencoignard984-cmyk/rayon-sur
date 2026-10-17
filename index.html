@@ -351,17 +351,18 @@ div.rowbtn{cursor:default}
 .homeinfo .hint{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .textbtn.danger{color:var(--no)}
 .drives{display:grid;gap:8px;margin-top:10px}
-.drivebtn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--sunk);color:var(--ink);text-decoration:none}
+.drivebtn{border-radius:12px;background:var(--sunk)}
+.drivebtn .dmain{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;color:var(--ink);text-decoration:none}
+.drivebtn .dalt{display:block;margin-top:-6px;padding:0 14px 10px;font-size:13px;color:var(--muted)}
 .drivebtn b{display:block;font-size:16px}
 .drivebtn small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
 .drivebtn .go{flex:none;color:var(--ok);font-weight:650;font-size:15px}
 .drivebtn .go::after{content:" ›"}
-.drivebtn.off .go{color:var(--muted);font-weight:500}
-.drivebtn.off .go::after{content:""}
 .dlist{list-style:none;margin:0;padding:0}
 .dlist li + li{border-top:1px solid var(--line)}
-.dlist a{display:flex;align-items:center;gap:12px;padding:12px 16px;color:var(--ink);text-decoration:none}
-.dlist a span:first-child{flex:1;min-width:0}
+.dlist a.dmain{display:flex;align-items:center;gap:12px;padding:12px 16px;color:var(--ink);text-decoration:none}
+.dlist a.dmain span:first-child{flex:1;min-width:0}
+.dlist .dalt{display:block;margin-top:-6px;padding:0 16px 12px;font-size:13px;color:var(--muted)}
 .dlist .go{flex:none;color:var(--ok);font-weight:650}
 .dlist .go::after{content:" ›"}
 .wlinks{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
@@ -3342,16 +3343,37 @@ const DRIVES = {
   auchan:{ site:'auchan.fr', q:'https://www.auchan.fr/recherche?text=' },
   intermarche:{ site:'intermarche.com', q:'https://www.intermarche.com/recherche/' },
   u:{ site:'coursesu.com', q:'https://www.coursesu.com/recherche?q=' },
-  monoprix:{ site:'monoprix.fr' }, franprix:{ site:'franprix.fr' }, casino:{ site:'casino.fr' }, cora:{ site:'cora.fr' },
-  biocoop:{ site:'biocoop.fr' }, picard:{ site:'picard.fr' },
-  lidl:{ site:'lidl.fr', noDrive:true }, aldi:{ site:'aldi.fr', noDrive:true }, netto:{ site:'netto.fr', noDrive:true },
+  biocoop:{ site:'biocoop.fr', q:'https://www.biocoop.fr/catalogsearch/result/?q=' },
+  monoprix:{ site:'monoprix.fr', q:'https://courses.monoprix.fr/search?q=' },
+  picard:{ site:'picard.fr', q:'https://www.picard.fr/recherche?q=' },
+  cora:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=' },          // les Cora sont devenus des Carrefour
+  franprix:{ site:'franprix.fr' }, casino:{ site:'casino.fr' },
+  lidl:{ site:'lidl.fr', q:'https://www.lidl.fr/q/search?q=', noDrive:true }, aldi:{ site:'aldi.fr', noDrive:true }, netto:{ site:'netto.fr', noDrive:true },
 };
 const driveName = id => shortLabel(storeById(id));
-const driveTerms = p => [nameOf(p), brandOf(p).split(',')[0]].filter(Boolean).join(' ').replace(/\s+/g, ' ').slice(0, 80);
-function driveUrl(p, id){
+/* Recherche courte : la marque et les 2 premiers mots utiles du nom. Les moteurs des sites (et Google)
+   ne trouvent rien avec un nom complet de fiche, souvent bilingue (« À la Grecque Greek Style Nature-Natural »). */
+const TERM_STOP = new Set('a au aux de du des la le les l d et en un une sans avec pour sur par ou'.split(' '));
+const TERM_EN = new Set('style natural plain with and the of flavour flavor flavoured original classic greek sweet light free organic pack big mini new'.split(' '));
+const driveBrand = p => (brandOf(p).split(',')[0] || '').trim();
+function driveTerms(p){
+  const brand = driveBrand(p), bw = fold(brand).split(' ');
+  const name = String(nameOf(p)).replace(/\(.*?\)/g, ' ').replace(/\b\d+([.,]\d+)?\s*(g|kg|ml|cl|l|x|%)(?=\s|$)/gi, ' ').split(/\s+[-–|\/]\s+/)[0];
+  const words = name.split(/[\s,;:'’.\/+&–]+/).map(w => {
+    w = w.replace(/^-+|-+$/g, '');
+    if (!w.includes('-')) return w;
+    const parts = w.split('-');   // « Nature-Natural » : on garde le français ; « demi-écrémé » reste entier
+    return parts.some(x => TERM_EN.has(fold(x))) ? (parts.find(x => !TERM_EN.has(fold(x))) || '') : w;
+  }).filter(w => w.length > 1 && !/\d/.test(w) && !TERM_STOP.has(fold(w)) && !TERM_EN.has(fold(w)) && !bw.includes(fold(w)));
+  const seenW = new Set(); const pick = [], max = brand ? 2 : 3;
+  for (const w of words){ const f = fold(w); if (!seenW.has(f)){ seenW.add(f); pick.push(w); } if (pick.length === max) break; }
+  return [brand, ...pick].filter(Boolean).join(' ').slice(0, 60) || String(nameOf(p)).slice(0, 40);
+}
+function driveUrl(p, id, brandOnly = false){
   const d = DRIVES[id]; if (!d) return '';
-  if (d.q) return d.q + encodeURIComponent(d.ean && /^\d{8,14}$/.test(String(p.code)) ? String(p.code) : driveTerms(p));
-  return `https://www.google.com/search?q=${encodeURIComponent(driveTerms(p) + ' site:' + d.site)}`;
+  const terms = brandOnly && driveBrand(p) ? driveBrand(p) : driveTerms(p);
+  if (d.q) return d.q + encodeURIComponent(terms);
+  return `https://www.google.com/search?q=${encodeURIComponent(terms + ' site:' + d.site)}`;
 }
 // enseignes à proposer : celles où le produit a été vu parmi les proches, puis les plus proches
 function linkChains(p){
@@ -3360,17 +3382,20 @@ function linkChains(p){
     : S.store !== 'all' ? [S.store, ...close.filter(id => info.seen.includes(id)), ...close]
     : [...close.filter(id => info.seen.includes(id)), ...close, ...info.seen];
   if (info.mdd.length) base = base.filter(id => info.seen.includes(id));   // marque distributeur : sa seule enseigne
-  return [...new Set(base)].filter(id => DRIVES[id]).slice(0, 3);
+  // sans drive (Lidl, Aldi, Netto) : seulement si le produit y a été vu
+  return [...new Set(base)].filter(id => DRIVES[id] && (!DRIVES[id].noDrive || info.seen.includes(id))).slice(0, 3);
 }
 function driveCard(p){
   if (!p || p._fresh) return '';
   const ids = linkChains(p); if (!ids.length) return '';
+  const info = chainInfo(p), brand = driveBrand(p), terms = driveTerms(p);
   const rows = ids.map(id => {
     const n = nearInfo(id), d = DRIVES[id];
-    const where = n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne';
-    return `<a class="drivebtn" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}${d.noDrive ? ' · pas de drive' : ''}</small></span><span class="go">${d.noDrive ? 'Voir sur le site' : 'Voir le stock'}</span></a>`;
+    const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', info.seen.includes(id) ? 'vu dans l\'enseigne' : '', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
+    const alt = brand && brand !== terms ? `<a class="dalt" href="${esc(driveUrl(p, id, true))}" target="_blank" rel="noopener">Rien trouvé ? Toute la marque ${esc(brand)}</a>` : '';
+    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small></span><span class="go">${d.noDrive ? 'Voir sur le site' : 'Voir le stock'}</span></a>${alt}</div>`;
   }).join('');
-  return `<section class="card"><h3>Stock au drive</h3><p class="hint">Le site de l'enseigne s'ouvre sur ce produit, avec le stock du drive que tu y as choisi (il te le demande la première fois).</p><div class="drives">${rows}</div></section>`;
+  return `<section class="card"><h3>Stock au drive</h3><p class="hint">Le site de l'enseigne s'ouvre sur la recherche « ${esc(terms)} », avec le stock du drive que tu y as choisi (il te le demande la première fois).</p><div class="drives">${rows}</div></section>`;
 }
 // « Ma liste chez Carrefour » : chaque produit de la liste, à ouvrir sur le site
 function openDriveList(id){
@@ -3379,9 +3404,10 @@ function openDriveList(id){
   $('#driveTitle').textContent = 'Ma liste chez ' + driveName(id);
   $('#driveHint').textContent = `Touche un produit : le site ${driveName(id)} s'ouvre dessus${d.noDrive ? '' : ', avec le stock du drive que tu y as choisi'}.` + (n ? ` Ton magasin le plus proche : ${n.name}, ${fmtKm(n.dist)}.` : '') + (fresh ? ` Produits frais (${fresh}) : à choisir sur place.` : '');
   $('#driveList').innerHTML = items.length ? items.map(x => {
-    const a = availability(chainInfo(x.p), id);
-    const note = a === 'sure' ? 'Vu dans l\'enseigne' : a === 'no' ? 'Marque d\'une autre enseigne : sûrement absent' : 'Marque nationale';
-    return `<li><a href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), note].filter(Boolean).join(' · '))}</small></span><span class="go">Voir</span></a></li>`;
+    const a = availability(chainInfo(x.p), id), terms = driveTerms(x.p), brand = driveBrand(x.p);
+    const note = a === 'sure' ? 'Vu dans l\'enseigne' : a === 'no' ? 'Marque d\'une autre enseigne : sûrement absent' : `Marque nationale, pas encore signalée chez ${driveName(id)}`;
+    const alt = brand && brand !== terms ? `<a class="dalt" href="${esc(driveUrl(x.p, id, true))}" target="_blank" rel="noopener">Rien trouvé ? Toute la marque ${esc(brand)}</a>` : '';
+    return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), note].filter(Boolean).join(' · '))}</small><small class="meta">Recherche : « ${esc(terms)} »</small></span><span class="go">Voir</span></a>${alt}</li>`;
   }).join('') : '<li><p class="hint" style="padding:12px 16px">Ta liste est vide.</p></li>';
   openDialog($('#driveSheet'));
 }
@@ -3389,7 +3415,7 @@ $('#driveClose').addEventListener('click', () => closeDialog($('#driveSheet')));
 $('#whereList').addEventListener('click', e => { const b = e.target.closest('[data-drive]'); if (b) openDriveList(b.dataset.drive); });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.7';
+const APP_VERSION = '3.8';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -3419,7 +3445,7 @@ if (!FIRST_RUN) autoLocate('start');
 if (S.ran && (!start || start === 'search')) runSearch();
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds };
+window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, linkChains, driveUrl };
 })();
 </script>
 </body>
