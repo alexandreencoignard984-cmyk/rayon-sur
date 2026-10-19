@@ -9,6 +9,7 @@ page bloquée ou non, adresse finale (redirection vers une catégorie ?), produi
 Écrit sonde/rapport.md et une capture par lien dans sonde/ (publiés sur une branche à part, pas sur main).
 Quelques dizaines de pages en tout, une à la fois : rien qui ressemble à une aspiration du site.
 Usage : python3 tools/sonde_drive.py [nombre de produits par enseigne, 5 par défaut]
+        python3 tools/sonde_drive.py --urls "URL1 URL2 …"   (ouvre seulement ces adresses : pour tester un format de lien)
 """
 import datetime, json, os, re, sys, threading, time, unicodedata
 from functools import partial
@@ -17,7 +18,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'sonde')
-N = int(sys.argv[1]) if len(sys.argv) > 1 else 5
+N = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 5
 CHAINS = ['carrefour', 'leclerc', 'auchan', 'u', 'intermarche', 'monoprix', 'biocoop', 'lidl', 'picard']
 # variantes essayées en plus du lien de l'appli : « ean » recherche par code-barres, « nom » marque + nom
 EXTRA = {
@@ -82,7 +83,7 @@ READ = r"""() => {
   const txt = document.body ? document.body.innerText : '';
   const links = [...document.querySelectorAll('a[href]')].map(a => ({ h:a.href, t:(a.innerText || a.getAttribute('aria-label') || a.title || '').replace(/\s+/g, ' ').trim() }));
   const h1 = document.querySelector('h1');
-  return { title:document.title, h1:h1 ? h1.innerText.trim().slice(0, 120) : '', text:txt.slice(0, 4000), links,
+  return { title:document.title, h1:h1 ? h1.innerText.trim().slice(0, 120) : '', text:txt.slice(0, 30000), links,
     iframes:[...document.querySelectorAll('iframe')].map(f => f.src).filter(Boolean).slice(0, 10) };
 }"""
 
@@ -194,5 +195,34 @@ def main():
         open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8').write(report)
 
 
+def urls_only(urls):
+    """Ouvre chaque adresse, note statut, adresse finale, titre et début du texte, avec une capture."""
+    os.makedirs(OUT, exist_ok=True)
+    rows = []
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        iphone = dict(p.devices['iPhone 13'])
+        iphone.pop('default_browser_type', None)
+        ctx = b.new_context(**iphone, locale='fr-FR', timezone_id='Europe/Paris')
+        for k, url in enumerate(urls, 1):
+            shot = os.path.join(OUT, f'u{k:02d}.jpg')
+            status, final, info, err = probe(ctx, url, shot)
+            text = re.sub(r'\s+', ' ', info['text'])[:1500]
+            rows.append(dict(url=url, status=status, final=final, title=info['title'][:120], h1=info['h1'], text=text, err=err,
+                             links=[l for l in info['links'] if l['t']][:80], shot=os.path.basename(shot)))
+            print(f'{k:2d} {status} {final[:100]} « {info["title"][:60]} » {err}', flush=True)
+            time.sleep(3)
+        b.close()
+    json.dump(rows, open(os.path.join(OUT, 'adresses.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    lines = ['# Sonde : adresses testées', '']
+    for r in rows:
+        lines += [f"- `{r['url']}`", f"  - statut {r['status']}, final `{r['final'][:160]}`, titre « {r['title']} »" + (f", erreur {r['err']}" if r['err'] else ''),
+                  f"  - {r['text'][:400]}", f"  - capture {r['shot']}"]
+    open(os.path.join(OUT, 'rapport.md'), 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
+
+
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) > 2 and sys.argv[1] == '--urls':
+        urls_only(sys.argv[2].split())
+    else:
+        main()

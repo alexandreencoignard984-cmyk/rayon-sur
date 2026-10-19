@@ -8,6 +8,9 @@ on:
       produits:
         description: Nombre de produits par enseigne
         default: '5'
+      adresses:
+        description: Adresses à tester seules, séparées par des espaces (laisser vide pour la sonde complète)
+        default: ''
 permissions:
   contents: write
 concurrency:
@@ -24,7 +27,11 @@ jobs:
           pip install -q playwright==1.56.0
           python3 -m playwright install --with-deps chromium
       - name: Sonde
-        run: python3 tools/sonde_drive.py "${{ github.event.inputs.produits || '5' }}"
+        env:
+          ADRESSES: ${{ github.event.inputs.adresses }}
+          PRODUITS: ${{ github.event.inputs.produits || '5' }}
+        run: |
+          if [ -n "$ADRESSES" ]; then python3 tools/sonde_drive.py --urls "$ADRESSES"; else python3 tools/sonde_drive.py "$PRODUITS"; fi
       - name: Publier le rapport sur une branche à part
         if: success() || failure()
         run: |
