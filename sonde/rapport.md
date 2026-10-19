@@ -1,0 +1,50 @@
+# Sonde : adresses testées
+
+- `https://www.leclercdrive.fr/`
+  - statut 403, final `https://www.leclercdrive.fr/`, titre « leclercdrive.fr »
+  - 
+  - capture u01.jpg
+- `https://api-recherchemagasins.leclercdrive.fr/API_RechercheMagasins/api/v1/MapPoint/nearby?latitude=48.1113&longitude=-1.68&postalCode=35000`
+  - statut 403, final `https://api-recherchemagasins.leclercdrive.fr/API_RechercheMagasins/api/v1/MapPoint/nearby?latitude=48.1113&longitude=-1.68&postalCode=35000`, titre « leclercdrive.fr »
+  - 
+  - capture u02.jpg
+- `https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=nutella`
+  - statut 403, final `https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=nutella`, titre « leclercdrive.fr »
+  - 
+  - capture u03.jpg
+- `https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=3017620429484`
+  - statut 403, final `https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=3017620429484`, titre « leclercdrive.fr »
+  - 
+  - capture u04.jpg
+- `https://fd9-courses.leclercdrive.fr/magasin-053701-053701/recherche.aspx?TexteRecherche=3564700007433`
+  - statut 403, final `https://fd9-courses.leclercdrive.fr/magasin-053701-053701/recherche.aspx?TexteRecherche=3564700007433`, titre « leclercdrive.fr »
+  - 
+  - capture u05.jpg
+- `https://www.leclercdrive.fr/recherche.aspx?TexteRecherche=nutella`
+  - statut 403, final `https://www.leclercdrive.fr/recherche.aspx?TexteRecherche=nutella`, titre « leclercdrive.fr »
+  - 
+  - capture u06.jpg
+- `https://www.carrefour.fr/s?q=3256228686558`
+  - statut 403, final `https://www.carrefour.fr/s?q=3256228686558`, titre « Un instant… »
+  - C’est une formalité… si vous êtes un humain ! Vérifions ensemble que vous n’êtes pas un robot. Client IP : 52.141.64.250 Ray ID : a4d16b1c8d19240a
+  - capture u07.jpg
+- `https://www.carrefour.fr/s?q=3564700007433`
+  - statut 403, final `https://www.carrefour.fr/s?q=3564700007433`, titre « Un instant… »
+  - C’est une formalité… si vous êtes un humain ! Vérifions ensemble que vous n’êtes pas un robot. Client IP : 52.141.64.250 Ray ID : a4d16b8b1cc4240a
+  - capture u08.jpg
+- `https://www.auchan.fr/recherche?text=3256228686558`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3256228686558`, titre « Votre recherche 3256228686558 sur Auchan.fr »
+  - Aller directement au contenu Aller directement à la recherche Aller directement à la navigation Aller directement à la rubrique besoin d'aide Choisir vos courses Rayons Recherche Lancer la recherche Annuler Mes produits 0,00 € Accueil Votre recherche : 3256228686558 Oups, on n'a rien trouvé pour : 3256228686558 Nous vous invitons à lancer une autre recherche ou signaler un produit manquant ... ou 
+  - capture u09.jpg
+- `https://www.auchan.fr/recherche?text=3017620429484`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3017620429484`, titre « Votre recherche 3017620429484 sur Auchan.fr »
+  - Auchan France Achat en ligne et magasin 14,2 K Vers l'App Aller directement au contenu Aller directement à la recherche Aller directement à la navigation Aller directement à la rubrique besoin d'aide Choisir vos courses Rayons Recherche Lancer la recherche Annuler Mes produits 0,00 € Accueil Votre recherche : 3017620429484 Oups, on n'a rien trouvé pour : 3017620429484 Nous vous invitons à lancer u
+  - capture u10.jpg
+- `https://www.biocoop.fr/catalogsearch/result/?q=3017620429484`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=3017620429484`, titre « Produits pour votre recherche " 3017620429484 " »
+  - Aller au contenu Aller au menu Aller à la recherche Ouvrir ou fermer le menu Rechercher Lancer la recherche Faire mes courses en ligne NOS PRODUITS NOS MAGASINS LA BIO AU QUOTIDIEN LE PROJET BIOCOOP NOUS REJOINDRE Accueil Résultats de recherche pour '3017620429484' Oups, nous n'avons pas trouvé d'éléments correspondant à votre recherche " 3017620429484 " Services client Informations utiles Courses
+  - capture u11.jpg
+- `https://courses.monoprix.fr/search?q=3017620429484`
+  - statut 200, final `https://courses.monoprix.fr/search?q=3017620429484`, titre « Résultats de recherche pour 3017620429484 - Monoprix Monoprix.fr : Livraison courses à domicile en 24h »
+  - Aller directement au contenu Aller directement au moteur de recherche Aller directement en bas de la page Fermer le message pop-up Promo Bonbons Halloween Prix en baisse Mes marques Monoprix Naturalia Appli mobile Promotions Présentation du service Monoprix Mode et Maison (s’ouvre dans une nouvelle fenêtre) Menu des onglets du haut de l’écran Page d’accueil Rechercher un article Aller au paiement 
+  - capture u12.jpg

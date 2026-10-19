@@ -1,0 +1,1418 @@
+[
+ {
+  "url": "https://www.leclercdrive.fr/",
+  "status": 403,
+  "final": "https://www.leclercdrive.fr/",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u01.jpg"
+ },
+ {
+  "url": "https://api-recherchemagasins.leclercdrive.fr/API_RechercheMagasins/api/v1/MapPoint/nearby?latitude=48.1113&longitude=-1.68&postalCode=35000",
+  "status": 403,
+  "final": "https://api-recherchemagasins.leclercdrive.fr/API_RechercheMagasins/api/v1/MapPoint/nearby?latitude=48.1113&longitude=-1.68&postalCode=35000",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u02.jpg"
+ },
+ {
+  "url": "https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=nutella",
+  "status": 403,
+  "final": "https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=nutella",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u03.jpg"
+ },
+ {
+  "url": "https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=3017620429484",
+  "status": 403,
+  "final": "https://fd9-courses.leclercdrive.fr/magasin-053701-053701-La-Ville-aux-Dames/recherche.aspx?TexteRecherche=3017620429484",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u04.jpg"
+ },
+ {
+  "url": "https://fd9-courses.leclercdrive.fr/magasin-053701-053701/recherche.aspx?TexteRecherche=3564700007433",
+  "status": 403,
+  "final": "https://fd9-courses.leclercdrive.fr/magasin-053701-053701/recherche.aspx?TexteRecherche=3564700007433",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u05.jpg"
+ },
+ {
+  "url": "https://www.leclercdrive.fr/recherche.aspx?TexteRecherche=nutella",
+  "status": 403,
+  "final": "https://www.leclercdrive.fr/recherche.aspx?TexteRecherche=nutella",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u06.jpg"
+ },
+ {
+  "url": "https://www.carrefour.fr/s?q=3256228686558",
+  "status": 403,
+  "final": "https://www.carrefour.fr/s?q=3256228686558",
+  "title": "Un instant…",
+  "h1": "C’est une formalité… si vous êtes un humain !",
+  "text": "C’est une formalité… si vous êtes un humain ! Vérifions ensemble que vous n’êtes pas un robot. Client IP : 52.141.64.250 Ray ID : a4d16b1c8d19240a",
+  "err": "",
+  "links": [],
+  "shot": "u07.jpg"
+ },
+ {
+  "url": "https://www.carrefour.fr/s?q=3564700007433",
+  "status": 403,
+  "final": "https://www.carrefour.fr/s?q=3564700007433",
+  "title": "Un instant…",
+  "h1": "C’est une formalité… si vous êtes un humain !",
+  "text": "C’est une formalité… si vous êtes un humain ! Vérifions ensemble que vous n’êtes pas un robot. Client IP : 52.141.64.250 Ray ID : a4d16b8b1cc4240a",
+  "err": "",
+  "links": [],
+  "shot": "u08.jpg"
+ },
+ {
+  "url": "https://www.auchan.fr/recherche?text=3256228686558",
+  "status": 200,
+  "final": "https://www.auchan.fr/recherche?text=3256228686558",
+  "title": "Votre recherche 3256228686558 sur Auchan.fr",
+  "h1": "Votre recherche : 3256228686558",
+  "text": "Aller directement au contenu Aller directement à la recherche Aller directement à la navigation Aller directement à la rubrique besoin d'aide Choisir vos courses Rayons Recherche Lancer la recherche Annuler Mes produits 0,00 € Accueil Votre recherche : 3256228686558 Oups, on n'a rien trouvé pour : 3256228686558 Nous vous invitons à lancer une autre recherche ou signaler un produit manquant ... ou à trouver votre bonheur dans nos rayons Promos Bonbons d'Halloween Jouets de Noël Foire aux vins** d'automne Les halles d'Auchan Produits laitiers, oeufs, fromages Fruits, légumes Tout voir Vos courses à domicile, en drive ou click & collect Paiement sécurisé en ligne ou au retrait Retour produits : 30 jours pour changer d’avis Service client 7j/7 03 59 30 59 30 8h>21h, dimanche 8h30>13h Besoin d'aide ? Nos services À propos d'Auchan Programme de fidélité Waaoh! Nous suivre Notre application Télécharger Accessibilité : non conforme Espace sourds et malentendants Interdiction de vente de boissons alcooliques aux mineurs de moins de 18 ans La preuve de majorité de l'acheteur est exigée au moment de la vente en ligne. * Voir les conditions en cliquant ici ** L’abus d’alcool est dangereux pour la santé, à consommer avec modération Pour votre santé, évitez de grignoter entre les repas. www.mangerbouger.fr Nos conditions générales Mentions légales Conditions des offres et promotions Paramètres des cookies Politique de confidentialité Informations légales marketplace Auchan 2026 © Tous droi",
+  "err": "",
+  "links": [
+   {
+    "h": "https://www.auchan.fr/recherche?text=3256228686558#wrapper",
+    "t": "Aller directement au contenu"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3256228686558#search",
+    "t": "Aller directement à la recherche"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3256228686558#navigation",
+    "t": "Aller directement à la navigation"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3256228686558#footer-help",
+    "t": "Aller directement à la rubrique besoin d'aide"
+   },
+   {
+    "h": "https://www.auchan.fr/",
+    "t": "Page d'accueil du site Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/promos",
+    "t": "Promos"
+   },
+   {
+    "h": "https://www.auchan.fr/client/mes-produits-preferes",
+    "t": "Mes produits"
+   },
+   {
+    "h": "https://www.auchan.fr/checkout/cart/",
+    "t": "0,00 €"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/promos",
+    "t": "Promos"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/bonbons/bonbons-d-halloween/ca-n050708",
+    "t": "Bonbons d'Halloween"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021?sort=default&catalogue_jouet01=catalogue_jouet01__greater__1",
+    "t": "Jouets de Noël"
+   },
+   {
+    "h": "https://www.auchan.fr/foire-aux-vins/ca-b201904021858",
+    "t": "Foire aux vins** d'automne"
+   },
+   {
+    "h": "https://www.auchan.fr/marques-auchan/ep-marques-auchan",
+    "t": "Nos marques Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/service-traiteur-sur-commande/ca-n120211",
+    "t": "Service traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/les-halles-d-auchan/ca-b202209050930",
+    "t": "Les halles d'Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/oeufs-produits-laitiers/ca-n01",
+    "t": "Produits laitiers, oeufs, fromages"
+   },
+   {
+    "h": "https://www.auchan.fr/fruits-legumes/ca-n03",
+    "t": "Fruits, légumes"
+   },
+   {
+    "h": "https://www.auchan.fr/boucherie-volaille-poissonnerie/ca-n02",
+    "t": "Boucherie, volaille, poissonnerie"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/ca-n12",
+    "t": "Charcuterie, traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/pain-patisserie/ca-n1203",
+    "t": "Pain, pâtisserie"
+   },
+   {
+    "h": "https://www.auchan.fr/surgeles/ca-n04",
+    "t": "Surgelés"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/ca-n05",
+    "t": "Epicerie sucrée"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-salee/ca-n06",
+    "t": "Epicerie salée"
+   },
+   {
+    "h": "https://www.auchan.fr/boissons-sans-alcool/ca-n13",
+    "t": "Eaux, jus, soda, thés glacés"
+   },
+   {
+    "h": "https://www.auchan.fr/vins-bieres-alcool/ca-n07",
+    "t": "Vins, bières, alcools"
+   },
+   {
+    "h": "https://www.auchan.fr/hygiene-beaute-parapharmacie/ca-n09",
+    "t": "Hygiène, beauté"
+   },
+   {
+    "h": "https://www.auchan.fr/entretien-maison/ca-n10",
+    "t": "Entretien, accessoires de la maison"
+   },
+   {
+    "h": "https://www.auchan.fr/bebe/ca-n08",
+    "t": "Tout pour bébé"
+   },
+   {
+    "h": "https://www.auchan.fr/parapharmacie/ca-n14",
+    "t": "Parapharmacie"
+   },
+   {
+    "h": "https://www.auchan.fr/animalerie/ca-n11",
+    "t": "Animalerie"
+   },
+   {
+    "h": "https://www.auchan.fr/bio-et-nutrition/ca-b04",
+    "t": "Bio, végétal, diététique"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions-et-du-monde/ca-b08",
+    "t": "Produits du monde"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions/ca-b202406051513",
+    "t": "Produits de nos régions"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/baf-maison-loisirs",
+    "t": "Promos maison & loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/jardin-auto-brico/ca-2903202116100",
+    "t": "Jardin, auto, brico"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021",
+    "t": "Jouets, jeux vidéo, loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/high-tech-audio-tv-telephonie/ca-29032021170201",
+    "t": "High-tech, téléphonie"
+   },
+   {
+    "h": "https://www.auchan.fr/electromenager-cuisine/ca-201612151000",
+    "t": "Electroménager, cuisine"
+   },
+   {
+    "h": "https://www.auchan.fr/meuble-deco-linge-de-maison/ca-302202115",
+    "t": "Meuble, linge de maison"
+   },
+   {
+    "h": "https://www.auchan.fr/mode-bijoux-bagagerie/ca-31032021153703",
+    "t": "Mode, bijoux, bagagerie"
+   },
+   {
+    "h": "https://www.auchan.fr/puericulture/ca-7135353",
+    "t": "Puériculture"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3256228686558#",
+    "t": "Billetterie, traiteur, voyage"
+   },
+   {
+    "h": "https://www.auchan.fr/",
+    "t": "Accueil"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/promos",
+    "t": "Promos"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/bonbons/bonbons-d-halloween/ca-n050708",
+    "t": "Bonbons d'Halloween"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021?sort=default&catalogue_jouet01=catalogue_jouet01__greater__1",
+    "t": "Jouets de Noël"
+   },
+   {
+    "h": "https://www.auchan.fr/foire-aux-vins/ca-b201904021858",
+    "t": "Foire aux vins** d'automne"
+   },
+   {
+    "h": "https://www.auchan.fr/les-halles-d-auchan/ca-b202209050930",
+    "t": "Les halles d'Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/oeufs-produits-laitiers/ca-n01",
+    "t": "Produits laitiers, oeufs, fromages"
+   },
+   {
+    "h": "https://www.auchan.fr/fruits-legumes/ca-n03",
+    "t": "Fruits, légumes"
+   },
+   {
+    "h": "https://www.auchan.fr/boucherie-volaille-poissonnerie/ca-n02",
+    "t": "Boucherie, volaille, poissonnerie"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/ca-n12",
+    "t": "Charcuterie, traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/pain-patisserie/ca-n1203",
+    "t": "Pain, pâtisserie"
+   },
+   {
+    "h": "https://www.auchan.fr/surgeles/ca-n04",
+    "t": "Surgelés"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/ca-n05",
+    "t": "Epicerie sucrée"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-salee/ca-n06",
+    "t": "Epicerie salée"
+   },
+   {
+    "h": "https://www.auchan.fr/boissons-sans-alcool/ca-n13",
+    "t": "Eaux, jus, soda, thés glacés"
+   },
+   {
+    "h": "https://www.auchan.fr/vins-bieres-alcool/ca-n07",
+    "t": "Vins, bières, alcools"
+   },
+   {
+    "h": "https://www.auchan.fr/hygiene-beaute-parapharmacie/ca-n09",
+    "t": "Hygiène, beauté"
+   },
+   {
+    "h": "https://www.auchan.fr/parapharmacie/ca-n14",
+    "t": "Parapharmacie"
+   },
+   {
+    "h": "https://www.auchan.fr/entretien-maison/ca-n10",
+    "t": "Entretien, accessoires de la maison"
+   },
+   {
+    "h": "https://www.auchan.fr/bebe/ca-n08",
+    "t": "Tout pour bébé"
+   },
+   {
+    "h": "https://www.auchan.fr/animalerie/ca-n11",
+    "t": "Animalerie"
+   },
+   {
+    "h": "https://www.auchan.fr/bio-et-nutrition/ca-b04",
+    "t": "Bio, végétal, diététique"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions-et-du-monde/ca-b08",
+    "t": "Produits du monde"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions/ca-b202406051513",
+    "t": "Produits de nos régions"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/baf-maison-loisirs",
+    "t": "Promos maison & loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/jardin-auto-brico/ca-2903202116100",
+    "t": "Jardin, auto, brico"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021",
+    "t": "Jouets, jeux vidéo, loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/mode-bijoux-bagagerie/ca-31032021153703",
+    "t": "Mode, bijoux, bagagerie"
+   },
+   {
+    "h": "https://www.auchan.fr/high-tech-audio-tv-telephonie/ca-29032021170201",
+    "t": "High-tech, téléphonie"
+   },
+   {
+    "h": "https://www.auchan.fr/electromenager-cuisine/ca-201612151000",
+    "t": "Electroménager, cuisine"
+   },
+   {
+    "h": "https://www.auchan.fr/meuble-deco-linge-de-maison/ca-302202115",
+    "t": "Meuble, linge de maison"
+   },
+   {
+    "h": "https://www.auchan.fr/puericulture/ca-7135353",
+    "t": "Puériculture"
+   },
+   {
+    "h": "https://www.auchan.fr/marques-auchan/ep-marques-auchan",
+    "t": "Nos marques Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3256228686558#",
+    "t": "Billetterie, traiteur, voyage"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/service-traiteur-sur-commande/ca-n120211",
+    "t": "Service traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/courses",
+    "t": "Vos courses à domicile, en drive ou click & collect"
+   },
+   {
+    "h": "https://www.auchan.fr/contactez-nous",
+    "t": "Service client 7j/7 03 59 30 59 30 8h>21h, dimanche 8h30>13h"
+   },
+   {
+    "h": "https://www.auchan.fr/contactez-nous",
+    "t": "Nous contacter"
+   }
+  ],
+  "shot": "u09.jpg"
+ },
+ {
+  "url": "https://www.auchan.fr/recherche?text=3017620429484",
+  "status": 200,
+  "final": "https://www.auchan.fr/recherche?text=3017620429484",
+  "title": "Votre recherche 3017620429484 sur Auchan.fr",
+  "h1": "Votre recherche : 3017620429484",
+  "text": "Auchan France Achat en ligne et magasin 14,2 K Vers l'App Aller directement au contenu Aller directement à la recherche Aller directement à la navigation Aller directement à la rubrique besoin d'aide Choisir vos courses Rayons Recherche Lancer la recherche Annuler Mes produits 0,00 € Accueil Votre recherche : 3017620429484 Oups, on n'a rien trouvé pour : 3017620429484 Nous vous invitons à lancer une autre recherche ou signaler un produit manquant ... ou à trouver votre bonheur dans nos rayons Promos Bonbons d'Halloween Jouets de Noël Foire aux vins** d'automne Les halles d'Auchan Produits laitiers, oeufs, fromages Fruits, légumes Tout voir Vos courses à domicile, en drive ou click & collect Paiement sécurisé en ligne ou au retrait Retour produits : 30 jours pour changer d’avis Service client 7j/7 03 59 30 59 30 8h>21h, dimanche 8h30>13h Besoin d'aide ? Nos services À propos d'Auchan Programme de fidélité Waaoh! Nous suivre Notre application Télécharger Accessibilité : non conforme Espace sourds et malentendants Interdiction de vente de boissons alcooliques aux mineurs de moins de 18 ans La preuve de majorité de l'acheteur est exigée au moment de la vente en ligne. * Voir les conditions en cliquant ici ** L’abus d’alcool est dangereux pour la santé, à consommer avec modération Pour votre santé, évitez de grignoter entre les repas. www.mangerbouger.fr Nos conditions générales Mentions légales Conditions des offres et promotions Paramètres des cookies Politique de confidentialit",
+  "err": "",
+  "links": [
+   {
+    "h": "javascript:void(0);",
+    "t": "Fermer"
+   },
+   {
+    "h": "https://apps.apple.com/fr/app/auchan-france/id393068659",
+    "t": "Vers l'App"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3017620429484#wrapper",
+    "t": "Aller directement au contenu"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3017620429484#search",
+    "t": "Aller directement à la recherche"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3017620429484#navigation",
+    "t": "Aller directement à la navigation"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3017620429484#footer-help",
+    "t": "Aller directement à la rubrique besoin d'aide"
+   },
+   {
+    "h": "https://www.auchan.fr/",
+    "t": "Page d'accueil du site Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/promos",
+    "t": "Promos"
+   },
+   {
+    "h": "https://www.auchan.fr/client/mes-produits-preferes",
+    "t": "Mes produits"
+   },
+   {
+    "h": "https://www.auchan.fr/checkout/cart/",
+    "t": "0,00 €"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/promos",
+    "t": "Promos"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/bonbons/bonbons-d-halloween/ca-n050708",
+    "t": "Bonbons d'Halloween"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021?sort=default&catalogue_jouet01=catalogue_jouet01__greater__1",
+    "t": "Jouets de Noël"
+   },
+   {
+    "h": "https://www.auchan.fr/foire-aux-vins/ca-b201904021858",
+    "t": "Foire aux vins** d'automne"
+   },
+   {
+    "h": "https://www.auchan.fr/marques-auchan/ep-marques-auchan",
+    "t": "Nos marques Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/service-traiteur-sur-commande/ca-n120211",
+    "t": "Service traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/les-halles-d-auchan/ca-b202209050930",
+    "t": "Les halles d'Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/oeufs-produits-laitiers/ca-n01",
+    "t": "Produits laitiers, oeufs, fromages"
+   },
+   {
+    "h": "https://www.auchan.fr/fruits-legumes/ca-n03",
+    "t": "Fruits, légumes"
+   },
+   {
+    "h": "https://www.auchan.fr/boucherie-volaille-poissonnerie/ca-n02",
+    "t": "Boucherie, volaille, poissonnerie"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/ca-n12",
+    "t": "Charcuterie, traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/pain-patisserie/ca-n1203",
+    "t": "Pain, pâtisserie"
+   },
+   {
+    "h": "https://www.auchan.fr/surgeles/ca-n04",
+    "t": "Surgelés"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/ca-n05",
+    "t": "Epicerie sucrée"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-salee/ca-n06",
+    "t": "Epicerie salée"
+   },
+   {
+    "h": "https://www.auchan.fr/boissons-sans-alcool/ca-n13",
+    "t": "Eaux, jus, soda, thés glacés"
+   },
+   {
+    "h": "https://www.auchan.fr/vins-bieres-alcool/ca-n07",
+    "t": "Vins, bières, alcools"
+   },
+   {
+    "h": "https://www.auchan.fr/hygiene-beaute-parapharmacie/ca-n09",
+    "t": "Hygiène, beauté"
+   },
+   {
+    "h": "https://www.auchan.fr/entretien-maison/ca-n10",
+    "t": "Entretien, accessoires de la maison"
+   },
+   {
+    "h": "https://www.auchan.fr/bebe/ca-n08",
+    "t": "Tout pour bébé"
+   },
+   {
+    "h": "https://www.auchan.fr/parapharmacie/ca-n14",
+    "t": "Parapharmacie"
+   },
+   {
+    "h": "https://www.auchan.fr/animalerie/ca-n11",
+    "t": "Animalerie"
+   },
+   {
+    "h": "https://www.auchan.fr/bio-et-nutrition/ca-b04",
+    "t": "Bio, végétal, diététique"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions-et-du-monde/ca-b08",
+    "t": "Produits du monde"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions/ca-b202406051513",
+    "t": "Produits de nos régions"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/baf-maison-loisirs",
+    "t": "Promos maison & loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/jardin-auto-brico/ca-2903202116100",
+    "t": "Jardin, auto, brico"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021",
+    "t": "Jouets, jeux vidéo, loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/high-tech-audio-tv-telephonie/ca-29032021170201",
+    "t": "High-tech, téléphonie"
+   },
+   {
+    "h": "https://www.auchan.fr/electromenager-cuisine/ca-201612151000",
+    "t": "Electroménager, cuisine"
+   },
+   {
+    "h": "https://www.auchan.fr/meuble-deco-linge-de-maison/ca-302202115",
+    "t": "Meuble, linge de maison"
+   },
+   {
+    "h": "https://www.auchan.fr/mode-bijoux-bagagerie/ca-31032021153703",
+    "t": "Mode, bijoux, bagagerie"
+   },
+   {
+    "h": "https://www.auchan.fr/puericulture/ca-7135353",
+    "t": "Puériculture"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3017620429484#",
+    "t": "Billetterie, traiteur, voyage"
+   },
+   {
+    "h": "https://www.auchan.fr/",
+    "t": "Accueil"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/promos",
+    "t": "Promos"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/bonbons/bonbons-d-halloween/ca-n050708",
+    "t": "Bonbons d'Halloween"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021?sort=default&catalogue_jouet01=catalogue_jouet01__greater__1",
+    "t": "Jouets de Noël"
+   },
+   {
+    "h": "https://www.auchan.fr/foire-aux-vins/ca-b201904021858",
+    "t": "Foire aux vins** d'automne"
+   },
+   {
+    "h": "https://www.auchan.fr/les-halles-d-auchan/ca-b202209050930",
+    "t": "Les halles d'Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/oeufs-produits-laitiers/ca-n01",
+    "t": "Produits laitiers, oeufs, fromages"
+   },
+   {
+    "h": "https://www.auchan.fr/fruits-legumes/ca-n03",
+    "t": "Fruits, légumes"
+   },
+   {
+    "h": "https://www.auchan.fr/boucherie-volaille-poissonnerie/ca-n02",
+    "t": "Boucherie, volaille, poissonnerie"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/ca-n12",
+    "t": "Charcuterie, traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/pain-patisserie/ca-n1203",
+    "t": "Pain, pâtisserie"
+   },
+   {
+    "h": "https://www.auchan.fr/surgeles/ca-n04",
+    "t": "Surgelés"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-sucree/ca-n05",
+    "t": "Epicerie sucrée"
+   },
+   {
+    "h": "https://www.auchan.fr/epicerie-salee/ca-n06",
+    "t": "Epicerie salée"
+   },
+   {
+    "h": "https://www.auchan.fr/boissons-sans-alcool/ca-n13",
+    "t": "Eaux, jus, soda, thés glacés"
+   },
+   {
+    "h": "https://www.auchan.fr/vins-bieres-alcool/ca-n07",
+    "t": "Vins, bières, alcools"
+   },
+   {
+    "h": "https://www.auchan.fr/hygiene-beaute-parapharmacie/ca-n09",
+    "t": "Hygiène, beauté"
+   },
+   {
+    "h": "https://www.auchan.fr/parapharmacie/ca-n14",
+    "t": "Parapharmacie"
+   },
+   {
+    "h": "https://www.auchan.fr/entretien-maison/ca-n10",
+    "t": "Entretien, accessoires de la maison"
+   },
+   {
+    "h": "https://www.auchan.fr/bebe/ca-n08",
+    "t": "Tout pour bébé"
+   },
+   {
+    "h": "https://www.auchan.fr/animalerie/ca-n11",
+    "t": "Animalerie"
+   },
+   {
+    "h": "https://www.auchan.fr/bio-et-nutrition/ca-b04",
+    "t": "Bio, végétal, diététique"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions-et-du-monde/ca-b08",
+    "t": "Produits du monde"
+   },
+   {
+    "h": "https://www.auchan.fr/produits-de-nos-regions/ca-b202406051513",
+    "t": "Produits de nos régions"
+   },
+   {
+    "h": "https://www.auchan.fr/boutique/baf-maison-loisirs",
+    "t": "Promos maison & loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/jardin-auto-brico/ca-2903202116100",
+    "t": "Jardin, auto, brico"
+   },
+   {
+    "h": "https://www.auchan.fr/jouets-jeux-video-loisirs/ca-101042021",
+    "t": "Jouets, jeux vidéo, loisirs"
+   },
+   {
+    "h": "https://www.auchan.fr/mode-bijoux-bagagerie/ca-31032021153703",
+    "t": "Mode, bijoux, bagagerie"
+   },
+   {
+    "h": "https://www.auchan.fr/high-tech-audio-tv-telephonie/ca-29032021170201",
+    "t": "High-tech, téléphonie"
+   },
+   {
+    "h": "https://www.auchan.fr/electromenager-cuisine/ca-201612151000",
+    "t": "Electroménager, cuisine"
+   },
+   {
+    "h": "https://www.auchan.fr/meuble-deco-linge-de-maison/ca-302202115",
+    "t": "Meuble, linge de maison"
+   },
+   {
+    "h": "https://www.auchan.fr/puericulture/ca-7135353",
+    "t": "Puériculture"
+   },
+   {
+    "h": "https://www.auchan.fr/marques-auchan/ep-marques-auchan",
+    "t": "Nos marques Auchan"
+   },
+   {
+    "h": "https://www.auchan.fr/recherche?text=3017620429484#",
+    "t": "Billetterie, traiteur, voyage"
+   },
+   {
+    "h": "https://www.auchan.fr/charcuterie-traiteur-pain/service-traiteur-sur-commande/ca-n120211",
+    "t": "Service traiteur"
+   },
+   {
+    "h": "https://www.auchan.fr/courses",
+    "t": "Vos courses à domicile, en drive ou click & collect"
+   }
+  ],
+  "shot": "u10.jpg"
+ },
+ {
+  "url": "https://www.biocoop.fr/catalogsearch/result/?q=3017620429484",
+  "status": 200,
+  "final": "https://www.biocoop.fr/catalogsearch/result/?q=3017620429484",
+  "title": "Produits pour votre recherche \" 3017620429484 \"",
+  "h1": "Produits pour votre recherche \" 3017620429484 \"",
+  "text": "Aller au contenu Aller au menu Aller à la recherche Ouvrir ou fermer le menu Rechercher Lancer la recherche Faire mes courses en ligne NOS PRODUITS NOS MAGASINS LA BIO AU QUOTIDIEN LE PROJET BIOCOOP NOUS REJOINDRE Accueil Résultats de recherche pour '3017620429484' Oups, nous n'avons pas trouvé d'éléments correspondant à votre recherche \" 3017620429484 \" Services client Informations utiles Courses en ligne Biocoop pro Informations légales Suivez-nous Paiements sécurisés L'abus d'alcool est dangereux pour la santé À consommer avec modération CODE DE LA SANTE PUBLIQUE, ART. L3323-3 Interdiction de vente de boissons alcooliques aux mineurs de moins de 18 ans La preuve de majorité de l'acheteur est exigée au moment de la vente en ligne. CODE DE LA SANTE PUBLIQUE : ART. L.3342-1, L.3342-3 ÉTHYLOTESTS EN VENTE SUR CE SITE L'ALCOOL EST EN CAUSE DANS 1 ACCIDENT MORTEL SUR 3* POUR SAVOIR SI VOUS POUVEZ CONDUIRE CONTRÔLEZ VOTRE ALCOOLÉMIE *Source sécurité routière Pour votre santé, mangez au moins cinq fruits et légumes par jour www.mangerbouger.fr Retour en haut",
+  "err": "",
+  "links": [
+   {
+    "h": "https://www.biocoop.fr/catalogsearch/result/?q=3017620429484#maincontent",
+    "t": "Aller au contenu"
+   },
+   {
+    "h": "https://www.biocoop.fr/catalogsearch/result/?q=3017620429484#navigation",
+    "t": "Aller au menu"
+   },
+   {
+    "h": "https://www.biocoop.fr/catalogsearch/result/?q=3017620429484#search",
+    "t": "Aller à la recherche"
+   },
+   {
+    "h": "https://www.biocoop.fr/",
+    "t": "Biocoop"
+   },
+   {
+    "h": "https://www.biocoop.fr/magasins",
+    "t": "Trouver mon magasin"
+   },
+   {
+    "h": "https://www.biocoop.fr/magasins",
+    "t": "Faire mes courses en ligne"
+   },
+   {
+    "h": "https://www.biocoop.fr/customer/account/login/",
+    "t": "Mon compte"
+   },
+   {
+    "h": "https://www.biocoop.fr/nos-magasins",
+    "t": "NOS MAGASINS"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Nos magasins"
+   },
+   {
+    "h": "https://www.biocoop.fr/nos-magasins/magasins",
+    "t": "Trouver un magasin"
+   },
+   {
+    "h": "https://www.biocoop.fr/nos-magasins/actualites-magasins",
+    "t": "Les actualités magasins"
+   },
+   {
+    "h": "https://www.biocoop.fr/magasins",
+    "t": "Trouver un magasin"
+   },
+   {
+    "h": "https://www.biocoop.fr/nos-magasins/actualites-magasins",
+    "t": "Actualités de nos magasins"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien",
+    "t": "LA BIO AU QUOTIDIEN"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "La Bio Au Quotidien"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/la-bio-en-france",
+    "t": "Qu'est-ce que la Bio ?"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/etiquetage",
+    "t": "Les Labels"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/notre-magazine",
+    "t": "Notre magazine"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-podcasts",
+    "t": "Nos podcasts"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/recettes/categorie/cuisine",
+    "t": "Nos recettes"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Nos conseils pour mieux consommer"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Nos conseils pour mieux consommer"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/les-produits-bebe",
+    "t": "Alimentation et soin Enfant"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/reduction-des-dechets",
+    "t": "Consommer Zéro déchet"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/flexitarisme",
+    "t": "Régime flexitarien"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/sans-gluten",
+    "t": "Régime sans gluten"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/beaute-hygiene",
+    "t": "Hygiène et beauté"
+   },
+   {
+    "h": "https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/produits-d-entretiens-bio",
+    "t": "Entretien de maison"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop",
+    "t": "LE PROJET BIOCOOP"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Le Projet Biocoop"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop",
+    "t": "La Coopérative"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "La Coopérative"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/notre-histoire",
+    "t": "Notre histoire"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/la-charte-biocoop",
+    "t": "Notre charte"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/ecosysteme-biocoop",
+    "t": "Notre modèle coopératif"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/nos-paysans-associes",
+    "t": "Nos Paysan.ne.s Associé.e.s"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/fonds-de-dotation-biocoop",
+    "t": "Nos actions solidaires"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/restauration-collective",
+    "t": "Biocoop Restauration"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/biocoop/transport",
+    "t": "La Société de Transport Biocoop"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Nos engagements"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Nos engagements"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/exigences-biocoop",
+    "t": "La Bio selon Biocoop"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/producteurs-locaux",
+    "t": "La Production Locale"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/commerce-equitable",
+    "t": "Le Commerce équitable"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/ultra-transformation",
+    "t": "Des produits sains et simples"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/fruits-legumes-les-calendriers-de-saisonnalite-selon-biocoop",
+    "t": "Le respect des saisons"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/la-biodiversite-dans-le-champ-et-dans-l-assiette",
+    "t": "La biodiversité"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/la-marque-de-biocoop",
+    "t": "La Marque de Biocoop"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-engagements/nos-prix-engages",
+    "t": "Nos prix engagés"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/nos-actualites",
+    "t": "Nos actualités"
+   },
+   {
+    "h": "https://www.biocoop.fr/le-projet-biocoop/espace-presse",
+    "t": "Notre Espace Presse"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre",
+    "t": "NOUS REJOINDRE"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Nous Rejoindre"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/recrutement-et-carriere",
+    "t": "Recrutement et carrière"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Recrutement et carrière"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/recrutement-et-carriere/nos-engagements-rh",
+    "t": "Pourquoi nous rejoindre ?"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/recrutement-et-carriere/nos-offres-d-emploi",
+    "t": "Nos offres d'emploi"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/recrutement-et-carriere/nos-metiers",
+    "t": "Nos métiers"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/devenir-entrepreneur-commercant",
+    "t": "Devenir entrepreneur commerçant"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Devenir entrepreneur commerçant"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/devenir-entrepreneur-commercant/donnez-du-sens-a-votre-envie-d-entreprendre",
+    "t": "Donnez du sens à votre envie d'entreprendre"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/devenir-entrepreneur-commercant/faq-et-temoignages",
+    "t": "FAQ et témoignages"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/devenir-entrepreneur-commercant/cession-magasins",
+    "t": "Cessions magasins"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/se-faire-referencer-fournisseur",
+    "t": "Devenir fournisseur"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/recrutement-et-carriere/nos-engagements-rh",
+    "t": "Nos engagements rh"
+   },
+   {
+    "h": "https://www.biocoop.fr/nous-rejoindre/recrutement-et-carriere/nos-offres-d-emploi",
+    "t": "Nos offres d'emploi"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac.html",
+    "t": "Vrac"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Vrac"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac.html",
+    "t": "Tout voir"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/aperitif.html",
+    "t": "Apéritif"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Apéritif"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/aperitif.html",
+    "t": "Tout voir"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/aperitif/fruits-secs.html",
+    "t": "Fruits secs"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/aperitif/biscuits-crackers.html",
+    "t": "Biscuits, crackers"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/biscuits-confiseries.html",
+    "t": "Biscuits, Confiseries"
+   },
+   {
+    "h": "javascript:void(0)",
+    "t": "Biscuits, Confiseries"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/biscuits-confiseries.html",
+    "t": "Tout voir"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/biscuits-confiseries/biscuits-cookies.html",
+    "t": "Biscuits, cookies"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/biscuits-confiseries/confiseries.html",
+    "t": "Confiseries"
+   },
+   {
+    "h": "https://www.biocoop.fr/vrac/cereales-legumineuses.html",
+    "t": "Céréales, Légumineuses"
+   }
+  ],
+  "shot": "u11.jpg"
+ },
+ {
+  "url": "https://courses.monoprix.fr/search?q=3017620429484",
+  "status": 200,
+  "final": "https://courses.monoprix.fr/search?q=3017620429484",
+  "title": "Résultats de recherche pour 3017620429484 - Monoprix Monoprix.fr : Livraison courses à domicile en 24h",
+  "h1": "3017620429484",
+  "text": "Aller directement au contenu Aller directement au moteur de recherche Aller directement en bas de la page Fermer le message pop-up Promo Bonbons Halloween Prix en baisse Mes marques Monoprix Naturalia Appli mobile Promotions Présentation du service Monoprix Mode et Maison (s’ouvre dans une nouvelle fenêtre) Menu des onglets du haut de l’écran Page d’accueil Rechercher un article Aller au paiement Nombre total d’articles dans votre panier 0. Montant du panier 0,00 €. 0,00 € 60,00 € Bouton du menu principal BIENVENUE2620€ offerts dès 80€ d'achats sur vos 2 premières commandes + 2 mois de livraison offerte* EN SAVOIR + résultats de la recherche pour3017620429484 Nous n’avons trouvé aucun produit Nos rayons Nous contacter (s’ouvre dans une nouvelle fenêtre) (s’ouvre dans une nouvelle fenêtre) Politique relative aux cookies A propos Aide & Mentions Nos autres sites Monoprix.fr Courses Plus de services © Monoprix 2025 facebook (s’ouvre dans une nouvelle fenêtre) twitter (s’ouvre dans une nouvelle fenêtre) pinterest (s’ouvre dans une nouvelle fenêtre)",
+  "err": "",
+  "links": [
+   {
+    "h": "https://courses.monoprix.fr/search?q=3017620429484#main",
+    "t": "Aller directement au contenu"
+   },
+   {
+    "h": "https://courses.monoprix.fr/search?q=3017620429484#search",
+    "t": "Aller directement au moteur de recherche"
+   },
+   {
+    "h": "https://courses.monoprix.fr/search?q=3017620429484#footer",
+    "t": "Aller directement en bas de la page"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/presentation-monoprix-plus",
+    "t": "Message pop-up : BIENVENUE26"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories/promotions/nos-promos-du-moment/promo-halloween-jusqu-%C3%A0-50-sur-le-2%C3%A8me-sur-une-s%C3%A9lection-de-bonbons/a0d3e167-8700-4828-82e9-d60b00af9a07",
+    "t": "Promo Bonbons Halloween"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories/nos-s%C3%A9lections/prix-en-baisse-alimentaire/6c2cb692-718a-42a4-901d-2a81a91656f9",
+    "t": "Prix en baisse"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories/mes-marques-monoprix/cf99332a-fc5d-4264-b5a5-3301621023e7",
+    "t": "Mes marques Monoprix"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories/naturalia/ce88c03d-e98a-4236-b9ba-b759937c0a5d",
+    "t": "Naturalia"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/appli-mobile-monoprix-plus",
+    "t": "Appli mobile"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories/promotions/3d423a4e-70eb-4d3b-8b86-f64a46097f8f",
+    "t": "Promotions"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/presentation-monoprix-plus",
+    "t": "Présentation du service"
+   },
+   {
+    "h": "https://www.monoprix.fr/mode.html",
+    "t": "Monoprix Mode et Maison (s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/",
+    "t": "Page d’accueil"
+   },
+   {
+    "h": "https://courses.monoprix.fr/",
+    "t": "Page d’accueil"
+   },
+   {
+    "h": "https://courses.monoprix.fr/checkout",
+    "t": "Aller au paiement"
+   },
+   {
+    "h": "https://courses.monoprix.fr/basket",
+    "t": "0,00 €"
+   },
+   {
+    "h": "https://courses.monoprix.fr/login",
+    "t": "Se connecter"
+   },
+   {
+    "h": "https://courses.monoprix.fr/register",
+    "t": "S’inscrire"
+   },
+   {
+    "h": "https://courses.monoprix.fr/",
+    "t": "Accueil"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories?source=navigation",
+    "t": "Parcourir"
+   },
+   {
+    "h": "https://courses.monoprix.fr/favorites?source=header%20dropdown",
+    "t": "Vos favoris"
+   },
+   {
+    "h": "https://courses.monoprix.fr/lists?source=header%20dropdown",
+    "t": "Liste de courses"
+   },
+   {
+    "h": "https://courses.monoprix.fr/regulars?source=header%20dropdown",
+    "t": "Produits réguliers"
+   },
+   {
+    "h": "https://courses.monoprix.fr/",
+    "t": "Sélectionner votre emplacement de livraison"
+   },
+   {
+    "h": "https://courses.monoprix.fr/categories?source=navigation",
+    "t": "Tous les produits"
+   },
+   {
+    "h": "https://courses.monoprix.fr/favorites?source=header%20button",
+    "t": "Favoris"
+   },
+   {
+    "h": "https://courses.monoprix.fr/lists?source=header%20button",
+    "t": "Liste de courses"
+   },
+   {
+    "h": "https://courses.monoprix.fr/regulars?source=header%20button",
+    "t": "Produits réguliers"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/presentation-monoprix-plus",
+    "t": "BIENVENUE2620€ offerts dès 80€ d'achats sur vos 2 premières commandes + 2 mois de livraison offerte* EN SAVOIR +"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/presentation-monoprix-plus",
+    "t": "EN SAVOIR +"
+   },
+   {
+    "h": "https://www.monoprix.fr/contact.html",
+    "t": "Nous contacter (s’ouvre dans une nouvelle fenêtre) (s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/cookie-policy",
+    "t": "Politique relative aux cookies"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/listes-des-magasins",
+    "t": "Nos magasins"
+   },
+   {
+    "h": "https://www.monoprix.fr/listes-des-magasins.html",
+    "t": "Trouver mon magasin"
+   },
+   {
+    "h": "https://www.monoprix.fr/le-programme-de-fidelite-m.html",
+    "t": "Programme de fidélité"
+   },
+   {
+    "h": "https://www.monoprix.fr/nos-catalogues.html",
+    "t": "Nos catalogues"
+   },
+   {
+    "h": "https://www.monoprix.fr/liste-magasins-disposant-rayon-parapharmacie.html",
+    "t": "Nos magasins avec Parapharmacie(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://www.monoprix.fr/privacy.html",
+    "t": "Données personnelles et cookies(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/mention-legale-conditions-offres",
+    "t": "Mention légale et conditions de nos offres(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/contacts",
+    "t": "Contacts"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/rappel-produits",
+    "t": "Rappel produits"
+   },
+   {
+    "h": "https://www.monoprix.fr/conditions-generales-de-vente-courses-alimentaires.html",
+    "t": "CGV & Mentions légales(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://client.monoprix.fr/monoprix-shopping/contact-service-clients",
+    "t": "Droit de rétractation(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://entreprise.monoprix.fr/",
+    "t": "L'entreprise"
+   },
+   {
+    "h": "https://recrutement.monoprix.fr/fr",
+    "t": "Nous rejoindre(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://entreprise.monoprix.fr/presseroom/communiques-de-presse/",
+    "t": "Espace Presse"
+   },
+   {
+    "h": "https://entreprise.monoprix.fr/franchises/parcours-franchises/",
+    "t": "Espace Franchisé(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/affiliation-kwanko",
+    "t": "Affiliation monoprix.fr"
+   },
+   {
+    "h": "https://mag.bonsplansdesmarques.com/fr/monoprix/",
+    "t": "Bons plans des marques"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/tariflivraison",
+    "t": "Tarifs de livraison"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/presentation-monoprix-plus",
+    "t": "Présentation du service"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/astuces",
+    "t": "Astuces"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/abonnementmplus",
+    "t": "Abonnement M+"
+   },
+   {
+    "h": "https://www.monoprix.fr/mes-courses-en-ligne.html",
+    "t": "FAQ"
+   },
+   {
+    "h": "https://apps.apple.com/fr/app/monoprix-plus/id1495370014",
+    "t": "Appli mobile Apple(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://play.google.com/store/apps/details?id=fr.monoprix.ocommerce&pli=1",
+    "t": "Appli mobile Android(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/listes-des-magasins",
+    "t": "Nos magasins"
+   },
+   {
+    "h": "https://www.monoprix.fr/listes-des-magasins.html",
+    "t": "Trouver mon magasin"
+   },
+   {
+    "h": "https://www.monoprix.fr/le-programme-de-fidelite-m.html",
+    "t": "Programme de fidélité"
+   },
+   {
+    "h": "https://www.monoprix.fr/nos-catalogues.html",
+    "t": "Nos catalogues"
+   },
+   {
+    "h": "https://www.monoprix.fr/liste-magasins-disposant-rayon-parapharmacie.html",
+    "t": "Nos magasins avec Parapharmacie(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://www.monoprix.fr/privacy.html",
+    "t": "Données personnelles et cookies(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/mention-legale-conditions-offres",
+    "t": "Mention légale et conditions de nos offres(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/contacts",
+    "t": "Contacts"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/rappel-produits",
+    "t": "Rappel produits"
+   },
+   {
+    "h": "https://www.monoprix.fr/conditions-generales-de-vente-courses-alimentaires.html",
+    "t": "CGV & Mentions légales(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://client.monoprix.fr/monoprix-shopping/contact-service-clients",
+    "t": "Droit de rétractation(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://entreprise.monoprix.fr/",
+    "t": "L'entreprise"
+   },
+   {
+    "h": "https://recrutement.monoprix.fr/fr",
+    "t": "Nous rejoindre(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://entreprise.monoprix.fr/presseroom/communiques-de-presse/",
+    "t": "Espace Presse"
+   },
+   {
+    "h": "https://entreprise.monoprix.fr/franchises/parcours-franchises/",
+    "t": "Espace Franchisé(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/affiliation-kwanko",
+    "t": "Affiliation monoprix.fr"
+   },
+   {
+    "h": "https://mag.bonsplansdesmarques.com/fr/monoprix/",
+    "t": "Bons plans des marques"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/tariflivraison",
+    "t": "Tarifs de livraison"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/presentation-monoprix-plus",
+    "t": "Présentation du service"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/astuces",
+    "t": "Astuces"
+   },
+   {
+    "h": "https://courses.monoprix.fr/content/abonnementmplus",
+    "t": "Abonnement M+"
+   },
+   {
+    "h": "https://www.monoprix.fr/mes-courses-en-ligne.html",
+    "t": "FAQ"
+   },
+   {
+    "h": "https://apps.apple.com/fr/app/monoprix-plus/id1495370014",
+    "t": "Appli mobile Apple(s’ouvre dans une nouvelle fenêtre)"
+   },
+   {
+    "h": "https://play.google.com/store/apps/details?id=fr.monoprix.ocommerce&pli=1",
+    "t": "Appli mobile Android(s’ouvre dans une nouvelle fenêtre)"
+   }
+  ],
+  "shot": "u12.jpg"
+ }
+]
