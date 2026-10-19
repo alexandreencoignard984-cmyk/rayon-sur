@@ -45,6 +45,9 @@ Snapchat ou de Claude).
   `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Leclerc, Cora ; Google + code-barres pour
   Intermarché ; recherche par nom ailleurs). Magasins proches : `computeNear`, `placesAround`, tuiles
   `data/stores/`. Position : `getPosition`, `autoLocate`, adresse enregistrée en repli.
+- Recettes : `ING` (ingrédients → catégories de la base) et `RECIPES` (93 recettes : `g` rubrique, `e` pictogramme,
+  `t` minutes, `st` étapes, `i` ingrédients `[id, quantité pour 4, unité, facultatif]`). Un ingrédient qui pointe vers
+  une catégorie absente de la base doit l'ajouter dans `tools/config.json` (`extra`).
 - `window.__RS` expose des fonctions pour les tests.
 - **Données** : `data/index.json` + `data/a/<rayon>.json` (produits Open Food Facts rangés par rayon, mis à jour
   chaque lundi par `.github/workflows/data.yml` → `tools/build_data.py`, réglages dans `tools/config.json`) ;
@@ -62,6 +65,7 @@ Snapchat ou de Claude).
   - `verdicts.py` : verdicts allergènes (mots-clés, faux amis, règles de sécurité). À compléter à chaque
     changement du verdict.
   - `fiches.py` : allergènes repérés mais non déclarés, listes incomplètes, signalement, fiche mise à jour en direct.
+  - `recettes.py` : catalogue des recettes (ingrédients connus, étapes, temps), filtres, préparation.
   - `localisation.py` : position, adresse, magasins, horaires, liens drive. Contient aussi les outils communs
     (`serve`, `new_page`, `setup_routes` qui simule les services externes, `check`, `wait_near`, `RENNES`).
   - `navigation.py` : retour, onglets, recettes, messages, carte drive, barre du bas, positions par onglet.

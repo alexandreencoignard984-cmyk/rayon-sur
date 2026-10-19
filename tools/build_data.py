@@ -21,8 +21,8 @@ MAX_PAGES = int(os.environ.get('MAX_PAGES', 4))
 IMG_PREFIX = 'https://images.openfoodfacts.org/images/products/'
 COLS = ['code', 'name', 'brands', 'qty', 'stores', 'allergens', 'traces', 'labels', 'ingr', 'analysis',
         'nutri', 'nscore', 'nova', 'eco', 'escore', 'img', 'scans', 'nut', 'ai', 'q', 'mod', 'ia']
-# q : fiabilité de la liste d'ingrédients — « i » à compléter selon Open Food Facts, « u » plus de la moitié des
-#     ingrédients non reconnus par Open Food Facts (texte mal lu ou dans une autre langue)
+# q : fiabilité de la liste d'ingrédients — « i » à compléter selon Open Food Facts. (La part d'ingrédients non
+#     reconnus n'est pas fiable dans l'export : l'appli la prend dans la fiche en direct.)
 # mod : date de dernière modification de la fiche (jour, AAAA-MM-JJ)
 # ia : allergènes repérés dans les ingrédients reconnus par Open Food Facts (même s'ils ne sont pas déclarés)
 INGR_MAX = 6000
@@ -50,8 +50,6 @@ def ingredient_info(tags_text, states_text):
     q = ''
     if 'en:ingredients-to-be-completed' in (states_text or ''):
         q += 'i'
-    if len(tags) >= 3 and sum(1 for t in tags if not t.startswith('en:')) / len(tags) >= 0.5:
-        q += 'u'
     ia = sorted({IA_OF[t] for t in tags if t in IA_OF})
     return q, ','.join(ia)
 NUT = ['energy-kcal_100g', 'fat_100g', 'saturated-fat_100g', 'carbohydrates_100g', 'sugars_100g', 'fiber_100g', 'proteins_100g', 'salt_100g']

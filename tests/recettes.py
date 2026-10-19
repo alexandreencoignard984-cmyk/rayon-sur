@@ -1,0 +1,67 @@
+"""Recettes : catalogue complet (ingrédients connus, étapes, temps), filtres, fiche d'une recette avec sa préparation.
+Usage : python3 tests/recettes.py"""
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from localisation import serve, new_page, check, FAIL, RENNES, wait_near
+from playwright.sync_api import sync_playwright
+
+GROUPS = ['Plats', 'Entrées et salades', 'Soupes', 'Apéritif', 'Petit-déjeuner', 'Desserts et goûter']
+httpd, base = serve()
+with sync_playwright() as p:
+    b = p.chromium.launch()
+    ctx, page, errs, _ = new_page(b, base, geo=RENNES)
+    page.wait_for_function('() => window.__RS && window.__RS.RECIPES', timeout=30000)
+
+    print('1. Catalogue')
+    info = page.evaluate("""() => { const R = window.__RS;
+      return R.RECIPES.map(r => ({ id:r.id, n:r.n, g:r.g, t:r.t, e:r.e, st:(r.st || []).length, bad:r.i.filter(x => !R.ING[x[0]]).map(x => x[0]),
+        badq:r.i.filter(x => x.length > 1 && x[1] != null && !(typeof x[1] === 'number' && x[1] > 0)).length })); }""")
+    ids = [r['id'] for r in info]
+    check(len(info) >= 90, f'{len(info)} recettes')
+    check(len(set(ids)) == len(ids), 'identifiants uniques')
+    check(all(not r['bad'] for r in info), 'tous les ingrédients existent : ' + ', '.join(f"{r['id']}:{r['bad']}" for r in info if r['bad']))
+    check(all(r['badq'] == 0 for r in info), 'quantités valides')
+    check(all(r['st'] >= 2 and r['t'] and r['e'] for r in info), 'chaque recette a des étapes, un temps et un pictogramme : ' + ', '.join(r['id'] for r in info if not (r['st'] >= 2 and r['t'] and r['e'])))
+    by = {g: sum(1 for r in info if r['g'] == g) for g in GROUPS}
+    check(all(by[g] >= 5 for g in GROUPS) and all(r['g'] in GROUPS for r in info), f'rubriques : {by}')
+
+    print('2. Onglet Recettes : filtres et recherche')
+    page.click('nav [data-go="recipes"]'); page.wait_for_timeout(300)
+    chips = page.eval_on_selector_all('#recCats .chip', 'els => els.map(e => e.textContent)')
+    check(chips[:2] == ['Toutes', 'Végétarien'] and 'Soupes' in chips and 'Moins de 20 min' in chips, 'puces : ' + ', '.join(chips))
+    page.click('#recCats [data-rf="Soupes"]'); page.wait_for_timeout(200)
+    heads = page.eval_on_selector_all('#recCatalog .sec h2', 'els => els.map(e => e.textContent)')
+    check(len(heads) == 1 and heads[0].startswith('Soupes'), 'filtre Soupes : ' + ', '.join(heads))
+    page.click('#recCats [data-rf="veg"]'); page.wait_for_timeout(200)
+    names = page.eval_on_selector_all('#recCatalog .rrow .name', 'els => els.map(e => e.textContent)')
+    check(len(names) >= 20 and not any(n in names for n in ['Pâtes bolognaise', 'Moules marinières', 'Tartiflette', 'Salade niçoise']) and 'Ratatouille' in names, f'filtre Végétarien : {len(names)} recettes, sans viande ni poisson')
+    page.click('#recCats [data-rf="quick"]'); page.wait_for_timeout(200)
+    metas = page.eval_on_selector_all('#recCatalog .rrow .meta', 'els => els.map(e => e.textContent)')
+    check(metas and all(m.split(' min')[0].isdigit() and int(m.split(' min')[0]) <= 20 for m in metas), f'moins de 20 min : {len(metas)} recettes')
+    page.click('#recCats [data-rf="quick"]'); page.wait_for_timeout(200)
+    check(page.get_attribute('#recCats [data-rf=""]', 'aria-pressed') == 'true', 'retoucher une puce : retour à toutes les recettes')
+    page.fill('#recQ', 'crevette'); page.wait_for_timeout(300)
+    names = page.eval_on_selector_all('#recCatalog .rrow .name', 'els => els.map(e => e.textContent)')
+    check('Crevettes sautées à l\'ail' in names, 'recherche « crevette » : ' + ', '.join(names))
+    page.fill('#recQ', ''); page.wait_for_timeout(200)
+
+    print('3. Fiche d\'une recette : temps et préparation')
+    page.click('text=Tiramisu'); page.wait_for_selector('#recIngr li')
+    check('30 min' in page.inner_text('#recMeta') and 'Desserts' in page.inner_text('#recMeta'), 'infos : ' + page.inner_text('#recMeta'))
+    check(page.is_visible('#recSteps') and page.locator('#recStepList li').count() == 5, 'préparation en 5 étapes')
+    check(page.locator('#recIngr li').count() == 6, '6 ingrédients')
+    page.wait_for_function("() => !document.querySelector('#recIngr .pending')", timeout=30000)
+    check(page.inner_text('#recLink') == 'Plus d\'idées sur Marmiton', 'lien Marmiton en complément')
+    page.click('#recBack'); page.wait_for_timeout(300)
+    page.click('text=Blanquette de veau'); page.wait_for_selector('#recIngr li')
+    page.wait_for_function("() => !document.querySelector('#recIngr .pending')", timeout=30000)
+    check(page.locator('#recStepList li').count() == 5 and page.locator('#recIngr li').count() == 12, 'blanquette : 12 ingrédients, 5 étapes')
+    page.click('#recBack'); page.wait_for_timeout(300)
+    page.click('#recNew'); page.wait_for_timeout(300)
+    check(page.is_visible('#recEditor'), 'créer sa recette : toujours possible')
+    page.go_back(); page.wait_for_timeout(300)
+    check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
+    b.close()
+httpd.shutdown()
+print('\n' + ('TOUT EST OK' if not FAIL else f'{len(FAIL)} ÉCHEC(S)'))
+sys.exit(1 if FAIL else 0)

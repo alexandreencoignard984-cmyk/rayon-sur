@@ -1204,6 +1204,26 @@
    "tag": "en:pestos",
    "name": "Pesto",
    "pages": 1
+  },
+  {
+   "tag": "en:chickpeas",
+   "name": "Pois chiches",
+   "pages": 1
+  },
+  {
+   "tag": "en:quinoa",
+   "name": "Quinoa",
+   "pages": 1
+  },
+  {
+   "tag": "en:breadcrumbs",
+   "name": "Chapelures",
+   "pages": 1
+  },
+  {
+   "tag": "en:cocoa-and-chocolate-powders",
+   "name": "Cacaos en poudre",
+   "pages": 1
   }
  ]
 }

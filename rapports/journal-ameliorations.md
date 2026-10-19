@@ -27,12 +27,27 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 - Faux doutes ajoutés en 3.14 (sans danger, « À vérifier ») : madeleines ou cookies sans gluten qui ne disent pas
   « sans gluten » dans les ingrédients, tranches végétales « saveur emmental », sirop « saveur spéculoos ». On
   pourrait les lever avec le label « sans gluten » / végan d'Open Food Facts.
+- Recettes : après chaque construction de la base, vérifier que chaque ingrédient trouve des produits (un contrôle
+  automatique sur le modèle de `tools/audit_drive.py` serait utile), notamment cacao, quinoa, chapelure.
 - Mollusques : les « coques » ne sont pas reconnues (le mot se confond avec « fruits à coque », présent dans
   16 000 fiches). À faire avec une règle qui écarte « fruits à coque ».
 - Tâches programmées de GitHub très en retard (la « Base produits » prévue à 3 h 17 UTC a démarré à 8 h 46) :
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 · 3.18
+- **Recettes bien plus complètes** : 93 recettes (61 nouvelles) en 6 rubriques — plats, entrées et salades, soupes,
+  apéritif, petit-déjeuner, desserts et goûter. Chacune a un pictogramme, son temps et **ses étapes de
+  préparation** (Marmiton devient un simple complément). Filtres en puces : Végétarien (57 recettes), Moins de
+  20 min, et chaque rubrique. 60 nouveaux ingrédients ; 4 catégories ajoutées à la base (pois chiches, quinoa,
+  chapelure, cacao en poudre) pour les trouver en magasin.
+- **Correction de la 3.17** : l'indicateur « ingrédients mal lus », calculé sur l'export d'Open Food Facts, n'était
+  pas fiable (œufs frais, yaourts nature… passaient « À vérifier », environ 4 000 produits par allergène). Il n'est
+  plus utilisé que d'après la fiche en direct, où Open Food Facts donne le nombre d'ingrédients inconnus. Restent
+  actifs sur la base : liste « à compléter » (600 à 1 200 produits par allergène) et allergène repéré par Open Food
+  Facts mais non déclaré (50 à 300 produits par allergène).
+- Tests : `tests/recettes.py` (catalogue, filtres, préparation).
 
 ### 2026-10-19 · 3.17
 - **Fiches produit plus fiables.** Pourquoi des produits sortaient « Compatible » à tort : la fiche Open Food Facts
