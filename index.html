@@ -160,6 +160,31 @@ p{margin:0}
 
 /* état vide de l'accueil */
 .welcome{margin-top:18px;padding:22px 18px;border-radius:var(--r);background:var(--surface);text-align:center;box-shadow:var(--card)}
+#intro{text-align:left;padding:18px 16px}
+#intro h2{margin:0;font-size:18px}
+#intro .steps{max-width:none;margin:8px 0 12px}
+.vd{display:inline-flex;align-items:center;gap:4px;font-weight:700;white-space:nowrap}
+.vd::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.vd.ok{color:var(--ok)} .vd.check{color:var(--warn)} .vd.no{color:var(--no)}
+.scanhint{width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.scanhint svg{width:22px;height:22px}
+/* accueil : les rayons les plus courants, en grandes tuiles */
+.home{margin-top:22px}
+.home h2{margin:0;font-family:var(--display);font-stretch:75%;font-weight:800;font-size:27px;line-height:1.1}
+.home-sub{margin:4px 0 14px;color:var(--muted);font-size:15px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{display:grid;justify-items:center;align-content:center;gap:7px;min-height:94px;padding:12px 6px 10px;border:0;border-radius:18px;background:var(--sunk);color:var(--ink);text-align:center;transition:transform .12s}
+.tile .em{font-size:34px;line-height:1}
+.tile b{font-family:var(--display);font-stretch:87%;font-weight:700;font-size:15px;line-height:1.15}
+.tile:active{transform:scale(.96)}
+.tile[aria-pressed="true"]{background:var(--ok-bg);box-shadow:inset 0 0 0 2px var(--primary)}
+.allrayons{width:100%;margin-top:10px}
+.resume{display:flex;align-items:center;gap:6px;width:100%;margin:0 0 12px;padding:12px 14px;border:0;border-radius:14px;background:var(--ok-bg);color:var(--ink);font-size:15px;text-align:left}
+.resume b{color:var(--ok)}
+#screen-search[data-view="home"] #results,#screen-search[data-view="home"] #status,#screen-search[data-view="home"] #quick,#screen-search[data-view="home"] #rayonBtn{display:none}
+#screen-search[data-view="results"] #home,#screen-search[data-view="results"] #intro{display:none}
+#screen-search[data-view="results"] .top{flex-wrap:wrap;row-gap:0}
+#screen-search[data-view="results"] .top h1{order:2;flex-basis:100%;font-size:30px;white-space:normal}
 .welcome .ill{width:64px;height:64px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;background:var(--ok-bg);color:var(--ok)}
 .welcome .ill svg{width:34px;height:34px}
 .welcome p{color:var(--muted);font-size:15px;max-width:30ch;margin:6px auto 0}
@@ -479,8 +504,9 @@ dialog .toast{position:fixed}
 <div class="wrap">
 
   <!-- RECHERCHE -->
-  <section class="screen" id="screen-search" aria-labelledby="t-search">
+  <section class="screen" id="screen-search" data-view="home" aria-labelledby="t-search">
     <header class="top">
+      <button class="backbtn" id="homeBack" type="button" hidden><svg aria-hidden="true"><use href="#i-back"/></svg>Rayons</button>
       <h1 id="t-search">Rayon sûr</h1>
       <button class="pchip" type="button" id="profileLine" data-go="profile" aria-label="Mon profil"></button>
     </header>
@@ -507,6 +533,14 @@ dialog .toast{position:fixed}
       <div class="chiprow quick" id="quick" aria-label="Rayons rapides"></div>
     </form>
 
+    <section class="home" id="home" aria-labelledby="t-home">
+      <h2 id="t-home">Que veux-tu acheter ?</h2>
+      <p class="home-sub">Touche un rayon : l'appli trie ses produits selon tes allergies, dans tes magasins.</p>
+      <button class="resume" id="resume" type="button" hidden></button>
+      <div class="tiles" id="homeGrid"></div>
+      <button class="ghost allrayons" id="allRayons" type="button">Voir tous les rayons</button>
+    </section>
+
     <p class="status" id="status" aria-live="polite"></p>
 
     <section id="results" hidden aria-label="Résultats">
@@ -528,14 +562,14 @@ dialog .toast{position:fixed}
     </section>
 
     <div class="welcome" id="intro">
-      <div class="ill"><svg aria-hidden="true"><use href="#i-basket"/></svg></div>
       <h2>Comment ça marche</h2>
       <ol class="steps">
-        <li><b>Choisis un rayon</b> ci-dessus, ou tape un produit.</li>
-        <li><b>Regarde les « Compatibles »</b> : triés selon tes allergies.</li>
-        <li><b>Ajoute à ta liste</b> avec le bouton +, puis vérifie le stock au drive.</li>
+        <li><b>Choisis un rayon</b> ci-dessus, ou tape le nom d'un produit.</li>
+        <li><b>Lis le verdict</b> de chaque produit : <span class="vd ok">Compatible</span> rien de ce que tu évites, <span class="vd check">À vérifier</span> lis l'étiquette, <span class="vd no">Exclu</span> contient un de tes allergènes.</li>
+        <li><b>Ajoute à ta liste</b> avec le bouton +, puis vérifie le stock au drive de ton magasin.</li>
       </ol>
-      <p>En magasin, scanne un code-barres avec l'onglet Scanner.</p>
+      <p class="hint" style="margin:0 0 8px">En magasin, vérifie un produit en scannant son code-barres :</p>
+      <button class="ghost scanhint" type="button" data-go="scan"><svg aria-hidden="true"><use href="#i-barcode"/></svg>Scanner un code-barres</button>
     </div>
   </section>
 
@@ -1118,6 +1152,9 @@ if (!['', 'a', 'b', 'c', 'd'].includes(S.nutri)) S.nutri = '';
 if (!['', '1', '2', '3'].includes(String(S.nova || ''))) S.nova = '';
 if (!['popularity', 'nutriscore', 'nova', 'green', 'name'].includes(S.sort)) S.sort = 'popularity';
 if (typeof S.terms !== 'string') S.terms = '';
+// dernière recherche lancée (bouton « Reprendre » de l'accueil) ; avant la 3.14 : le rayon et le nom en cours
+if (typeof S.lastTerms !== 'string') S.lastTerms = S.terms;
+if (typeof S.lastRayon !== 'string' || !(S.lastRayon in RAYON_NAME)) S.lastRayon = S.rayon;
 for (const k of ['bio', 'vegan', 'vegetarian', 'palm', 'wide', 'ran']) S[k] = !!S[k];
 const saveSearch = () => ls.set(K.search, S);
 
@@ -1580,6 +1617,10 @@ window.addEventListener('popstate', e => {
     if (st.view === 'detail' && st.id){ recViewFromNav(st.id); return; }
     if (!st.view){ RV = null; ED = null; recView('home'); }
   }
+  if (sc === 'search'){
+    if (st.view === 'results'){ if (R) setSearchView('results'); homeBelow = false; }
+    else if (searchView === 'results'){ setSearchView('home'); homeBelow = false; }
+  }
   go(sc, { pop:true });
 });
 const scrollMem = {};
@@ -1595,8 +1636,9 @@ function go(name, { pop = false, init = false, replace = false } = {}){
   if (name === 'scan') renderHistory();
   if (name === 'search') renderProfileLine();
   if (name === 'recipes') showRecipes();
-  if (init || replace) navReplace({ screen:name }, navUrl(name));
-  else if (!pop && name !== screenNow) navPush({ screen:name }, navUrl(name));
+  const nst = name === 'search' && searchView === 'results' ? { screen:name, view:'results' } : { screen:name };
+  if (init || replace) navReplace(nst, navUrl(name));
+  else if (!pop && name !== screenNow){ navPush(nst, navUrl(name)); homeBelow = false; }
   screenNow = name;
   // un message « Ajouté à ta liste · Voir ma liste » ne suit pas l'utilisateur sur un autre écran
   if (prev !== name && $('#toast').classList.contains('hasact')) hideToast();
@@ -1607,6 +1649,7 @@ $$('.tabbar button').forEach(b => b.addEventListener('click', () => {
   if (b.dataset.go !== screenNow){ go(b.dataset.go); return; }
   // onglet déjà ouvert : retour à la liste des recettes, sinon en haut de l'écran
   if (screenNow === 'recipes' && !$('#recDetail').hidden){ $('#recBack').click(); return; }
+  if (screenNow === 'search' && searchView === 'results'){ backToHome(); return; }
   try { scrollBox().scrollTo({ top:0, behavior:'smooth' }); } catch (e) { scrollBox().scrollTop = 0; }
 }));
 document.addEventListener('click', e => { const g = e.target.closest('[data-go]:not(.tabbar button)'); if (g) go(g.dataset.go); });
@@ -1620,9 +1663,19 @@ function renderProfileLine(){
   $('#profileLine').innerHTML = `<svg aria-hidden="true"><use href="#i-shield"/></svg><span>${esc(txt)}</span>`;
   $('#profileLine').setAttribute('aria-label', 'Mon profil : ' + (n ? [...names, ...profile.words].join(', ') + (profile.traces ? ', traces exclues' : '') : 'vide'));
 }
-const QUICK = ['en:ice-creams-and-sorbets','en:yogurts','en:cheeses','en:biscuits','en:breakfast-cereals','en:breads','en:fresh-meals','en:plant-based-milk-alternatives','en:chocolates','en:crisps','en:pizzas','en:dairy-desserts','en:fruit-juices'];
+// accueil : les rayons les plus courants, avec un pictogramme ; les mêmes en puces au-dessus des résultats
+const HOME_AISLES = [
+  ['en:breads', 'Pain', '🍞'], ['en:biscuits', 'Biscuits', '🍪'], ['en:breakfast-cereals', 'Céréales', '🥣'],
+  ['en:yogurts', 'Yaourts', '🥛'], ['en:cheeses', 'Fromages', '🧀'], ['en:plant-based-milk-alternatives', 'Laits végétaux', '🌱'],
+  ['en:pastas', 'Pâtes', '🍝'], ['en:fresh-meals', 'Plats préparés', '🍲'], ['en:prepared-meats', 'Charcuterie', '🥓'],
+  ['en:chocolates', 'Chocolat', '🍫'], ['en:cakes', 'Gâteaux', '🍰'], ['en:salty-snacks', 'Apéritif', '🥨'],
+  ['en:ice-creams-and-sorbets', 'Glaces', '🍨'], ['en:dairy-desserts', 'Desserts', '🍮'], ['en:pizzas', 'Pizzas', '🍕'],
+].filter(([id]) => id in RAYON_NAME);
+const QUICK = [...HOME_AISLES.map(a => a[0]), 'en:sauces', 'en:fruit-juices', 'en:compotes', 'en:candies'].filter(id => id in RAYON_NAME);
+const homeLabel = id => (HOME_AISLES.find(a => a[0] === id) || [])[1] || RAYON_NAME[id];
 function renderQuick(){
-  $('#quick').innerHTML = QUICK.map(id => `<button type="button" class="chip" data-q="${id}" aria-pressed="${id === S.rayon}">${esc(RAYON_NAME[id])}</button>`).join('');
+  const ids = S.rayon && !QUICK.includes(S.rayon) ? [S.rayon, ...QUICK] : QUICK;   // le rayon en cours reste visible
+  $('#quick').innerHTML = ids.map(id => `<button type="button" class="chip" data-q="${id}" aria-pressed="${id === S.rayon}">${esc(homeLabel(id))}</button>`).join('');
 }
 function storeOptions(){
   const ns = nearStore();
@@ -1635,7 +1688,7 @@ function refreshStoreSelects(){
 }
 $('#store').innerHTML = storeOptions();
 $('#store').value = S.store; $('#terms').value = S.terms || ''; $('#sort').value = S.sort; $('#wide').checked = !!S.wide;
-$('#wide').addEventListener('change', e => { S.wide = e.target.checked; saveSearch(); if (R) runSearch(); });
+$('#wide').addEventListener('change', e => { S.wide = e.target.checked; saveSearch(); if (resultsShown()) runSearch(); });
 $('#rayonName').textContent = RAYON_NAME[S.rayon];
 function syncFilterUI(){
   $$('#fNutri button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === (S.nutri || '')));
@@ -1671,19 +1724,63 @@ async function chooseStore(id, sel){
   } else { loc.pinned = true; saveLoc(); }
   S.store = id; saveSearch(); refreshStoreSelects();
   if (RV) { RV.pick = {}; computeRecipe(); }
-  if (R) runSearch();
+  if (resultsShown()) runSearch();
 }
 $('#terms').addEventListener('input', e => { S.terms = e.target.value; saveSearch(); });
-$('#searchForm').addEventListener('submit', e => { e.preventDefault(); $('#terms').blur(); runSearch({ scroll:true }); });
+$('#searchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if (searchView === 'home'){
+    if (!$('#terms').value.trim()){ $('#terms').focus(); toast('Tape le nom d\'un produit, ou touche un rayon ci-dessous.'); return; }
+    S.rayon = ''; $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick();   // depuis l'accueil : tous les rayons
+  }
+  $('#terms').blur(); runSearch({ scroll:true });
+});
+/* Écran Rechercher : l'accueil (tuiles des rayons) ou les résultats, avec une étape d'historique entre les deux
+   pour que le geste retour ramène aux rayons. */
+let searchView = 'home';
+let homeBelow = false;   // l'étape d'historique juste avant les résultats est l'accueil des rayons
+const resultsShown = () => !!R && searchView === 'results';
+function resultsTitle(){ const t = (S.terms || '').trim(); return S.rayon ? RAYON_NAME[S.rayon] : t ? `« ${t} »` : RAYON_NAME['']; }
+function renderHome(){
+  const last = S.ran && !S.lastTerms ? S.lastRayon : null;
+  $('#homeGrid').innerHTML = HOME_AISLES.map(([id, label, em]) => `<button type="button" class="tile" data-q="${id}" aria-pressed="${id === last}"><span class="em" aria-hidden="true">${em}</span><b>${esc(label)}</b></button>`).join('');
+  const r = $('#resume'), lt = S.lastTerms, lr = S.lastRayon, resume = S.ran && (!!lt || !HOME_AISLES.some(a => a[0] === lr));
+  r.hidden = !resume;
+  if (resume) r.innerHTML = `Reprendre : <b>${esc(lt ? '« ' + lt + ' »' + (lr ? ' dans ' + RAYON_NAME[lr].toLowerCase() : '') : RAYON_NAME[lr])}</b>`;
+}
+function setSearchView(v){
+  if (v === 'results') $('#t-search').textContent = resultsTitle();
+  if (v === searchView) return;
+  searchView = v; $('#screen-search').dataset.view = v;
+  $('#homeBack').hidden = v !== 'results';
+  if (v === 'home'){ $('#t-search').textContent = 'Rayon sûr'; renderHome(); }
+  if (screenNow === 'search') scrollBox().scrollTop = 0;
+}
+function backToHome(){
+  if (homeBelow && history.state && history.state.view === 'results'){ try { history.back(); return; } catch (e) {} }
+  setSearchView('home'); navReplace({ screen:'search' }, navUrl('search'));
+}
+$('#homeBack').addEventListener('click', backToHome);
+$('#homeGrid').addEventListener('click', e => {
+  const b = e.target.closest('[data-q]'); if (!b) return;
+  $('#terms').value = ''; S.rayon = b.dataset.q; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick();
+  runSearch();
+});
+$('#resume').addEventListener('click', () => {
+  $('#terms').value = S.lastTerms; S.rayon = S.lastRayon; $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick(); runSearch();
+});
+$('#allRayons').addEventListener('click', () => $('#rayonBtn').click());
 function markDirty(msg){ const d = $('#dirty'); d.textContent = msg; d.hidden = false; }
 function setStatus(msg, isErr){ const s = $('#status'); s.innerHTML = msg || ''; s.classList.toggle('err', !!isErr); }
 
 async function runSearch({ scroll = false } = {}){
-  S.terms = $('#terms').value.trim(); S.ran = true; saveSearch();
+  S.terms = $('#terms').value.trim(); S.ran = true; S.lastTerms = S.terms; S.lastRayon = S.rayon; saveSearch();
+  if (searchView !== 'results'){ setSearchView('results'); if (screenNow === 'search'){ navPush({ screen:'search', view:'results' }, navUrl('search')); homeBelow = true; } }
+  else setSearchView('results');
   const ctx = { store:S.store, rayon:S.rayon, terms:S.terms, sort:S.sort, nutri:S.nutri, bio:S.bio, vegan:S.vegan, vegetarian:S.vegetarian, palm:S.palm, wide:S.wide };
   const withSafe = profile.sel.size > 0;
   R = { ctx, products:new Map(), sets:{}, tab:'ok', id:Symbol(), limit:LIMIT };
-  $('#dirty').hidden = true; $('#intro').hidden = true;
+  $('#dirty').hidden = true;
   $('#results').hidden = true; $('#list').innerHTML = '';
   const myR = R;
   setStatus(SPIN + 'Recherche des produits…');
@@ -3294,7 +3391,7 @@ function afterNear(before, { quiet, announce }){
   if ((changed || switched) && S.store === 'near'){
     if ($('#nearSheet').open) nearDirty = true;   // relancé à la fermeture de la fiche
     else {
-      if (R) runSearch();
+      if (resultsShown()) runSearch();
       if (RV && !$('#recDetail').hidden){ RV.pick = {}; computeRecipe(); }
     }
   }
@@ -3433,7 +3530,7 @@ const closeNear = () => closeDialog($('#nearSheet'));
 $('#nearSheet').addEventListener('close', () => {
   if (!nearDirty) return;
   nearDirty = false;
-  if (S.store === 'near'){ if (R) runSearch(); if (RV && !$('#recDetail').hidden){ RV.pick = {}; computeRecipe(); } }
+  if (S.store === 'near'){ if (resultsShown()) runSearch(); if (RV && !$('#recDetail').hidden){ RV.pick = {}; computeRecipe(); } }
   if (!$('#screen-list').hidden) renderLists();
 });
 function nearChanged(){ NEAR_ST = null; computeNear(); persistNear(); nearDirty = true; refreshStoreSelects(); renderNearUI(); }
@@ -3888,7 +3985,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.14';
+const APP_VERSION = '3.15';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -3910,12 +4007,12 @@ $('#themeChips').addEventListener('click', e => {
 renderProfile(); updateBadge(); renderQuick();
 if (FIRST_RUN){ renderOnboard(); openDialog(onboard); }
 const start = (location.hash || '').replace('#', '');
+renderHome();
 go(SCREENS.includes(start) ? start : 'search', { init:true });
 loadIndex();
 renderNearUI();
 // l'accueil demande la position à la fin ; ensuite, mise à jour automatique à chaque ouverture
 if (!FIRST_RUN) autoLocate('start');
-if (S.ran && (!start || start === 'search')) runSearch();
 // iOS : après le clavier, la page peut rester décalée vers le haut. Elle ne doit jamais défiler (seul le contenu
 // défile) : on la remet en place, sauf pendant une saisie ou un zoom avec deux doigts.
 function resetPage(){

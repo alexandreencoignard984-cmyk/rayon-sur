@@ -30,7 +30,9 @@ Snapchat ou de Claude).
   `grep -n` et `sed -n 'a,bp'` sur des plages, ou couper l'affichage (`cut -c1-300`).
 - Version affichée : `const APP_VERSION = '3.x'` (Profil). L'augmenter à chaque publication et mettre à jour
   l'attente dans `tests/appli.py` si besoin.
-- Écrans (`#screen-search`, `recipes`, `scan`, `list`, `profile`) changés par `go(name)`. Fiches (`dialog.sheet`)
+- Écrans (`#screen-search`, `recipes`, `scan`, `list`, `profile`) changés par `go(name)`. L'écran Rechercher a deux
+  vues (`setSearchView('home' | 'results')`) : l'accueil avec les rayons courants en tuiles (`HOME_AISLES`) et
+  les résultats ; le geste retour et l'onglet retouché ramènent à l'accueil. Au démarrage : toujours l'accueil. Fiches (`dialog.sheet`)
   ouvertes et fermées par `openDialog(d)` / `closeDialog(d)` : elles gèrent l'historique, donc le geste retour
   de l'iPhone ferme la fiche. Messages : `toast(msg, ms, { label, fn })`.
 - **Mise en page d'appli** : seul `#scroller` défile, la page entière jamais ; la barre d'onglets est dans le

@@ -9,6 +9,7 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     print('A. Recherche glaces chez Leclerc')
     ctx, page, errs, _ = new_page(b, base, geo=None, granted=False, init={'rs2:search': {'store': 'leclerc', 'rayon': 'en:ice-creams-and-sorbets', 'ran': True}})
+    page.click('#homeGrid [data-q="en:ice-creams-and-sorbets"]')
     page.wait_for_selector('#results:not([hidden])', timeout=20000)
     n, prev = -1, -2
     for _ in range(40):                      # les verdicts arrivent par paquets : on attend que le compte ne bouge plus

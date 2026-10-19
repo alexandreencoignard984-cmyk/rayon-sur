@@ -19,7 +19,8 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   surveiller aussi le clavier dans les fiches (champ adresse), même bug possible sous iOS 26.
 - Recherche par code-barres chez Carrefour et Leclerc : non vérifiable automatiquement ; attendre le rapport de
   « Tester les liens drive » et corriger les enseignes qui échouent.
-- Premier lancement : compter les étapes jusqu'au premier résultat utile et les réduire si possible.
+- Accueil (3.14) : voir si d'autres rayons méritent une tuile, et s'il faut afficher sur chaque tuile le nombre de
+  produits compatibles avec le profil (calcul à faire sans ralentir l'ouverture).
 - Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
 - Faux doutes restants après la 3.13 : desserts végétaux appelés « Skyr », barres « nougat » sans fruits à coque
   (Mars). Sans danger (« À vérifier »), mais on pourrait les lever avec le label végan ou la liste d'ingrédients.
@@ -32,6 +33,17 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 (3e séance) · 3.15
+- **Nouvel accueil.** L'écran Rechercher s'ouvre sur « Que veux-tu acheter ? » et 15 grandes tuiles avec un
+  pictogramme : les rayons les plus courants (pain, biscuits, céréales, yaourts, fromages, laits végétaux, pâtes,
+  plats préparés, charcuterie, chocolat, gâteaux, apéritif, glaces, desserts, pizzas), puis « Voir tous les
+  rayons ». Une tuile = les produits du rayon triés selon les allergies.
+- Les résultats ont leur propre en-tête (« ‹ Rayons » et le nom du rayon) ; le geste retour, ce bouton ou
+  l'onglet Rechercher ramènent aux tuiles. Le dernier rayon est marqué, et une recherche par nom peut être reprise.
+- Un nom tapé depuis l'accueil cherche dans tous les rayons ; sans nom, un message explique quoi faire.
+- « Comment ça marche » réécrit : les 3 étapes, les couleurs des verdicts et un bouton pour scanner en magasin.
+- Au démarrage, l'appli ouvre toujours l'accueil (avant : les derniers résultats).
 
 ### 2026-10-19 (2e séance) · 3.14
 - **Verdict allergènes encore plus sûr.** Des produits sortaient « Compatible » alors qu'ils contiennent ce que

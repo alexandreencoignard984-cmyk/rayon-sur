@@ -13,7 +13,8 @@ JUNK = ['null', '"texte"', '[]', '{}', '[null,1,"x"]', '{']
 SPECIFIC = {
     'rs2:profile': [{'sel': 'milk'}, {'sel': [1, None, 'milk'], 'words': 'palme', 'traces': 'oui'}, {'words': [1, None, {}]}],
     'rs2:search': [{'nutri': 'z', 'sort': 'zz', 'rayon': 5, 'store': None, 'nova': 'x', 'terms': 12, 'ran': True},
-                   {'store': 'near', 'ran': True}, {'rayon': 'en:inconnu', 'ran': True}],
+                   {'store': 'near', 'ran': True}, {'rayon': 'en:inconnu', 'ran': True},
+                   {'lastTerms': 5, 'lastRayon': 'en:inconnu', 'ran': True}, {'lastTerms': 'nutella', 'lastRayon': '', 'ran': True}],
     'rs2:favs': [{'1': None}, {'2': {'p': None}}, {'3': {'p': 'x'}}, {'4': {'p': {'code': 4}}}],
     'rs2:shop': [[{'code': 1}], [None, 'x', {'p': {}}], [{'code': 'a', 'p': {'product_name': 5, 'brands': ['x']}, 'done': 'oui'}]],
     'rs2:history': [[{'code': 1}], [{'code': 'b', 'p': None}], [{'code': 'c', 'p': {'labels_tags': 'en:vegan', 'stores_tags': 'lidl'}}]],
@@ -46,6 +47,9 @@ def run_case(b, base, key, raw, errs_out):
         for tab in ['recipes', 'scan', 'list', 'profile', 'search']:
             page.click(f'nav [data-go="{tab}"]', timeout=5000)
             page.wait_for_timeout(80)
+        page.click('#homeGrid .tile >> nth=0', timeout=5000); page.wait_for_timeout(300)
+        page.click('#homeBack', timeout=5000); page.wait_for_timeout(200)
+        if page.is_visible('#resume'): page.click('#resume', timeout=5000); page.wait_for_timeout(300)
         page.click('nav [data-go="profile"]'); page.click('#profNear', timeout=5000); page.wait_for_timeout(200)
         page.click('#nearClose', timeout=5000)
         page.click('#dtBtn', timeout=5000); page.wait_for_timeout(900)

@@ -311,6 +311,7 @@ def main():
         shop = [{'code': '3017620422003', 'p': {'code': '3017620422003', 'product_name': 'Glace vanille', 'brands': 'Carte d\'Or', 'stores_tags': ['carrefour']}, 'done': False, 'at': 1}]
         ctx, page, errs, _ = new_page(b, base, geo=RENNES, init={'rs2:shop': shop, 'rs2:search': {'store': 'near', 'rayon': 'en:ice-creams-and-sorbets', 'ran': True}})
         wait_near(page)
+        page.click('#homeGrid [data-q="en:ice-creams-and-sorbets"]')
         page.wait_for_selector('#results:not([hidden]) #list li .name', timeout=20000)
         page.click('#list li .name >> nth=0')
         page.wait_for_selector('#sheet[open] .drivebtn', timeout=8000)
