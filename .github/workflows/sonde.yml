@@ -11,6 +11,15 @@ on:
       adresses:
         description: Adresses à tester seules, séparées par des espaces (laisser vide pour la sonde complète)
         default: ''
+      enseignes:
+        description: Enseignes à sonder (ex. u,intermarche), vide pour toutes
+        default: ''
+      navigateur:
+        description: 1 pour un vrai navigateur à l'écran (sous xvfb), plus proche d'un téléphone
+        default: '0'
+      pause:
+        description: Secondes entre deux pages
+        default: '2'
 permissions:
   contents: write
 concurrency:
@@ -30,8 +39,12 @@ jobs:
         env:
           ADRESSES: ${{ github.event.inputs.adresses }}
           PRODUITS: ${{ github.event.inputs.produits || '5' }}
+          SONDE_CHAINS: ${{ github.event.inputs.enseignes }}
+          SONDE_HEADFUL: ${{ github.event.inputs.navigateur }}
+          SONDE_PAUSE: ${{ github.event.inputs.pause }}
         run: |
-          if [ -n "$ADRESSES" ]; then python3 tools/sonde_drive.py --urls "$ADRESSES"; else python3 tools/sonde_drive.py "$PRODUITS"; fi
+          RUN="python3"; [ "$SONDE_HEADFUL" = "1" ] && RUN="xvfb-run -a python3"
+          if [ -n "$ADRESSES" ]; then $RUN tools/sonde_drive.py --urls "$ADRESSES"; else $RUN tools/sonde_drive.py "$PRODUITS"; fi
       - name: Publier le rapport sur une branche à part
         if: success() || failure()
         run: |

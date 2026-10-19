@@ -19,14 +19,20 @@ from playwright.sync_api import sync_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'sonde')
 N = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 5
-CHAINS = ['carrefour', 'leclerc', 'auchan', 'u', 'intermarche', 'monoprix', 'biocoop', 'lidl', 'picard']
+CHAINS = [c for c in os.environ.get('SONDE_CHAINS', '').replace(' ', ',').split(',') if c] or \
+    ['carrefour', 'leclerc', 'auchan', 'u', 'intermarche', 'monoprix', 'biocoop', 'lidl', 'picard']
+HEADFUL = os.environ.get('SONDE_HEADFUL') == '1'          # vrai navigateur à l'écran (sous xvfb sur GitHub)
+PAUSE = float(os.environ.get('SONDE_PAUSE') or 2)          # secondes entre deux pages
+# page d'attente des protections (Cloudflare, DataDome…) : elle se résout parfois seule après quelques secondes
+WAITING = re.compile(r'^(un instant|just a moment|one moment|vérification|leclercdrive\.fr|intermarche\.com|www\.coursesu\.com)', re.I)
 # variantes essayées en plus du lien de l'appli : « ean » recherche par code-barres, « nom » marque + nom
 EXTRA = {
     'carrefour': [('nom', None), ('fiche', 'https://www.carrefour.fr/p/{ean}')],
     'leclerc': [('nom', None)],
     'auchan': [('ean', 'https://www.auchan.fr/recherche?text={ean}')],
     'u': [('ean', 'https://www.coursesu.com/recherche?q={ean}')],
-    'intermarche': [('site-nom', 'https://www.intermarche.com/recherche/{terms}'), ('site-ean', 'https://www.intermarche.com/recherche/{ean}')],
+    'intermarche': [('site-nom', 'https://www.intermarche.com/recherche/{terms}'), ('site-ean', 'https://www.intermarche.com/recherche/{ean}'),
+                    ('fiche', 'https://www.intermarche.com/produit/produit/{ean}')],
     'monoprix': [('ean', 'https://courses.monoprix.fr/search?q={ean}')],
     'biocoop': [('ean', 'https://www.biocoop.fr/catalogsearch/result/?q={ean}')],
     'lidl': [],
@@ -99,6 +105,10 @@ def probe(ctx, url, shot):
         except Exception:
             pass
         page.wait_for_timeout(2500)
+        for _ in range(12):                      # page d'attente : on lui laisse jusqu'à 30 s pour s'effacer
+            if not WAITING.search(page.title() or ''):
+                break
+            page.wait_for_timeout(2500)
         for sel in ['#onetrust-accept-btn-handler', 'button:has-text("Tout accepter")', 'button:has-text("Accepter")', 'button:has-text("J\'accepte")']:
             try:
                 b = page.locator(sel).first
@@ -135,7 +145,7 @@ def main():
     base = f'http://127.0.0.1:{srv.server_address[1]}/'
     rows, lines = [], []
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        b = p.chromium.launch(headless=not HEADFUL)
         app = b.new_context()
         app.add_init_script("localStorage.setItem('rs2:profile', JSON.stringify({sel:[], traces:false, words:[]})); localStorage.setItem('rs2:geoAsked', '1');")
         app.route(lambda u: not u.startswith(base), lambda r: r.abort())
@@ -165,7 +175,7 @@ def main():
                                      n=len(prods), ean=bool(ean_link), brand_hits=brand_hits, first=[l['t'][:70] for l in prods[:4]],
                                      title=info['title'][:90], h1=info['h1'], err=err, shot=os.path.basename(shot)))
                     print(f"{k:3d} {chain:11s} {vname:14s} {status} bloqué={blocked} produits={len(prods)} ean={bool(ean_link)} marque={brand_hits} {final[:90]}", flush=True)
-                    time.sleep(2)
+                    time.sleep(PAUSE)
         b.close()
     srv.shutdown()
 
@@ -200,7 +210,7 @@ def urls_only(urls):
     os.makedirs(OUT, exist_ok=True)
     rows = []
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        b = p.chromium.launch(headless=not HEADFUL)
         iphone = dict(p.devices['iPhone 13'])
         iphone.pop('default_browser_type', None)
         ctx = b.new_context(**iphone, locale='fr-FR', timezone_id='Europe/Paris')
@@ -211,7 +221,7 @@ def urls_only(urls):
             rows.append(dict(url=url, status=status, final=final, title=info['title'][:120], h1=info['h1'], text=text, err=err,
                              links=[l for l in info['links'] if l['t']][:80], shot=os.path.basename(shot)))
             print(f'{k:2d} {status} {final[:100]} « {info["title"][:60]} » {err}', flush=True)
-            time.sleep(3)
+            time.sleep(max(PAUSE, 3))
         b.close()
     json.dump(rows, open(os.path.join(OUT, 'adresses.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     lines = ['# Sonde : adresses testées', '']
