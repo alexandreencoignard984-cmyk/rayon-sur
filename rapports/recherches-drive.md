@@ -1,6 +1,6 @@
 # Recherches « Stock au drive »
 
-Contrôle du 19/10/2026  appli 3.12  246 227 produits.
+Contrôle du 19/10/2026  appli 3.19  247 643 produits.
 Chaque produit reçoit la recherche que l'appli envoie aux sites des enseignes (marque + 2 mots utiles du nom).
 Les sites eux-mêmes ne sont pas interrogés : pour ça, utilise « Tester les liens drive » dans Profil.
 
@@ -12,7 +12,7 @@ Les sites eux-mêmes ne sont pas interrogés : pour ça, utilise « Tester les l
 | Un seul mot alors que le nom en dit plus | 0.0 % | 0.0 %  | 5 % |
 | Sans marque (recherche sur le nom seul) | 4.1 % | 1.2 %  | — |
 | Chiffres hors de la marque | 0.0 % | 0.0 %  | 2 % |
-| Contient un mot anglais | 3.6 % | 4.9 %  | 10 % |
+| Contient un mot anglais | 3.6 % | 4.8 %  | 10 % |
 | Plus de 45 caractères | 0.1 % | 0.0 %  | 2 % |
 
 ## Un seul mot alors que le nom en dit plus
@@ -61,10 +61,10 @@ Les sites eux-mêmes ne sont pas interrogés : pour ça, utilise « Tester les l
 | 40 |  | « 40 » | 6111245340692 |
 | 40 |  | « 40 » | 6111245340074 |
 | 40 |  | « 40 » | 6111245340371 |
+| 1848 |  | « 1848 » | 8601346306027 |
 | 41022 |  | « 41022 » | 6953237400751 |
 | 6111267140188 |  | « 6111267140188 » | 6111267140188 |
 | 6111128001313 |  | « 6111128001313 » | 6111128001313 |
-| 6111262585960 |  | « 6111262585960 » | 6111262585960 |
 
 ## Contient un mot anglais
 
