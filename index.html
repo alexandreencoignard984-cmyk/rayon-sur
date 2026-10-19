@@ -439,7 +439,8 @@ div.rowbtn{cursor:default}
 .drivebtn .dalt{display:block;margin-top:-6px;padding:0 14px 10px;font-size:13px;color:var(--muted)}
 .drivebtn .dfoot{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .drivebtn .dfoot .dalt{flex:1}
-.drivebtn .dfix{flex:none;margin:-10px 6px 4px 0;padding:6px 8px;min-height:32px;border:0;background:none;color:var(--warn);font-size:13px;font-weight:600}
+.drivebtn .dfix{flex:none;margin:-12px 4px 0 0;padding:8px 10px;min-height:44px;border:0;background:none;color:var(--warn);font-size:13px;font-weight:600}
+.drivebtn small.dcp{color:var(--ink);margin-top:4px}
 .dwarn{color:var(--warn)}
 .dmore{margin-top:8px}
 .drivebtn b{display:block;font-size:16px}
@@ -3974,14 +3975,16 @@ $('#nearBtn').addEventListener('click', () => openNear({ locate:!near && !locBus
    gean : Google retrouve la fiche du site par le code-barres (Intermarché : sa recherche ne s'ouvre pas depuis un lien).
    Sinon : recherche par nom, avec la marque seule en secours. */
 const DRIVES = {
-  leclerc:{ site:'e.leclerc', q:'https://www.e.leclerc/recherche?q=', ean:true },
+  // e.leclerc ne vend pas les courses : sa recherche montrait livres et jouets, et rien pour un code-barres (sonde du
+  // 19/10/2026). Le drive Leclerc est un autre site, propre à chaque magasin : on l'ouvre et on copie le nom à coller.
+  leclerc:{ site:'leclercdrive.fr', home:'https://www.leclercdrive.fr/' },
   carrefour:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=', ean:true },
-  auchan:{ site:'auchan.fr', q:'https://www.auchan.fr/recherche?text=' },
+  auchan:{ site:'auchan.fr', q:'https://www.auchan.fr/recherche?text=', ean:true },   // code-barres : produit exact ou « rien trouvé » (sonde)
   intermarche:{ site:'intermarche.com', gean:true },
   u:{ site:'coursesu.com', q:'https://www.coursesu.com/recherche?q=' },
   biocoop:{ site:'biocoop.fr', q:'https://www.biocoop.fr/catalogsearch/result/?q=' },
   monoprix:{ site:'monoprix.fr', q:'https://courses.monoprix.fr/search?q=' },
-  picard:{ site:'picard.fr', q:'https://www.picard.fr/recherche?q=' },
+  picard:{ site:'picard.fr', q:'https://www.picard.fr/recherche?q=', noBrand:true },   // tout est Picard ; « Le Bio par Picard » ouvrait le rayon bio
   cora:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=', ean:true }, // les Cora sont devenus des Carrefour
   franprix:{ site:'franprix.fr' }, casino:{ site:'casino.fr' },
   lidl:{ site:'lidl.fr', q:'https://www.lidl.fr/q/search?q=', noDrive:true }, aldi:{ site:'aldi.fr', noDrive:true }, netto:{ site:'netto.fr', noDrive:true },
@@ -3989,25 +3992,39 @@ const DRIVES = {
 const driveName = id => shortLabel(storeById(id));
 /* Recherche courte : la marque et les 2 premiers mots utiles du nom. Les moteurs des sites (et Google)
    ne trouvent rien avec un nom complet de fiche, souvent bilingue (« À la Grecque Greek Style Nature-Natural »). */
-const TERM_STOP = new Set('a au aux de du des la le les l d et en un une sans avec pour sur par ou'.split(' '));
+const TERM_STOP = new Set('a au aux de du des la le les l d et en un une sans avec pour sur par ou gout saveur saveurs parfum arome'.split(' '));
+// groupes et fabricants qui ne sont pas la marque écrite sur le paquet : « Mondelez » pour Prince, « Lindt & Sprüngli »
+// (la sonde du 19/10/2026 : Super U « rien trouvé pour Mondelez Prince », Carrefour 0 résultat pour « Lindt & Sprüngli … »)
+const BRAND_GROUP = new Set(['mondelez', 'mondelez international', 'mondelez france', 'kraft', 'kraft foods', 'kraft heinz', 'unilever', 'pepsico',
+  'general mills', 'lactalis', 'groupe lactalis', 'savencia', 'savencia fromage & dairy', 'sodiaal', 'agrial', 'eurial', 'coca-cola company',
+  'the coca-cola company', 'mars incorporated', 'mars inc', 'scamark', 'itm', 'itm entreprises', 'les mousquetaires', 'systeme u',
+  'groupe casino', 'casino guichard', 'nestle', 'danone', 'ferrero', 'mars', 'bel', "kellogg's", 'kellogg']);
+// …parmi eux, ceux qui ne sont jamais une marque de rayon : sans autre marque, on cherche sur le nom seul
+const BRAND_DROP = new Set([...BRAND_GROUP].filter(b => !['nestle', 'danone', 'ferrero', 'mars', 'bel', "kellogg's", 'kellogg'].includes(b)));
 // mots anglais des fiches bilingues (« Amande Almond », « Sucre - Sugar ») ; pas « the », qui est aussi « thé »
 const TERM_EN = new Set('style natural plain with and of flavour flavor flavoured original classic greek sweet free organic pack big new almond water drink sugar'.split(' '));
 // marque : la première, sans parenthèses ni mots répétés, 3 mots au plus (« CMI (Carrefour Marchandises…) » devient Carrefour)
 function driveBrand(p){
-  let b = (brandOf(p).split(',')[0] || '').replace(/\(.*?\)/g, ' ').split(/\s+[-–]\s+/)[0].replace(/\s+/g, ' ').trim();
+  const all = String(p && p.brands || '').split(',').map(x => x.replace(/\(.*?\)/g, ' ').split(/\s+[-–]\s+/)[0].replace(/\s+/g, ' ').trim()).filter(Boolean);
+  let b = (all[0] || '').replace(/\s*(&|and)\s*spr[uü]ngli\b/i, '');
   if (/^cmi\b/i.test(b)) b = 'Carrefour';
+  if (BRAND_GROUP.has(fold(b))){
+    const next = all.slice(1).find(x => !BRAND_GROUP.has(fold(x)) && fold(x) !== fold(b));
+    b = next || (BRAND_DROP.has(fold(b)) ? '' : b);
+  }
   const seen = new Set();
   return b.split(' ').filter(w => { const f = fold(w); if (!f || seen.has(f)) return false; seen.add(f); return true; }).slice(0, 3).join(' ');
 }
-function driveTerms(p){
-  const brand = driveBrand(p), bw = fold(brand).split(/[^a-z0-9]+/);
+function driveTerms(p, id){
+  const brand = id && DRIVES[id] && DRIVES[id].noBrand ? '' : driveBrand(p), bw = fold(brand).split(/[^a-z0-9]+/).filter(Boolean);
+  const inBrand = w => { const f = fold(w).split(/[^a-z0-9]+/).filter(Boolean); return f.length > 0 && f.every(x => bw.includes(x)); };
   const clean = String(nameOf(p)).replace(/\(.*?\)/g, ' ').replace(/\b\d+([.,]\d+)?\s*(g|kg|ml|cl|l|x|%|oz)(?=\s|,|$)/gi, ' ');
   const tokens = (part, noEn) => part.split(/[\s,;:'’.\/+&–!?]+/).map(w => {
     w = w.replace(/^-+|-+$/g, '');
     if (!w.includes('-')) return w;
     const parts = w.split('-');   // « Nature-Natural » : on garde le français ; « demi-écrémé » reste entier
     return parts.some(x => TERM_EN.has(fold(x))) ? (parts.find(x => !TERM_EN.has(fold(x))) || '') : w;
-  }).filter(w => w.length > 1 && !/\d/.test(w) && !TERM_STOP.has(fold(w)) && !(noEn && TERM_EN.has(fold(w))) && !bw.includes(fold(w)));
+  }).filter(w => w.length > 1 && !/\d/.test(w) && !TERM_STOP.has(fold(w)) && !(noEn && TERM_EN.has(fold(w))) && !inBrand(w));
   // « BN - Casse Croute Biscuits » : la partie qui ne répète pas la marque ; noms tout en anglais : sans filtre
   const parts = clean.split(/\s+[-–|\/]\s+/);
   let words = [];
@@ -4026,6 +4043,7 @@ let driveFix = cleanDriveFix(ls.get(DFIX_KEY, {}));
 // recherche principale chez une enseigne : 'ean', 'gean', 'nom' (ou 'marque' après un signalement)
 function driveMode(p, id){
   const d = DRIVES[id]; if (!d) return '';
+  if (d.home) return 'site';    // site du drive à ouvrir, nom copié pour le coller dans sa recherche
   const fx = driveFix[`${p && p.code}|${id}`]; if (fx) return fx;
   if (validEan(p) && d.ean && d.q) return 'ean';
   if (validEan(p) && d.gean) return 'gean';
@@ -4034,17 +4052,28 @@ function driveMode(p, id){
 // how : 'auto' (recherche principale), 'nom' (marque + nom), 'marque' (marque seule)
 function driveUrl(p, id, how = 'auto'){
   const d = DRIVES[id]; if (!d) return '';
+  if (d.home) return d.home;
   if (how === true) how = 'marque';
   const mode = how === 'nom' || how === 'marque' ? how : driveMode(p, id);
   const google = t => `https://www.google.com/search?q=${encodeURIComponent(t + ' site:' + d.site)}`;
   if (mode === 'ean') return d.q + String(p.code);
   if (mode === 'gean') return google(String(p.code));
-  const terms = mode === 'marque' && driveBrand(p) ? driveBrand(p) : driveTerms(p);
+  const terms = mode === 'marque' && driveBrand(p) ? driveBrand(p) : driveTerms(p, id);
   return d.q ? d.q + encodeURIComponent(terms) : google(terms);
 }
 // lien de secours : par nom si la recherche principale utilise le code-barres, sinon la marque seule
+// une autre recherche existe-t-elle ? (sinon pas de bouton « Mauvais produit ? »)
+function canFix(p, id){
+  const m = driveMode(p, id);
+  if (m === 'site' || !m) return false;
+  if (driveFix[`${p && p.code}|${id}`]) return true;
+  if (m !== 'nom') return true;
+  const b = DRIVES[id].noBrand ? '' : driveBrand(p);
+  return !!b && b !== driveTerms(p, id);
+}
 function driveAlt(p, id){
-  const brand = driveBrand(p), terms = driveTerms(p), m = driveMode(p, id);
+  const brand = DRIVES[id] && DRIVES[id].noBrand ? '' : driveBrand(p), terms = driveTerms(p, id), m = driveMode(p, id);
+  if (m === 'site') return null;
   if (m === 'marque') return { href:driveUrl(p, id, 'nom'), text:`Chercher « ${terms} »` };
   if (m !== 'nom') return { href:driveUrl(p, id, 'nom'), text:`Ou chercher « ${terms} »` };
   if (brand && brand !== terms) return { href:driveUrl(p, id, 'marque'), text:`Rien trouvé ? Toute la marque ${brand}` };
@@ -4080,6 +4109,11 @@ document.addEventListener('click', e => {
   }
   ls.set(DFIX_KEY, driveFix); drawKeepScroll();
 });
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-cp]'); if (!a) return;
+  const t = a.dataset.cp;
+  try { navigator.clipboard.writeText(t).then(() => toast(`« ${t} » copié : colle-le dans la recherche du drive.`, 5000), () => {}); } catch (err) {}
+});
 document.addEventListener('click', async e => {
   const b = e.target.closest('[data-copy]'); if (!b) return;
   const url = b.dataset.copy;
@@ -4095,10 +4129,14 @@ function driveCard(p){
     const n = nearInfo(id), d = DRIVES[id], mode = driveMode(p, id), alt = driveAlt(p, id);
     const seen = info.seen.includes(id);
     const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
-    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small>
-        <small class="${seen ? 'dseen' : 'dunk'}">${seen ? 'Vu dans cette enseigne' : 'Pas signalé ici : peut-être pas vendu'}</small></span>
-        <span class="go">${mode === 'nom' || mode === 'marque' ? 'Chercher' : 'Voir le produit'}</span></a>
-      <div class="dfoot">${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : '<span></span>'}<button type="button" class="dfix" data-dfix="${id}">${driveFix[`${p.code}|${id}`] ? 'Revenir au premier lien' : 'Mauvais produit ?'}</button></div></div>`;
+    const site = mode === 'site', terms = driveTerms(p, id);
+    const foot = (alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : '<span></span>')
+      + (canFix(p, id) ? `<button type="button" class="dfix" data-dfix="${id}">${driveFix[`${p.code}|${id}`] ? 'Revenir au premier lien' : 'Mauvais produit ?'}</button>` : '');
+    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"${site ? ` data-cp="${esc(terms)}"` : ''}><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small>
+        <small class="${seen ? 'dseen' : 'dunk'}">${seen ? 'Vu dans cette enseigne' : 'Pas signalé ici : peut-être pas vendu'}</small>
+        ${site ? `<small class="dcp">Le site du drive s'ouvre et « ${esc(terms)} » est copié : colle-le dans sa recherche.</small>` : ''}</span>
+        <span class="go">${site ? 'Ouvrir le drive' : mode === 'nom' || mode === 'marque' ? 'Chercher' : 'Voir le produit'}</span></a>
+      ${foot === '<span></span>' ? '' : `<div class="dfoot">${foot}</div>`}</div>`;
   };
   // d'abord les enseignes où le produit a été vu ; ailleurs, la recherche tombe souvent sur d'autres produits
   const seenIds = ids.filter(id => info.seen.includes(id)), other = ids.filter(id => !info.seen.includes(id));
@@ -4122,8 +4160,9 @@ function openDriveList(id){
   $('#driveList').innerHTML = items.length ? items.map(x => {
     const a = availability(chainInfo(x.p), id), alt = driveAlt(x.p, id), mode = driveMode(x.p, id);
     const note = a === 'sure' ? 'Vu dans l\'enseigne' : a === 'no' ? 'Marque d\'une autre enseigne : sûrement absent' : `Marque nationale, pas encore signalée chez ${driveName(id)}`;
-    const how = mode === 'marque' ? `Recherche : toute la marque ${driveBrand(x.p)}` : mode === 'nom' ? `Recherche : « ${driveTerms(x.p)} »` : 'Recherche par le code-barres : le produit exact';
-    return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), x.p.quantity, note].filter(Boolean).join(' · '))}</small><small class="meta">${esc(how)}</small></span><span class="go">Voir</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</li>`;
+    const how = mode === 'site' ? `Touche : « ${driveTerms(x.p, id)} » est copié, colle-le dans la recherche du drive`
+      : mode === 'marque' ? `Recherche : toute la marque ${driveBrand(x.p)}` : mode === 'nom' ? `Recherche : « ${driveTerms(x.p, id)} »` : 'Recherche par le code-barres : le produit exact';
+    return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"${mode === 'site' ? ` data-cp="${esc(driveTerms(x.p, id))}"` : ''}><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), x.p.quantity, note].filter(Boolean).join(' · '))}</small><small class="meta">${esc(how)}</small></span><span class="go">Voir</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</li>`;
   }).join('') : '<li><p class="hint" style="padding:12px 16px">Ta liste est vide.</p></li>';
   $('#driveHelp').innerHTML = d.noDrive ? '' : driveHelp();
   openDialog($('#driveSheet'));
@@ -4219,7 +4258,7 @@ function dtRender(){
     const rows = it.chains.map(id => {
       const k = p.code + '|' + id, v = DT.res[k] || '';
       const alt = driveAlt(p, id), mode = driveMode(p, id);
-      return `<div class="dtrow"><div class="dttop"><a href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener">${esc(driveName(id))}${mode === 'nom' ? '' : ' (code-barres)'} ›</a>${alt ? `<a class="dtbrand" href="${esc(alt.href)}" target="_blank" rel="noopener">${mode === 'nom' ? 'marque seule' : 'par nom'} ›</a>` : ''}</div>
+      return `<div class="dtrow"><div class="dttop"><a href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"${mode === 'site' ? ` data-cp="${esc(driveTerms(p, id))}"` : ''}>${esc(driveName(id))}${mode === 'nom' ? '' : mode === 'site' ? ' (drive, nom copié)' : ' (code-barres)'} ›</a>${alt ? `<a class="dtbrand" href="${esc(alt.href)}" target="_blank" rel="noopener">${mode === 'nom' ? 'marque seule' : 'par nom'} ›</a>` : ''}</div>
         <div class="seg" data-k="${esc(k)}" data-v="${v}" role="group" aria-label="Résultat chez ${esc(driveName(id))}">${Object.entries(DT_RES).map(([val, lab]) => `<button type="button" data-v="${val}" aria-pressed="${v === val}">${lab}</button>`).join('')}</div></div>`;
     }).join('');
     return `<li><b>${esc(nameOf(p))}</b><small class="meta">${esc([brandOf(p), ...dtCases(p)].filter(Boolean).join(' · '))}</small>
@@ -4232,7 +4271,7 @@ function dtReport(){
   for (const it of DT.items) for (const id of it.chains){
     const v = DT.res[it.p.code + '|' + id] || 'none';
     (by[id] || (by[id] = { ok:0, brand:0, ko:0, none:0 }))[v]++;
-    L[v].push(`- ${driveName(id)} · ${driveMode(it.p, id) === 'nom' ? '« ' + driveTerms(it.p) + ' »' : 'code-barres'} · ${nameOf(it.p)}${brandOf(it.p) ? ' (' + brandOf(it.p) + ')' : ''} · ${it.p.code} · ${it.seen.includes(id) ? 'vu dans l\'enseigne' : 'pas signalé dans l\'enseigne'}${dtCases(it.p).length ? ' · ' + dtCases(it.p).join(', ') : ''}`);
+    L[v].push(`- ${driveName(id)} · ${['nom', 'site'].includes(driveMode(it.p, id)) ? '« ' + driveTerms(it.p, id) + ' »' : 'code-barres'} · ${nameOf(it.p)}${brandOf(it.p) ? ' (' + brandOf(it.p) + ')' : ''} · ${it.p.code} · ${it.seen.includes(id) ? 'vu dans l\'enseigne' : 'pas signalé dans l\'enseigne'}${dtCases(it.p).length ? ' · ' + dtCases(it.p).join(', ') : ''}`);
   }
   const c = dtCount();
   const out = [`Rapport liens drive · Rayon sûr ${APP_VERSION} · ${new Date().toLocaleString('fr-FR')}`,
@@ -4271,7 +4310,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.20';
+const APP_VERSION = '3.21';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

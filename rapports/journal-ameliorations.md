@@ -21,6 +21,11 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   « Tester les liens drive » et corriger les enseignes qui échouent. Depuis la 3.20, Alexandre signale les mauvais
   liens avec « Mauvais produit ? » (clé `rs2:drivefix`, sur son téléphone seulement) : s'il en cite, regarder si une
   enseigne revient souvent et changer sa recherche par défaut (`driveMode`).
+- Drive Leclerc (3.21) : on ouvre `www.leclercdrive.fr` et on copie le nom. Mieux : ouvrir directement la recherche du
+  drive du magasin (`https://fdN-courses.leclercdrive.fr/magasin-XXXXXX-XXXXXX-Ville/recherche.aspx?TexteRecherche=…`),
+  mais il faut le numéro et l'hôte de chaque drive (API `api-recherchemagasins.leclercdrive.fr`, bloquée par DataDome
+  depuis GitHub). À reprendre si une source de ces numéros apparaît (OpenStreetMap n'en a que 4).
+- Super U, Monoprix, Intermarché : la sonde est bloquée depuis GitHub ; recherche par code-barres non vérifiée.
 - Accueil (3.14) : voir si d'autres rayons méritent une tuile, et s'il faut afficher sur chaque tuile le nombre de
   produits compatibles avec le profil (calcul à faire sans ralentir l'ouverture).
 - Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
@@ -37,6 +42,21 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 · 3.21
+- Demande d'Alexandre : « continue à corriger les liens vers les drives, que tout soit bien ».
+- **Sonde des vrais sites** (nouvelle tâche GitHub « Sonde drive ») : 95 pages ouvertes comme un iPhone depuis GitHub.
+  Constats : la recherche de **e.leclerc** montre des livres, des LEGO, des cahiers (c'est le site non alimentaire) et
+  rien pour un code-barres ; **Auchan** trouve le produit exact par code-barres (4 sur 5) et dit « rien trouvé »
+  sinon, alors que sa recherche par nom ratait ; **Carrefour** par code-barres : le bon produit à chaque fois ; les
+  recherches par nom échouaient avec le nom du fabricant (« Mondelez Prince » : rien chez Super U ni Auchan,
+  « Lindt & Sprüngli » : 0 résultat chez Carrefour) ; **Picard** : « Le Bio par Picard … » ouvrait le rayon bio, et le
+  code-barres n'y marche pas.
+- Corrections : Leclerc ouvre le site du **drive Leclerc** et copie le nom du produit à coller dans sa recherche ;
+  Auchan passe au code-barres ; la recherche par nom prend la marque du paquet (LU, Lindt, Nutella, Activia…) au lieu
+  du fabricant, et sans « goût », « saveur », « parfum » ; Picard sans la marque ; « Coca-Cola Coca-Cola » corrigé.
+- « Mauvais produit ? » n'apparaît plus quand il n'existe pas d'autre recherche ; bouton agrandi (44 px).
+- Tests : `liens_drive.py` (liens d'après la sonde, copie du nom pour Leclerc, marques), attentes Leclerc mises à jour.
 
 ### 2026-10-19 · 3.20
 - Demande d'Alexandre : « je veux aussi la recette » et « beaucoup de produits sont redirigés vers des mauvais

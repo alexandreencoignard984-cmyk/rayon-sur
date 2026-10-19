@@ -89,7 +89,7 @@ with sync_playwright() as p:
     check('Voir le produit' in txt and ('Vu dans cette enseigne' in txt or 'Pas signalé' in txt), 'produit exact et présence dans l\'enseigne indiqués')
     hrefs = page.eval_on_selector_all('#sheet .drivebtn .dmain', 'els => els.map(e => e.href)')
     alts = page.eval_on_selector_all('#sheet .drivebtn .dalt', 'els => els.map(e => e.textContent)')
-    check(any(re.search(r'carrefour\.fr/s\?q=\d{8,14}$', h) or re.search(r'e\.leclerc/recherche\?q=\d{8,14}$', h) for h in hrefs), 'Carrefour / Leclerc : recherche par code-barres')
+    check(any(re.search(r'carrefour\.fr/s\?q=\d{8,14}$', h) for h in hrefs), 'Carrefour : recherche par code-barres')
     check(any(a.startswith('Ou chercher « ') for a in alts), 'lien de secours par nom')
     gi = page.evaluate("() => __RS.driveUrl({ code:'3017620422003', product_name:'Pâte à tartiner', brands:'Nutella' }, 'intermarche')")
     check(gi == 'https://www.google.com/search?q=3017620422003%20site%3Aintermarche.com', 'Intermarché : fiche retrouvée par Google avec le code-barres')

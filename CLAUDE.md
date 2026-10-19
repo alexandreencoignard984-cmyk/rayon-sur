@@ -42,8 +42,10 @@ Snapchat ou de Claude).
   Facts dans les ingrédients (`_ia`), de la fiabilité de la liste (`_q` : « i » à compléter, « u » mal lue) et des
   produits signalés par l'utilisateur (`flags`, clé `rs2:flags`, toujours « Exclu »). À l'ouverture d'une fiche,
   `refreshLive` recharge la version actuelle d'Open Food Facts et recalcule le verdict partout. Drive : `DRIVES`, `driveMode`, `driveUrl`,
-  `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Leclerc, Cora ; Google + code-barres pour
-  Intermarché ; recherche par nom ailleurs). La carte montre d'abord les enseignes où le produit a été vu, les
+  `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Auchan, Cora ; Google + code-barres pour
+  Intermarché ; Leclerc : le site du drive `leclercdrive.fr`, propre à chaque magasin, s'ouvre et le nom est copié
+  (`data-cp`) car la recherche de e.leclerc ne montre pas les courses ; Picard : nom sans la marque ; recherche par
+  nom ailleurs, avec la marque du paquet et non le fabricant : `BRAND_GROUP`). La carte montre d'abord les enseignes où le produit a été vu, les
   autres repliées (`.dmore`). « Mauvais produit ? » enregistre une autre recherche par produit et enseigne
   (`driveFix`, clé `rs2:drivefix` : `"code|enseigne": "nom" | "marque"`), prioritaire dans `driveMode`. Magasins proches : `computeNear`, `placesAround`, tuiles
   `data/stores/`. Position : `getPosition`, `autoLocate`, adresse enregistrée en repli.
@@ -56,7 +58,11 @@ Snapchat ou de Claude).
   chaque lundi par `.github/workflows/data.yml` → `tools/build_data.py`, réglages dans `tools/config.json`) ;
   `data/stores/` (magasins OpenStreetMap, `stores.yml` → `tools/build_stores.py`). Ne pas modifier ces fichiers
   de données à la main.
-- Les sites des drives bloquent les robots : impossible de vérifier leurs résultats automatiquement. La page
+- Les sites des drives bloquent l'atelier de Claude. La tâche GitHub « Sonde drive » (`tools/sonde_drive.py`,
+  `.github/workflows/sonde.yml`, lancée par `gh api -X POST repos/<dépôt>/actions/workflows/sonde.yml/dispatches -f ref=main`)
+  ouvre les vrais sites depuis GitHub et publie rapport et captures sur une branche `sonde-drive-<n°>` (à lire avec
+  `git fetch origin sonde-drive-<n°>`). Carrefour (souvent), Auchan, Biocoop, Picard, Lidl répondent ; Super U, Intermarché,
+  Monoprix et le drive Leclerc bloquent ces serveurs. Mode `adresses` pour tester un format de lien. La page
   Profil › « Tester les liens drive » sert au test à la main.
 
 ## Vérifier et tester

@@ -25,7 +25,7 @@ with sync_playwright() as p:
     terms = page.eval_on_selector_all('#dtList .meta', "els => els.map(e => (e.textContent.match(/« (.*?) »/) || [])[1]).filter(Boolean)")
     check(len(terms) == len(dt['items']) and all(0 < len(t) <= 60 for t in terms), 'une recherche courte pour chaque produit')
     hrefs = page.eval_on_selector_all('#dtList .dttop a:first-child', 'els => els.map(e => e.href)')
-    check(all(re.match(r'https://(www\.carrefour\.fr/s\?q=|www\.biocoop\.fr/catalogsearch/result/\?q=|www\.e\.leclerc/recherche\?q=|www\.coursesu\.com/recherche\?q=)', h) for h in hrefs), f'{len(hrefs)} liens vers la recherche des sites')
+    check(all(re.match(r'https://(www\.carrefour\.fr/s\?q=|www\.biocoop\.fr/catalogsearch/result/\?q=|www\.leclercdrive\.fr/$|www\.coursesu\.com/recherche\?q=)', h) for h in hrefs), f'{len(hrefs)} liens vers la recherche des sites')
     segs = page.locator('#dtList .seg')
     segs.nth(0).locator('[data-v="ko"]').click()
     segs.nth(1).locator('[data-v="ok"]').click()
@@ -78,7 +78,8 @@ with sync_playwright() as p:
     page.reload(); wait_near(page); open_a()
     check(page.locator('#sheetBody .drivebtn .dmain').first.get_attribute('href') == href1, 'signalement gardé après rechargement')
     other = page.eval_on_selector_all('#sheetBody .dmore .dmain', 'els => els.map(e => e.getAttribute("href"))')
-    check(any(re.search(r'q=3017620422003$', h) for h in other) or not any('leclerc' in h for h in other), 'les autres enseignes gardent leur propre lien')
+    check(len(other) == len(ids) - 1 and not any('carrefour' in h for h in other) and ('https://www.leclercdrive.fr/' in other or 'leclerc' not in ids),
+          'les autres enseignes gardent leur propre lien')
     page.locator('#sheetBody .drivebtn .dfix').first.click(); page.wait_for_timeout(200)
     check(page.locator('#sheetBody .drivebtn .dmain').first.get_attribute('href') == href0 and page.evaluate("() => JSON.parse(localStorage.getItem('rs2:drivefix'))") == {}, '« Revenir au premier lien » remet le code-barres')
     page.evaluate("() => history.back()"); page.wait_for_timeout(300)
@@ -98,6 +99,55 @@ with sync_playwright() as p:
     check(names == ['Pâte à tartiner', 'Biscuits fourrés', 'Lait demi-écrémé'], 'Ma liste chez Carrefour : produits vus chez Carrefour d\'abord, marque U à la fin (' + ' / '.join(names) + ')')
     meta = page.inner_text('#driveList')
     check('code-barres' in meta and 'toute la marque Marque Test' in meta, 'chaque produit dit comment il est cherché (code-barres, nom, marque)')
+    check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
+    ctx.close()
+
+    print('Liens corrigés d\'après la sonde des vrais sites (19/10/2026)')
+    R = {'code': '3564700007433', 'product_name': 'Fromage blanc au lait demi-écrémé', 'brands': 'Délisse, Marque Repère', 'stores_tags': ['e-leclerc']}
+    shop = [{'code': R['code'], 'p': R, 'done': False, 'at': 1}]
+    ctx, page, errs, _ = new_page(b, base, geo=RENNES, init={'rs2:shop': shop, 'rs2:drivefix': {'3564700007433|leclerc': 'nom'}})
+    ctx.grant_permissions(['clipboard-read', 'clipboard-write'], origin=base.rstrip('/'))
+    ctx.route(re.compile(r'.*leclercdrive.*'), lambda r: r.fulfill(status=200, content_type='text/html', body='<title>Leclerc Drive</title>'))
+    wait_near(page)
+    E = lambda expr, arg=None: page.evaluate(expr, arg)
+    prince = {'code': '7622210449283', 'product_name': 'Prince Goût Chocolat au blé complet', 'brands': 'Mondelez'}
+    check(E("p => __RS.driveUrl(p, 'auchan')", prince) == 'https://www.auchan.fr/recherche?text=7622210449283', 'Auchan : recherche par code-barres (produit exact sur le site)')
+    check(E("p => __RS.driveUrl(p, 'leclerc')", prince) == 'https://www.leclercdrive.fr/', 'Leclerc : le site du drive, plus la recherche de e.leclerc (livres, jouets)')
+    terms = {
+        ('Mondelez', 'Prince Goût Chocolat au blé complet'): 'Prince Chocolat blé',
+        ('Lindt & Sprüngli', 'Extra fine dark chocolate'): 'Lindt Extra fine',
+        ('Mondelez, LU, Prince', 'Prince chocolat'): 'LU Prince chocolat',
+        ('Ferrero, Nutella', 'Nutella'): 'Nutella',
+        ('Coca-Cola', 'Coca-Cola'): 'Coca-Cola',
+        ('Danone, Activia', 'Activia nature'): 'Activia nature',
+        ('Nestlé', 'Dessert chocolat noir'): 'Nestlé Dessert chocolat',
+    }
+    bad = []
+    for (br, nm), want in terms.items():
+        got = E("p => __RS.driveTerms(p, 'u')", {'code': '1', 'product_name': nm, 'brands': br})
+        if got != want: bad.append(f'{br} / {nm} : « {got} » au lieu de « {want} »')
+    check(not bad, 'recherche par nom : la marque du paquet, pas le fabricant (Mondelez, Lindt & Sprüngli…)' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
+    pic = {'code': '3270160680276', 'product_name': 'Velouté courge butternut carotte navet', 'brands': 'Le Bio par Picard'}
+    check(E("p => __RS.driveTerms(p, 'picard')", pic) == 'Velouté courge butternut', 'Picard : recherche sans la marque (« Le Bio par Picard » ouvrait le rayon bio)')
+    check(E("p => __RS.driveMode(p, 'leclerc')", R) == 'site', 'ancien signalement sur Leclerc sans effet : toujours le site du drive')
+
+    page.click('nav [data-go="list"]')
+    page.click('#shopList [data-open="3564700007433"]'); page.wait_for_selector('#sheet[open] .drivebtn')
+    row = page.locator('#sheetBody .drivebtn').first
+    t = row.inner_text()
+    check(page.locator('#sheetBody .drivebtn').count() == 1 and 'E.Leclerc' in t and 'Ouvrir le drive' in t, 'Marque Repère : seulement Leclerc, bouton « Ouvrir le drive »')
+    cp = row.locator('.dmain').get_attribute('data-cp')
+    check(cp == 'Délisse Fromage blanc' and f'« {cp} » est copié' in t, 'le nom à coller est annoncé : ' + str(cp))
+    check(row.locator('.dfix').count() == 0, 'pas de « Mauvais produit ? » quand il n\'y a pas d\'autre recherche')
+    with ctx.expect_page() as pop:
+        row.locator('.dmain').click()
+    pop.value.close()
+    page.wait_for_selector('#toast.show')
+    check(E("() => navigator.clipboard.readText()") == cp and 'copié' in page.inner_text('#toast'), 'en touchant : nom copié dans le presse-papiers, message affiché')
+    page.evaluate("() => history.back()"); page.wait_for_timeout(300)
+    if page.locator('#whereList [data-drive="leclerc"]').count():
+        page.click('#whereList [data-drive="leclerc"]'); page.wait_for_selector('#driveSheet[open] #driveList li')
+        check(page.locator('#driveList a[data-cp]').count() == 1 and 'est copié' in page.inner_text('#driveList'), 'Ma liste chez Leclerc : chaque produit copie son nom')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()

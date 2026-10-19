@@ -318,7 +318,7 @@ def main():
         hrefs = page.eval_on_selector_all('#sheet .drivebtn .dmain', 'els => els.map(e => e.href)')
         txt = page.inner_text('#sheet .drives')
         check(len(hrefs) >= 2 and ('Voir le produit' in txt or 'Chercher' in txt), f'{len(hrefs)} liens vers les drives : ' + txt.replace('\n', ' | ')[:120])
-        check(any('carrefour.fr/s?q=' in h for h in hrefs) or any('e.leclerc/recherche?q=' in h for h in hrefs), 'recherche directe sur le site de l\'enseigne')
+        check(any('carrefour.fr/s?q=' in h for h in hrefs) or any(h == 'https://www.leclercdrive.fr/' for h in hrefs), 'recherche directe sur le site de l\'enseigne (drive Leclerc : son site)')
         page.click('#sheetClose')
         sojade = {'code': '3273220020018', 'product_name': 'À la Grecque Greek Style Nature-Natural', 'brands': 'Sojade', 'stores_tags': ['biocoop']}
         ids = page.evaluate("p => __RS.linkChains(p)", sojade)
