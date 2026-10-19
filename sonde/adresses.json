@@ -1,0 +1,66 @@
+[
+ {
+  "url": "https://www.leclercdrive.fr/",
+  "status": 403,
+  "final": "https://www.leclercdrive.fr/",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u01.jpg"
+ },
+ {
+  "url": "https://m-courses.leclercdrive.fr/magasin-113521-113521/recherche/Nutella",
+  "status": 403,
+  "final": "https://m-courses.leclercdrive.fr/magasin-113521-113521/recherche/Nutella",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u02.jpg"
+ },
+ {
+  "url": "https://fd6-courses.leclercdrive.fr/magasin-113521-113521-rennes---cleunay.aspx",
+  "status": 403,
+  "final": "https://fd6-courses.leclercdrive.fr/magasin-113521-113521-rennes---cleunay.aspx",
+  "title": "leclercdrive.fr",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u03.jpg"
+ },
+ {
+  "url": "https://www.intermarche.com/produit/produit/7622210449283",
+  "status": 403,
+  "final": "https://www.intermarche.com/produit/produit/7622210449283",
+  "title": "intermarche.com",
+  "h1": "",
+  "text": "",
+  "err": "",
+  "links": [],
+  "shot": "u04.jpg"
+ },
+ {
+  "url": "https://www.coursesu.com/recherche?q=7622210449283",
+  "status": 403,
+  "final": "https://www.coursesu.com/recherche?q=7622210449283",
+  "title": "Un instant…",
+  "h1": "www.coursesu.com",
+  "text": "www.coursesu.com Vérification de sécurité en cours Ce site utilise un service de sécurité pour se protéger contre les bots malveillants. Cette page s’affiche pendant que le site vérifie que vous n’êtes pas un bot. Ray ID: a4d21e597a40ab6b Performances et sécurité par Cloudflare Confidentialité",
+  "err": "",
+  "links": [
+   {
+    "h": "https://www.cloudflare.com/?utm_source=challenge&utm_campaign=m",
+    "t": "Cloudflare"
+   },
+   {
+    "h": "https://www.cloudflare.com/fr-fr/privacypolicy/",
+    "t": "Confidentialité"
+   }
+  ],
+  "shot": "u05.jpg"
+ }
+]

@@ -1,0 +1,22 @@
+# Sonde : adresses testées
+
+- `https://www.leclercdrive.fr/`
+  - statut 403, final `https://www.leclercdrive.fr/`, titre « leclercdrive.fr »
+  - 
+  - capture u01.jpg
+- `https://m-courses.leclercdrive.fr/magasin-113521-113521/recherche/Nutella`
+  - statut 403, final `https://m-courses.leclercdrive.fr/magasin-113521-113521/recherche/Nutella`, titre « leclercdrive.fr »
+  - 
+  - capture u02.jpg
+- `https://fd6-courses.leclercdrive.fr/magasin-113521-113521-rennes---cleunay.aspx`
+  - statut 403, final `https://fd6-courses.leclercdrive.fr/magasin-113521-113521-rennes---cleunay.aspx`, titre « leclercdrive.fr »
+  - 
+  - capture u03.jpg
+- `https://www.intermarche.com/produit/produit/7622210449283`
+  - statut 403, final `https://www.intermarche.com/produit/produit/7622210449283`, titre « intermarche.com »
+  - 
+  - capture u04.jpg
+- `https://www.coursesu.com/recherche?q=7622210449283`
+  - statut 403, final `https://www.coursesu.com/recherche?q=7622210449283`, titre « Un instant… »
+  - www.coursesu.com Vérification de sécurité en cours Ce site utilise un service de sécurité pour se protéger contre les bots malveillants. Cette page s’affiche pendant que le site vérifie que vous n’êtes pas un bot. Ray ID: a4d21e597a40ab6b Performances et sécurité par Cloudflare Confidentialité
+  - capture u05.jpg
