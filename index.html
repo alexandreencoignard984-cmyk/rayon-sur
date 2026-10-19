@@ -352,7 +352,18 @@ table.nut tr.sub td:first-child{padding-left:14px;color:var(--muted)}
 .sec h2 .cnt{color:var(--muted);font-weight:500;font-size:15px}
 #recCats{margin:12px -16px 4px;padding:0 16px}
 .recmeta{margin:-4px 0 12px;color:var(--muted);font-size:15px}
-.recsteps{margin-top:16px}
+.recsteps{margin-top:12px}
+.rtabs{display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:3px;margin:4px 0 12px;border-radius:12px;background:var(--sunk)}
+.rtab{min-height:44px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:15px;font-weight:650}
+.rtab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.rtab b{color:var(--ok);font-weight:700;margin-left:2px}
+.ingtext{list-style:none;margin:6px 0 0;padding:0}
+.ingtext li{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:16px}
+.ingtext li:first-child{border-top:0}
+.ingtext .q{flex:none;color:var(--muted);font-variant-numeric:tabular-nums}
+.ingtext .st{display:block;font-size:13px;font-weight:600;margin-top:1px}
+.ingtext .st.ok{color:var(--ok)} .ingtext .st.check{color:var(--warn)} .ingtext .st.no{color:var(--no)} .ingtext .st.wait{color:var(--muted);font-weight:500}
+.card h3 .for{font-weight:500;color:var(--muted);font-size:14px}
 .recsteps .steps{max-width:none;margin:8px 0 0;font-size:16px;line-height:1.45}
 .recsteps .steps li{padding:8px 0 8px 36px}
 .chev{width:16px;height:16px;transform:rotate(-90deg);color:var(--muted)}
@@ -426,6 +437,11 @@ div.rowbtn{cursor:default}
 .drivebtn{border-radius:12px;background:var(--sunk)}
 .drivebtn .dmain{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;color:var(--ink);text-decoration:none}
 .drivebtn .dalt{display:block;margin-top:-6px;padding:0 14px 10px;font-size:13px;color:var(--muted)}
+.drivebtn .dfoot{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.drivebtn .dfoot .dalt{flex:1}
+.drivebtn .dfix{flex:none;margin:-10px 6px 4px 0;padding:6px 8px;min-height:32px;border:0;background:none;color:var(--warn);font-size:13px;font-weight:600}
+.dwarn{color:var(--warn)}
+.dmore{margin-top:8px}
 .drivebtn b{display:block;font-size:16px}
 .drivebtn small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
 .dhelp{margin-top:10px;font-size:14px;color:var(--muted)}
@@ -632,12 +648,22 @@ dialog .toast{position:fixed}
         <span class="stepper" id="recServ"><button type="button" id="servMinus" aria-label="Une personne de moins">−</button><span id="servN" aria-live="polite">4 personnes</span><button type="button" id="servPlus" aria-label="Une personne de plus">+</button></span>
         <span class="selchip"><label class="sr" for="recStore">Magasin</label><select id="recStore"></select><svg aria-hidden="true"><use href="#i-down"/></svg></span>
       </div>
-      <p class="banner rsum" id="recSummary" aria-live="polite"></p>
-      <ul class="list" id="recIngr" style="margin-top:12px"></ul>
-      <button class="primary wide" id="recAddAll" type="button" style="margin-top:14px">Ajouter à ma liste</button>
-      <p class="hint" style="margin-top:12px">Produits tirés de la base de l'appli : ceux vus dans ton magasin d'abord. Les ingrédients facultatifs et le sel ne sont pas ajoutés d'office. L'étiquette fait toujours foi.</p>
-      <section class="card recsteps" id="recSteps" hidden><h3>Préparation</h3><ol class="steps" id="recStepList"></ol></section>
-      <a class="ghost wide" id="recLink" href="#" target="_blank" rel="noopener">Voir la préparation sur Marmiton</a>
+      <div class="rtabs" role="tablist" id="recTabs" aria-label="Recette ou produits">
+        <button class="rtab" role="tab" type="button" data-rt="recipe" aria-selected="true">La recette</button>
+        <button class="rtab" role="tab" type="button" data-rt="products" aria-selected="false">Les produits <b id="recProdN"></b></button>
+      </div>
+      <div id="recRecipe">
+        <section class="card"><h3>Ingrédients <span class="for" id="recFor"></span></h3><ul class="ingtext" id="recIngrText"></ul></section>
+        <section class="card recsteps" id="recSteps" hidden><h3>Préparation</h3><ol class="steps" id="recStepList"></ol></section>
+        <button class="primary wide" id="recGoProducts" type="button" style="margin-top:14px">Voir les produits sans tes allergènes</button>
+      </div>
+      <div id="recProducts" hidden>
+        <p class="banner rsum" id="recSummary" aria-live="polite"></p>
+        <ul class="list" id="recIngr" style="margin-top:12px"></ul>
+        <button class="primary wide" id="recAddAll" type="button" style="margin-top:14px">Ajouter à ma liste</button>
+        <p class="hint" style="margin-top:12px">Produits tirés de la base de l'appli : ceux vus dans ton magasin d'abord. Les ingrédients facultatifs et le sel ne sont pas ajoutés d'office. L'étiquette fait toujours foi.</p>
+      </div>
+      <a class="ghost wide" id="recLink" href="#" target="_blank" rel="noopener" style="margin-top:14px">Voir la préparation sur Marmiton</a>
     </div>
 
     <div id="recEditor" hidden>
@@ -2712,7 +2738,7 @@ $('#shareList').addEventListener('click', async () => {
 });
 $('#exportBtn').addEventListener('click', () => {
   const data = { app:'rayon-sur', version:3, exported:new Date().toISOString(), profile:{ sel:[...profile.sel], traces:profile.traces, words:profile.words }, favs, shop, history:hist,
-    recipes:myRecipes, flags, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
+    recipes:myRecipes, flags, drivefix:driveFix, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
   const blob = new Blob([JSON.stringify(data)], { type:'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rayon-sur-sauvegarde.json';
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
@@ -2729,6 +2755,7 @@ $('#importFile').addEventListener('change', async e => {
     if (Array.isArray(d.history)){ hist = cleanList(d.history).slice(0, 40); saveHist(); }
     if (Array.isArray(d.recipes)){ myRecipes = cleanRecipes(d.recipes); saveMyRecipes(); }
     if (isObj(d.flags)){ flags = cleanFlags(d.flags); saveFlags(); }
+    if (isObj(d.drivefix)){ driveFix = cleanDriveFix(d.drivefix); ls.set(DFIX_KEY, driveFix); }
     if (isObj(d.stores)){
       const h = d.stores.home;
       if (isObj(h) && fin(h.lat) && fin(h.lon)) loc.home = { main:String(h.main || h.city || 'Mon adresse'), city:String(h.city || h.main || ''), full:String(h.full || h.city || ''), kind:String(h.kind || 'place'), lat:h.lat, lon:h.lon };
@@ -3058,6 +3085,7 @@ function openRecipe(id, { nav = true, replace = false } = {}){
   $('#recMeta').textContent = [r.e, fmtMin(r.t) && '⏱ ' + fmtMin(r.t), r.mine ? 'Ma recette' : r.g, isVeg(r) && !r.mine ? 'Végétarien' : ''].filter(Boolean).join(' · ');
   $('#recSteps').hidden = !(r.st && r.st.length);
   $('#recStepList').innerHTML = (r.st || []).map(t => `<li>${esc(t)}</li>`).join('');
+  recTab(r.st && r.st.length ? 'recipe' : 'products');
   recView('detail');
   computeRecipe();
 }
@@ -3139,6 +3167,20 @@ function renderRecipe(){
     return `<li class="item s-${st2} rec"><${tag}><span class="tw">${pic}<span class="sbadge" aria-hidden="true"><svg><use href="#${BADGE[st2]}"/></svg></span></span><span>${body}</span></${e ? 'button' : 'div'}>${addBtn}${more}</li>`;
   });
   $('#recIngr').innerHTML = rows.join('');
+  // onglet « La recette » : quantités pour le nombre de personnes, et ce que l'appli a trouvé pour chaque ingrédient
+  $('#recFor').textContent = `pour ${v.serv} personne${v.serv > 1 ? 's' : ''}`;
+  $('#recIngrText').innerHTML = r.i.map(([id, q, u, opt], k) => {
+    const ing = ING[id] || { n:id }, res = v.res[k];
+    let st = '';
+    if (ing.b) st = '';
+    else if (!res) st = '<span class="st wait">Recherche d\'un produit…</span>';
+    else if (res.fresh) st = res.status === 'ok' ? '' : `<span class="st no">${esc(res.note)}</span>`;
+    else if (res.status === 'ok'){ const e = curPick(k), sub = e && res.subOf ? res.subOf.get(e.code) : null; st = `<span class="st ok">✓ ${sub ? 'remplacé par ' + esc(sub) : 'version compatible trouvée'}</span>`; }
+    else if (res.status === 'check') st = '<span class="st check">À vérifier sur l\'étiquette</span>';
+    else st = `<span class="st no">${opt ? 'Facultatif : sans version sûre' : 'Pas de version sûre pour toi'}</span>`;
+    return `<li><span><span class="n">${esc(ing.n)}${opt ? ' <span class="hint">(facultatif)</span>' : ''}</span>${st}</span><span class="q">${q != null ? esc(fmtQty(q, u, f)) : ''}</span></li>`;
+  }).join('');
+  $('#recProdN').textContent = pend ? '' : `${ok}/${r.i.filter(x => !(ING[x[0]] || {}).b).length}`;
   const sum = $('#recSummary');
   const where = st.id === 'all' ? 'en France' : whereName(st);
   if (pend){ sum.className = 'banner rsum'; sum.innerHTML = `${SPIN}Recherche des produits ${esc(where)}… (${r.i.length - pend} sur ${r.i.length})`; }
@@ -3150,6 +3192,14 @@ function renderRecipe(){
   btn.disabled = !!pend || !missing;
   btn.textContent = pend ? 'Recherche en cours…' : missing ? `Ajouter ${missing} ingrédient${missing > 1 ? 's' : ''} à ma liste` : 'Tout est dans ta liste';
 }
+// fiche d'une recette : « La recette » (ingrédients et préparation) ou « Les produits » (sans tes allergènes)
+function recTab(t){
+  if (RV) RV.tab = t;
+  $$('#recTabs .rtab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.rt === t)));
+  $('#recRecipe').hidden = t !== 'recipe'; $('#recProducts').hidden = t !== 'products';
+}
+$('#recTabs').addEventListener('click', e => { const b = e.target.closest('[data-rt]'); if (b) recTab(b.dataset.rt); });
+$('#recGoProducts').addEventListener('click', () => { recTab('products'); $('#recTabs').scrollIntoView({ block:'start', behavior:'smooth' }); });
 $('#recQ').addEventListener('input', renderRecHome);
 $('#recForm').addEventListener('submit', e => { e.preventDefault(); $('#recQ').blur(); const first = $('#recCatalog [data-rec]'); if (first && $('#recCatalog [data-rec]').length === 1) openRecipe(first.dataset.rec); });
 // filtres des recettes : puces au-dessus du catalogue (et bouton « Voir toutes les recettes »)
@@ -3967,9 +4017,16 @@ function driveTerms(p){
   return [brand, ...pick].filter(Boolean).join(' ').slice(0, 60) || String(nameOf(p)).slice(0, 40);
 }
 const validEan = p => !!p && gtinOK(String(p.code || ''));
-// recherche principale chez une enseigne : 'ean', 'gean' ou 'nom'
+// liens signalés faux par l'utilisateur : « code-barres|enseigne » → recherche à utiliser ('nom' ou 'marque')
+const DFIX_KEY = 'rs2:drivefix';
+function cleanDriveFix(o){ const out = {};
+  if (isObj(o)) for (const [k, v] of Object.entries(o)) if (/^\d{1,20}\|[a-z]+$/.test(k) && (v === 'nom' || v === 'marque')) out[k] = v;
+  return out; }
+let driveFix = cleanDriveFix(ls.get(DFIX_KEY, {}));
+// recherche principale chez une enseigne : 'ean', 'gean', 'nom' (ou 'marque' après un signalement)
 function driveMode(p, id){
   const d = DRIVES[id]; if (!d) return '';
+  const fx = driveFix[`${p && p.code}|${id}`]; if (fx) return fx;
   if (validEan(p) && d.ean && d.q) return 'ean';
   if (validEan(p) && d.gean) return 'gean';
   return 'nom';
@@ -3987,8 +4044,9 @@ function driveUrl(p, id, how = 'auto'){
 }
 // lien de secours : par nom si la recherche principale utilise le code-barres, sinon la marque seule
 function driveAlt(p, id){
-  const brand = driveBrand(p), terms = driveTerms(p);
-  if (driveMode(p, id) !== 'nom') return { href:driveUrl(p, id, 'nom'), text:`Pas le bon produit ? Chercher « ${terms} »` };
+  const brand = driveBrand(p), terms = driveTerms(p), m = driveMode(p, id);
+  if (m === 'marque') return { href:driveUrl(p, id, 'nom'), text:`Chercher « ${terms} »` };
+  if (m !== 'nom') return { href:driveUrl(p, id, 'nom'), text:`Ou chercher « ${terms} »` };
   if (brand && brand !== terms) return { href:driveUrl(p, id, 'marque'), text:`Rien trouvé ? Toute la marque ${brand}` };
   return null;
 }
@@ -4009,6 +4067,19 @@ function driveHelp(links = []){
     <p>Ouvre Rayon sûr dans un onglet normal de Safari et réessaie${links.length ? ', ou copie le lien et colle-le dans Safari' : ''}. En navigation privée, ta liste et ton profil sont aussi effacés quand tu fermes l'onglet.</p>
     ${links.length ? `<div class="dcopy">${links.map(l => `<button type="button" class="ghost small" data-copy="${esc(l.href)}">Copier le lien ${esc(driveName(l.id))}</button>`).join('')}</div>` : ''}</details>`;
 }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-dfix]'); if (!b) return;
+  const p = stack[stack.length - 1]; if (!p) return;
+  const id = b.dataset.dfix, key = `${p.code}|${id}`, cur = driveFix[key];
+  const before = driveMode(p, id);
+  if (cur){ delete driveFix[key]; toast(`Chez ${driveName(id)} : retour au premier lien.`); }
+  else {
+    driveFix[key] = before === 'nom' ? (driveBrand(p) ? 'marque' : 'nom') : 'nom';
+    toast(`Noté : chez ${driveName(id)}, l'appli cherchera ${driveFix[key] === 'marque' ? 'toute la marque' : 'par le nom'} pour ce produit.`, 4500);
+    try { window.open(driveUrl(p, id), '_blank', 'noopener'); } catch (err) {}
+  }
+  ls.set(DFIX_KEY, driveFix); drawKeepScroll();
+});
 document.addEventListener('click', async e => {
   const b = e.target.closest('[data-copy]'); if (!b) return;
   const url = b.dataset.copy;
@@ -4020,30 +4091,38 @@ function driveCard(p){
   if (!p || p._fresh) return '';
   const ids = linkChains(p); if (!ids.length) return '';
   const info = chainInfo(p);
-  const rows = ids.map(id => {
+  const row = id => {
     const n = nearInfo(id), d = DRIVES[id], mode = driveMode(p, id), alt = driveAlt(p, id);
     const seen = info.seen.includes(id);
     const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
     return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small>
         <small class="${seen ? 'dseen' : 'dunk'}">${seen ? 'Vu dans cette enseigne' : 'Pas signalé ici : peut-être pas vendu'}</small></span>
-        <span class="go">${mode === 'nom' ? 'Chercher' : 'Voir le produit'}</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</div>`;
-  }).join('');
+        <span class="go">${mode === 'nom' || mode === 'marque' ? 'Chercher' : 'Voir le produit'}</span></a>
+      <div class="dfoot">${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : '<span></span>'}<button type="button" class="dfix" data-dfix="${id}">${driveFix[`${p.code}|${id}`] ? 'Revenir au premier lien' : 'Mauvais produit ?'}</button></div></div>`;
+  };
+  // d'abord les enseignes où le produit a été vu ; ailleurs, la recherche tombe souvent sur d'autres produits
+  const seenIds = ids.filter(id => info.seen.includes(id)), other = ids.filter(id => !info.seen.includes(id));
+  const rows = (seenIds.length ? seenIds : other).map(row).join('')
+    + (seenIds.length && other.length ? `<details class="dhelp dmore"><summary>Chercher aussi chez ${esc(other.map(driveName).join(', '))}</summary><p>Ce produit n'y a pas été signalé : il n'y est peut-être pas vendu, et la recherche peut montrer d'autres produits.</p><div class="drives">${other.map(row).join('')}</div></details>` : '');
   const id = [nameOf(p), brandOf(p), p.quantity].filter(Boolean).join(' · ');
-  const exact = ids.some(id2 => driveMode(p, id2) !== 'nom');
+  const exact = ids.some(id2 => ['ean', 'gean'].includes(driveMode(p, id2)));
+  const warn = !ids.some(x => info.seen.includes(x)) ? '<p class="hint dwarn">Ce produit n\'a été signalé dans aucun de ces magasins : il n\'y est peut-être pas vendu, et la recherche peut montrer d\'autres produits.</p>' : '';
   return `<section class="card"><h3>Stock au drive</h3>
-    <p class="hint">${exact ? '« Voir le produit » ouvre ce produit précis grâce à son code-barres. ' : ''}« Chercher » lance une recherche par nom : vérifie que c'est bien <b>${esc(id)}</b>. Le site affiche le stock du drive que tu y as choisi.</p>
+    <p class="hint">${exact ? '« Voir le produit » ouvre ce produit précis grâce à son code-barres. ' : ''}Vérifie que c'est bien <b>${esc(id)}</b>. Si le site montre autre chose, touche « Mauvais produit ? » : l'appli cherchera autrement pour ce produit.</p>${warn}
     <div class="drives">${rows}</div>${driveHelp(ids.map(id2 => ({ id:id2, href:driveUrl(p, id2) })))}</section>`;
 }
 // « Ma liste chez Carrefour » : chaque produit de la liste, à ouvrir sur le site
 function openDriveList(id){
-  const items = shop.filter(x => !x.done && x.p && !x.p._fresh), fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
+  const RANK = { sure:0, likely:1, no:2 };   // vus dans l'enseigne d'abord, marques d'autres enseignes à la fin
+  const items = shop.filter(x => !x.done && x.p && !x.p._fresh).sort((a, b) => RANK[availability(chainInfo(a.p), id)] - RANK[availability(chainInfo(b.p), id)]),
+    fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
   const n = nearInfo(id), d = DRIVES[id] || {};
   $('#driveTitle').textContent = 'Ma liste chez ' + driveName(id);
   $('#driveHint').textContent = `Touche un produit : le site ${driveName(id)} s'ouvre dessus${d.noDrive ? '' : ', avec le stock du drive que tu y as choisi'}.` + (n ? ` Ton magasin le plus proche : ${n.name}, ${fmtKm(n.dist)}.` : '') + (fresh ? ` Produits frais (${fresh}) : à choisir sur place.` : '');
   $('#driveList').innerHTML = items.length ? items.map(x => {
     const a = availability(chainInfo(x.p), id), alt = driveAlt(x.p, id), mode = driveMode(x.p, id);
     const note = a === 'sure' ? 'Vu dans l\'enseigne' : a === 'no' ? 'Marque d\'une autre enseigne : sûrement absent' : `Marque nationale, pas encore signalée chez ${driveName(id)}`;
-    const how = mode === 'nom' ? `Recherche : « ${driveTerms(x.p)} »` : 'Recherche par le code-barres : le produit exact';
+    const how = mode === 'marque' ? `Recherche : toute la marque ${driveBrand(x.p)}` : mode === 'nom' ? `Recherche : « ${driveTerms(x.p)} »` : 'Recherche par le code-barres : le produit exact';
     return `<li><a class="dmain" href="${esc(driveUrl(x.p, id))}" target="_blank" rel="noopener"><span><b>${esc(nameOf(x.p))}</b><small class="meta">${esc([brandOf(x.p), x.p.quantity, note].filter(Boolean).join(' · '))}</small><small class="meta">${esc(how)}</small></span><span class="go">Voir</span></a>${alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : ''}</li>`;
   }).join('') : '<li><p class="hint" style="padding:12px 16px">Ta liste est vide.</p></li>';
   $('#driveHelp').innerHTML = d.noDrive ? '' : driveHelp();
@@ -4192,7 +4271,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.19';
+const APP_VERSION = '3.20';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -4231,7 +4310,7 @@ document.addEventListener('focusout', () => setTimeout(resetPage, 150));
 if (window.visualViewport) visualViewport.addEventListener('resize', () => setTimeout(resetPage, 150));
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, dtReport:() => DT && dtReport(), getDT:() => DT };
+window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, dtReport:() => DT && dtReport(), getDT:() => DT };
 })();
 </script>
 </body>

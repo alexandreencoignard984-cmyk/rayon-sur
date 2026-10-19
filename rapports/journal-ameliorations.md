@@ -18,7 +18,9 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 - Vérifier que la barre du bas reste en bas sur iPhone (corrigé en 3.12 sans test sur un vrai téléphone) ;
   surveiller aussi le clavier dans les fiches (champ adresse), même bug possible sous iOS 26.
 - Recherche par code-barres chez Carrefour et Leclerc : non vérifiable automatiquement ; attendre le rapport de
-  « Tester les liens drive » et corriger les enseignes qui échouent.
+  « Tester les liens drive » et corriger les enseignes qui échouent. Depuis la 3.20, Alexandre signale les mauvais
+  liens avec « Mauvais produit ? » (clé `rs2:drivefix`, sur son téléphone seulement) : s'il en cite, regarder si une
+  enseigne revient souvent et changer sa recherche par défaut (`driveMode`).
 - Accueil (3.14) : voir si d'autres rayons méritent une tuile, et s'il faut afficher sur chaque tuile le nombre de
   produits compatibles avec le profil (calcul à faire sans ralentir l'ouverture).
 - Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
@@ -35,6 +37,21 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 · 3.20
+- Demande d'Alexandre : « je veux aussi la recette » et « beaucoup de produits sont redirigés vers des mauvais
+  produits ou de mauvaises catégories dans les drives ».
+- **La recette d'abord** : la page d'une recette s'ouvre sur l'onglet « La recette » (ingrédients avec quantités
+  pour le nombre de personnes choisi, état de chaque ingrédient pour le profil, étapes numérotées). L'onglet « Les
+  produits » garde le choix des produits en magasin ; le bouton « Voir les produits sans tes allergènes » y mène.
+- **Liens drive plus justes** : sur la fiche, seules les enseignes où le produit a été vu sont proposées d'emblée ;
+  les autres sont repliées sous « Chercher aussi chez … » avec la mise en garde « peut-être pas vendu ici ». Un
+  produit vu nulle part l'annonce clairement. Chaque lien a un bouton « Mauvais produit ? » : l'appli retient,
+  pour ce produit et cette enseigne, une autre recherche (code-barres → nom → toute la marque) et l'ouvre tout de
+  suite ; « Revenir au premier lien » annule. Ces choix sont dans la sauvegarde (export / import).
+- « Ma liste chez … » : les produits vus dans l'enseigne en premier, ceux d'une marque d'une autre enseigne à la fin.
+- Tests : `liens_drive.py` (carte drive, signalement, ordre de la liste), `bugs.py` (sauvegarde), `robustesse.py`
+  (`rs2:drivefix` abîmé), `recettes.py` (onglets).
 
 ### 2026-10-19 · 3.19
 - Recettes : la chapelure pointait vers une catégorie vide (« en:breadcrumbs ») ; elle cherche maintenant dans

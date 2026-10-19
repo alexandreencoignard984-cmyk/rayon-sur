@@ -20,7 +20,7 @@ with sync_playwright() as p:
     print('B. Recette bolognaise')
     page.click('nav [data-go="recipes"]')
     page.click('text=Pâtes bolognaise')
-    page.wait_for_selector('#recIngr li', timeout=20000)
+    page.wait_for_selector('#recIngrText li', timeout=20000)
     page.wait_for_timeout(1500)
     check(page.locator('#recIngr li').count() >= 8, f"{page.locator('#recIngr li').count()} ingrédients")
     print('C. Liste et profil')

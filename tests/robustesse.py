@@ -26,6 +26,7 @@ SPECIFIC = {
                 {'mode': 'city', 'home': {'main': 'Rennes', 'city': 'Rennes', 'full': 'Rennes', 'kind': 'municipality', 'lat': 48.11, 'lon': -1.68}}],
     'rs2:drivetest': [{'items': [{}], 'res': {}}, {'items': 'x', 'res': 1}, {'v': 1, 'at': 1, 'chains': ['carrefour'], 'items': [{'p': {'code': '1'}, 'chains': ['carrefour'], 'seen': []}], 'res': {'1|carrefour': 'ok'}}],
     'rs2:theme': ['"violet"'],
+    'rs2:drivefix': [{'abc|carrefour': 'nom'}, {'123|carrefour': 'autre'}, {'123|Carre four': 'nom'}, {'123|carrefour': None}, ['nom'], {'3017620422003|carrefour': 'marque', '1|u': 'nom'}],
     'rs2:flags': [{'abc': {'al': ['milk']}}, {'1': {'al': 'milk'}}, {'2': {'al': ['inconnu', None, 3]}}, {'3017620422003': {'al': ['milk', 'any'], 'at': 'x', 'name': 5}}],
 }
 

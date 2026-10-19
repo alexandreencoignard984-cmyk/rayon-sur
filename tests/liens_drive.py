@@ -42,6 +42,63 @@ with sync_playwright() as p:
     check(rep.startswith('Rapport liens drive · Rayon sûr') and 'Rien trouvé :' in rep and '« Nurishh Râpé Gran »' in rep and 'Par enseigne :' in rep, 'rapport copié')
     print('   ' + rep.split('\n')[2])
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
+    ctx.close()
+
+    print('Carte « Stock au drive » : bonne enseigne d\'abord, mauvais lien signalé')
+    A = {'code': '3017620422003', 'product_name': 'Pâte à tartiner', 'brands': 'Nutella', 'quantity': '400 g', 'stores_tags': ['carrefour']}
+    C = {'code': '123456', 'product_name': 'Biscuits fourrés', 'brands': 'Marque Test', 'stores_tags': []}
+    D = {'code': '777888', 'product_name': 'Lait demi-écrémé', 'brands': 'U', 'stores_tags': ['magasins-u']}
+    shop = [{'code': x['code'], 'p': x, 'done': False, 'at': i + 1} for i, x in enumerate([D, C, A])]
+    ctx, page, errs, _ = new_page(b, base, geo=RENNES, init={'rs2:shop': shop})
+    wait_near(page)
+    page.add_init_script("window.open = u => { (window.__opened = window.__opened || []).push(u); return null; };")
+    page.evaluate("() => { window.open = u => { (window.__opened = window.__opened || []).push(u); return null; }; }")
+    def open_a():
+        page.click('nav [data-go="list"]')
+        page.click('#shopList [data-open="3017620422003"]'); page.wait_for_selector('#sheet[open] .drivebtn')
+    open_a()
+    ids = page.evaluate("p => __RS.linkChains(p)", A)
+    top = page.eval_on_selector_all('#sheetBody .card:has(.drives) > .drives > .drivebtn b', 'els => els.map(e => e.textContent)')
+    more = page.eval_on_selector_all('#sheetBody .dmore .drivebtn b', 'els => els.map(e => e.textContent)')
+    check(ids[0] == 'carrefour' and len(ids) >= 2, 'enseignes proposées : ' + ','.join(ids))
+    check(top == ['Carrefour'], 'en premier, seulement l\'enseigne où le produit a été vu : ' + ','.join(top))
+    check(len(more) == len(ids) - 1 and not page.evaluate("document.querySelector('#sheetBody .dmore').open"), 'les autres enseignes repliées dans « Chercher aussi chez … »')
+    check('Chercher aussi chez' in page.inner_text('#sheetBody .dmore summary') and page.locator('#sheetBody .dwarn').count() == 0, 'titre clair, pas d\'avertissement')
+    first = page.locator('#sheetBody .drivebtn').first
+    href0 = first.locator('.dmain').get_attribute('href')
+    check(href0 == 'https://www.carrefour.fr/s?q=3017620422003', 'Carrefour : produit exact par le code-barres')
+    check(first.locator('.dfix').inner_text() == 'Mauvais produit ?', 'bouton « Mauvais produit ? » sous chaque lien')
+    first.locator('.dfix').click(); page.wait_for_selector('#toast.show')
+    first = page.locator('#sheetBody .drivebtn').first
+    href1 = first.locator('.dmain').get_attribute('href')
+    check(href1.startswith('https://www.carrefour.fr/s?q=Nutella'), 'après signalement : recherche par le nom (' + href1[-40:] + ')')
+    check(page.evaluate("() => window.__opened || []") == [href1], 'la nouvelle recherche s\'ouvre tout de suite')
+    check('par le nom' in page.inner_text('#toast') and first.locator('.dfix').inner_text() == 'Revenir au premier lien', 'message clair et bouton pour revenir')
+    check(page.evaluate("() => JSON.parse(localStorage.getItem('rs2:drivefix'))") == {'3017620422003|carrefour': 'nom'}, 'signalement enregistré pour ce produit et cette enseigne')
+    page.reload(); wait_near(page); open_a()
+    check(page.locator('#sheetBody .drivebtn .dmain').first.get_attribute('href') == href1, 'signalement gardé après rechargement')
+    other = page.eval_on_selector_all('#sheetBody .dmore .dmain', 'els => els.map(e => e.getAttribute("href"))')
+    check(any(re.search(r'q=3017620422003$', h) for h in other) or not any('leclerc' in h for h in other), 'les autres enseignes gardent leur propre lien')
+    page.locator('#sheetBody .drivebtn .dfix').first.click(); page.wait_for_timeout(200)
+    check(page.locator('#sheetBody .drivebtn .dmain').first.get_attribute('href') == href0 and page.evaluate("() => JSON.parse(localStorage.getItem('rs2:drivefix'))") == {}, '« Revenir au premier lien » remet le code-barres')
+    page.evaluate("() => history.back()"); page.wait_for_timeout(300)
+
+    page.click('#shopList [data-open="123456"]'); page.wait_for_selector('#sheet[open] .drivebtn')
+    check(page.locator('#sheetBody .dwarn').count() == 1 and page.locator('#sheetBody .dmore').count() == 0, 'produit vu nulle part : avertissement « peut-être pas vendu »')
+    btn = page.locator('#sheetBody .drivebtn').first
+    h = btn.locator('.dmain').get_attribute('href'); name = btn.locator('b').inner_text()
+    btn.locator('.dfix').click(); page.wait_for_timeout(200)
+    h2 = page.locator('#sheetBody .drivebtn .dmain').first.get_attribute('href')
+    check('Biscuits' in h.replace('%20', ' ') and h2.endswith('Marque%20Test') and 'Biscuits' not in h2, f'{name} : recherche par nom, puis toute la marque après signalement')
+    check(page.locator('#sheetBody .drivebtn .dalt').first.inner_text().startswith('Chercher « Marque Test'), 'lien de secours : revenir à la recherche par nom')
+    page.evaluate("() => history.back()"); page.wait_for_timeout(300)
+
+    page.click('#whereList [data-drive="carrefour"]'); page.wait_for_selector('#driveSheet[open] #driveList li')
+    names = page.eval_on_selector_all('#driveList li b', 'els => els.map(e => e.textContent)')
+    check(names == ['Pâte à tartiner', 'Biscuits fourrés', 'Lait demi-écrémé'], 'Ma liste chez Carrefour : produits vus chez Carrefour d\'abord, marque U à la fin (' + ' / '.join(names) + ')')
+    meta = page.inner_text('#driveList')
+    check('code-barres' in meta and 'toute la marque Marque Test' in meta, 'chaque produit dit comment il est cherché (code-barres, nom, marque)')
+    check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
 print('\n' + ('TOUT EST OK' if not FAIL else f'{len(FAIL)} ÉCHEC(S)'))

@@ -43,10 +43,13 @@ Snapchat ou de Claude).
   produits signalés par l'utilisateur (`flags`, clé `rs2:flags`, toujours « Exclu »). À l'ouverture d'une fiche,
   `refreshLive` recharge la version actuelle d'Open Food Facts et recalcule le verdict partout. Drive : `DRIVES`, `driveMode`, `driveUrl`,
   `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Leclerc, Cora ; Google + code-barres pour
-  Intermarché ; recherche par nom ailleurs). Magasins proches : `computeNear`, `placesAround`, tuiles
+  Intermarché ; recherche par nom ailleurs). La carte montre d'abord les enseignes où le produit a été vu, les
+  autres repliées (`.dmore`). « Mauvais produit ? » enregistre une autre recherche par produit et enseigne
+  (`driveFix`, clé `rs2:drivefix` : `"code|enseigne": "nom" | "marque"`), prioritaire dans `driveMode`. Magasins proches : `computeNear`, `placesAround`, tuiles
   `data/stores/`. Position : `getPosition`, `autoLocate`, adresse enregistrée en repli.
 - Recettes : `ING` (ingrédients → catégories de la base) et `RECIPES` (93 recettes : `g` rubrique, `e` pictogramme,
-  `t` minutes, `st` étapes, `i` ingrédients `[id, quantité pour 4, unité, facultatif]`). Un ingrédient qui pointe vers
+  `t` minutes, `st` étapes, `i` ingrédients `[id, quantité pour 4, unité, facultatif]`). La page d'une recette a deux
+  onglets (`recTab('recipe' | 'products')`) : « La recette » (ingrédients, quantités, étapes) s'ouvre par défaut. Un ingrédient qui pointe vers
   une catégorie absente de la base doit l'ajouter dans `tools/config.json` (`extra`).
 - `window.__RS` expose des fonctions pour les tests.
 - **Données** : `data/index.json` + `data/a/<rayon>.json` (produits Open Food Facts rangés par rayon, mis à jour
