@@ -34,6 +34,18 @@ CASES = [
     ('gluten', "semoule d'ail", 'ok'), ('gluten', 'épices pour couscous', 'ok'),
     # sulfites
     ('sulphites', 'conservateur : E-220', 'check'), ('sulphites', 'E 224', 'check'), ('sulphites', 'E223', 'check'),
+    # 3.14 : sulfites écrits « disulfite », fromages nommés sans le mot « lait », biscuits, morue, cacahouète
+    ('sulphites', 'conservateur : disulfite de potassium', 'check'), ('sulphites', 'sodium metabisulphite', 'check'), ('sulphites', 'disulfites de sodium', 'check'),
+    ('milk', 'emmental 9,5 %', 'check'), ('milk', 'parmigiano reggiano', 'check'), ('milk', 'grana padano AOP', 'check'), ('milk', 'feta', 'check'),
+    ('milk', 'fromage de chèvre', 'check'), ('milk', 'chèvre 12 %', 'check'), ('milk', 'comté 13 %', 'check'), ('milk', 'cheddar', 'check'), ('milk', 'raclette', 'check'),
+    ('milk', 'stracciatella', 'check'), ('milk', 'sauce béchamel', 'check'),
+    ('milk', 'jambon de Franche-Comté', 'ok'), ('milk', 'beurre de cacahouète', 'ok'),
+    ('gluten', 'biscuit 20 %', 'check'), ('gluten', 'brisures de cookies', 'check'), ('gluten', 'gaufrette', 'check'), ('gluten', 'madeleine 7,8 %', 'check'),
+    ('gluten', 'speculoos', 'check'), ('gluten', 'croûtons', 'check'), ('gluten', 'génoise', 'check'), ('gluten', 'brioche', 'check'), ('gluten', 'wafer', 'check'),
+    ('gluten', 'biscuits sans gluten', 'ok'),
+    ('fish', 'foie de morue', 'check'), ('fish', 'filets de sébaste', 'check'), ('fish', 'capelan', 'check'),
+    ('peanuts', 'cacahouètes grillées', 'check'), ('peanuts', 'beurre de cacahouète', 'check'),
+    ('crustaceans', 'araignée de mer', 'check'),
 ]
 
 httpd, base = serve()

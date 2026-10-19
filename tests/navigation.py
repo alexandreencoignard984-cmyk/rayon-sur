@@ -72,6 +72,13 @@ with sync_playwright() as p:
     check(dialogs(page) == 'driveSheet', 'le résumé ouvre « Ma liste chez … »')
     back(page); check(dialogs(page) == '' and screen(page) == 'list', 'retour : fiche du drive fermée')
     back(page); check(screen(page) == 'search', 'retour : revient à la recherche (la fiche produit a été remplacée)')
+    # ajout depuis la liste de résultats puis onglet Ma liste : le message « Voir ma liste » disparaît
+    page.click('#list li [data-add] >> nth=2'); page.wait_for_selector('#toast.show .tact')
+    page.click('nav [data-go="list"]'); page.wait_for_timeout(500)
+    check(screen(page) == 'list' and not page.evaluate("document.querySelector('#toast').classList.contains('show')"),
+          'onglet Ma liste après un ajout : le message « Voir ma liste » est retiré')
+    page.click('nav [data-go="search"]'); page.wait_for_timeout(200)
+    page.click('#list li [data-add] >> nth=2'); page.wait_for_timeout(300)   # remet la liste comme avant
 
     print('6. Fiche « Stock au drive »')
     page.click('#list li [data-open] >> nth=0'); page.wait_for_selector('#sheet[open] .drivebtn')

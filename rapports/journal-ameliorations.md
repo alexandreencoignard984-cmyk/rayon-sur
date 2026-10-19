@@ -21,14 +21,35 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   « Tester les liens drive » et corriger les enseignes qui échouent.
 - Premier lancement : compter les étapes jusqu'au premier résultat utile et les réduire si possible.
 - Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
-- Ma liste, « meilleur choix » : à égalité de produits, un magasin où le produit a été vu passe devant un
-  magasin plus proche (Super U à 8,6 km devant Carrefour à 550 m). Voir s'il faut départager par la distance.
 - Faux doutes restants après la 3.13 : desserts végétaux appelés « Skyr », barres « nougat » sans fruits à coque
   (Mars). Sans danger (« À vérifier »), mais on pourrait les lever avec le label végan ou la liste d'ingrédients.
+- Faux doutes ajoutés en 3.14 (sans danger, « À vérifier ») : madeleines ou cookies sans gluten qui ne disent pas
+  « sans gluten » dans les ingrédients, tranches végétales « saveur emmental », sirop « saveur spéculoos ». On
+  pourrait les lever avec le label « sans gluten » / végan d'Open Food Facts.
+- Mollusques : les « coques » ne sont pas reconnues (le mot se confond avec « fruits à coque », présent dans
+  16 000 fiches). À faire avec une règle qui écarte « fruits à coque ».
 - Tâches programmées de GitHub très en retard (la « Base produits » prévue à 3 h 17 UTC a démarré à 8 h 46) :
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 (2e séance) · 3.14
+- **Verdict allergènes encore plus sûr.** Des produits sortaient « Compatible » alors qu'ils contiennent ce que
+  l'utilisateur évite, parce que l'ingrédient était écrit d'une façon que l'appli ne reconnaissait pas. Ils passent
+  maintenant dans « À vérifier » :
+  - **lait** : fromages nommés sans le mot « lait » (emmental, parmesan, grana padano, cheddar, comté, feta, chèvre,
+    raclette, stracciatella, béchamel…). Exemples corrigés : « Pizza 4 saisons Bio » (emmental), « Pesto Rosso »
+    (parmesan), « Taboulé au cheddar ». 187 produits.
+  - **sulfites** écrits « disulfite de potassium » ou « metabisulphite » (jus de citron, sirops…) : 922 produits.
+  - **gluten** : biscuits, cookies, gaufrettes, madeleines, brioches, spéculoos, croûtons, génoise : 248 produits.
+  - **poisson** : morue (accras, brandade, foie de morue), sébaste, capelan… : 50 produits.
+  - **arachide** écrite « cacahouète » ; **crustacés** : araignée de mer.
+  - Les beurres de cacahouète ne sont plus pris pour du beurre (lait), et « Franche-Comté » pour du comté.
+- **Ma liste, « meilleur choix »** : à égalité, le magasin le plus proche passe devant (avant : Super U à 8,6 km
+  devant Carrefour à 550 m parce que le produit y avait été vu). Les deux restent marqués « Meilleur choix ».
+- Le message « Ajouté à ta liste · Voir ma liste » disparaît quand on change d'onglet (il restait affiché sur
+  Ma liste elle-même).
+- Tests : `tests/verdicts.py` (nouveaux mots), `tests/localisation.py` (13b), `tests/navigation.py` (5).
 
 ### 2026-10-19 · 3.13
 - **Verdict allergènes plus sûr.** Quand la fiche Open Food Facts ne déclare pas l'allergène, l'appli repère

@@ -408,6 +408,18 @@ def main():
         check('enseignes près de Rennes' in page.inner_text('#profNear'), 'Profil : ' + page.inner_text('#profNear').replace('\n', ' '))
         check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
         ctx.close()
+
+        print('13b. Ma liste : à égalité, le magasin le plus proche passe devant')
+        shop = [{'code': '3017620422004', 'p': {'code': '3017620422004', 'product_name': 'Glace fraise', 'brands': 'Carte d\'Or', 'stores_tags': ['super-u']}, 'done': False, 'at': 1}]
+        ctx, page, errs, _ = new_page(b, base, geo=RENNES, init={'rs2:shop': shop})
+        wait_near(page)
+        page.click('nav [data-go="list"]'); page.wait_for_timeout(500)
+        sm = page.inner_text('#listSum'); first = page.inner_text('#whereList li >> nth=0')
+        check('Carrefour' in sm and 'Carrefour' in first, 'vu chez Super U (8,6 km), marque nationale : Carrefour (550 m) proposé en premier — ' + sm.replace('\n', ' '))
+        bests = page.eval_on_selector_all('#whereList li.best .wtop b', 'els => els.map(e => e.textContent)')
+        check(any('Super U' in x for x in bests), 'Super U reste marqué « Meilleur choix » : ' + ', '.join(bests))
+        check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
+        ctx.close()
         b.close()
     httpd.shutdown()
     print('\n' + ('TOUT EST OK' if not FAIL else f'{len(FAIL)} ÉCHEC(S)'))
