@@ -464,6 +464,7 @@ div.rowbtn{cursor:default}
 .drivebtn small.dunk{color:var(--warn)}
 .drivebtn .go{flex:none;color:var(--ok);font-weight:650;font-size:15px}
 .drivebtn .go::after{content:" ›"}
+.drivebtn .gostore{flex:none;color:var(--muted);font-size:14px;font-weight:600}
 .dlist{list-style:none;margin:0;padding:0}
 .dlist li + li{border-top:1px solid var(--line)}
 .dlist a.dmain{display:flex;align-items:center;gap:12px;padding:12px 16px;color:var(--ink);text-decoration:none}
@@ -3960,7 +3961,8 @@ function renderWhere(){
     const parts = [r.sure ? `${r.sure} vu${r.sure > 1 ? 's' : ''} dans l'enseigne` : '', r.likely ? `${r.likely} marque${r.likely > 1 ? 's' : ''} nationale${r.likely > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
     const miss = r.miss.length ? `<p class="hint">Pas chez eux : ${r.miss.slice(0, 3).map(x => esc(nameOf(x.p))).join(', ')}${r.miss.length > 3 ? '…' : ''}</p>` : '';
     const st = r.store ? `<p class="hint">Le plus proche : ${esc(r.store.name)}, ${fmtKm(r.store.dist)}${r.store.oh && ohStatus(r.store.oh) ? ' · ' + ohHtml(r.store.oh) : ''}</p>` : '';
-    const links = [DRIVES[r.s.id] ? `<button type="button" data-drive="${r.s.id}">${DRIVES[r.s.id].noDrive ? 'Voir ma liste sur le site' : 'Vérifier ma liste au drive'}</button>` : '',
+    // Lidl, Aldi, Netto : pas de courses en ligne, leur site ne montre que des promos et du non alimentaire (sonde du 19/10/2026)
+    const links = [DRIVES[r.s.id] && !DRIVES[r.s.id].noDrive ? `<button type="button" data-drive="${r.s.id}">Vérifier ma liste au drive</button>` : '',
       r.store ? `<a href="${esc(mapsUrl(r.store.lat, r.store.lon, r.store.name))}" target="_blank" rel="noopener">Itinéraire</a>` : '',
       r.store && /^https?:\/\//.test(r.store.web || '') ? `<a href="${esc(r.store.web)}" target="_blank" rel="noopener">Site du magasin</a>` : ''].filter(Boolean).join('');
     return `<li class="${ties.includes(r) ? 'best' : ''}"><div class="wtop"><b>${esc(r.s.label)}</b><span class="wcount">${r.avail} / ${N}</span></div>
@@ -4128,6 +4130,8 @@ function driveCard(p){
   const row = id => {
     const n = nearInfo(id), d = DRIVES[id], mode = driveMode(p, id), alt = driveAlt(p, id);
     const seen = info.seen.includes(id);
+    if (d.noDrive) return `<div class="drivebtn dstore"><div class="dmain"><span><b>${esc(driveName(id))}</b><small>${esc(n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Magasin')}</small>
+        <small class="dseen">Vu dans cette enseigne</small><small>Pas de drive ni de courses en ligne : à prendre en magasin.</small></span><span class="gostore">En magasin</span></div></div>`;
     const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
     const site = mode === 'site', terms = driveTerms(p, id);
     const foot = (alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : '<span></span>')
@@ -4143,14 +4147,16 @@ function driveCard(p){
   const rows = (seenIds.length ? seenIds : other).map(row).join('')
     + (seenIds.length && other.length ? `<details class="dhelp dmore"><summary>Chercher aussi chez ${esc(other.map(driveName).join(', '))}</summary><p>Ce produit n'y a pas été signalé : il n'y est peut-être pas vendu, et la recherche peut montrer d'autres produits.</p><div class="drives">${other.map(row).join('')}</div></details>` : '');
   const id = [nameOf(p), brandOf(p), p.quantity].filter(Boolean).join(' · ');
-  const exact = ids.some(id2 => ['ean', 'gean'].includes(driveMode(p, id2)));
+  const shown = seenIds.length ? seenIds : other;
+  const exact = shown.some(id2 => ['ean', 'gean'].includes(driveMode(p, id2))), fixable = ids.some(id2 => canFix(p, id2));
   const warn = !ids.some(x => info.seen.includes(x)) ? '<p class="hint dwarn">Ce produit n\'a été signalé dans aucun de ces magasins : il n\'y est peut-être pas vendu, et la recherche peut montrer d\'autres produits.</p>' : '';
   return `<section class="card"><h3>Stock au drive</h3>
-    <p class="hint">${exact ? '« Voir le produit » ouvre ce produit précis grâce à son code-barres. ' : ''}Vérifie que c'est bien <b>${esc(id)}</b>. Si le site montre autre chose, touche « Mauvais produit ? » : l'appli cherchera autrement pour ce produit.</p>${warn}
-    <div class="drives">${rows}</div>${driveHelp(ids.map(id2 => ({ id:id2, href:driveUrl(p, id2) })))}</section>`;
+    <p class="hint">${exact ? '« Voir le produit » ouvre ce produit précis grâce à son code-barres. ' : ''}Vérifie que c'est bien <b>${esc(id)}</b>.${fixable ? ' Si le site montre autre chose, touche « Mauvais produit ? » : l\'appli cherchera autrement pour ce produit.' : ''}</p>${warn}
+    <div class="drives">${rows}</div>${driveHelp(ids.filter(id2 => !DRIVES[id2].noDrive).map(id2 => ({ id:id2, href:driveUrl(p, id2) })))}</section>`;
 }
 // « Ma liste chez Carrefour » : chaque produit de la liste, à ouvrir sur le site
 function openDriveList(id){
+  if (!DRIVES[id] || DRIVES[id].noDrive) return;
   const RANK = { sure:0, likely:1, no:2 };   // vus dans l'enseigne d'abord, marques d'autres enseignes à la fin
   const items = shop.filter(x => !x.done && x.p && !x.p._fresh).sort((a, b) => RANK[availability(chainInfo(a.p), id)] - RANK[availability(chainInfo(b.p), id)]),
     fresh = shop.filter(x => !x.done && x.p && x.p._fresh).length;
@@ -4310,7 +4316,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.21';
+const APP_VERSION = '3.22';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

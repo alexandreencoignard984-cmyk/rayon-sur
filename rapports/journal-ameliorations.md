@@ -43,6 +43,15 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-19 · 3.22
+- Deuxième sonde après la 3.21 : Auchan trouve le bon produit 5 fois sur 5 (0 avant), Picard 5 sur 5 (le velouté bio
+  n'ouvre plus le rayon bio), Carrefour 4 sur 4. Le drive Leclerc, Super U, Intermarché et Monoprix bloquent les
+  serveurs de GitHub : non vérifiables ainsi.
+- Lidl, Aldi, Netto : leur site ne vend pas les courses (la recherche « Cristaline » ou « Pesto » montrait une cocotte,
+  des pommes de terre en promo, des vêtements). Plus de lien vers leur site : la fiche dit « Vu dans cette enseigne ·
+  à prendre en magasin », et Ma liste n'a plus de bouton « drive » pour eux.
+- La phrase d'aide de la carte ne parle plus de « Voir le produit » quand aucun bouton visible ne l'affiche.
+
 ### 2026-10-19 · 3.21
 - Demande d'Alexandre : « continue à corriger les liens vers les drives, que tout soit bien ».
 - **Sonde des vrais sites** (nouvelle tâche GitHub « Sonde drive ») : 95 pages ouvertes comme un iPhone depuis GitHub.

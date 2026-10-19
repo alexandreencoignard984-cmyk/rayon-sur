@@ -86,7 +86,7 @@ with sync_playwright() as p:
     page.click('#list li [data-open] >> nth=0'); page.wait_for_selector('#sheet[open] .drivebtn')
     txt = page.inner_text('#sheet .card:has(.drives)')
     check('Vérifie que c\'est bien' in txt and 'Mauvais produit ?' in txt, 'nom, marque et format à comparer, bouton « Mauvais produit ? »')
-    check('Voir le produit' in txt and ('Vu dans cette enseigne' in txt or 'Pas signalé' in txt), 'produit exact et présence dans l\'enseigne indiqués')
+    check(any(k in txt for k in ('Voir le produit', 'Ouvrir le drive', 'Chercher')) and ('Vu dans cette enseigne' in txt or 'Pas signalé' in txt), 'bouton vers le site et présence dans l\'enseigne indiqués : ' + ' / '.join(l for l in txt.split('\n') if l in ('Voir le produit', 'Ouvrir le drive', 'Chercher')))
     hrefs = page.eval_on_selector_all('#sheet .drivebtn .dmain', 'els => els.map(e => e.href)')
     alts = page.eval_on_selector_all('#sheet .drivebtn .dalt', 'els => els.map(e => e.textContent)')
     check(any(re.search(r'carrefour\.fr/s\?q=\d{8,14}$', h) for h in hrefs), 'Carrefour : recherche par code-barres')

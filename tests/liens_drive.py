@@ -104,7 +104,8 @@ with sync_playwright() as p:
 
     print('Liens corrigés d\'après la sonde des vrais sites (19/10/2026)')
     R = {'code': '3564700007433', 'product_name': 'Fromage blanc au lait demi-écrémé', 'brands': 'Délisse, Marque Repère', 'stores_tags': ['e-leclerc']}
-    shop = [{'code': R['code'], 'p': R, 'done': False, 'at': 1}]
+    LI = {'code': '4056489123456', 'product_name': 'Pesto rosso', 'brands': 'Baresa', 'stores_tags': ['lidl']}
+    shop = [{'code': R['code'], 'p': R, 'done': False, 'at': 1}, {'code': LI['code'], 'p': LI, 'done': False, 'at': 2}]
     ctx, page, errs, _ = new_page(b, base, geo=RENNES, init={'rs2:shop': shop, 'rs2:drivefix': {'3564700007433|leclerc': 'nom'}})
     ctx.grant_permissions(['clipboard-read', 'clipboard-write'], origin=base.rstrip('/'))
     ctx.route(re.compile(r'.*leclercdrive.*'), lambda r: r.fulfill(status=200, content_type='text/html', body='<title>Leclerc Drive</title>'))
@@ -145,9 +146,17 @@ with sync_playwright() as p:
     page.wait_for_selector('#toast.show')
     check(E("() => navigator.clipboard.readText()") == cp and 'copié' in page.inner_text('#toast'), 'en touchant : nom copié dans le presse-papiers, message affiché')
     page.evaluate("() => history.back()"); page.wait_for_timeout(300)
+    page.click('#shopList [data-open="4056489123456"]'); page.wait_for_selector('#sheet[open] .drivebtn')
+    t = page.inner_text('#sheetBody .card:has(.drives)')
+    check(page.locator('#sheetBody .drivebtn.dstore').count() == 1 and page.locator('#sheetBody .drivebtn a.dmain').count() == 0 and 'à prendre en magasin' in t,
+          'Lidl : pas de lien vers son site (promos et non alimentaire), « à prendre en magasin »')
+    check(page.locator('#sheetBody .dhelp:not(.dmore)').count() == 0 or page.locator('#sheetBody .dhelp [data-copy]').count() == 0, 'pas de lien à copier pour Lidl')
+    page.evaluate("() => history.back()"); page.wait_for_timeout(300)
+    check(page.locator('#whereList [data-drive="lidl"]').count() == 0, 'Ma liste : pas de bouton « drive » pour Lidl')
     if page.locator('#whereList [data-drive="leclerc"]').count():
         page.click('#whereList [data-drive="leclerc"]'); page.wait_for_selector('#driveSheet[open] #driveList li')
-        check(page.locator('#driveList a[data-cp]').count() == 1 and 'est copié' in page.inner_text('#driveList'), 'Ma liste chez Leclerc : chaque produit copie son nom')
+        check(page.locator('#driveList a[data-cp]').count() >= 1 and page.locator('#driveList a[data-cp]').count() == page.locator('#driveList a.dmain').count() and 'est copié' in page.inner_text('#driveList'),
+              'Ma liste chez Leclerc : chaque produit copie son nom')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
