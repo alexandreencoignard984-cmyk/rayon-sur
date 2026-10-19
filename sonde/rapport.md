@@ -1,0 +1,164 @@
+# Sonde des liens drive
+
+Sonde du 19/10/2026 19:12 UTC, appli 3.22, 10 produits par enseigne, Chromium avec l'allure d'un iPhone depuis un serveur GitHub (les sites peuvent bloquer ce type de serveur).
+
+| Enseigne | Lien | Pages | Bloquées | Code-barres retrouvé | Marque dans les 1ers résultats | Redirigées |
+|---|---|---:|---:|---:|---:|---:|
+| biocoop | appli:nom | 10 | 0 | 0 | 0 | 1 |
+| biocoop | ean | 10 | 0 | 0 | 0 | 6 |
+| picard | appli:nom | 10 | 0 | 0 | 5 | 1 |
+| picard | ean | 10 | 0 | 0 | 0 | 0 |
+| auchan | appli:ean | 10 | 0 | 0 | 9 | 0 |
+
+## Détail
+
+- **biocoop · appli:nom** · Gerblé – Cranberry saveur amande (3175681257542) · `https://www.biocoop.fr/catalogsearch/result/?q=Gerbl%C3%A9%20Cranberry%20amande`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Gerbl%C3%A9%20Cranberry%20amande`, titre « Produits pour votre recherche " Gerblé Cranberry amande " », h1 « Produits pour votre recherche " Gerblé Cranberry amande " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 001-biocoop-applinom.jpg
+- **biocoop · ean** · Gerblé – Cranberry saveur amande (3175681257542) · `https://www.biocoop.fr/catalogsearch/result/?q=3175681257542`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=3175681257542`, titre « Produits pour votre recherche " 3175681257542 " », h1 « Produits pour votre recherche " 3175681257542 " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 002-biocoop-ean.jpg
+- **biocoop · appli:nom** · Bien – PAIN MIE SANDWICH BIO* COMPLET Sans sucres ajoutés 500G (3760049794373) · `https://www.biocoop.fr/catalogsearch/result/?q=Bien%20PAIN%20MIE`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Bien%20PAIN%20MIE`, titre « Produits pour votre recherche " Bien PAIN MIE " », h1 « 4 Produits pour votre recherche " Bien PAIN MIE " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 003-biocoop-applinom.jpg
+- **biocoop · ean** · Bien – PAIN MIE SANDWICH BIO* COMPLET Sans sucres ajoutés 500G (3760049794373) · `https://www.biocoop.fr/catalogsearch/result/?q=3760049794373`
+  - statut 200, final `https://www.biocoop.fr/pain-de-mie-farine-complete-ssa-tranche-500g-pc8523-000.html`, titre « Pain de mie farine complète ssa tranché 500g | Pains | Biocoop », h1 « Pain de mie farine complète ssa tranché 500g »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 004-biocoop-ean.jpg
+- **biocoop · appli:nom** · Terres et céréales bio – Muesli croustillant duo pépites (3421557501975) · `https://www.biocoop.fr/catalogsearch/result/?q=Terres%20et%20c%C3%A9r%C3%A9ales%20Muesli%20croustillant`
+  - statut 200, final `https://www.biocoop.fr/la-bio-au-quotidien/nos-conseils-pour-mieux-consommer/regime-sans-gluten`, titre « Produits sans gluten - Biocoop | Biocoop », h1 « Les produits sans gluten »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 005-biocoop-applinom.jpg
+- **biocoop · ean** · Terres et céréales bio – Muesli croustillant duo pépites (3421557501975) · `https://www.biocoop.fr/catalogsearch/result/?q=3421557501975`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=3421557501975`, titre « Produits pour votre recherche " 3421557501975 " », h1 « 3 Produits pour votre recherche " 3421557501975 " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 006-biocoop-ean.jpg
+- **biocoop · appli:nom** · Jean Hervé – Purée de cacahuètes (3390390000153) · `https://www.biocoop.fr/catalogsearch/result/?q=Jean%20Herv%C3%A9%20Pur%C3%A9e%20cacahu%C3%A8tes`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Jean%20Herv%C3%A9%20Pur%C3%A9e%20cacahu%C3%A8tes`, titre « Produits pour votre recherche " Jean Hervé Purée cacahuètes " », h1 « 2 Produits pour votre recherche " Jean Hervé Purée cacahuète »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 007-biocoop-applinom.jpg
+- **biocoop · ean** · Jean Hervé – Purée de cacahuètes (3390390000153) · `https://www.biocoop.fr/catalogsearch/result/?q=3390390000153`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=3390390000153`, titre « Produits pour votre recherche " 3390390000153 " », h1 « 4 Produits pour votre recherche " 3390390000153 " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 008-biocoop-ean.jpg
+- **biocoop · appli:nom** · The Bridge – Boisson avoine naturel (8019428000105) · `https://www.biocoop.fr/catalogsearch/result/?q=The%20Bridge%20Boisson%20avoine`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=The%20Bridge%20Boisson%20avoine`, titre « Produits pour votre recherche " The Bridge Boisson avoine " », h1 « 7 Produits pour votre recherche " The Bridge Boisson avoine  »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 009-biocoop-applinom.jpg
+- **biocoop · ean** · The Bridge – Boisson avoine naturel (8019428000105) · `https://www.biocoop.fr/catalogsearch/result/?q=8019428000105`
+  - statut 200, final `https://www.biocoop.fr/boisson-avoine-naturel-1l-tb0026-000.html`, titre « Boisson avoine naturel 1L | Boissons avoine | Biocoop », h1 « Boisson avoine naturel 1L »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 010-biocoop-ean.jpg
+- **biocoop · appli:nom** · Sojade – Nature (3273220181027) · `https://www.biocoop.fr/catalogsearch/result/?q=Sojade%20Nature`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Sojade%20Nature`, titre « Produits pour votre recherche " Sojade Nature " », h1 « 27 Produits pour votre recherche " Sojade Nature " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 011-biocoop-applinom.jpg
+- **biocoop · ean** · Sojade – Nature (3273220181027) · `https://www.biocoop.fr/catalogsearch/result/?q=3273220181027`
+  - statut 200, final `https://www.biocoop.fr/sojade-nature-400g-al9206-000.html`, titre « Sojade nature 400g | Desserts végétaux | Biocoop », h1 « Sojade nature 400g »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 012-biocoop-ean.jpg
+- **biocoop · appli:nom** · Biocoop – Chocolat noir 70 % (3760121219749) · `https://www.biocoop.fr/catalogsearch/result/?q=Biocoop%20Chocolat%20noir`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Biocoop%20Chocolat%20noir`, titre « Produits pour votre recherche " Biocoop Chocolat noir " », h1 « 13 Produits pour votre recherche " Biocoop Chocolat noir " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 013-biocoop-applinom.jpg
+- **biocoop · ean** · Biocoop – Chocolat noir 70 % (3760121219749) · `https://www.biocoop.fr/catalogsearch/result/?q=3760121219749`
+  - statut 200, final `https://www.biocoop.fr/chocolat-noir-70-100g-bc4127-000.html`, titre « Chocolat noir 70% 100g | Tablettes de chocolat | Biocoop », h1 « Chocolat noir 70% 100g »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 014-biocoop-ean.jpg
+- **biocoop · appli:nom** · Brioches Fonteneau – Pains au lait (3279840006290) · `https://www.biocoop.fr/catalogsearch/result/?q=Brioches%20Fonteneau%20Pains%20lait`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Brioches%20Fonteneau%20Pains%20lait`, titre « Produits pour votre recherche " Brioches Fonteneau Pains lait " », h1 « 2 Produits pour votre recherche " Brioches Fonteneau Pains l »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 015-biocoop-applinom.jpg
+- **biocoop · ean** · Brioches Fonteneau – Pains au lait (3279840006290) · `https://www.biocoop.fr/catalogsearch/result/?q=3279840006290`
+  - statut 200, final `https://www.biocoop.fr/pain-au-lait-matiere-g-vegetale-8-280g-bf2225-000.html`, titre « Pain au lait matière G végétale (8) 280g | Pains | Biocoop », h1 « Pain au lait matière G végétale (8) 280g »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 016-biocoop-ean.jpg
+- **biocoop · appli:nom** · Borsa – Biscottes à la farine complète (3174503423424) · `https://www.biocoop.fr/catalogsearch/result/?q=Borsa%20Biscottes%20farine`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Borsa%20Biscottes%20farine`, titre « Produits pour votre recherche " Borsa Biscottes farine " », h1 « 2 Produits pour votre recherche " Borsa Biscottes farine " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 017-biocoop-applinom.jpg
+- **biocoop · ean** · Borsa – Biscottes à la farine complète (3174503423424) · `https://www.biocoop.fr/catalogsearch/result/?q=3174503423424`
+  - statut 200, final `https://www.biocoop.fr/biscottes-a-la-farine-complete-300g-bo1013-000.html`, titre « Biscottes à la farine complète 300g | Biscottes, Pains grillés | Biocoop », h1 « Biscottes à la farine complète 300g »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 018-biocoop-ean.jpg
+- **biocoop · appli:nom** · Taifun – Filets de tofu à la japonaise (4012359144003) · `https://www.biocoop.fr/catalogsearch/result/?q=Taifun%20Filets%20tofu`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=Taifun%20Filets%20tofu`, titre « Produits pour votre recherche " Taifun Filets tofu " », h1 « 2 Produits pour votre recherche " Taifun Filets tofu " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 019-biocoop-applinom.jpg
+- **biocoop · ean** · Taifun – Filets de tofu à la japonaise (4012359144003) · `https://www.biocoop.fr/catalogsearch/result/?q=4012359144003`
+  - statut 200, final `https://www.biocoop.fr/catalogsearch/result/?q=4012359144003`, titre « Produits pour votre recherche " 4012359144003 " », h1 « Produits pour votre recherche " 4012359144003 " »
+  - 12 liens produit, code-barres non, marque dans 0 des 6 premiers : Entretien de maison | La Production Locale | Produits de la mer | Traiteur de la mer · capture 020-biocoop-ean.jpg
+- **picard · appli:nom** · Picard – Paëlla à la Valenciana (3270160697861) · `https://www.picard.fr/recherche?q=Pa%C3%ABlla%20Valenciana`
+  - statut 200, final `https://www.picard.fr/recherche?q=Pa%C3%ABlla%20Valenciana`, titre « Résultats de recherche "Paëlla Valenciana" - Picard Surgelés », h1 « Votre recherche : Paëlla Valenciana »
+  - 6 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,374 sur 5 (2 180) Paëlla Valenciana le sachet de 900 g 5,99 € 6,65 € · capture 021-picard-applinom.jpg
+- **picard · ean** · Picard – Paëlla à la Valenciana (3270160697861) · `https://www.picard.fr/recherche?q=3270160697861`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160697861`, titre « Résultats de recherche "3270160697861" - Picard Surgelés », h1 « Votre recherche : 3270160697861 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 022-picard-ean.jpg
+- **picard · appli:nom** · Formule express, Picard – Gnocchis au chèvre et aux épinards et à la sauce tomate (3270160860166) · `https://www.picard.fr/recherche?q=Gnocchis%20ch%C3%A8vre%20%C3%A9pinards`
+  - statut 200, final `https://www.picard.fr/recherche?q=Gnocchis%20ch%C3%A8vre%20%C3%A9pinards`, titre « Résultats de recherche "Gnocchis chèvre épinards" - Picard Surgelés », h1 « Votre recherche : Gnocchis chèvre épinards »
+  - 6 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,469 sur 5 (1 018) Gnocchis au chèvre et aux épinards, sauce tomate b · capture 023-picard-applinom.jpg
+- **picard · ean** · Formule express, Picard – Gnocchis au chèvre et aux épinards et à la sauce tomate (3270160860166) · `https://www.picard.fr/recherche?q=3270160860166`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160860166`, titre « Résultats de recherche "3270160860166" - Picard Surgelés », h1 « Votre recherche : 3270160860166 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 024-picard-ean.jpg
+- **picard · appli:nom** · Le Bio par Picard – Velouté courge butternut carotte navet jaune (3270160680276) · `https://www.picard.fr/recherche?q=Velout%C3%A9%20courge%20butternut`
+  - statut 200, final `https://www.picard.fr/recherche?q=Velout%C3%A9%20courge%20butternut`, titre « Résultats de recherche "Velouté courge butternut" - Picard Surgelés », h1 « Votre recherche : Velouté courge butternut »
+  - 10 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,554 sur 5 (213) Velouté courge butternut, carotte, navet jaune bio l · capture 025-picard-applinom.jpg
+- **picard · ean** · Le Bio par Picard – Velouté courge butternut carotte navet jaune (3270160680276) · `https://www.picard.fr/recherche?q=3270160680276`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160680276`, titre « Résultats de recherche "3270160680276" - Picard Surgelés », h1 « Votre recherche : 3270160680276 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 026-picard-ean.jpg
+- **picard · appli:nom** · Poêlée cuisinée – Poêlée à la bretonne (3270160752256) · `https://www.picard.fr/recherche?q=Po%C3%AAl%C3%A9e%20bretonne`
+  - statut 200, final `https://www.picard.fr/recherche?q=Po%C3%AAl%C3%A9e%20bretonne`, titre « Résultats de recherche "Poêlée bretonne" - Picard Surgelés », h1 « Votre recherche : Poêlée bretonne »
+  - 7 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,664 sur 5 (292) Poêlée à la bretonne le sachet de 1 kg 3,99 € 3,99 € · capture 027-picard-applinom.jpg
+- **picard · ean** · Poêlée cuisinée – Poêlée à la bretonne (3270160752256) · `https://www.picard.fr/recherche?q=3270160752256`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160752256`, titre « Résultats de recherche "3270160752256" - Picard Surgelés », h1 « Votre recherche : 3270160752256 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 028-picard-ean.jpg
+- **picard · appli:nom** · Tout bon tout vegan – Buddha bowl tikka, tout bon tout veggie (3270160861835) · `https://www.picard.fr/recherche?q=Buddha%20bowl%20tikka`
+  - statut 200, final `https://www.picard.fr/recherche?q=Buddha%20bowl%20tikka`, titre « Résultats de recherche "Buddha bowl tikka" - Picard Surgelés », h1 « Votre recherche : Buddha bowl tikka »
+  - 6 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 3,667 sur 5 (81) Buddha bowl tikka, tout bon tout veggie le bol de 350 · capture 029-picard-applinom.jpg
+- **picard · ean** · Tout bon tout vegan – Buddha bowl tikka, tout bon tout veggie (3270160861835) · `https://www.picard.fr/recherche?q=3270160861835`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160861835`, titre « Résultats de recherche "3270160861835" - Picard Surgelés », h1 « Votre recherche : 3270160861835 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 030-picard-ean.jpg
+- **picard · appli:nom** · Royans – Ravioles du Dauphiné surgelées (3266140051600) · `https://www.picard.fr/recherche?q=Ravioles%20Dauphin%C3%A9%20surgel%C3%A9es`
+  - statut 200, final `https://www.picard.fr/recherche?q=Ravioles%20Dauphin%C3%A9%20surgel%C3%A9es`, titre « Résultats de recherche "Ravioles Dauphiné surgelées" - Picard Surgelés », h1 « Votre recherche : Ravioles Dauphiné surgelées »
+  - 11 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 3,821 sur 5 (252) Ravioli aux cèpes sauce au parmesan barquette de 300 · capture 031-picard-applinom.jpg
+- **picard · ean** · Royans – Ravioles du Dauphiné surgelées (3266140051600) · `https://www.picard.fr/recherche?q=3266140051600`
+  - statut 200, final `https://www.picard.fr/recherche?q=3266140051600`, titre « Résultats de recherche "3266140051600" - Picard Surgelés », h1 « Votre recherche : 3266140051600 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 032-picard-ean.jpg
+- **picard · appli:nom** · Bio par Picard, Le bio par picard, Picard – 10 Mini crêpes bio (3270160431410) · `https://www.picard.fr/recherche?q=Mini%20cr%C3%AApes%20bio`
+  - statut 200, final `https://www.picard.fr/rayons/bio`, titre « Les surgelés bio - Tous les produits bio Picard », h1 « Bio »
+  - 45 liens produit, code-barres non, marque dans 3 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,543 sur 5 (153) Légumes pour potage bio le sachet de 600 g 2,60 € 4, · capture 033-picard-applinom.jpg
+- **picard · ean** · Bio par Picard, Le bio par picard, Picard – 10 Mini crêpes bio (3270160431410) · `https://www.picard.fr/recherche?q=3270160431410`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160431410`, titre « Résultats de recherche "3270160431410" - Picard Surgelés », h1 « Votre recherche : 3270160431410 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 034-picard-ean.jpg
+- **picard · appli:nom** · Saint Alby – Jambon à l'ancienne 4 tranches (4056489276227) · `https://www.picard.fr/recherche?q=Jambon%20ancienne%20tranches`
+  - statut 200, final `https://www.picard.fr/recherche?q=Jambon%20ancienne%20tranches`, titre « Résultats de recherche "Jambon ancienne tranches" - Picard Surgelés », h1 « Votre recherche : Jambon ancienne tranches »
+  - 6 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,667 sur 5 (694) Mini-cake jambon olives (à trancher) la boîte de 245 · capture 035-picard-applinom.jpg
+- **picard · ean** · Saint Alby – Jambon à l'ancienne 4 tranches (4056489276227) · `https://www.picard.fr/recherche?q=4056489276227`
+  - statut 200, final `https://www.picard.fr/recherche?q=4056489276227`, titre « Résultats de recherche "4056489276227" - Picard Surgelés », h1 « Votre recherche : 4056489276227 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 036-picard-ean.jpg
+- **picard · appli:nom** · Mars – Mars glacé (5000159397292) · `https://www.picard.fr/recherche?q=Mars%20glac%C3%A9`
+  - statut 200, final `https://www.picard.fr/recherche?q=Mars%20glac%C3%A9`, titre « Résultats de recherche "Mars glacé" - Picard Surgelés », h1 « Votre recherche : Mars glacé »
+  - 8 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,74 sur 5 (131) 6 Mars la boîte de 240 g 4,20 € 17,50 €/kg · capture 037-picard-applinom.jpg
+- **picard · ean** · Mars – Mars glacé (5000159397292) · `https://www.picard.fr/recherche?q=5000159397292`
+  - statut 200, final `https://www.picard.fr/recherche?q=5000159397292`, titre « Résultats de recherche "5000159397292" - Picard Surgelés », h1 « Votre recherche : 5000159397292 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 038-picard-ean.jpg
+- **picard · appli:nom** · NE CUISINE FACILE ! – 2 pâtes feuilletées pré-étalées, pur beurre (3270160361816) · `https://www.picard.fr/recherche?q=p%C3%A2tes%20feuillet%C3%A9es%20pr%C3%A9-%C3%A9tal%C3%A9es`
+  - statut 200, final `https://www.picard.fr/recherche?q=p%C3%A2tes%20feuillet%C3%A9es%20pr%C3%A9-%C3%A9tal%C3%A9es`, titre « Résultats de recherche "pâtes feuilletées pré-étalées" - Picard Surgelés », h1 « Votre recherche : pâtes feuilletées pré-étalées »
+  - 6 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,692 sur 5 (26) 2 pâtes feuilletées, pre-étalées pur beurre la boîte  · capture 039-picard-applinom.jpg
+- **picard · ean** · NE CUISINE FACILE ! – 2 pâtes feuilletées pré-étalées, pur beurre (3270160361816) · `https://www.picard.fr/recherche?q=3270160361816`
+  - statut 200, final `https://www.picard.fr/recherche?q=3270160361816`, titre « Résultats de recherche "3270160361816" - Picard Surgelés », h1 « Votre recherche : 3270160361816 »
+  - 19 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits sans gluten | Produits Nutri-Score A | Produits Nutri-Score B | 4,468 sur 5 (1 017) Poulet et petites pâtes sauce aux champignons barq · capture 040-picard-ean.jpg
+- **auchan · appli:ean** · Cristaline – isabelle (3274080005003) · `https://www.auchan.fr/recherche?text=3274080005003`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3274080005003`, titre « Votre recherche 3274080005003 sur Auchan.fr », h1 « Votre recherche : 3274080005003 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (7) CRISTALINE Eau de source plate 1,5l · capture 041-auchan-appliean.jpg
+- **auchan · appli:ean** · Mondelez – Prince Goût Chocolat au blé complet (7622210449283) · `https://www.auchan.fr/recherche?text=7622210449283`
+  - statut 200, final `https://www.auchan.fr/recherche?text=7622210449283`, titre « Votre recherche 7622210449283 sur Auchan.fr », h1 « Votre recherche : 7622210449283 »
+  - 3 liens produit, code-barres non, marque dans 0 des 6 premiers : Produits du monde | Produits de nos régions | (9) PRINCE Biscuits fourrés goût chocolat au blé complet ouverture fac · capture 042-auchan-appliean.jpg
+- **auchan · appli:ean** · Lindt – Excellence 85% cacao (3046920022606) · `https://www.auchan.fr/recherche?text=3046920022606`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3046920022606`, titre « Votre recherche 3046920022606 sur Auchan.fr », h1 « Votre recherche : 3046920022606 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (17) LINDT Excellence tablette de chocolat noir dégustation puissant 8 · capture 043-auchan-appliean.jpg
+- **auchan · appli:ean** · Wasa – Fibres (7300400481588) · `https://www.auchan.fr/recherche?text=7300400481588`
+  - statut 200, final `https://www.auchan.fr/recherche?text=7300400481588`, titre « Votre recherche 7300400481588 sur Auchan.fr », h1 « Votre recherche : 7300400481588 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (11) WASA Fibres tartines croustillantes à la farine de seigle 230g · capture 044-auchan-appliean.jpg
+- **auchan · appli:ean** · Bjorg – Flocons d'avoine (3229820019307) · `https://www.auchan.fr/recherche?text=3229820019307`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3229820019307`, titre « Votre recherche 3229820019307 sur Auchan.fr », h1 « Votre recherche : 3229820019307 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (11) BJORG Flocons d'avoine bio 500g · capture 045-auchan-appliean.jpg
+- **auchan · appli:ean** · Tuc – Original (5410041001204) · `https://www.auchan.fr/recherche?text=5410041001204`
+  - statut 200, final `https://www.auchan.fr/recherche?text=5410041001204`, titre « Votre recherche 5410041001204 sur Auchan.fr », h1 « Votre recherche : 5410041001204 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (9) TUC Biscuits crackers salés Original 100g · capture 046-auchan-appliean.jpg
+- **auchan · appli:ean** · Brioche Pasquier – Pains au lait (3256540000698) · `https://www.auchan.fr/recherche?text=3256540000698`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3256540000698`, titre « Votre recherche 3256540000698 sur Auchan.fr », h1 « Votre recherche : 3256540000698 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (19) PASQUIER Pains au lait au levain 350g 10 pains au lait · capture 047-auchan-appliean.jpg
+- **auchan · appli:ean** · Gerblé – Levure de bière (3175680015228) · `https://www.auchan.fr/recherche?text=3175680015228`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3175680015228`, titre « Votre recherche 3175680015228 sur Auchan.fr », h1 « Votre recherche : 3175680015228 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (10) GERBLE Levure de bière à saupoudrer 150g · capture 048-auchan-appliean.jpg
+- **auchan · appli:ean** · Herta – Jambon à l'étouffée sans nitrite (3154230809869) · `https://www.auchan.fr/recherche?text=3154230809869`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3154230809869`, titre « Votre recherche 3154230809869 sur Auchan.fr », h1 « Votre recherche : 3154230809869 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (37) HERTA Le Bon Paris Jambon cuit à l'étouffée sans nitrite 140g 4 t · capture 049-auchan-appliean.jpg
+- **auchan · appli:ean** · Nestlé, Ricore – Chicorée & Café, RICORÉ® L'Original, Boîte de 100g (3033710073467) · `https://www.auchan.fr/recherche?text=3033710073467`
+  - statut 200, final `https://www.auchan.fr/recherche?text=3033710073467`, titre « Votre recherche 3033710073467 sur Auchan.fr », h1 « Votre recherche : 3033710073467 »
+  - 3 liens produit, code-barres non, marque dans 1 des 6 premiers : Produits du monde | Produits de nos régions | (1) RICORE Café chicorée soluble Ricoré original 100g 25 tasses · capture 050-auchan-appliean.jpg
