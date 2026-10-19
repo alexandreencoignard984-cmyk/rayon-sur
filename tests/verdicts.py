@@ -46,6 +46,16 @@ CASES = [
     ('fish', 'foie de morue', 'check'), ('fish', 'filets de sébaste', 'check'), ('fish', 'capelan', 'check'),
     ('peanuts', 'cacahouètes grillées', 'check'), ('peanuts', 'beurre de cacahouète', 'check'),
     ('crustaceans', 'araignée de mer', 'check'),
+    # 3.23 : coques (coquillages) et autres mollusques, sans confondre avec les fruits à coque
+    ('molluscs', 'coques', 'check'), ('molluscs', 'coques décortiquées 12 %', 'check'), ('molluscs', 'amandes de mer', 'check'),
+    ('molluscs', 'berniques', 'check'), ('molluscs', 'clovisses', 'check'), ('molluscs', 'cockles', 'check'), ('molluscs', 'whelks', 'check'),
+    ('molluscs', 'traces de fruits à coques', 'ok'), ('molluscs', 'noisettes en coque', 'ok'), ('molluscs', 'oeuf à la coque', 'ok'),
+    ('molluscs', 'coques de cacao', 'ok'), ('molluscs', 'fruit à coque', 'ok'), ('molluscs', 'pâtes coquillettes', 'ok'),
+    ('nuts', 'amandes de mer', 'ok'), ('nuts', 'amandes', 'check'),
+    ('molluscs', 'fruits de mer, coques', 'check'), ('molluscs', 'fruits de mer (moules, coques, crevettes)', 'check'), ('molluscs', 'coques au naturel', 'check'),
+    ('molluscs', 'chair de coques', 'check'), ('molluscs', 'fruits coque', 'ok'), ('molluscs', 'fruit(s) à coque', 'ok'), ('molluscs', 'fruits & coques', 'ok'),
+    ('molluscs', 'fruitsà coque', 'ok'), ('molluscs', 'coque au chocolat noir 12 %', 'ok'), ('molluscs', 'coque de macaron', 'ok'),
+    ('molluscs', 'céréales (billes et coques fourrées)', 'ok'), ('molluscs', 'contient : coque (noix)', 'ok'),
 ]
 
 httpd, base = serve()
@@ -80,6 +90,8 @@ with sync_playwright() as p:
     check(verdict(['gluten'], BASE + 'carottes', {'product_name': 'Légumes pour couscous'}) == 'ok', 'nom « Légumes pour couscous » : pas de faux doute sur le gluten')
     check(verdict(['gluten'], BASE + 'farine', {'product_name': 'Pain campagnard'}) == 'check', 'nom « Pain … » sans allergène déclaré : à vérifier')
     check(verdict(['fish'], BASE + 'farine', {'product_name': 'Filet de limande meunière'}) == 'check', 'nom « limande » : à vérifier')
+    check(verdict(['molluscs'], 'oeufs frais', {'product_name': '6 œufs coque fermiers'}) == 'ok', 'œufs « coque » : pas de faux doute pour les mollusques')
+    check(verdict(['molluscs'], 'coques 60 %, eau, sel', {'product_name': 'Coques au naturel'}) == 'check', 'boîte de coques : à vérifier pour les mollusques')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()

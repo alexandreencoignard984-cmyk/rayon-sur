@@ -21,11 +21,13 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   « Tester les liens drive » et corriger les enseignes qui échouent. Depuis la 3.20, Alexandre signale les mauvais
   liens avec « Mauvais produit ? » (clé `rs2:drivefix`, sur son téléphone seulement) : s'il en cite, regarder si une
   enseigne revient souvent et changer sa recherche par défaut (`driveMode`).
-- Drive Leclerc (3.21) : on ouvre `www.leclercdrive.fr` et on copie le nom. Mieux : ouvrir directement la recherche du
-  drive du magasin (`https://fdN-courses.leclercdrive.fr/magasin-XXXXXX-XXXXXX-Ville/recherche.aspx?TexteRecherche=…`),
-  mais il faut le numéro et l'hôte de chaque drive (API `api-recherchemagasins.leclercdrive.fr`, bloquée par DataDome
-  depuis GitHub). À reprendre si une source de ces numéros apparaît (OpenStreetMap n'en a que 4).
-- Super U, Monoprix, Intermarché : la sonde est bloquée depuis GitHub ; recherche par code-barres non vérifiée.
+- Drive Leclerc (3.23) : l'utilisateur colle l'adresse de son drive. Demander à Alexandre si la recherche directe
+  s'ouvre bien sur son iPhone ; sinon revenir à l'accueil + nom copié. Un numéro de drive automatique par magasin
+  demanderait une liste des drives (l'API Leclerc est protégée, et leurs pages interdisent les robots).
+- Super U, Monoprix, Intermarché et drive Leclerc bloquent la sonde depuis GitHub : seuls les retours d'Alexandre
+  (« Mauvais produit ? », « Tester les liens drive ») peuvent confirmer leurs liens.
+- Mascarpone et cerneaux de noix : aucune version pour les allergiques au lait / aux fruits à coque (normal, l'appli
+  le dit) ; on pourrait proposer un remplaçant (fromage végétal à tartiner) si la base en a.
 - Accueil (3.14) : voir si d'autres rayons méritent une tuile, et s'il faut afficher sur chaque tuile le nombre de
   produits compatibles avec le profil (calcul à faire sans ralentir l'ouverture).
 - Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
@@ -42,6 +44,27 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 · 3.23
+- Demande d'Alexandre : « corrige et cherche des solutions pour tous les problèmes ».
+- **Mon drive Leclerc** (Profil, ou depuis la ligne Leclerc d'une fiche) : l'utilisateur colle une fois l'adresse de
+  son drive ; les liens Leclerc ouvrent alors directement la recherche du produit dans son magasin
+  (`m-courses.leclercdrive.fr/magasin-<n°>-<n°>/recherche/<texte>`, format relevé en vrai par le projet libre
+  « Comparateur de paniers », août 2026). Sauvegardé dans l'export. Non vérifiable depuis GitHub (DataDome).
+- **Super U** : recherche par code-barres (Courses U trouve le produit exact par son EAN, vérifié en vrai le
+  01/09/2026 par le même projet). **Biocoop** : code-barres aussi (sonde : fiche exacte 6 fois sur 10, sinon « aucun
+  résultat exact » ; la recherche par nom ouvrait parfois une page de conseils).
+- Sonde avec vrai navigateur et rythme lent : Super U, Intermarché, Monoprix et le drive Leclerc bloquent toujours les
+  serveurs de GitHub. Intermarché : sa recherche n'a pas d'adresse (`/recherche` renvoie une erreur) et la fiche
+  produit exige le nom exact dans l'adresse (`/produit/<nom>/<EAN>`) : on garde Google + code-barres.
+- **Sécurité (mollusques)** : les « coques » (coquillages), « amandes de mer », berniques, patelles, clovisses, bulots
+  anglais (whelks)… n'étaient pas reconnus : des rillettes d'amandes de mer ou une boîte de coques pouvaient sortir
+  « Compatible ». Corrigé, sans confondre avec les fruits à coque (même mal écrits), l'œuf à la coque, les coques en
+  chocolat ou de macaron. 150 produits passent en « À vérifier » pour les mollusques.
+- Recettes : nouveau contrôle `tools/audit_recettes.py` (aussi dans la tâche « Tests ») : les 106 ingrédients achetés
+  en magasin trouvent des produits. Mayonnaise sans œuf proposée aux allergiques aux œufs.
+- Zones tactiles : puces, petits boutons, boutons + et − des recettes, liens de Ma liste, titres repliables passent à
+  44 px touchables sans changer le dessin.
 
 ### 2026-10-19 · 3.22
 - Deuxième sonde après la 3.21 : Auchan trouve le bon produit 5 fois sur 5 (0 avant), Picard 5 sur 5 (le velouté bio

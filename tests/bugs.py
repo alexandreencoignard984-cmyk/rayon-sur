@@ -37,7 +37,8 @@ with sync_playwright() as p:
       localStorage.setItem('rs2:profile', JSON.stringify({ sel:['milk'], traces:false, words:[] })); localStorage.setItem('rs2:geoAsked', '1');
       localStorage.setItem('rs2:recipes', %s); localStorage.setItem('rs2:loc', %s);
       localStorage.setItem('rs2:flags', JSON.stringify({ '3017620422003': { al:['milk'], at:1, name:'Pâte à tartiner' } }));
-      localStorage.setItem('rs2:drivefix', JSON.stringify({ '3017620422003|carrefour': 'nom' })); })();""" % (json.dumps(json.dumps(rec)), json.dumps(json.dumps({'mode': 'city', 'home': home, 'radius': 20, 'off': ['lidl']}))))
+      localStorage.setItem('rs2:drivefix', JSON.stringify({ '3017620422003|carrefour': 'nom' }));
+      localStorage.setItem('rs2:leclerc', JSON.stringify({ id:'113521', id2:'113521', name:'Rennes – Cleunay' })); })();""" % (json.dumps(json.dumps(rec)), json.dumps(json.dumps({'mode': 'city', 'home': home, 'radius': 20, 'off': ['lidl']}))))
     page = ctx.new_page(); errs = []
     page.on('pageerror', lambda e: errs.append(str(e)))
     page.goto(base); page.wait_for_timeout(800)
@@ -49,15 +50,17 @@ with sync_playwright() as p:
     data = json.load(open(path, encoding='utf-8'))
     check(data.get('flags', {}).get('3017620422003', {}).get('al') == ['milk'], 'produits signalés dans le fichier')
     check(data.get('drivefix') == {'3017620422003|carrefour': 'nom'}, 'liens drive corrigés dans le fichier')
+    check(data.get('leclerc', {}).get('id') == '113521', 'drive Leclerc dans le fichier')
     check(data.get('recipes') == rec and data.get('stores', {}).get('home', {}).get('full') == home['full'] and data['stores']['radius'] == 20, 'recettes et adresse dans le fichier')
-    page.evaluate("() => { localStorage.removeItem('rs2:recipes'); localStorage.removeItem('rs2:loc'); localStorage.removeItem('rs2:flags'); localStorage.removeItem('rs2:drivefix'); }")
+    page.evaluate("() => { localStorage.removeItem('rs2:recipes'); localStorage.removeItem('rs2:loc'); localStorage.removeItem('rs2:flags'); localStorage.removeItem('rs2:drivefix'); localStorage.removeItem('rs2:leclerc'); }")
     page.reload(); page.wait_for_timeout(600)
     page.on('dialog', lambda d: d.accept())
     page.click('nav [data-go="list"]'); page.click('summary:has-text("Sauvegarder")')
     page.set_input_files('#importFile', path); page.wait_for_timeout(800)
-    got = page.evaluate("() => ({ rec:JSON.parse(localStorage.getItem('rs2:recipes') || '[]'), loc:JSON.parse(localStorage.getItem('rs2:loc') || '{}'), fl:JSON.parse(localStorage.getItem('rs2:flags') || '{}'), df:JSON.parse(localStorage.getItem('rs2:drivefix') || '{}') })")
+    got = page.evaluate("() => ({ rec:JSON.parse(localStorage.getItem('rs2:recipes') || '[]'), loc:JSON.parse(localStorage.getItem('rs2:loc') || '{}'), fl:JSON.parse(localStorage.getItem('rs2:flags') || '{}'), df:JSON.parse(localStorage.getItem('rs2:drivefix') || '{}'), lc:JSON.parse(localStorage.getItem('rs2:leclerc') || 'null') })")
     check('3017620422003' in got['fl'], 'produits signalés réimportés')
     check(got['df'] == {'3017620422003|carrefour': 'nom'}, 'liens drive corrigés réimportés')
+    check((got['lc'] or {}).get('name') == 'Rennes – Cleunay', 'drive Leclerc réimporté')
     check(got['rec'] == rec and got['loc'].get('home', {}).get('full') == home['full'] and got['loc'].get('off') == ['lidl'], 'réimportés')
     page.click('nav [data-go="recipes"]')
     check('Ma salade' in page.inner_text('#recCatalog'), 'la recette réimportée apparaît')

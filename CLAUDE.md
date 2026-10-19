@@ -42,9 +42,11 @@ Snapchat ou de Claude).
   Facts dans les ingrédients (`_ia`), de la fiabilité de la liste (`_q` : « i » à compléter, « u » mal lue) et des
   produits signalés par l'utilisateur (`flags`, clé `rs2:flags`, toujours « Exclu »). À l'ouverture d'une fiche,
   `refreshLive` recharge la version actuelle d'Open Food Facts et recalcule le verdict partout. Drive : `DRIVES`, `driveMode`, `driveUrl`,
-  `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Auchan, Cora ; Google + code-barres pour
-  Intermarché ; Leclerc : le site du drive `leclercdrive.fr`, propre à chaque magasin, s'ouvre et le nom est copié
-  (`data-cp`) car la recherche de e.leclerc ne montre pas les courses ; Picard : nom sans la marque ; recherche par
+  `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Auchan, Super U, Biocoop, Cora ; Google +
+  code-barres pour Intermarché, dont la recherche n'a pas d'adresse ; Leclerc : la recherche de e.leclerc ne montre pas les courses ; si l'utilisateur a indiqué son drive
+  (Profil › « Mon drive Leclerc », adresse collée, clé `rs2:leclerc` `{id, id2, name}`, `parseLeclerc`), recherche
+  directe `m-courses.leclercdrive.fr/magasin-<id>-<id2>/recherche/<texte>`, sinon l'accueil du drive s'ouvre et le nom
+  est copié (`data-cp`) ; Lidl, Aldi, Netto : pas de lien, « à prendre en magasin » ; Picard : nom sans la marque ; recherche par
   nom ailleurs, avec la marque du paquet et non le fabricant : `BRAND_GROUP`). La carte montre d'abord les enseignes où le produit a été vu, les
   autres repliées (`.dmore`). « Mauvais produit ? » enregistre une autre recherche par produit et enseigne
   (`driveFix`, clé `rs2:drivefix` : `"code|enseigne": "nom" | "marque"`), prioritaire dans `driveMode`. Magasins proches : `computeNear`, `placesAround`, tuiles
@@ -81,6 +83,8 @@ Snapchat ou de Claude).
   - `liens_drive.py`, `magasins_reels.py`, `appli.py`, `bugs.py`, `robustesse.py` (données abîmées et clics au
     hasard, hors ligne compris).
 - `python3 tools/audit_drive.py` : contrôle les recherches drive sur toute la base (seuils dans le fichier).
+- `python3 tools/audit_recettes.py` : chaque ingrédient des recettes doit trouver des produits (sans allergie, puis
+  lait, gluten, œufs, fruits à coque) ; écrit `rapports/recettes.md`. Lancé aussi par la tâche « Tests ».
 - Toute correction de bug ou nouvelle fonction vient avec un test. Toute erreur JavaScript fait échouer les tests.
 - Regarder le résultat : captures Playwright à 390 × 844 (taille iPhone), en clair et en sombre.
 - À chaque push sur `index.html` ou `tests/`, la tâche GitHub « Tests » relance tout (`gh run list`).

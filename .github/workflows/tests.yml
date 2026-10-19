@@ -1,12 +1,13 @@
 name: Tests
 # Tests de l'appli à chaque modification, et chaque lundi après la mise à jour des bases :
 # localisation, liens drive, vraie base des magasins, recherche et recettes (tests/run.sh),
-# puis contrôle des recherches drive sur toute la base (tools/audit_drive.py).
+# puis contrôle des recherches drive sur toute la base (tools/audit_drive.py) et des ingrédients des recettes
+# (tools/audit_recettes.py : chaque ingrédient doit trouver des produits dans la base).
 # Un échec affiche une croix rouge sur GitHub et envoie un e-mail.
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'tests/**', 'tools/audit_drive.py', '.github/workflows/tests.yml']
+    paths: ['index.html', 'tests/**', 'tools/audit_drive.py', 'tools/audit_recettes.py', '.github/workflows/tests.yml']
   schedule:
     - cron: '23 6 * * 1'
   workflow_dispatch:
@@ -33,6 +34,10 @@ jobs:
         id: audit
         if: success() || failure()
         run: python3 tools/audit_drive.py
+      - name: Contrôle des recettes sur toute la base
+        id: recettes
+        if: success() || failure()
+        run: python3 tools/audit_recettes.py
       - name: Captures d'écran et journaux
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,7 +50,7 @@ jobs:
         run: |
           git config user.name "rayon-sur-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add rapports/recherches-drive.md
+          git add rapports/recherches-drive.md rapports/recettes.md
           if git diff --cached --quiet; then exit 0; fi
-          git commit -q -m "Rapport des recherches drive ($(date -u +%F))"
+          git commit -q -m "Rapports drive et recettes ($(date -u +%F))"
           git pull -q --rebase origin main && git push -q origin HEAD:main

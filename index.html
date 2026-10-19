@@ -298,7 +298,7 @@ dialog.sheet.short .sheet-in{max-height:calc(100dvh - env(safe-area-inset-top,0p
 .card{margin-top:12px;padding:14px 16px;border-radius:var(--r);background:var(--surface);box-shadow:var(--card)}
 .card h3 + h3{margin-top:14px}
 .card .sub{margin-top:14px}
-details.card.more > summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;font-weight:650;font-size:16px}
+details.card.more > summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-weight:650;font-size:16px;padding:11px 0;margin:-11px 0}
 details.card.more > summary::-webkit-details-marker{display:none}
 details.card.more > summary::after{content:"›";color:var(--muted);transition:transform .2s}
 details.card.more[open] > summary::after{transform:rotate(90deg)}
@@ -375,6 +375,12 @@ table.nut tr.sub td:first-child{padding-left:14px;color:var(--muted)}
 .stepper{display:inline-flex;align-items:center;gap:2px;height:36px;padding:0 3px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-weight:600;font-size:15px}
 .stepper button{width:30px;height:30px;border-radius:50%;border:0;background:var(--sunk);color:var(--ink);font-size:18px;font-weight:700;line-height:1}
 .stepper span{min-width:96px;text-align:center}
+/* zones tactiles d'au moins 44 px sans changer le dessin : la zone qu'on peut toucher déborde un peu du bouton */
+.chip,.btnchip,.iconbtn,.ghost.small,.stepper button,.wlinks a,.wlinks button{position:relative}
+.chip::before,.btnchip::before,.iconbtn::before,.ghost.small::before,.stepper button::before,.wlinks a::before,.wlinks button::before{content:"";position:absolute;inset:-4px -2px}
+.iconbtn::before{inset:-4px}
+.stepper button::before{inset:-7px}
+.wlinks a::before,.wlinks button::before{inset:-8px -6px}
 .rsum{margin-top:12px;background:var(--sunk)}
 .rsum.s-ok{background:var(--ok-bg)} .rsum.s-check{background:var(--warn-bg)} .rsum.s-no{background:var(--no-bg)}
 .rsum .spin{margin-right:6px;vertical-align:-2px}
@@ -441,12 +447,15 @@ div.rowbtn{cursor:default}
 .drivebtn .dfoot .dalt{flex:1}
 .drivebtn .dfix{flex:none;margin:-12px 4px 0 0;padding:8px 10px;min-height:44px;border:0;background:none;color:var(--warn);font-size:13px;font-weight:600}
 .drivebtn small.dcp{color:var(--ink);margin-top:4px}
+.lecsteps{max-width:none;margin:10px 4px 12px}
+.lecsteps .ghost{margin:-2px 0 6px}
+.drivebtn .dset{display:block;margin:-4px 14px 0;padding:0 0 10px;border:0;background:none;color:var(--ok);font-size:13px;font-weight:600;text-align:left;min-height:44px}
 .dwarn{color:var(--warn)}
 .dmore{margin-top:8px}
 .drivebtn b{display:block;font-size:16px}
 .drivebtn small{display:block;color:var(--muted);font-size:13px;margin-top:1px}
 .dhelp{margin-top:10px;font-size:14px;color:var(--muted)}
-.dhelp>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px;padding:6px 2px;color:var(--ink);font-weight:600}
+.dhelp>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 2px;margin:-6px 0;color:var(--ink);font-weight:600}
 .dhelp>summary::-webkit-details-marker{display:none}
 .dhelp>summary::after{content:"›";color:var(--muted);transition:transform .2s}
 .dhelp[open]>summary::after{transform:rotate(90deg)}
@@ -825,6 +834,12 @@ dialog .toast{position:fixed}
     </div>
 
     <div class="group">
+      <button class="grow rowbtn" id="lecBtn" type="button" aria-haspopup="dialog">
+        <span class="lbl">Mon drive Leclerc<small id="lecBtnTxt">Pas encore choisi : les liens ouvrent l'accueil du drive</small></span>
+        <svg class="chev" aria-hidden="true"><use href="#i-down"/></svg>
+      </button>
+    </div>
+    <div class="group">
       <button class="grow rowbtn" id="dtBtn" type="button" aria-haspopup="dialog">
         <span class="lbl">Tester les liens drive<small>10 minutes pour vérifier que les sites des enseignes trouvent bien les produits</small></span>
         <svg class="chev" aria-hidden="true"><use href="#i-down"/></svg>
@@ -1042,6 +1057,33 @@ dialog .toast{position:fixed}
   </div>
 </dialog>
 
+<dialog class="sheet" id="lecSheet" aria-labelledby="lecTitle">
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <span class="t" id="lecTitle" style="grid-column:2">Ton drive Leclerc</span>
+      <button class="iconbtn" id="lecClose" type="button" aria-label="Fermer" style="grid-column:3"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint" style="margin:0 4px 6px">Le drive Leclerc a un site différent pour chaque magasin. Indique le tien une fois : les liens Leclerc ouvriront directement la recherche du produit dans ton drive.</p>
+      <p class="banner s-ok" id="lecNow" hidden></p>
+      <ol class="steps lecsteps">
+        <li><button class="ghost small" id="lecOpen" type="button">Ouvrir le drive Leclerc</button><br>Choisis ton magasin sur le site.</li>
+        <li>Sur la page de ton magasin, touche la barre d'adresse de Safari, puis « Copier ».</li>
+        <li>Reviens ici et colle l'adresse :</li>
+      </ol>
+      <form id="lecForm" autocomplete="off">
+        <div class="inrow">
+          <input id="lecUrl" type="url" placeholder="https://…leclercdrive.fr/magasin-…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Adresse de ton drive Leclerc">
+          <button class="ghost" id="lecPaste" type="button">Coller</button>
+        </div>
+        <p class="banner" id="lecMsg" hidden aria-live="polite"></p>
+        <button class="primary wide" type="submit" style="margin-top:12px">Enregistrer mon drive</button>
+      </form>
+      <button class="textbtn danger" id="lecForget" type="button" hidden style="display:block;margin:14px auto 0">Oublier ce drive</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog class="sheet" id="dtSheet" aria-labelledby="dtTitle">
   <div class="sheet-in">
     <div class="sheet-head">
@@ -1170,14 +1212,17 @@ const KW = {
   gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|khorasan|engrain|amidonnier|farro|freekeh|gluten|malt|malte|maltee|triticale|froment|seitan|boulgour|bulgur|couscous|semoules?|chapelure|panure|pains?|biscuits?|gaufrettes?|cookies?|speculoos|croutons?|genoise|brioches?|madeleines?|crumble|chapatis?|bretzels?|udon|wheat|barley|rye|oat|oats|spelt|durum|semolina|breadcrumbs?|bread|wafers?)\b/g,
           ex:/\b(pains?|chapelure|panure|semoules?|couscous|farines?|pates?|biscuits?|cookies?|gaufrettes?|brioches?|madeleines?)\s+sans\s+gluten\b|\bsans\s+gluten\b|\bgluten[\s-]free\b|\bsemoules?\s+(de\s+|d')\s*(mais|riz|sarrasin|millet|manioc|quinoa|ail|oignons?)\b|\bcouscous\s+de\s+chou-fleur\b|\bpour\s+couscous\b|\bgluten[\s-]free\s+(bread|breadcrumbs?)\b/g },
   eggs: { re:/\b(oeuf|oeufs|ovoproduits?|ovo-produits?|ovalbumine|albumines?|lysozyme|mayonnaise|meringues?|egg|eggs)\b/g, ex:/\balbumines?\s+de\s+lait\b/g },
-  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|pralin|nougat|nougatine|massepain|marzipan|frangipane|gianduja|nocciola|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|s(ain)?t[\s-]jacques)\b/g },
+  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|pralin|nougat|nougatine|massepain|marzipan|frangipane|gianduja|nocciola|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|s(ain)?t[\s-]jacques)\b|\bamandes?\s+de\s+mer\b/g },
   peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes|cacahouete|cacahouetes|peanut|peanuts)\b/g },
   soybeans: { re:/\b(soja|soya|edamame|tofu|tempeh|miso|tamari|shoyu|yuba|soy|soybean|soybeans)\b/g },
   sesame: { re:/\b(sesame|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa)\b/g },
   fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|lieu\s+(noir|jaune)|morue|capelan|eperlan|grondin|rascasse|sebaste|lingue|carrelet|pilchards?|sardinelles?|poutargue|katsuobushi|bacalao|fish|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring)\b/g,
           ex:/\bcaviar\s+(de\s+|d')\s*(aubergines?|tomates?|legumes|courgettes?|poivrons?|olives?|champignons?|lentilles|betteraves?|carottes?|artichauts?|potirons?|poireaux|citrons?|cepes|pois\s+chiches)\b|\bdi\s+lotte\b/g },
   crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|araignees?\s+de\s+mer|etrilles?|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish)\b/g },
-  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails)\b/g },
+  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|coques?|amandes?\s+de\s+mer|berniques?|patelles?|clovisses?|vernis\s+de\s+mer|murex|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails|cockles?|whelks?|abalone|cuttlefish|calamari|limpets?|periwinkles?)\b/g,
+          // « coques » (coquillages) mais pas les fruits à coque (même mal écrits : « fruits coque », « fruitsà coque »), les noisettes
+          // en coque, l'œuf à la coque, les coques de chocolat ou de macaron, ni les œufs « Baby Coque »
+          ex:/fruit(?!s?\s+de\s+mer)[^.;:]{0,10}?coques?\b|\b(a|en|sans)\s+(la\s+)?coques?\b|\bcoques?\s+(de\s+|d'\s*|des\s+)?(cacao|noix|noisettes?|amandes?|cacahuetes?|cacahouetes?|arachides?|graines?|sarrasin|riz|ble|soja|oeufs?|tournesol|courges?|potirons?|pistaches?|macarons?|meringues?|chocolat|biscuits?|pate|tartes?|tartelettes?|nougatine|sucre|praline|cereales?)\b|\bcoques?\s+(au|aux|en)\s+(chocolat|caramel|praline|nougat|sucre|biscuit|meringue)\b|\bcoques?\s+(dures?|vides?|vegetales?|fourrees?|sucrees?|et\s+velours)\b|\bcoques?\s*\(\s*(noix|noisettes?|amandes?|fruits?)|\b(debris|morceaux|eclats?|residus?|fragments?)\s+(de|des|d')\s*coques?\b|\b(billes?|cereales?)\s+et\s+coques?\b|\b(baby|fraicheur)\s+coques?\b|\boeufs?\s+coques?\b|\bcoques?\s+(extra|gros|moyens?)\b|\bnut\s+shells?\b/g },
   celery: { re:/\b(celeri|celeris|celery|celeriac)\b/g },
   mustard: { re:/\b(moutarde|moutardes|mustard)\b/g },
   lupin: { re:/\b(lupin|lupins)\b/g },
@@ -2740,7 +2785,7 @@ $('#shareList').addEventListener('click', async () => {
 });
 $('#exportBtn').addEventListener('click', () => {
   const data = { app:'rayon-sur', version:3, exported:new Date().toISOString(), profile:{ sel:[...profile.sel], traces:profile.traces, words:profile.words }, favs, shop, history:hist,
-    recipes:myRecipes, flags, drivefix:driveFix, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
+    recipes:myRecipes, flags, drivefix:driveFix, leclerc:leclercDrive, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
   const blob = new Blob([JSON.stringify(data)], { type:'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rayon-sur-sauvegarde.json';
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
@@ -2758,6 +2803,7 @@ $('#importFile').addEventListener('change', async e => {
     if (Array.isArray(d.recipes)){ myRecipes = cleanRecipes(d.recipes); saveMyRecipes(); }
     if (isObj(d.flags)){ flags = cleanFlags(d.flags); saveFlags(); }
     if (isObj(d.drivefix)){ driveFix = cleanDriveFix(d.drivefix); ls.set(DFIX_KEY, driveFix); }
+    if (isObj(d.leclerc)){ const lc = cleanLeclerc(d.leclerc); if (lc){ leclercDrive = lc; ls.set(LEC_KEY, lc); renderLec(); } }
     if (isObj(d.stores)){
       const h = d.stores.home;
       if (isObj(h) && fin(h.lat) && fin(h.lon)) loc.home = { main:String(h.main || h.city || 'Mon adresse'), city:String(h.city || h.main || ''), full:String(h.full || h.city || ''), kind:String(h.kind || 'place'), lat:h.lat, lon:h.lon };
@@ -2998,7 +3044,8 @@ async function pickProducts(ing, st){
     if (k === 'lactose') return isLactoseFree(p) || vegan(p) || lab.includes('en:no-milk');
     if (k === 'milk') return vegan(p) || lab.includes('en:no-milk');
     if (k === 'gluten') return lab.includes('en:no-gluten');
-    return false; };   // œufs, poisson, soja : pas de version « sans » dans la même catégorie
+    if (k === 'eggs') return vegan(p) || lab.includes('en:no-eggs');    // mayonnaise végétale, sans œuf
+    return false; };   // poisson, soja, fruits à coque : pas de version « sans » dans la même catégorie (le verdict décide de toute façon)
   const inhOK = p => !conflicts.length || conflicts.every(k => freeOf(p, k));
   // popularité, petit bonus magasin ; malus pour les variantes parfumées et les noms étrangers
   const score = p => Math.log1p(popOf(p)) + (seenAt(p, st) ? 1 : 0) - (/\b(au|aux|à la|à l'|saveur|go[uû]t|parfum|aromatis)/i.test(nameOf(p)) ? 1.5 : 0)
@@ -3979,12 +4026,12 @@ $('#nearBtn').addEventListener('click', () => openNear({ locate:!near && !locBus
 const DRIVES = {
   // e.leclerc ne vend pas les courses : sa recherche montrait livres et jouets, et rien pour un code-barres (sonde du
   // 19/10/2026). Le drive Leclerc est un autre site, propre à chaque magasin : on l'ouvre et on copie le nom à coller.
-  leclerc:{ site:'leclercdrive.fr', home:'https://www.leclercdrive.fr/' },
+  leclerc:{ site:'leclercdrive.fr', home:'https://www.leclercdrive.fr/', qf:() => leclercBase() },
   carrefour:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=', ean:true },
   auchan:{ site:'auchan.fr', q:'https://www.auchan.fr/recherche?text=', ean:true },   // code-barres : produit exact ou « rien trouvé » (sonde)
   intermarche:{ site:'intermarche.com', gean:true },
-  u:{ site:'coursesu.com', q:'https://www.coursesu.com/recherche?q=' },
-  biocoop:{ site:'biocoop.fr', q:'https://www.biocoop.fr/catalogsearch/result/?q=' },
+  u:{ site:'coursesu.com', q:'https://www.coursesu.com/recherche?q=', ean:true },   // Courses U trouve le produit par son code-barres (vérifié en vrai, 2026)
+  biocoop:{ site:'biocoop.fr', q:'https://www.biocoop.fr/catalogsearch/result/?q=', ean:true },   // code-barres : fiche exacte 6 fois sur 10, sinon « aucun résultat exact » (sonde) ; la recherche par nom ouvrait parfois une page de conseils
   monoprix:{ site:'monoprix.fr', q:'https://courses.monoprix.fr/search?q=' },
   picard:{ site:'picard.fr', q:'https://www.picard.fr/recherche?q=', noBrand:true },   // tout est Picard ; « Le Bio par Picard » ouvrait le rayon bio
   cora:{ site:'carrefour.fr', q:'https://www.carrefour.fr/s?q=', ean:true }, // les Cora sont devenus des Carrefour
@@ -3992,6 +4039,23 @@ const DRIVES = {
   lidl:{ site:'lidl.fr', q:'https://www.lidl.fr/q/search?q=', noDrive:true }, aldi:{ site:'aldi.fr', noDrive:true }, netto:{ site:'netto.fr', noDrive:true },
 };
 const driveName = id => shortLabel(storeById(id));
+/* Drive Leclerc choisi par l'utilisateur (adresse de sa page collée une fois) : recherche directe dans son magasin.
+   Site mobile : m-courses.leclercdrive.fr/magasin-<n°>-<n°>/recherche/<texte> (le site de bureau ne prend plus
+   recherche.aspx?TexteRecherche= depuis 2026). */
+const LEC_KEY = 'rs2:leclerc';
+function parseLeclerc(text){
+  const m = String(text || '').match(/leclercdrive\.fr\/magasin-(\d{3,7})(?:-(\d{3,7}))?(?:-([a-z0-9-]+?))?(?:\.aspx|[/?#\s]|$)/i);
+  if (!m) return null;
+  const name = (m[3] || '').replace(/---/g, ' – ').replace(/-/g, ' ').replace(/\s+/g, ' ').trim().replace(/(^|\s|–\s)([a-zà-ÿ])/g, (x, a, b) => a + b.toUpperCase());
+  return { id:m[1], id2:m[2] || m[1], name:name.slice(0, 40) };
+}
+function cleanLeclerc(o){
+  if (!isObj(o) || !/^\d{3,7}$/.test(String(o.id)) || !/^\d{3,7}$/.test(String(o.id2 || o.id))) return null;
+  return { id:String(o.id), id2:String(o.id2 || o.id), name:typeof o.name === 'string' ? o.name.slice(0, 40) : '' };
+}
+let leclercDrive = cleanLeclerc(ls.get(LEC_KEY, null));
+const leclercBase = () => leclercDrive ? `https://m-courses.leclercdrive.fr/magasin-${leclercDrive.id}-${leclercDrive.id2}/recherche/` : '';
+const leclercLabel = () => leclercDrive ? (leclercDrive.name || `magasin n° ${leclercDrive.id}`) : '';
 /* Recherche courte : la marque et les 2 premiers mots utiles du nom. Les moteurs des sites (et Google)
    ne trouvent rien avec un nom complet de fiche, souvent bilingue (« À la Grecque Greek Style Nature-Natural »). */
 const TERM_STOP = new Set('a au aux de du des la le les l d et en un une sans avec pour sur par ou gout saveur saveurs parfum arome'.split(' '));
@@ -4045,7 +4109,7 @@ let driveFix = cleanDriveFix(ls.get(DFIX_KEY, {}));
 // recherche principale chez une enseigne : 'ean', 'gean', 'nom' (ou 'marque' après un signalement)
 function driveMode(p, id){
   const d = DRIVES[id]; if (!d) return '';
-  if (d.home) return 'site';    // site du drive à ouvrir, nom copié pour le coller dans sa recherche
+  if (d.home && !(d.qf && d.qf())) return 'site';    // site du drive à ouvrir, nom copié pour le coller dans sa recherche
   const fx = driveFix[`${p && p.code}|${id}`]; if (fx) return fx;
   if (validEan(p) && d.ean && d.q) return 'ean';
   if (validEan(p) && d.gean) return 'gean';
@@ -4054,14 +4118,15 @@ function driveMode(p, id){
 // how : 'auto' (recherche principale), 'nom' (marque + nom), 'marque' (marque seule)
 function driveUrl(p, id, how = 'auto'){
   const d = DRIVES[id]; if (!d) return '';
-  if (d.home) return d.home;
+  const q = d.qf ? d.qf() : d.q;    // drive Leclerc : la recherche du magasin choisi
+  if (d.home && !q) return d.home;
   if (how === true) how = 'marque';
   const mode = how === 'nom' || how === 'marque' ? how : driveMode(p, id);
   const google = t => `https://www.google.com/search?q=${encodeURIComponent(t + ' site:' + d.site)}`;
   if (mode === 'ean') return d.q + String(p.code);
   if (mode === 'gean') return google(String(p.code));
   const terms = mode === 'marque' && driveBrand(p) ? driveBrand(p) : driveTerms(p, id);
-  return d.q ? d.q + encodeURIComponent(terms) : google(terms);
+  return q ? q + encodeURIComponent(d.qf ? terms.replace(/[%/]/g, ' ').trim() : terms) : google(terms);
 }
 // lien de secours : par nom si la recherche principale utilise le code-barres, sinon la marque seule
 // une autre recherche existe-t-elle ? (sinon pas de bouton « Mauvais produit ? »)
@@ -4111,6 +4176,36 @@ document.addEventListener('click', e => {
   }
   ls.set(DFIX_KEY, driveFix); drawKeepScroll();
 });
+function renderLec(){
+  const set = !!leclercDrive;
+  $('#lecBtnTxt').textContent = set ? `${leclercLabel()} : les liens Leclerc vont directement à la recherche` : 'Pas encore choisi : les liens ouvrent l\'accueil du drive';
+  $('#lecNow').hidden = !set; if (set) $('#lecNow').textContent = `Ton drive : ${leclercLabel()}.`;
+  $('#lecForget').hidden = !set;
+}
+function openLec(){
+  $('#lecUrl').value = ''; $('#lecMsg').hidden = true; renderLec();
+  openDialog($('#lecSheet'));
+}
+function lecMsg(t, ok){ const m = $('#lecMsg'); m.hidden = false; m.className = 'banner ' + (ok ? 's-ok' : 's-check'); m.textContent = t; }
+function lecChanged(){ ls.set(LEC_KEY, leclercDrive); renderLec(); if (sheet.open) drawKeepScroll(); if (!$('#screen-list').hidden) renderLists(); }
+$('#lecBtn').addEventListener('click', openLec);
+$('#lecClose').addEventListener('click', () => closeDialog($('#lecSheet')));
+$('#lecOpen').addEventListener('click', () => { try { window.open(DRIVES.leclerc.home, '_blank', 'noopener'); } catch (err) {} });
+$('#lecPaste').addEventListener('click', async () => {
+  try { const t = await navigator.clipboard.readText(); if (t){ $('#lecUrl').value = t.trim().slice(0, 400); return; } } catch (err) {}
+  $('#lecUrl').focus(); lecMsg('Touche le champ puis « Coller » pour y mettre l\'adresse copiée.', false);
+});
+$('#lecForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const d = parseLeclerc($('#lecUrl').value);
+  if (!d){ lecMsg('Ce n\'est pas l\'adresse d\'un drive Leclerc. Elle doit contenir « leclercdrive.fr/magasin- » suivi d\'un numéro.', false); return; }
+  leclercDrive = d; lecChanged();
+  closeDialog($('#lecSheet'));
+  toast(`Drive Leclerc enregistré : ${leclercLabel()}.`, 3500);
+});
+$('#lecForget').addEventListener('click', () => { leclercDrive = null; lecChanged(); lecMsg('Drive oublié : les liens Leclerc ouvrent de nouveau l\'accueil du drive.', true); });
+document.addEventListener('click', e => { if (e.target.closest('[data-lec]')) openLec(); });
+renderLec();
 document.addEventListener('click', e => {
   const a = e.target.closest('a[data-cp]'); if (!a) return;
   const t = a.dataset.cp;
@@ -4134,13 +4229,14 @@ function driveCard(p){
         <small class="dseen">Vu dans cette enseigne</small><small>Pas de drive ni de courses en ligne : à prendre en magasin.</small></span><span class="gostore">En magasin</span></div></div>`;
     const where = [n ? `${n.name || driveName(id)} · ${fmtKm(n.dist)}` : 'Site de l\'enseigne', d.noDrive ? 'pas de drive' : ''].filter(Boolean).join(' · ');
     const site = mode === 'site', terms = driveTerms(p, id);
+    const lec = id === 'leclerc' && leclercDrive ? `Ton drive : ${leclercLabel()}` : '';
     const foot = (alt ? `<a class="dalt" href="${esc(alt.href)}" target="_blank" rel="noopener">${esc(alt.text)}</a>` : '<span></span>')
       + (canFix(p, id) ? `<button type="button" class="dfix" data-dfix="${id}">${driveFix[`${p.code}|${id}`] ? 'Revenir au premier lien' : 'Mauvais produit ?'}</button>` : '');
-    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"${site ? ` data-cp="${esc(terms)}"` : ''}><span><b>${esc(driveName(id))}</b><small>${esc(where)}</small>
+    return `<div class="drivebtn"><a class="dmain" href="${esc(driveUrl(p, id))}" target="_blank" rel="noopener"${site ? ` data-cp="${esc(terms)}"` : ''}><span><b>${esc(driveName(id))}</b><small>${esc(lec || where)}</small>
         <small class="${seen ? 'dseen' : 'dunk'}">${seen ? 'Vu dans cette enseigne' : 'Pas signalé ici : peut-être pas vendu'}</small>
         ${site ? `<small class="dcp">Le site du drive s'ouvre et « ${esc(terms)} » est copié : colle-le dans sa recherche.</small>` : ''}</span>
         <span class="go">${site ? 'Ouvrir le drive' : mode === 'nom' || mode === 'marque' ? 'Chercher' : 'Voir le produit'}</span></a>
-      ${foot === '<span></span>' ? '' : `<div class="dfoot">${foot}</div>`}</div>`;
+      ${foot === '<span></span>' ? '' : `<div class="dfoot">${foot}</div>`}${site && id === 'leclerc' ? '<button type="button" class="dset" data-lec>Indique ton drive Leclerc une fois : l\'appli ira directement au produit ›</button>' : ''}</div>`;
   };
   // d'abord les enseignes où le produit a été vu ; ailleurs, la recherche tombe souvent sur d'autres produits
   const seenIds = ids.filter(id => info.seen.includes(id)), other = ids.filter(id => !info.seen.includes(id));
@@ -4316,7 +4412,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.22';
+const APP_VERSION = '3.23';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -4355,7 +4451,7 @@ document.addEventListener('focusout', () => setTimeout(resetPage, 150));
 if (window.visualViewport) visualViewport.addEventListener('resize', () => setTimeout(resetPage, 150));
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, STORES, dtReport:() => DT && dtReport(), getDT:() => DT };
+window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, STORES, parseLeclerc, getLeclerc:() => leclercDrive, pickFor, storeById, testProfile:sel => { profile.sel = new Set(sel); profile.words = []; profile.traces = false; PV++; }, dtReport:() => DT && dtReport(), getDT:() => DT };
 })();
 </script>
 </body>
