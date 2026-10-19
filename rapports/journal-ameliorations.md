@@ -36,6 +36,10 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-19 · 3.19
+- Recettes : la chapelure pointait vers une catégorie vide (« en:breadcrumbs ») ; elle cherche maintenant dans
+  « en:bread-crumbs » puis dans le rayon pain. Pois chiches (464 produits), quinoa (406) et cacao (1 077) trouvés.
+
 ### 2026-10-19 · 3.18
 - **Recettes bien plus complètes** : 93 recettes (61 nouvelles) en 6 rubriques — plats, entrées et salades, soupes,
   apéritif, petit-déjeuner, desserts et goûter. Chacune a un pictogramme, son temps et **ses étapes de
