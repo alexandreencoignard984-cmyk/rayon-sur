@@ -1,0 +1,37 @@
+name: Sonde drive
+# Ouvre les liens « Stock au drive » sur les vrais sites des enseignes (tools/sonde_drive.py) et publie le
+# rapport et les captures sur une branche à part « sonde-drive-<n° de la tâche> » (rien n'est écrit sur main).
+# À lancer à la main (onglet Actions › Sonde drive › Run workflow) ou par Claude.
+on:
+  workflow_dispatch:
+    inputs:
+      produits:
+        description: Nombre de produits par enseigne
+        default: '5'
+permissions:
+  contents: write
+concurrency:
+  group: sonde
+  cancel-in-progress: false
+jobs:
+  sonde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installer Playwright et Chromium
+        run: |
+          pip install -q playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
+      - name: Sonde
+        run: python3 tools/sonde_drive.py "${{ github.event.inputs.produits || '5' }}"
+      - name: Publier le rapport sur une branche à part
+        if: success() || failure()
+        run: |
+          [ -d sonde ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "sonde-drive-${{ github.run_number }}"
+          git add sonde
+          git commit -q -m "Sonde des liens drive (${{ github.run_number }})"
+          git push -q origin "sonde-drive-${{ github.run_number }}"

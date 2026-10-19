@@ -4310,7 +4310,7 @@ document.addEventListener('focusout', () => setTimeout(resetPage, 150));
 if (window.visualViewport) visualViewport.addEventListener('resize', () => setTimeout(resetPage, 150));
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, dtReport:() => DT && dtReport(), getDT:() => DT };
+window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, STORES, dtReport:() => DT && dtReport(), getDT:() => DT };
 })();
 </script>
 </body>
