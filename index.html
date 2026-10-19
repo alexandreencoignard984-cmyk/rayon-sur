@@ -119,6 +119,7 @@ p{margin:0}
 .status{min-height:22px;margin:12px 4px 0;color:var(--muted);font-size:15px}
 .status.err{color:var(--no);font-weight:600}
 .summary{color:var(--muted);font-size:13px;margin:14px 4px 0}
+.widen{margin:8px 4px 0}
 .banner{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--warn-bg);font-size:14px}
 
 /* contrôle segmenté */
@@ -510,6 +511,7 @@ dialog .toast{position:fixed}
 
     <section id="results" hidden aria-label="Résultats">
       <p class="summary" id="summary"></p>
+      <p class="widen" id="widenRow" hidden><button class="ghost small" type="button" id="allAisles"></button></p>
       <p class="banner" id="dirty" hidden></p>
       <div class="segwrap">
         <div class="tabs" role="tablist" aria-label="Verdicts">
@@ -1039,21 +1041,23 @@ const ALLERGENS = [
   { key:'sulphites', label:'Sulfites', name:'sulfites', tag:'en:sulphur-dioxide-and-sulphites', kw:'sulphites' },
 ];
 const KW = {
-  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase)\b/g,
-          ex:/\b(lait|laits|creme|cremes|beurre)\s+(de\s+|d')\s*(noix\s+de\s+coco|coco|amandes?|avoine|soja|riz|noisettes?|cajou|cacao|karite|cacahuetes?|arachides?|marrons?|chataignes?|cassis|tartre)\b|\b(coconut|almond|oat|soy|soya|rice|cashew|cocoa|peanut|shea|nut|hazelnut)\s+(milk|butter|cream|drink)\b|\bcream\s+of\s+tartar\b/g },
-  gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|gluten|malt|malte|maltee|triticale|froment|wheat|barley|rye|oat|oats|spelt)\b/g, ex:/\bsans\s+gluten\b|\bgluten[\s-]free\b/g },
-  eggs: { re:/\b(oeuf|oeufs|ovalbumine|lysozyme|egg|eggs)\b/g },
-  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|nougatine|massepain|frangipane|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|saint-jacques)\b/g },
+  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|lactalbumines?|lactoglobulines?|lacto-serum|kefir|skyr|quark|paneer|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase)\b/g,
+          ex:/\b(lait|laits|creme|cremes|beurre)\s+(de\s+|d')\s*(noix\s+de\s+coco|coco|amandes?|avoine|soja|riz|noisettes?|cajou|cacao|karite|cacahuetes?|arachides?|marrons?|chataignes?|cassis|tartre)\b|\bkefir\s+(de\s+fruits|d'eau)\b|\b(coconut|almond|oat|soy|soya|rice|cashew|cocoa|peanut|shea|nut|hazelnut)\s+(milk|butter|cream|drink)\b|\bcream\s+of\s+tartar\b/g },
+  gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|khorasan|engrain|amidonnier|farro|freekeh|gluten|malt|malte|maltee|triticale|froment|seitan|boulgour|bulgur|couscous|semoules?|chapelure|panure|pains?|wheat|barley|rye|oat|oats|spelt|durum|semolina|breadcrumbs?|bread)\b/g,
+          ex:/\b(pains?|chapelure|panure|semoules?|couscous|farines?|pates?)\s+sans\s+gluten\b|\bsans\s+gluten\b|\bgluten[\s-]free\b|\bsemoules?\s+(de\s+|d')\s*(mais|riz|sarrasin|millet|manioc|quinoa|ail|oignons?)\b|\bcouscous\s+de\s+chou-fleur\b|\bpour\s+couscous\b|\bgluten[\s-]free\s+(bread|breadcrumbs?)\b/g },
+  eggs: { re:/\b(oeuf|oeufs|ovoproduits?|ovo-produits?|ovalbumine|albumines?|lysozyme|mayonnaise|meringues?|egg|eggs)\b/g, ex:/\balbumines?\s+de\s+lait\b/g },
+  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|pralin|nougat|nougatine|massepain|marzipan|frangipane|gianduja|nocciola|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|s(ain)?t[\s-]jacques)\b/g },
   peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes|peanut|peanuts)\b/g },
-  soybeans: { re:/\b(soja|soya|edamame|tofu|soy|soybean|soybeans)\b/g },
-  sesame: { re:/\b(sesame|tahin|tahini|tahine)\b/g },
-  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|fish|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring)\b/g },
-  crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish)\b/g },
-  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails)\b/g },
+  soybeans: { re:/\b(soja|soya|edamame|tofu|tempeh|miso|tamari|shoyu|yuba|soy|soybean|soybeans)\b/g },
+  sesame: { re:/\b(sesame|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa)\b/g },
+  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|lieu\s+(noir|jaune)|fish|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring)\b/g,
+          ex:/\bcaviar\s+(de\s+|d')\s*(aubergines?|tomates?|legumes|courgettes?|poivrons?|olives?|champignons?|lentilles|betteraves?|carottes?|artichauts?|potirons?|poireaux|citrons?|cepes|pois\s+chiches)\b|\bdi\s+lotte\b/g },
+  crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish)\b/g },
+  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails)\b/g },
   celery: { re:/\b(celeri|celeris|celery|celeriac)\b/g },
   mustard: { re:/\b(moutarde|moutardes|mustard)\b/g },
   lupin: { re:/\b(lupin|lupins)\b/g },
-  sulphites: { re:/\b(sulfite|sulfites|bisulfite|bisulfites|metabisulfite|metabisulfites|e ?22[0-8]|anhydride sulfureux|dioxyde de soufre|sulphite|sulphites|sulfur dioxide|sulphur dioxide)\b/g },
+  sulphites: { re:/\b(sulfite|sulfites|bisulfite|bisulfites|metabisulfite|metabisulfites|e[\s-]?22[0-8]|anhydride sulfureux|dioxyde de soufre|sulphite|sulphites|sulfur dioxide|sulphur dioxide)\b/g },
 };
 const TAG_FR = Object.fromEntries(ALLERGENS.filter(a => a.key !== 'lactose').map(a => [a.tag, a.key === 'milk' ? 'Lait' : a.label]));
 const LABEL_FR = { 'en:no-lactose':'Sans lactose','en:no-gluten':'Sans gluten','en:no-milk':'Sans lait','en:vegan':'Végan','en:vegetarian':'Végétarien',
@@ -1801,14 +1805,19 @@ function render(){
   const safeCount = R.sets.safe ? R.sets.safe.vars.reduce((s, v) => s + (v.count || 0), 0) : null;
   const allCount = R.sets.all.vars.reduce((s, v) => s + (v.count || 0), 0);
   const hereN = rows.filter(r => r.here).length;
-  let sum = `${rows.length} produits analysés, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}`;
+  const s_ = n => n > 1 ? 's' : '';
+  let sum = `${rows.length} produit${s_(rows.length)} analysé${s_(rows.length)}, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}`;
   const wideNow = local ? S.wide : R.ctx.wide;
-  sum += st.id === 'all' ? '.' : wideNow ? ` : ${hereN} signalés dans ${st.near ? 'ces magasins' : 'ce magasin'}, les autres sont des marques nationales vendues en France.` : '.';
+  sum += st.id === 'all' ? '.' : wideNow ? ` : ${hereN} signalé${s_(hereN)} dans ${st.near ? 'ces magasins' : 'ce magasin'}, les autres sont des marques nationales vendues en France.` : '.';
   if (local && dataIndex && dataIndex.built) sum += ` Base de l'appli du ${esc(dataDate())}.`;
   const curSet = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
   const total = Math.max(0, ...curSet.vars.map(v => v.count || 0));
   if (!local && curSet.vars.some(v => v.more) && total) sum += ` La base en compte environ ${total.toLocaleString('fr-FR')} : touche « Charger tout le rayon » pour tous les voir.`;
   $('#summary').innerHTML = sum;
+  // nom tapé dans un rayon : la recherche reste dans ce rayon ; proposer d'élargir à tous les rayons
+  const widen = !!R.ctx.terms && R.ctx.rayon !== '';
+  $('#widenRow').hidden = !widen;
+  if (widen) $('#allAisles').textContent = `Chercher « ${R.ctx.terms} » dans tous les rayons`;
   $('#results').hidden = false;
   const shown = rows.filter(r => r.ev.status === R.tab);
   const lim = R.limit || LIMIT;
@@ -1823,8 +1832,12 @@ function render(){
   $('#more').textContent = R.hiddenN > 0 ? `Afficher plus (${R.hiddenN})` : 'Charger plus';
   $('#all').hidden = R.hiddenN > 0 || !!set.local;
 }
+$('#allAisles').addEventListener('click', () => {
+  S.rayon = ''; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick(); runSearch({ scroll:true });
+});
 function emptyMsg(tab){
   const f = (S.nutri || S.nova || S.bio || S.vegan || S.vegetarian || S.palm) ? ' ou retire des filtres' : '';
+  if (tab === 'ok' && R && R.ctx.terms && R.ctx.rayon !== '') return `Aucun produit compatible pour « ${R.ctx.terms} » dans le rayon ${RAYON_NAME[R.ctx.rayon].toLowerCase()}. Touche le bouton ci-dessus pour chercher dans tous les rayons, ou regarde « À vérifier »${f}.`;
   if (tab === 'ok') return `Aucun produit compatible dans ce qui est chargé. Regarde « À vérifier », charge plus de produits${f}, ou essaie « Tous les magasins ».`;
   if (tab === 'check') return 'Rien à vérifier ici.';
   return 'Aucun produit exclu.';
@@ -3868,7 +3881,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.12';
+const APP_VERSION = '3.13';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

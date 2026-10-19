@@ -21,8 +21,27 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   « Tester les liens drive » et corriger les enseignes qui échouent.
 - Premier lancement : compter les étapes jusqu'au premier résultat utile et les réduire si possible.
 - Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
+- Ma liste, « meilleur choix » : à égalité de produits, un magasin où le produit a été vu passe devant un
+  magasin plus proche (Super U à 8,6 km devant Carrefour à 550 m). Voir s'il faut départager par la distance.
+- Faux doutes restants après la 3.13 : desserts végétaux appelés « Skyr », barres « nougat » sans fruits à coque
+  (Mars). Sans danger (« À vérifier »), mais on pourrait les lever avec le label végan ou la liste d'ingrédients.
+- Tâches programmées de GitHub très en retard (la « Base produits » prévue à 3 h 17 UTC a démarré à 8 h 46) :
+  vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
 
 ## Journal
+
+### 2026-10-19 · 3.13
+- **Verdict allergènes plus sûr.** Quand la fiche Open Food Facts ne déclare pas l'allergène, l'appli repère
+  maintenant beaucoup plus d'ingrédients à risque et classe le produit « À vérifier » au lieu de « Compatible » :
+  poissons (limande, églefin, lieu noir, sauce Worcestershire…), mollusques (Saint-Jacques, bulots, calamars…),
+  œufs (mayonnaise, meringue, ovoproduits), gluten (pain, chapelure, semoule, couscous, boulgour, seitan), soja
+  (miso, tamari), sulfites écrits « E-223 »… Sur toute la base, plus de 800 verdicts corrigés ; par exemple un
+  « Filet de limande meunière » sortait « Compatible » pour une allergie au poisson. Les faux amis restent
+  compatibles : lait de coco, noix de coco, caviar d'aubergines, semoule de maïs, chapelure sans gluten ; et les
+  noix de Saint-Jacques ne sont plus prises pour des fruits à coque (105 produits).
+- **Recherche par nom dans un rayon** : un bouton « Chercher « … » dans tous les rayons » apparaît, et le message
+  quand rien n'est compatible l'indique. Accords corrigés (« 1 produit analysé »).
+- Tests : `tests/verdicts.py` (mots-clés, faux amis, règles de sécurité).
 
 ### 2026-10-17 · 3.12
 - Barre d'onglets toujours en bas : la page ne défile plus, seul le contenu défile (bug iOS 26 des éléments

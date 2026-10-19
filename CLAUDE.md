@@ -54,6 +54,8 @@ Snapchat ou de Claude).
 - Tests (Playwright Python + Chromium déjà installé dans `/opt/pw-browsers`, ne pas lancer
   `playwright install`) : `bash tests/run.sh` (≈ 10 min), ou un fichier seul : `python3 tests/navigation.py`.
   Si Playwright manque : `pip install playwright==1.56.0 --break-system-packages`.
+  - `verdicts.py` : verdicts allergènes (mots-clés, faux amis, règles de sécurité). À compléter à chaque
+    changement du verdict.
   - `localisation.py` : position, adresse, magasins, horaires, liens drive. Contient aussi les outils communs
     (`serve`, `new_page`, `setup_routes` qui simule les services externes, `check`, `wait_near`, `RENNES`).
   - `navigation.py` : retour, onglets, recettes, messages, carte drive, barre du bas, positions par onglet.
