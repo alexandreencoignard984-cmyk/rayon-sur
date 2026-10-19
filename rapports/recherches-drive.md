@@ -1,6 +1,6 @@
 # Recherches « Stock au drive »
 
-Contrôle du 17/10/2026  appli 3.9  246 227 produits.
+Contrôle du 19/10/2026  appli 3.12  246 227 produits.
 Chaque produit reçoit la recherche que l'appli envoie aux sites des enseignes (marque + 2 mots utiles du nom).
 Les sites eux-mêmes ne sont pas interrogés : pour ça, utilise « Tester les liens drive » dans Profil.
 
