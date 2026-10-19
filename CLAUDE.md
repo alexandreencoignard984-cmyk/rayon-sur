@@ -38,7 +38,10 @@ Snapchat ou de Claude).
 - **Mise en page d'appli** : seul `#scroller` défile, la page entière jamais ; la barre d'onglets est dans le
   flux, pas en `position: fixed`. Raison : iOS 26 décale les éléments fixés en bas quand la barre d'adresse se
   replie ou après le clavier. Ne pas revenir à un défilement de la page ; faire défiler avec `scrollBox()`.
-- Verdict allergènes : `evaluate(p)` et le profil `profile`. Drive : `DRIVES`, `driveMode`, `driveUrl`,
+- Verdict allergènes : `evaluate(p)` et le profil `profile`. Il tient compte aussi des allergènes repérés par Open Food
+  Facts dans les ingrédients (`_ia`), de la fiabilité de la liste (`_q` : « i » à compléter, « u » mal lue) et des
+  produits signalés par l'utilisateur (`flags`, clé `rs2:flags`, toujours « Exclu »). À l'ouverture d'une fiche,
+  `refreshLive` recharge la version actuelle d'Open Food Facts et recalcule le verdict partout. Drive : `DRIVES`, `driveMode`, `driveUrl`,
   `driveTerms`, `linkChains`, `driveCard` (code-barres pour Carrefour, Leclerc, Cora ; Google + code-barres pour
   Intermarché ; recherche par nom ailleurs). Magasins proches : `computeNear`, `placesAround`, tuiles
   `data/stores/`. Position : `getPosition`, `autoLocate`, adresse enregistrée en repli.
@@ -58,6 +61,7 @@ Snapchat ou de Claude).
   Si Playwright manque : `pip install playwright==1.56.0 --break-system-packages`.
   - `verdicts.py` : verdicts allergènes (mots-clés, faux amis, règles de sécurité). À compléter à chaque
     changement du verdict.
+  - `fiches.py` : allergènes repérés mais non déclarés, listes incomplètes, signalement, fiche mise à jour en direct.
   - `localisation.py` : position, adresse, magasins, horaires, liens drive. Contient aussi les outils communs
     (`serve`, `new_page`, `setup_routes` qui simule les services externes, `check`, `wait_near`, `RENNES`).
   - `navigation.py` : retour, onglets, recettes, messages, carte drive, barre du bas, positions par onglet.

@@ -427,6 +427,14 @@ div.rowbtn{cursor:default}
 .dhelp[open]>summary::after{transform:rotate(90deg)}
 .dhelp p{margin:6px 2px}
 .dcopy{display:flex;flex-wrap:wrap;gap:8px;margin:10px 2px 2px}
+.flagbox>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:15px}
+.flagbox>summary::-webkit-details-marker{display:none}
+.flagbox>summary::after{content:"›";color:var(--muted);transition:transform .2s}
+.flagbox[open]>summary::after{transform:rotate(90deg)}
+.flagbox .tags{margin:10px 0}
+.flagbox a{color:var(--primary);font-weight:600}
+.flagbox .chip[aria-pressed="true"]{background:var(--no);color:#fff;box-shadow:none}
+.links .src{color:var(--muted);font-size:13px}
 .drivebtn small.dseen{color:var(--ok);font-weight:600}
 .drivebtn small.dunk{color:var(--warn)}
 .drivebtn .go{flex:none;color:var(--ok);font-weight:650;font-size:15px}
@@ -1033,6 +1041,31 @@ const FIELDS = ['code','product_name','product_name_fr','generic_name_fr','brand
   'allergens_tags','traces_tags','labels_tags','ingredients_text_fr','ingredients_text','ingredients_analysis_tags','additives_tags',
   'nutriscore_grade','nutriscore_score','nova_group','ecoscore_grade','ecoscore_score','nutriments','nutrient_levels',
   'stores','stores_tags','categories_tags','compared_to_category','popularity_key','unique_scans_n'].join(',');
+// fiche ouverte : en plus, de quoi juger la fiabilité de la liste d'ingrédients
+const FIELDS_LIVE = FIELDS + ',states_tags,ingredients_tags,ingredients_n,unknown_ingredients_n,last_modified_t,ingredients_text_en';
+/* Allergènes repérés par Open Food Facts dans les ingrédients qu'il a reconnus (même s'ils ne sont pas
+   déclarés), et fiabilité de la liste : « i » à compléter, « u » plus de la moitié des ingrédients non
+   reconnus. Même calcul que tools/build_data.py pour la base de l'appli. */
+const IA_ROOTS = {
+  'en:milk':['en:milk','en:dairy','en:cheese','en:whey','en:lactose','en:casein','en:yogurt','en:milk-powder','en:milk-proteins'],
+  'en:gluten':['en:wheat','en:barley','en:rye','en:oat','en:spelt','en:gluten','en:kamut','en:durum-wheat','en:triticale'],
+  'en:eggs':['en:egg'],
+  'en:nuts':['en:almond','en:hazelnut','en:walnut','en:cashew-nut','en:pistachio','en:pecan-nut','en:macadamia-nut','en:brazil-nut'],
+  'en:peanuts':['en:peanut'], 'en:soybeans':['en:soya','en:soybean'], 'en:sesame-seeds':['en:sesame','en:sesame-seed'], 'en:fish':['en:fish'],
+  'en:crustaceans':['en:crustacean','en:shrimp','en:prawn','en:crab','en:lobster'],
+  'en:molluscs':['en:mollusc','en:mussel','en:oyster','en:squid','en:octopus','en:scallop','en:clam','en:snail'],
+  'en:celery':['en:celery'], 'en:mustard':['en:mustard'], 'en:lupin':['en:lupin'],
+  'en:sulphur-dioxide-and-sulphites':['en:sulphur-dioxide','en:e220','en:e221','en:e222','en:e223','en:e224','en:e226','en:e227','en:e228'],
+};
+const IA_OF = {}; for (const [a, ts] of Object.entries(IA_ROOTS)) for (const t of ts) IA_OF[t] = a;
+function liveQuality(prod){
+  const tags = Array.isArray(prod.ingredients_tags) ? prod.ingredients_tags : [];
+  let q = (prod.states_tags || []).includes('en:ingredients-to-be-completed') ? 'i' : '';
+  const n = Number(prod.ingredients_n) || tags.length, u = Number(prod.unknown_ingredients_n);
+  if (n >= 3 && (isFinite(u) ? u : tags.filter(t => !String(t).startsWith('en:')).length) / n >= 0.5) q += 'u';
+  return { _q:q, _ia:[...new Set(tags.map(t => IA_OF[t]).filter(Boolean))].sort(),
+    _mod:prod.last_modified_t ? new Date(prod.last_modified_t * 1000).toISOString().slice(0, 10) : '' };
+}
 
 const MOUSQ = ['intermarche','chabrior','paturages','monique ranou','saint eloi','fiorini','itineraire des saveurs','top budget','capitaine cook'];
 const STORES = [
@@ -1125,15 +1158,15 @@ const ls = {
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
   del(k){ try { localStorage.removeItem(k); } catch (e) {} },
 };
-const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history', recipes:'rs2:recipes', theme:'rs2:theme' };
+const K = { profile:'rs2:profile', search:'rs2:search', favs:'rs2:favs', shop:'rs2:shop', hist:'rs2:history', recipes:'rs2:recipes', theme:'rs2:theme', flags:'rs2:flags' };
 
 /* Données enregistrées : ce qui est abîmé (ancienne version, mémoire corrompue, fichier importé) est
    ignoré ou réparé au chargement, plutôt que de bloquer l'appli. */
 const isObj = v => !!v && typeof v === 'object' && !Array.isArray(v);
 const fin = v => typeof v === 'number' && isFinite(v);
-const P_TEXT = ['product_name', 'product_name_fr', 'generic_name_fr', 'brands', 'quantity', 'stores', 'ingredients_text', 'ingredients_text_fr',
+const P_TEXT = ['_q', '_mod', 'product_name', 'product_name_fr', 'generic_name_fr', 'brands', 'quantity', 'stores', 'ingredients_text', 'ingredients_text_fr',
   'image_front_small_url', 'image_front_url', 'nutriscore_grade', 'ecoscore_grade', 'compared_to_category'];
-const P_TAGS = ['allergens_tags', 'traces_tags', 'labels_tags', 'ingredients_analysis_tags', 'additives_tags', 'stores_tags', 'categories_tags', '_al'];
+const P_TAGS = ['_ia', 'allergens_tags', 'traces_tags', 'labels_tags', 'ingredients_analysis_tags', 'additives_tags', 'stores_tags', 'categories_tags', '_al'];
 function cleanP(p){
   if (!isObj(p) || p.code == null || p.code === '') return null;
   const o = Object.assign({}, p, { code:String(p.code) });
@@ -1157,10 +1190,22 @@ function cleanProfile(d){
     words:(Array.isArray(o.words) ? o.words : []).filter(w => typeof w === 'string' && w.trim()).map(w => w.trim().slice(0, 40)).slice(0, 30) };
 }
 
+// produits signalés par l'utilisateur : « contient un de mes allergènes » (sur ce téléphone seulement)
+function cleanFlags(o){
+  const out = {}, keys = new Set([...ALLERGENS.map(a => a.key), 'any']);
+  if (isObj(o)) for (const [code, v] of Object.entries(o)){
+    if (!/^\d{1,20}$/.test(code) || !isObj(v) || !Array.isArray(v.al)) continue;
+    const al = [...new Set(v.al.filter(k => keys.has(k)))]; if (!al.length) continue;
+    out[code] = { al, at:fin(v.at) ? v.at : Date.now(), name:typeof v.name === 'string' ? v.name.slice(0, 120) : '' };
+  }
+  return out;
+}
+let flags = cleanFlags(ls.get(K.flags, {}));
 const FIRST_RUN = ls.get(K.profile, null) === null;
 const profile = cleanProfile(ls.get(K.profile, {}));
 let PV = 0;
 const saveProfile = () => { PV++; ls.set(K.profile, { sel:[...profile.sel], traces:profile.traces, words:profile.words }); };
+const saveFlags = () => { PV++; ls.set(K.flags, flags); };
 
 const S = Object.assign({ store:'leclerc', rayon:'en:ice-creams-and-sorbets', terms:'', nutri:'', nova:'', bio:false, vegan:false, vegetarian:false, palm:false, sort:'popularity', wide:true, ran:false },
   isObj(ls.get(K.search, null)) ? ls.get(K.search, {}) : {});
@@ -1306,6 +1351,8 @@ function slim(p){
   if (p._fresh) return { code:String(p.code), product_name:p.product_name, quantity:p.quantity || '', _fresh:true, _al:p._al || [] };
   const o = {}; for (const f of FIELDS.split(',')) if (p[f] != null && p[f] !== '') o[f] = p[f];
   if (o.nutriments){ const n = {}; for (const k of ['energy-kcal_100g','fat_100g','saturated-fat_100g','carbohydrates_100g','sugars_100g','fiber_100g','proteins_100g','salt_100g']) if (o.nutriments[k] != null) n[k] = o.nutriments[k]; o.nutriments = n; }
+  for (const f of ['_q', '_mod', '_live']) if (p[f]) o[f] = p[f];
+  if (p._ia && p._ia.length) o._ia = p._ia;
   o.code = String(p.code); return o;
 }
 function gtinOK(code, format){
@@ -1409,7 +1456,7 @@ function fromRow(r){
     allergens_tags:split(o.allergens), traces_tags:split(o.traces), labels_tags:split(o.labels),
     ingredients_text:o.ingr || '', ingredients_analysis_tags:split(o.analysis),
     nutriscore_grade:o.nutri || '', nutriscore_score:o.nscore, nova_group:o.nova, ecoscore_grade:o.eco || '', ecoscore_score:o.escore,
-    unique_scans_n:o.scans || 0, _local:true };
+    unique_scans_n:o.scans || 0, _local:true, _q:o.q || '', _ia:split(o.ia), _mod:o.mod || '' };
   const ss = split(o.stores).map(id => STORES.find(s => s.id === id)).filter(Boolean);
   if (ss.length){ p.stores_tags = ss.map(s => s.tags[0]); p.stores = ss.map(s => s.label).join(', '); }
   if (o.img){ const base = /^https?:/.test(o.img) ? null : (dataIndex.img || 'https://images.openfoodfacts.org/images/products/') + o.img;
@@ -1546,9 +1593,11 @@ function evaluate(p){
   const nameTxt = [nameOf(p), p.generic_name_fr || ''].join(' ');
   const nameFree = /\b(sans|free|vegan|vegetal|vegetale|vegetaux|plant)\b/.test(fold(nameTxt));
   const no = [], check = [], ok = [], info = [];
+  const ia = new Set(p._ia || []);
   for (const a of ALLERGENS){
     if (!profile.sel.has(a.key)) continue;
     if (a.key === 'lactose' && profile.sel.has('milk')) continue;
+    const before = no.length + check.length;
     const hits = hasText ? findHits(raw, KW[a.kw]).words : [];
     const nameHits = nameFree ? [] : findHits(nameTxt, KW[a.kw]).words;
     if (a.key === 'lactose'){
@@ -1561,6 +1610,7 @@ function evaluate(p){
         if (profile.traces) no.push('Peut contenir des traces de lait');
         else info.push('Traces de lait possibles, en général sans souci en cas d\'intolérance');
       }
+      if (ia.has('en:milk') && !al.has('en:milk') && !dairy && !isLactoseFree(p) && no.length + check.length === before) check.push('Open Food Facts repère du lait dans les ingrédients : vérifie l\'étiquette');
       continue;
     }
     if (al.has(a.tag)) no.push(`Contient : ${a.name}`);
@@ -1572,9 +1622,22 @@ function evaluate(p){
       if (profile.traces) no.push(`Traces possibles : ${a.name}`);
       else check.push(`Peut contenir des traces : ${a.name}`);
     }
+    // ingrédient reconnu par Open Food Facts mais allergène non déclaré sur la fiche
+    if (ia.has(a.tag) && !al.has(a.tag) && !(a.key === 'milk' && dairy) && !(no.length + check.length > before)) check.push(`Open Food Facts repère du ${a.name} dans les ingrédients : vérifie l'étiquette`);
   }
   if (hasText) for (const w of profile.words){ const kw = wordKW(w); const h = kw && findHits(raw, kw).words; if (h && h.length) no.push(`Contient « ${h[0]} », que tu évites`); }
   if (!hasText && hasCriteria()) check.push('Ingrédients non renseignés : vérifie l\'emballage');
+  else if (hasCriteria() && !no.length){
+    const q = p._q || '';
+    if (q.includes('i')) check.push('Liste d\'ingrédients incomplète sur la fiche : vérifie l\'emballage');
+    else if (q.includes('u') && !check.length) check.push('Ingrédients mal lus par Open Food Facts : vérifie l\'étiquette');
+  }
+  // signalé par l'utilisateur : exclu, quoi que dise la fiche
+  const fl = flags[String(p.code)];
+  if (fl){
+    const mine = fl.al.filter(k => k === 'any' ? hasCriteria() : profile.sel.has(k) || (k === 'milk' && profile.sel.has('lactose')) || (k === 'lactose' && profile.sel.has('milk')));
+    if (mine.length) no.unshift(mine.includes('any') ? 'Signalé par toi : contient un de tes allergènes' : 'Signalé par toi : contient ' + mine.map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k).join(', '));
+  }
   if (!hasCriteria()) ok.push('Aucun critère dans ton profil');
   else if (!no.length && !check.length) ok.push('Rien de ce que tu évites n\'a été détecté');
   return { status: no.length ? 'no' : check.length ? 'check' : 'ok', no, check, ok, info };
@@ -2097,6 +2160,32 @@ function openProduct(p, { push = false } = {}){
   drawSheet();
   openDialog(sheet);
   $('#sheetBody').scrollTop = 0;
+  refreshLive(p);
+}
+/* À l'ouverture d'une fiche : la version actuelle d'Open Food Facts (la base de l'appli a jusqu'à une semaine).
+   Le verdict est recalculé ; s'il change, la fiche, la liste de résultats et Ma liste sont mises à jour. */
+const liveDone = new Map();
+function refreshLive(p){
+  const code = String(p && p.code || '');
+  if (!p || p._fresh || (p._live && Date.now() - p._live < 6 * 3600e3) || !/^\d{6,14}$/.test(code)) return;
+  if (liveDone.has(code)){ applyLive(p, liveDone.get(code)); return; }
+  getJSON(`${OFF}/api/v2/product/${encodeURIComponent(code)}?fields=${FIELDS_LIVE}`, { ttl:6 * 3600e3 }).then(j => {
+    if (!j || j.status !== 1 || !isObj(j.product)) return;
+    const pr = cleanP(Object.assign({}, j.product, { code })); if (!pr) return;
+    const np = Object.assign({}, p, pr, liveQuality(j.product), { code, _live:Date.now() });
+    delete np.ingredients_tags; delete np.ingredients_n; delete np.unknown_ingredients_n; delete np.states_tags;
+    np.categories_tags = [...new Set([...(p.categories_tags || []), ...(pr.categories_tags || [])])];
+    if (!np.ingredients_text_fr && !np.ingredients_text && pr.ingredients_text_en) np.ingredients_text = pr.ingredients_text_en;
+    liveDone.set(code, np); applyLive(p, np);
+  }).catch(() => {});
+}
+function applyLive(old, np){
+  const before = evaluate(old).status, after = evaluate(np).status;
+  const i = stack.indexOf(old);
+  if (i >= 0){ stack[i] = np; if (i === stack.length - 1 && sheet.open) drawKeepScroll(); }
+  if (R){ const e = R.products.get(String(np.code)); if (e){ e.p = np; e.pv = -1; if (resultsShown()) render(); } }
+  if (refreshSnapshots(np) && !$('#screen-list').hidden) renderLists();
+  if (before !== after && i === stack.length - 1 && sheet.open) toast(`Fiche mise à jour en direct : « ${VERDICT[after]} »`, 4500);
 }
 function drawSheet(){
   const p = stack[stack.length - 1]; if (!p) return;
@@ -2188,7 +2277,7 @@ function productHTML(p){
   const ev = evaluate(p); const code = String(p.code);
   const reasons = [...ev.no.map(t => `<li class="r-no">${esc(t)}</li>`), ...ev.check.map(t => `<li class="r-check">${esc(t)}</li>`), ...ev.ok.map(t => `<li class="r-ok">${esc(t)}</li>`), ...ev.info.map(t => `<li>${esc(t)}</li>`)].join('');
   const raw = ingredientsOf(p);
-  const list = arr => arr && arr.length ? `<div class="tags">${arr.map(t => `<span class="tag">${esc(tagName(t))}</span>`).join('')}</div>` : '<p>Aucun déclaré.</p>';
+  const list = (arr, none = 'Aucun déclaré.') => arr && arr.length ? `<div class="tags">${arr.map(t => `<span class="tag">${esc(tagName(t))}</span>`).join('')}</div>` : `<p>${none}</p>`;
   const labels = [...new Set((p.labels_tags || []).map(l => LABEL_FR[l]).filter(Boolean))];
   const an = p.ingredients_analysis_tags || [];
   const has = l => labels.includes(l);
@@ -2216,9 +2305,10 @@ function productHTML(p){
     <button class="act" type="button" data-act="fav" aria-pressed="${fav}"><svg aria-hidden="true"><use href="#i-star"/></svg>${fav ? 'En favori' : 'Favori'}</button>
     <button class="act" type="button" data-act="share"><svg aria-hidden="true"><use href="#i-share"/></svg>Partager</button>
   </div>
+  ${flagHTML(p)}
   ${driveCard(p)}
   ${card('Ingrédients', raw ? `<p class="ingr">${renderIngredients(raw)}</p>` : '<p class="ingr">Non renseignés sur Open Food Facts : vérifie l\'emballage.</p>')}
-  <section class="card"><h3>Allergènes déclarés</h3>${list(p.allergens_tags)}<h3 class="sub">Peut contenir des traces de</h3>${list(p.traces_tags)}</section>
+  <section class="card"><h3>Allergènes déclarés</h3>${list(p.allergens_tags, 'Aucun déclaré sur la fiche. Ça ne garantit pas qu\'il n\'y en a pas : l\'étiquette fait foi.')}<h3 class="sub">Peut contenir des traces de</h3>${list(p.traces_tags, 'Aucune trace déclarée sur la fiche.')}</section>
   <section class="card"><h3>Équivalents</h3><button class="ghost small" type="button" data-act="alts">${esc(altLabel)}</button><div class="alts" id="alts"></div></section>
   ${labels.length || anTags.length || scores || nut || adds.length ? `<details class="card more"><summary>Labels, scores et nutrition</summary>
     ${labels.length || anTags.length ? `<h3>Labels et régimes</h3><div class="tags">${[...labels, ...anTags].map(l => `<span class="tag">${esc(l)}</span>`).join('')}</div>` : ''}
@@ -2229,11 +2319,41 @@ function productHTML(p){
   <details class="card more"><summary>Prix relevés en magasin</summary><button class="ghost small" type="button" data-act="prices">Voir les prix relevés</button><div id="prices"></div></details>
   <section class="card"><h3>Plus d'infos</h3><div class="links">
     ${p.stores ? `<span>Signalé chez : ${esc(p.stores)}</span>` : ''}
+    <span class="src">${esc(sourceLine(p))}</span>
     <span>Code-barres ${esc(code)}</span>
     <a href="${OFF_FR}/produit/${encodeURIComponent(code)}" target="_blank" rel="noopener">Voir la fiche sur Open Food Facts</a>
     <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">Compléter ou corriger la fiche</a>
   </div></section>`;
 }
+// d'où viennent les infos de la fiche, et de quand
+function sourceLine(p){
+  const parts = ['Infos : Open Food Facts, remplies par des bénévoles'];
+  if (p._mod) parts.push('fiche modifiée le ' + fmtDate(p._mod));
+  if (p._live) parts.push('vérifiée en direct à l\'ouverture');
+  else if (p._local && dataIndex && dataIndex.built) parts.push('base de l\'appli du ' + dataDate());
+  return parts.join(' · ') + '.';
+}
+function flagHTML(p){
+  if (!p || p._fresh) return '';
+  const code = String(p.code), fl = flags[code];
+  if (!fl && evaluate(p).status === 'no') return '';   // déjà exclu : rien à signaler
+  const mine = ALLERGENS.filter(a => profile.sel.has(a.key) && !(a.key === 'lactose' && profile.sel.has('milk')));
+  const chips = [...mine.map(a => [a.key, a.label]), ['any', mine.length ? 'Un autre de mes allergènes' : 'Un de mes allergènes']];
+  return `<details class="card flagbox"${fl ? ' open' : ''}><summary>${fl ? 'Tu as signalé ce produit' : 'Une erreur ? Ce produit contient un de mes allergènes'}</summary>
+    <p class="hint">Touche ce qu'il contient : il passera en « Exclu » pour toi, partout dans l'appli (sur ce téléphone).</p>
+    <div class="tags">${chips.map(([k, l]) => `<button type="button" class="chip" data-flag="${k}" aria-pressed="${!!(fl && fl.al.includes(k))}">${esc(l)}</button>`).join('')}</div>
+    <p class="hint">Aide aussi les autres : <a href="${OFF_FR}/cgi/product.pl?type=edit&amp;code=${encodeURIComponent(code)}" target="_blank" rel="noopener">corrige la fiche sur Open Food Facts</a>, l'appli prendra la correction en compte.</p>
+  </details>`;
+}
+$('#sheetBody').addEventListener('click', e => {
+  const f = e.target.closest('[data-flag]'); if (!f) return;
+  const p = stack[stack.length - 1]; if (!p) return;
+  const code = String(p.code), k = f.dataset.flag, cur = flags[code] ? flags[code].al : [];
+  const al = cur.includes(k) ? cur.filter(x => x !== k) : [...cur, k];
+  if (al.length) flags[code] = { al, at:Date.now(), name:nameOf(p) }; else delete flags[code];
+  saveFlags(); drawKeepScroll(); refreshVisibleLists();
+  toast(al.length > cur.length ? 'Signalé : ce produit est maintenant « Exclu » pour toi.' : al.length ? 'Signalement modifié' : 'Signalement retiré', 3500);
+});
 $('#sheetBody').addEventListener('click', async e => {
   const p = stack[stack.length - 1]; if (!p) return;
   const altItem = e.target.closest('#alts [data-open], #alts [data-add]');
@@ -2569,12 +2689,7 @@ $('#favList').addEventListener('click', e => {
   const add = e.target.closest('[data-add]'); if (add){ const f = favs[add.dataset.add]; if (f){ toggleShop(f.p, add); renderLists(); } return; }
   const o = e.target.closest('[data-open]'); if (o){ const f = favs[o.dataset.open]; if (f) openFromSnapshot(f.p); }
 });
-function openFromSnapshot(p){
-  openProduct(p);
-  getJSON(`${OFF}/api/v2/product/${encodeURIComponent(p.code)}?fields=${FIELDS}`).then(j => {
-    if (j.status === 1 && j.product){ const np = Object.assign({}, j.product, { code:j.product.code || p.code }); refreshSnapshots(np); if (stack[stack.length - 1] === p){ stack[stack.length - 1] = np; drawKeepScroll(); } }
-  }).catch(() => {});
-}
+function openFromSnapshot(p){ openProduct(p); }
 $('#clearDone').addEventListener('click', () => { shop = shop.filter(x => !x.done); saveShop(); renderLists(); });
 $('#uncheckAll').addEventListener('click', () => { shop.forEach(x => { x.done = false; }); saveShop(); renderLists(); });
 $('#shareList').addEventListener('click', async () => {
@@ -2585,7 +2700,7 @@ $('#shareList').addEventListener('click', async () => {
 });
 $('#exportBtn').addEventListener('click', () => {
   const data = { app:'rayon-sur', version:3, exported:new Date().toISOString(), profile:{ sel:[...profile.sel], traces:profile.traces, words:profile.words }, favs, shop, history:hist,
-    recipes:myRecipes, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
+    recipes:myRecipes, flags, stores:{ home:loc.home, radius:loc.radius, off:loc.off, auto:loc.auto } };
   const blob = new Blob([JSON.stringify(data)], { type:'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rayon-sur-sauvegarde.json';
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
@@ -2601,6 +2716,7 @@ $('#importFile').addEventListener('change', async e => {
     if (Array.isArray(d.shop)){ shop = cleanList(d.shop); saveShop(); }
     if (Array.isArray(d.history)){ hist = cleanList(d.history).slice(0, 40); saveHist(); }
     if (Array.isArray(d.recipes)){ myRecipes = cleanRecipes(d.recipes); saveMyRecipes(); }
+    if (isObj(d.flags)){ flags = cleanFlags(d.flags); saveFlags(); }
     if (isObj(d.stores)){
       const h = d.stores.home;
       if (isObj(h) && fin(h.lat) && fin(h.lon)) loc.home = { main:String(h.main || h.city || 'Mon adresse'), city:String(h.city || h.main || ''), full:String(h.full || h.city || ''), kind:String(h.kind || 'place'), lat:h.lat, lon:h.lon };
@@ -4033,7 +4149,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.16';
+const APP_VERSION = '3.17';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -4072,7 +4188,7 @@ document.addEventListener('focusout', () => setTimeout(resetPage, 150));
 if (window.visualViewport) visualViewport.addEventListener('resize', () => setTimeout(resetPage, 150));
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, dtReport:() => DT && dtReport(), getDT:() => DT };
+window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, dtReport:() => DT && dtReport(), getDT:() => DT };
 })();
 </script>
 </body>

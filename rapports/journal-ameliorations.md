@@ -34,6 +34,22 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-19 · 3.17
+- **Fiches produit plus fiables.** Pourquoi des produits sortaient « Compatible » à tort : la fiche Open Food Facts
+  est incomplète (allergène non déclaré, liste d'ingrédients partielle, mal lue ou dans une autre langue) et la base
+  de l'appli date de la semaine. Désormais :
+  - à l'ouverture d'une fiche, l'appli recharge la version actuelle d'Open Food Facts et recalcule le verdict
+    (fiche, liste de résultats, Ma liste) ; un message prévient si le verdict change ;
+  - un allergène repéré par Open Food Facts dans les ingrédients mais non déclaré passe le produit « À vérifier » ;
+  - une liste d'ingrédients « à compléter » ou mal lue (plus de la moitié des ingrédients non reconnus) aussi ;
+  - **« Une erreur ? Ce produit contient un de mes allergènes »** : l'utilisateur signale le produit, qui devient
+    « Exclu » pour lui partout, avec un lien pour corriger la fiche Open Food Facts ;
+  - la fiche dit d'où viennent les infos et de quand, et rappelle que « aucun allergène déclaré » ne garantit rien.
+- Base de l'appli : listes d'ingrédients gardées jusqu'à 6 000 caractères (2 500 avant), et nouvelles colonnes
+  (fiabilité, date de la fiche, allergènes repérés). À mesurer après la prochaine construction : combien de
+  produits passent « À vérifier ».
+- Tests : `tests/fiches.py` ; sauvegarde (signalements) et robustesse complétées.
+
 ### 2026-10-19 · 3.16
 - **Résultats plus lisibles** : un résumé d'une ligne (« 4 660 produits analysés · 3 285 vus dans tes magasins »),
   plus de doublons au-dessus de la liste (ligne « près de moi » et bouton du rayon retirés des résultats), plus de

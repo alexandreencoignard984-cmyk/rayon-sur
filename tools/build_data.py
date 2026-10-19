@@ -8,7 +8,7 @@ plus aucune recherche n'est envoyée à Open Food Facts pour parcourir un rayon.
 
 Usage : python3 tools/build_data.py [chemin_du_csv.gz]
 """
-import datetime, json, os, re, subprocess, sys, time, unicodedata
+import datetime, gzip, json, os, re, subprocess, sys, time, unicodedata
 
 import duckdb
 
@@ -20,7 +20,40 @@ PAGE_ROWS = int(os.environ.get('PAGE_ROWS', 1500))
 MAX_PAGES = int(os.environ.get('MAX_PAGES', 4))
 IMG_PREFIX = 'https://images.openfoodfacts.org/images/products/'
 COLS = ['code', 'name', 'brands', 'qty', 'stores', 'allergens', 'traces', 'labels', 'ingr', 'analysis',
-        'nutri', 'nscore', 'nova', 'eco', 'escore', 'img', 'scans', 'nut', 'ai']
+        'nutri', 'nscore', 'nova', 'eco', 'escore', 'img', 'scans', 'nut', 'ai', 'q', 'mod', 'ia']
+# q : fiabilité de la liste d'ingrédients — « i » à compléter selon Open Food Facts, « u » plus de la moitié des
+#     ingrédients non reconnus par Open Food Facts (texte mal lu ou dans une autre langue)
+# mod : date de dernière modification de la fiche (jour, AAAA-MM-JJ)
+# ia : allergènes repérés dans les ingrédients reconnus par Open Food Facts (même s'ils ne sont pas déclarés)
+INGR_MAX = 6000
+# ingrédients de la taxonomie d'Open Food Facts → allergène (les parents sont inclus dans ingredients_tags)
+IA = {
+    'en:milk': ['en:milk', 'en:dairy', 'en:cheese', 'en:whey', 'en:lactose', 'en:casein', 'en:yogurt', 'en:milk-powder', 'en:milk-proteins'],
+    'en:gluten': ['en:wheat', 'en:barley', 'en:rye', 'en:oat', 'en:spelt', 'en:gluten', 'en:kamut', 'en:durum-wheat', 'en:triticale'],
+    'en:eggs': ['en:egg'],
+    'en:nuts': ['en:almond', 'en:hazelnut', 'en:walnut', 'en:cashew-nut', 'en:pistachio', 'en:pecan-nut', 'en:macadamia-nut', 'en:brazil-nut'],
+    'en:peanuts': ['en:peanut'],
+    'en:soybeans': ['en:soya', 'en:soybean'],
+    'en:sesame-seeds': ['en:sesame', 'en:sesame-seed'],
+    'en:fish': ['en:fish'],
+    'en:crustaceans': ['en:crustacean', 'en:shrimp', 'en:prawn', 'en:crab', 'en:lobster'],
+    'en:molluscs': ['en:mollusc', 'en:mussel', 'en:oyster', 'en:squid', 'en:octopus', 'en:scallop', 'en:clam', 'en:snail'],
+    'en:celery': ['en:celery'], 'en:mustard': ['en:mustard'], 'en:lupin': ['en:lupin'],
+    'en:sulphur-dioxide-and-sulphites': ['en:sulphur-dioxide', 'en:e220', 'en:e221', 'en:e222', 'en:e223', 'en:e224', 'en:e226', 'en:e227', 'en:e228'],
+}
+IA_OF = {t: a for a, ts in IA.items() for t in ts}
+
+
+def ingredient_info(tags_text, states_text):
+    """(q, ia) à partir de ingredients_tags et states_tags."""
+    tags = [t.strip() for t in (tags_text or '').split(',') if t.strip()]
+    q = ''
+    if 'en:ingredients-to-be-completed' in (states_text or ''):
+        q += 'i'
+    if len(tags) >= 3 and sum(1 for t in tags if not t.startswith('en:')) / len(tags) >= 0.5:
+        q += 'u'
+    ia = sorted({IA_OF[t] for t in tags if t in IA_OF})
+    return q, ','.join(ia)
 NUT = ['energy-kcal_100g', 'fat_100g', 'saturated-fat_100g', 'carbohydrates_100g', 'sugars_100g', 'fiber_100g', 'proteins_100g', 'salt_100g']
 LABELS_KEEP = {'en:no-lactose', 'en:no-gluten', 'en:no-milk', 'en:vegan', 'en:vegetarian', 'en:organic', 'en:eu-organic',
                'fr:ab-agriculture-biologique', 'en:palm-oil-free', 'en:no-palm-oil', 'en:no-added-sugar', 'en:no-eggs',
@@ -106,10 +139,16 @@ def main():
     con.execute("SET preserve_insertion_order=false")
     pattern = ',(' + '|'.join(re.escape(t) for t in AISLES) + '),'
     nut_sql = ', '.join(f'"{c}"' for c in NUT)
+    # colonnes facultatives : prises si l'export les contient (sinon vides, sans faire échouer la construction)
+    with gzip.open(src, 'rt', encoding='utf-8', errors='replace') as fh:
+        header = set(fh.readline().rstrip('\n').split('\t'))
+    opt = lambda c: f'"{c}"' if c in header else f'NULL AS "{c}"'
+    log('colonnes facultatives :', {c: c in header for c in ('ingredients_tags', 'states_tags', 'last_modified_t')})
     q = f"""
       SELECT code, product_name, brands, quantity, stores, categories_tags, labels_tags, allergens, traces_tags,
              ingredients_text, ingredients_analysis_tags, nutriscore_grade, nutriscore_score, nova_group,
-             environmental_score_grade, environmental_score_score, image_small_url, unique_scans_n, {nut_sql}
+             environmental_score_grade, environmental_score_score, image_small_url, unique_scans_n, {nut_sql},
+             {opt('ingredients_tags')}, {opt('states_tags')}, {opt('last_modified_t')}
       FROM read_csv('{src}', delim='\t', quote='', escape='', header=true, all_varchar=true, ignore_errors=true,
                     max_line_size=20000000, parallel=false)
       WHERE countries_tags LIKE '%en:france%'
@@ -125,7 +164,8 @@ def main():
     for r in rows:
         (code, name, brands, qty, stores, cats, labels, allergens, traces, ingr, analysis, nutri, nscore, nova,
          eco, escore, img, scans) = r[:18]
-        nuts = r[18:]
+        nuts = r[18:18 + len(NUT)]
+        itags, states, modt = r[18 + len(NUT):]
         code = (code or '').strip()
         if not code.isdigit() or code in seen:
             continue
@@ -134,8 +174,13 @@ def main():
         if not ai:
             continue
         ingr = (ingr or '').strip()
-        if len(ingr) > 2500:
-            ingr = ingr[:2500]
+        if len(ingr) > INGR_MAX:
+            ingr = ingr[:INGR_MAX]
+        q, ia = ingredient_info(itags, states)
+        try:
+            mod = datetime.datetime.fromtimestamp(int(modt), datetime.timezone.utc).strftime('%Y-%m-%d') if modt else ''
+        except (ValueError, OverflowError, OSError):
+            mod = ''
         allergens = clean_list(allergens)
         chains = chains_of(stores)
         has_info = bool(ingr) or bool(allergens)
@@ -153,7 +198,7 @@ def main():
             nutri if nutri in ('a', 'b', 'c', 'd', 'e') else '', num(nscore, 0),
             num(nova, 0) if (nova or '') in ('1', '2', '3', '4') else None,
             eco if eco in ('a-plus', 'a', 'b', 'c', 'd', 'e', 'f') else '', num(escore, 0),
-            img or '', sc, nut if any(v is not None for v in nut) else None, ai,
+            img or '', sc, nut if any(v is not None for v in nut) else None, ai, q, mod, ia,
         ]
         kept_codes += 1
         rank = (2 if has_info else 0) + (1 if (chains or mdd) else 0)
