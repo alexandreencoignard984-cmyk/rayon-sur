@@ -118,7 +118,24 @@ p{margin:0}
 
 .status{min-height:22px;margin:12px 4px 0;color:var(--muted);font-size:15px}
 .status.err{color:var(--no);font-weight:600}
-.summary{color:var(--muted);font-size:13px;margin:14px 4px 0}
+.summary{color:var(--muted);font-size:14px;margin:14px 4px 0}
+.summary b{color:var(--ink)}
+/* chargement : des cartes grises à la place des produits */
+.skel{list-style:none;margin:6px 0 0;padding:0;background:var(--surface);border-radius:var(--r);box-shadow:var(--card);overflow:hidden}
+.skel li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:14px;align-items:center;padding:14px 12px}
+.skel li + li{border-top:1px solid var(--line)}
+.skel i{display:block;height:12px;width:80%;margin:7px 0;border-radius:6px;background:var(--sunk);animation:skel 1.1s ease-in-out infinite}
+.skel i.s{width:55%} .skel i.xs{width:35%}
+.skel i.ph{width:52px;height:52px;margin:0;border-radius:12px}
+@keyframes skel{50%{opacity:.45}}
+#screen-search[data-view="home"] #skel{display:none}
+/* passage accueil ⇄ résultats */
+#screen-search.vin #results,#screen-search.vin #home,#screen-search.vin #skel{animation:viewin .22s ease-out}
+@keyframes viewin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.chip:active,.btnchip:active{transform:scale(.96)}
+.badge.bump{animation:bump .45s ease-out}
+@keyframes bump{40%{transform:scale(1.35)}}
+dialog.sheet .sheet-head{touch-action:none}
 .widen{margin:8px 4px 0}
 .banner{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--warn-bg);font-size:14px}
 
@@ -182,7 +199,7 @@ p{margin:0}
 .resume{display:flex;align-items:center;gap:6px;width:100%;margin:0 0 12px;padding:12px 14px;border:0;border-radius:14px;background:var(--ok-bg);color:var(--ink);font-size:15px;text-align:left}
 .resume b{color:var(--ok)}
 #screen-search[data-view="home"] #results,#screen-search[data-view="home"] #status,#screen-search[data-view="home"] #quick,#screen-search[data-view="home"] #rayonBtn{display:none}
-#screen-search[data-view="results"] #home,#screen-search[data-view="results"] #intro{display:none}
+#screen-search[data-view="results"] #home,#screen-search[data-view="results"] #intro,#screen-search[data-view="results"] #nearLine,#screen-search[data-view="results"] #rayonBtn{display:none}
 #screen-search[data-view="results"] .top{flex-wrap:wrap;row-gap:0}
 #screen-search[data-view="results"] .top h1{order:2;flex-basis:100%;font-size:30px;white-space:normal}
 .welcome .ill{width:64px;height:64px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;background:var(--ok-bg);color:var(--ok)}
@@ -542,6 +559,7 @@ dialog .toast{position:fixed}
     </section>
 
     <p class="status" id="status" aria-live="polite"></p>
+    <ul class="skel" id="skel" hidden aria-hidden="true"><li><i class="ph"></i><span><i></i><i class="s"></i><i class="xs"></i></span></li><li><i class="ph"></i><span><i></i><i class="s"></i><i class="xs"></i></span></li><li><i class="ph"></i><span><i></i><i class="s"></i><i class="xs"></i></span></li><li><i class="ph"></i><span><i></i><i class="s"></i><i class="xs"></i></span></li></ul>
 
     <section id="results" hidden aria-label="Résultats">
       <p class="summary" id="summary"></p>
@@ -1751,7 +1769,8 @@ function renderHome(){
 function setSearchView(v){
   if (v === 'results') $('#t-search').textContent = resultsTitle();
   if (v === searchView) return;
-  searchView = v; $('#screen-search').dataset.view = v;
+  searchView = v; const sc = $('#screen-search'); sc.dataset.view = v;
+  sc.classList.remove('vin'); void sc.offsetWidth; sc.classList.add('vin'); clearTimeout(setSearchView.t); setSearchView.t = setTimeout(() => sc.classList.remove('vin'), 300);
   $('#homeBack').hidden = v !== 'results';
   if (v === 'home'){ $('#t-search').textContent = 'Rayon sûr'; renderHome(); }
   if (screenNow === 'search') scrollBox().scrollTop = 0;
@@ -1771,7 +1790,7 @@ $('#resume').addEventListener('click', () => {
 });
 $('#allRayons').addEventListener('click', () => $('#rayonBtn').click());
 function markDirty(msg){ const d = $('#dirty'); d.textContent = msg; d.hidden = false; }
-function setStatus(msg, isErr){ const s = $('#status'); s.innerHTML = msg || ''; s.classList.toggle('err', !!isErr); }
+function setStatus(msg, isErr){ const s = $('#status'); s.innerHTML = msg || ''; s.classList.toggle('err', !!isErr); if (isErr || !msg) $('#skel').hidden = true; }
 
 async function runSearch({ scroll = false } = {}){
   S.terms = $('#terms').value.trim(); S.ran = true; S.lastTerms = S.terms; S.lastRayon = S.rayon; saveSearch();
@@ -1783,7 +1802,7 @@ async function runSearch({ scroll = false } = {}){
   $('#dirty').hidden = true;
   $('#results').hidden = true; $('#list').innerHTML = '';
   const myR = R;
-  setStatus(SPIN + 'Recherche des produits…');
+  setStatus(SPIN + 'Recherche des produits…'); $('#skel').hidden = false;
   await loadIndex();
   if (myR !== R) return;
   const a = aisleOf(ctx.rayon);
@@ -1905,14 +1924,14 @@ function render(){
   const allCount = R.sets.all.vars.reduce((s, v) => s + (v.count || 0), 0);
   const hereN = rows.filter(r => r.here).length;
   const s_ = n => n > 1 ? 's' : '';
-  let sum = `${rows.length} produit${s_(rows.length)} analysé${s_(rows.length)}, ${esc(RAYON_NAME[R.ctx.rayon].toLowerCase())}${R.ctx.terms ? ` « ${esc(R.ctx.terms)} »` : ''}, ${esc(where)}`;
+  // une ligne : combien de produits, et combien vus dans les magasins choisis
+  let sum = `<b>${fmtNum(rows.length, 0)} produit${s_(rows.length)}</b> analysé${s_(rows.length)}${R.ctx.terms ? ` pour « ${esc(R.ctx.terms)} »` : ''}`;
   const wideNow = local ? S.wide : R.ctx.wide;
-  sum += st.id === 'all' ? '.' : wideNow ? ` : ${hereN} signalé${s_(hereN)} dans ${st.near ? 'ces magasins' : 'ce magasin'}, les autres sont des marques nationales vendues en France.` : '.';
-  if (local && dataIndex && dataIndex.built) sum += ` Base de l'appli du ${esc(dataDate())}.`;
+  sum += st.id === 'all' ? ', partout en France.' : wideNow ? ` · <b>${fmtNum(hereN, 0)}</b> vu${s_(hereN)} ${st.near ? 'dans tes magasins' : 'dans ce magasin'}, en tête de liste.` : `, ${esc(where)}.`;
   const curSet = R.tab === 'no' && R.sets.safe ? R.sets.all : (R.sets.safe || R.sets.all);
   const total = Math.max(0, ...curSet.vars.map(v => v.count || 0));
   if (!local && curSet.vars.some(v => v.more) && total) sum += ` La base en compte environ ${total.toLocaleString('fr-FR')} : touche « Charger tout le rayon » pour tous les voir.`;
-  $('#summary').innerHTML = sum;
+  $('#summary').innerHTML = sum; $('#skel').hidden = true;
   // nom tapé dans un rayon : la recherche reste dans ce rayon ; proposer d'élargir à tous les rayons
   const widen = !!R.ctx.terms && R.ctx.rayon !== '';
   $('#widenRow').hidden = !widen;
@@ -1977,7 +1996,7 @@ const ICON_CHECK = '<svg aria-hidden="true"><use href="#i-ok"/></svg>';
 const BADGE = { ok:'i-ok', check:'i-check', no:'i-no' };
 function itemHTML(p, ev, where){
   const code = esc(p.code); const added = inShop(String(p.code));
-  const reason = ev.no[0] || ev.check[0] || ev.ok[0] || '';
+  const reason = ev.no[0] || ev.check[0] || (ev.status === 'ok' && !hasCriteria() ? ev.ok[0] : '') || '';   // « Compatible » se suffit
   return `<li class="item s-${ev.status}">
     <button class="rowbtn" type="button" data-open="${code}">
       <span class="tw">${thumb(p)}<span class="sbadge" aria-hidden="true"><svg><use href="#${BADGE[ev.status]}"/></svg></span></span>
@@ -1997,10 +2016,13 @@ function toggleShop(p, btn){
   const code = String(p.code);
   if (inShop(code)){ shop = shop.filter(x => x.code !== code); toast('Retiré de ta liste'); }
   else { shop.unshift({ code, p:slim(p), done:false, at:Date.now() }); toast('Ajouté à ta liste', 3500, SEE_LIST); }
-  saveShop(); updateBadge();
+  saveShop(); updateBadge(!inShop(code) ? false : true);
   if (btn){ const on = inShop(code); btn.setAttribute('aria-pressed', on); btn.innerHTML = on ? ICON_CHECK : ICON_PLUS; btn.setAttribute('aria-label', (on ? 'Retirer de ma liste' : 'Ajouter à ma liste') + ' : ' + nameOf(p)); }
 }
-function updateBadge(){ const n = shop.filter(x => !x.done).length; const b = $('#listBadge'); b.textContent = n; b.hidden = !n; }
+function updateBadge(bump){
+  const n = shop.filter(x => !x.done).length, b = $('#listBadge'); b.textContent = n; b.hidden = !n;
+  if (bump && n){ b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+}
 
 /* ================= Sélecteur de rayon ================= */
 const rayonSheet = $('#rayonSheet');
@@ -2032,7 +2054,33 @@ $('#rayonList').addEventListener('click', e => {
   S.rayon = b.dataset.r; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick();
   closeDialog(rayonSheet); runSearch({ scroll:true });
 });
+// fiche : la poignée et le titre se glissent vers le bas pour fermer, comme sur iPhone
+function sheetDrag(d){
+  const head = d.querySelector('.sheet-head'); if (!head) return;
+  let y0 = null, dy = 0, t0 = 0, pid = null;
+  head.addEventListener('pointerdown', e => {
+    if (e.button > 0 || e.target.closest('button, a, input, select, textarea')) return;   // les boutons gardent leur clic
+    y0 = e.clientY; dy = 0; t0 = Date.now(); pid = e.pointerId;
+    try { head.setPointerCapture(pid); } catch (err) {}
+    d.style.transition = 'none';
+  });
+  head.addEventListener('pointermove', e => {
+    if (y0 == null || e.pointerId !== pid) return;
+    dy = Math.max(0, e.clientY - y0); d.style.transform = dy ? `translateY(${dy}px)` : '';
+  });
+  const end = () => {
+    if (y0 == null) return;
+    const fast = dy > 40 && dy / Math.max(1, Date.now() - t0) > 0.6;
+    y0 = null; d.style.transition = 'transform .2s ease';
+    if (dy > 110 || fast){
+      d.style.transform = 'translateY(100%)';
+      setTimeout(() => { closeDialog(d); d.style.transform = ''; d.style.transition = ''; }, 180);
+    } else { d.style.transform = ''; setTimeout(() => { d.style.transition = ''; }, 220); }
+  };
+  head.addEventListener('pointerup', end); head.addEventListener('pointercancel', end);
+}
 $$('dialog.sheet').forEach(d => {
+  if (d.id !== 'onboard') sheetDrag(d);
   d.addEventListener('close', () => {
     const t = $('#toast'); if (t && d.contains(t)) document.body.appendChild(t);   // le message reste visible après la fermeture
     dialogClosed(d); if (!anyOpen()) document.documentElement.classList.remove('locked');
@@ -3985,7 +4033,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.15';
+const APP_VERSION = '3.16';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

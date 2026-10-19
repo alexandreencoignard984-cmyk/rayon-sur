@@ -34,6 +34,14 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-19 · 3.16
+- **Résultats plus lisibles** : un résumé d'une ligne (« 4 660 produits analysés · 3 285 vus dans tes magasins »),
+  plus de doublons au-dessus de la liste (ligne « près de moi » et bouton du rayon retirés des résultats), plus de
+  phrase « Rien de ce que tu évites… » répétée sur chaque produit compatible.
+- **Fiches qu'on ferme en les glissant vers le bas** (poignée et titre), comme sur iPhone.
+- Cartes grises pendant le chargement, passage animé entre l'accueil et les résultats, pastille de « Ma liste » qui
+  rebondit à chaque ajout, puces qui réagissent au toucher.
+
 ### 2026-10-19 (3e séance) · 3.15
 - **Nouvel accueil.** L'écran Rechercher s'ouvre sur « Que veux-tu acheter ? » et 15 grandes tuiles avec un
   pictogramme : les rayons les plus courants (pain, biscuits, céréales, yaourts, fromages, laits végétaux, pâtes,
