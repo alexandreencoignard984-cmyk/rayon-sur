@@ -42,7 +42,6 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   allemand) quand l'étiquette mal lue écrit « ei » pour « et », mentions de traces (« senza glutine, arachidi »),
   « oester-zwam » (pleurote), « bie » qui peut être autre chose que « blé ». Refaire la recherche des mots mal lus
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
-- Recettes : le rappel « farine → une autre farine » pourrait dire « farine sans gluten » quand c'est le cas.
 
 ## Journal
 
@@ -56,7 +55,7 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 - La raison précise l'allergène aussi pour les mots étrangers déjà connus : « LECHE » (lait ?).
 - **Recettes** : quand l'appli remplace un ingrédient, la préparation le rappelle au-dessus des étapes (« Pour toi,
   dans les étapes : lait → une boisson végétale, beurre → une margarine »), car les étapes parlent toujours du lait
-  et du beurre.
+  et du beurre. Pour une allergie au gluten, la farine est annoncée « farine sans gluten » (« autre farine » avant).
 - Tests : `verdicts.py` (mots mal lus, raison), `recettes.py` (rappel des remplacements).
 
 ### 2026-10-20 · 3.24

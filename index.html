@@ -3116,7 +3116,7 @@ async function pickProducts(ing, st){
     }
   }
   const subOf = new Map();
-  for (const p of subFound) subOf.set(p.code, SUBNAME[subTag] || 'un produit de remplacement');
+  for (const p of subFound) subOf.set(p.code, subTag === 'en:flours' && profile.sel.has('gluten') ? 'une farine sans gluten' : SUBNAME[subTag] || 'un produit de remplacement');
   if (ing.inh === 'milk' && conflicts.length) for (const p of mainFound) if (vegan(p) && !subOf.has(p.code)) subOf.set(p.code, 'une alternative végétale');
   const noteOf = new Map();
   if (conflicts.includes('gluten')) for (const p of mainFound) if ((p.labels_tags || []).includes('en:no-gluten')) noteOf.set(p.code, 'Étiqueté sans gluten');
