@@ -36,14 +36,33 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 - Faux doutes ajoutés en 3.14 (sans danger, « À vérifier ») : madeleines ou cookies sans gluten qui ne disent pas
   « sans gluten » dans les ingrédients, tranches végétales « saveur emmental », sirop « saveur spéculoos ». On
   pourrait les lever avec le label « sans gluten » / végan d'Open Food Facts.
-- Recettes : après chaque construction de la base, vérifier que chaque ingrédient trouve des produits (un contrôle
-  automatique sur le modèle de `tools/audit_drive.py` serait utile), notamment cacao, quinoa, chapelure.
-- Mollusques : les « coques » ne sont pas reconnues (le mot se confond avec « fruits à coque », présent dans
-  16 000 fiches). À faire avec une règle qui écarte « fruits à coque ».
 - Tâches programmées de GitHub très en retard (la « Base produits » prévue à 3 h 17 UTC a démarré à 8 h 46) :
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
+- Ingrédients en langue étrangère (3.24) : de 12 à 693 produits passent « À vérifier » selon l'allergène. Faux
+  doutes connus, sans danger : « ei » (œuf en allemand) quand l'étiquette mal lue écrit « ei » pour « et », mentions de traces
+  (« senza glutine, arachidi »), « oester-zwam » (pleurote). D'autres lettres mal lues comme « CEUF » pourraient exister
+  (« iait » pour « lait » ?) : à chercher dans la base.
+- Les mots étrangers déjà connus (leche, latte, Milch…) n'ajoutent pas encore l'allergène entre parenthèses comme les
+  nouveaux (« TRIGO » (gluten ?)) : à harmoniser.
 
 ## Journal
+
+### 2026-10-20 · 3.24
+- **Sécurité (œufs)** : sur environ 500 fiches, l'étiquette photographiée a été mal lue et « ŒUFS » est devenu « CEUFS »
+  (madeleines, salades, quiches…). L'appli ne reconnaissait pas le mot : ces produits sortaient « Compatible » pour une
+  allergie aux œufs. Ils passent « À vérifier ».
+- **Sécurité (listes en langue étrangère)** : beaucoup de produits vendus en France ont une fiche remplie depuis
+  l'étiquette espagnole, italienne, allemande, néerlandaise ou portugaise (« harina de TRIGO », « Weizenmehl »,
+  « Magermilchpulver », « nocciole », « Sojalecithin »…). Ces mots n'étaient pas reconnus : des biscuits María au blé
+  ou des Pringles à l'amidon de blé sortaient « Compatible » pour le gluten. L'appli connaît maintenant les mots de
+  ces langues pour les 14 allergènes, y compris dans les mots composés allemands, sans confondre les faux amis
+  (sarrasin, lait de coco, beurre de cacao, acide lactique, noix de muscade, cumin…). Sur la base actuelle :
+  137 produits de moins « Compatible » pour le gluten, 52 pour le lait, 693 pour les œufs (surtout « CEUFS »), 204
+  pour les fruits à coque, 315 pour le soja, entre 12 et 134 pour les autres. Aucun produit ne gagne « Compatible ».
+- La raison affichée précise l'allergène pour ces mots : « Ingrédient à vérifier : « TRIGO » (gluten ?) », et le mot
+  est surligné dans la liste d'ingrédients. Une liste illisible dit maintenant « Ingrédients illisibles ou dans une
+  autre langue » au lieu de « non renseignés ».
+- Tests : `verdicts.py` (80 nouveaux cas : mots étrangers, mots composés, faux amis, message affiché).
 
 ### 2026-10-19 · 3.23
 - Demande d'Alexandre : « corrige et cherche des solutions pour tous les problèmes ».

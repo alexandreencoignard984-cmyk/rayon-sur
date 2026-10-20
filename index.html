@@ -1228,6 +1228,31 @@ const KW = {
   lupin: { re:/\b(lupin|lupins)\b/g },
   sulphites: { re:/\b(sulfite|sulfites|bisulfite|bisulfites|metabisulfite|metabisulfites|disulfite|disulfites|pyrosulfites?|metabisulphites?|bisulphites?|e[\s-]?22[0-8]|anhydride sulfureux|dioxyde de soufre|sulphite|sulphites|sulfur dioxide|sulphur dioxide)\b/g },
 };
+/* Ingrédients écrits dans une autre langue (espagnol, italien, allemand, néerlandais, portugais, polonais) ou mots
+   composés (« Weizenmehl », « Magermilchpulver ») : beaucoup de produits vendus en France ont une fiche Open Food Facts
+   remplie depuis l'étiquette étrangère. Un mot trouvé ici fait passer le produit « À vérifier », jamais « Compatible ».
+   Lu seulement dans la liste d'ingrédients (pas dans le nom : « Leche de almendras » est une boisson végétale). */
+const KW_X = {
+  milk: { re:/\b(lacteos?|lactosa|lattosio|laktose|suero|sueros|mantequilla|natas?|quesos|yogur|yogures|latticini|formaggi|burro|panna|siero|manteiga|queijos?|iogurte|requeijao|[a-zß]*(milch|molke|kase|rahm|kaas)[a-zß]*|melk[a-z]*|(koe|hel|skummet|mager|halfvolle?|volle?)melk[a-z]*|roomboter|roomijs|slagroom|kookroom|zure\s+room|[a-z]+boter|wei(poeder|eiwit|proteine|permeaat)|butter(reinfett|schmalz|fett)|mlek[a-z]*|mleczn[a-z]*|serwatk[a-z]*)(?![a-z0-9ß])/g,
+          ex:/[a-zß]*(kokos|kokosnuss|mandel|hafer|soja|reis|cashew|haselnuss|erbsen|dinkel)(milch|drink)[a-zß]*|[a-zß]*milchsaur[a-zß]*|[a-zß]*(milch|molke|laktose|kase)[a-zß]*frei[a-zß]*|melk(zuur|esyre)[a-z]*|[a-z]*kaasjeskruid|[a-z]*suojakaasu[a-z]*|\bnata\s+de\s+coco\b|\b(sin|senza|sem)\s+(lactosa|lattosio|lactose)\b|\bkwas\s+mlekowy\b|[a-z]*(cacao|pinda|shea|noten|kokos|amandel|hazelnoot)boter|\bburro\s+di\s+(cacao|arachidi|karite)\b|\bmanteiga\s+de\s+(cacau|amendoim|karite)\b|\bmantequilla\s+de\s+(cacao|cacahuete|mani)\b|\b(panna|nata)\s+vegetale?\b/g },
+  gluten: { re:/\b(trigos?|cebada|centeno|avena|espelta|frumento|grano\s+(tenero|duro)|orzo|segale|glutine|cevada|centeio|aveia|[a-zß]*(weizen|roggen|dinkel|grunkern|tarwe)[a-zß]*|(gerst|hafer|rogge|haver)[a-zß]*|pszenn?[a-z]*|zytni[a-z]*|jeczmien[a-z]*|owsian[a-z]*)(?![a-z0-9ß])/g,
+            ex:/[a-zß]*buchweizen[a-zß]*|\btrigo\s+sarraceno\b|\bsenza\s+glutine\b/g },
+  eggs: { re:/\b(huevos?|yemas?|ovoproductos|uov[oa]|tuorl[oi]|albume|ei|eier|[a-zß]*(vollei|eigelb|eiklar|huhnerei|eipulver|trockenei|flussigei|kippenei|eidooier)[a-zß]*|eieren|eigeel|volei|ovos?|jaj[a-z]*|ceufs?)(?![a-z0-9ß])/g },
+  nuts: { re:/\b(avelines?|almendras?|avellanas?|nuez|nueces|anacardos?|pistachos?|frutos\s+de\s+cascara|frutos\s+secos|mandorl[ae]|nocciole|noc[ei]|anacardi|pistacchi[oa]?|frutta\s+(secca\s+)?a\s+guscio|[a-zß]*(hasel|wal|pekan|para|macadamia|cashew)nu(ss|ß)[a-zß]*|[a-zß]*mandel[a-zß]*|pistazie[a-zß]*|schalenfr[a-z]*|[a-z]*(hazel|wal|cashew|pecan|para)noo?t(en)?[a-z]*|amandel[a-z]*|noten|amendoas?|avelas?|noz|nozes|caju|pistacios?|orzech[a-z]*)(?![a-z0-9ß])/g,
+          ex:/\bnuez\s+(moscada|de\s+(coco|cola))\b|\bnoce\s+(moscata|di\s+cocco)\b|\bnoz(es)?\s+(moscada|de\s+coco)(?![a-z0-9ß])/g },
+  peanuts: { re:/\b(cacahuates?|mani|arachidi|[a-zß]*erdnu(ss|ß)[a-zß]*|[a-z]*pinda[a-z]*|amendoins?|arachidow[a-z]*)(?![a-z0-9ß])/g },
+  soybeans: { re:/\b([a-zß]*soj[ae][a-zß]*|[a-z]*soia[a-z]*|sojow[a-z]*)(?![a-z0-9ß])/g },
+  sesame: { re:/\b(sesamo|[a-zß]*sesam[a-zß]*|sezam[a-z]*)(?![a-z0-9ß])/g },
+  fish: { re:/\b(pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
+          ex:/[a-zß]*tintenfisch[a-zß]*|[a-zß]*lachsschinken[a-zß]*|[a-zß]*[ai]fisch[a-zß]*/g },
+  crustaceans: { re:/\b(gamba|camaron(es)?|langostinos?|cangrejos?|crustaceos?|gamber[a-z]*|granchi[oa]?|aragost[ae]|crostacei|[a-zß]*garnelen?[a-zß]*|[a-zß]*krabben?[a-zß]*|hummer[a-zß]*|krebs(tiere|fleisch)|garnalen|kreeft(en)?|krab|schaaldieren|camarao|camaroes|caranguejos?|lagostas?|krewetk[a-z]*|skorupiak[a-z]*)(?![a-z0-9ß])/g },
+  molluscs: { re:/\b(mejillon(es)?|almejas?|pulpo|berberechos?|vieiras?|ostras?|moluscos?|cozze|polpo|seppi[ae]|ostrich[ei]|molluschi|capesante|[a-zß]*muschel[a-zß]*|[a-zß]*tintenfisch[a-zß]*|austern?|weichtiere|mosselen|inktvis|oesters?|weekdieren|mexilh(ao|oes)|lulas?|ameijoas?|kalmary|osmiornic[a-z]*)(?![a-z0-9ß])/g,
+              ex:/[a-zß]*muschelnudel[a-zß]*|[a-zß]*muschelform[a-zß]*/g },
+  celery: { re:/\b(apio|sedano|[a-zß]*sellerie[a-zß]*|selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
+  mustard: { re:/\b(mostaza|senape|senf[a-zß]*|mosterd[a-z]*|mostarda|gorczyc[a-z]*|musztard[a-z]*)(?![a-z0-9ß])/g },
+  lupin: { re:/\b(altramuz|altramuces|lupin[a-z]+|tremocos?)(?![a-z0-9ß])/g },
+  sulphites: { re:/\b(sulfitos?|solfit[oi]|sulfit|sulfiet[a-z]*|anhidrido\s+sulfuroso|anidride\s+solforosa|schwefeldioxid|zwaveldioxide|dioxido\s+de\s+(azufre|enxofre)|metabisolfit[oi]|metabisulfitos?|siarczyn[a-z]*|disiarczyn[a-z]*)(?![a-z0-9ß])/g },
+};
 const TAG_FR = Object.fromEntries(ALLERGENS.filter(a => a.key !== 'lactose').map(a => [a.tag, a.key === 'milk' ? 'Lait' : a.label]));
 const LABEL_FR = { 'en:no-lactose':'Sans lactose','en:no-gluten':'Sans gluten','en:no-milk':'Sans lait','en:vegan':'Végan','en:vegetarian':'Végétarien',
   'en:organic':'Bio','en:eu-organic':'Bio européen','fr:ab-agriculture-biologique':'AB','en:palm-oil-free':'Sans huile de palme','en:no-palm-oil':'Sans huile de palme',
@@ -1682,13 +1707,17 @@ function evaluate(p){
     if (!profile.sel.has(a.key)) continue;
     if (a.key === 'lactose' && profile.sel.has('milk')) continue;
     const before = no.length + check.length;
-    const hits = hasText ? findHits(raw, KW[a.kw]).words : [];
+    // mot français ou anglais d'abord ; sinon mot d'une autre langue (on précise alors l'allergène : « Weizenmehl » ne parle pas à tout le monde)
+    const frHits = hasText ? findHits(raw, KW[a.kw]).words : [];
+    const xHits = hasText && !frHits.length ? findHits(raw, KW_X[a.kw]).words : [];
+    const hits = frHits.length ? frHits : xHits;
+    const hitMsg = frHits.length ? `Ingrédient à vérifier : « ${frHits[0]} »` : xHits.length ? `Ingrédient à vérifier : « ${xHits[0]} » (${a.key === 'lactose' ? 'lait' : a.name} ?)` : '';
     const nameHits = nameFree ? [] : findHits(nameTxt, KW[a.kw]).words;
     if (a.key === 'lactose'){
       if (isLactoseFree(p)) ok.push(al.has('en:milk') ? 'Contient du lait mais étiqueté sans lactose' : 'Étiqueté sans lactose');
       else if (al.has('en:milk')) no.push('Contient du lait, donc du lactose');
       else if (dairy) no.push('Produit laitier : contient du lactose, sauf mention « sans lactose »');
-      else if (hits.length) check.push(`Ingrédient à vérifier : « ${hits[0]} »`);
+      else if (hits.length) check.push(hitMsg);
       else if (nameHits.length) check.push(`Le nom évoque « ${nameHits[0]} » : vérifie l'étiquette`);
       if (tr.has('en:milk')){
         if (profile.traces) no.push('Peut contenir des traces de lait');
@@ -1699,7 +1728,7 @@ function evaluate(p){
     }
     if (al.has(a.tag)) no.push(`Contient : ${a.name}`);
     else if (a.key === 'milk' && dairy) no.push('Produit laitier : contient du lait');
-    else if (hits.length) check.push(`Ingrédient à vérifier : « ${hits[0]} »`);
+    else if (hits.length) check.push(hitMsg);
     else if (nameHits.length) check.push(`Le nom évoque « ${nameHits[0]} » : vérifie l'étiquette`);
     else if (a.key === 'gluten' && glutenCat(p)) check.push('Le gluten est fréquent dans ce rayon : vérifie l\'étiquette');
     if (tr.has(a.tag)){
@@ -1710,7 +1739,7 @@ function evaluate(p){
     if (ia.has(a.tag) && !al.has(a.tag) && !(a.key === 'milk' && dairy) && !(no.length + check.length > before)) check.push(`Open Food Facts repère du ${a.name} dans les ingrédients : vérifie l'étiquette`);
   }
   if (hasText) for (const w of profile.words){ const kw = wordKW(w); const h = kw && findHits(raw, kw).words; if (h && h.length) no.push(`Contient « ${h[0]} », que tu évites`); }
-  if (!hasText && hasCriteria()) check.push('Ingrédients non renseignés : vérifie l\'emballage');
+  if (!hasText && hasCriteria()) check.push(raw.length > 3 ? 'Ingrédients illisibles ou dans une autre langue : vérifie l\'emballage' : 'Ingrédients non renseignés : vérifie l\'emballage');
   else if (hasCriteria() && !no.length){
     const q = p._q || '';
     if (q.includes('i')) check.push('Liste d\'ingrédients incomplète sur la fiche : vérifie l\'emballage');
@@ -2335,7 +2364,7 @@ function renderIngredients(raw){
   let clean = ''; const strong = []; let on = false;
   for (let i = 0; i < raw.length; i++){ const ch = raw[i]; if (ch === '_'){ on = !on; continue; } clean += ch; strong.push(on); }
   const mark = new Array(clean.length).fill(false);
-  const kws = new Set(); for (const a of ALLERGENS) if (profile.sel.has(a.key)) kws.add(KW[a.kw]);
+  const kws = new Set(); for (const a of ALLERGENS) if (profile.sel.has(a.key)){ kws.add(KW[a.kw]); kws.add(KW_X[a.kw]); }
   for (const w of profile.words){ const k = wordKW(w); if (k) kws.add(k); }
   for (const k of kws) for (const [s, e] of findHits(clean, k).ranges) for (let i = s; i < e; i++) mark[i] = true;
   let html = '', i = 0;
@@ -4412,7 +4441,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.23';
+const APP_VERSION = '3.24';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

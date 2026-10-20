@@ -56,6 +56,27 @@ CASES = [
     ('molluscs', 'chair de coques', 'check'), ('molluscs', 'fruits coque', 'ok'), ('molluscs', 'fruit(s) à coque', 'ok'), ('molluscs', 'fruits & coques', 'ok'),
     ('molluscs', 'fruitsà coque', 'ok'), ('molluscs', 'coque au chocolat noir 12 %', 'ok'), ('molluscs', 'coque de macaron', 'ok'),
     ('molluscs', 'céréales (billes et coques fourrées)', 'ok'), ('molluscs', 'contient : coque (noix)', 'ok'),
+    # 3.24 : œufs mal lus sur l'emballage (« Œ » lu « CE »), ingrédients en langue étrangère ou en mots composés
+    ('eggs', 'CEUFS de poules élevées en plein air 21 %', 'check'), ('eggs', 'ceuf dur 8 %', 'check'),
+    ('gluten', 'harina de TRIGO', 'check'), ('gluten', 'farina di frumento', 'check'), ('gluten', 'farina di grano tenero tipo 00', 'check'),
+    ('gluten', 'Weizenmehl', 'check'), ('gluten', 'Hartweizengrieß', 'check'), ('gluten', 'Gerstenmalzextrakt', 'check'), ('gluten', 'tarwebloem', 'check'),
+    ('gluten', 'malto d\'orzo', 'check'), ('gluten', 'extracto de malta de cebada', 'check'), ('gluten', 'farinha de trigo', 'check'),
+    ('gluten', 'Buchweizenmehl', 'ok'), ('gluten', 'harina de trigo sarraceno', 'ok'), ('gluten', 'Speisequarkzubereitung Magerstufe', 'ok'),
+    ('milk', 'Magermilchpulver', 'check'), ('milk', 'Süßmolkenpulver', 'check'), ('milk', 'zoete weipoeder', 'check'), ('milk', 'volle melkpoeder', 'check'),
+    ('milk', 'burro', 'check'), ('milk', 'lactosa', 'check'), ('milk', 'Butterreinfett', 'check'), ('milk', 'roomboter', 'check'),
+    ('milk', 'Kokosmilch', 'ok'), ('milk', 'Milchsäure', 'ok'), ('milk', 'Kakaobutter', 'ok'), ('milk', 'cacaoboter', 'ok'), ('milk', 'nata de coco', 'ok'),
+    ('milk', 'Kümmelkörner', 'ok'), ('milk', 'producto sin lactosa', 'ok'), ('milk', 'melkzuur', 'ok'), ('milk', 'leche de coco', 'check'),
+    ('eggs', 'huevo', 'check'), ('eggs', 'uova fresche', 'check'), ('eggs', 'Vollei', 'check'), ('eggs', 'Hühnereiweißpulver', 'check'), ('eggs', 'eieren', 'check'),
+    ('eggs', 'Eigelb', 'check'), ('eggs', 'tuorlo d\'uovo', 'check'), ('eggs', 'Sojaeiweiß', 'ok'),
+    ('nuts', 'Haselnüsse', 'check'), ('nuts', 'Mandelscheiben', 'check'), ('nuts', 'nocciole', 'check'), ('nuts', 'avellanas', 'check'), ('nuts', 'hazelnoten', 'check'),
+    ('nuts', 'avelines', 'check'), ('nuts', 'Kokosnuss', 'ok'), ('nuts', 'Muskatnuss', 'ok'), ('nuts', 'nuez moscada', 'ok'), ('nuts', 'extracto de nuez de cola', 'ok'),
+    ('peanuts', 'Erdnüsse', 'check'), ('peanuts', 'pindakaas', 'check'), ('peanuts', 'arachidi', 'check'),
+    ('soybeans', 'Sojalecithin', 'check'), ('soybeans', 'lecitina di soia', 'check'), ('sesame', 'Sesamsaat', 'check'), ('sesame', 'semillas de sésamo', 'check'),
+    ('fish', 'Alaska-Seelachs', 'check'), ('fish', 'Thunfisch', 'check'), ('fish', 'tonno', 'check'), ('fish', 'pazifisches Meersalz', 'ok'), ('fish', 'Riboflavin, ryboflawina', 'ok'),
+    ('crustaceans', 'Garnelen', 'check'), ('crustaceans', 'gamberetti', 'check'), ('molluscs', 'mejillones', 'check'), ('molluscs', 'Muschelnudeln', 'ok'),
+    ('celery', 'Knollensellerie', 'check'), ('celery', 'sedano', 'check'), ('mustard', 'Senfsaat', 'check'), ('mustard', 'senape', 'check'),
+    ('mustard', 'Hülsenfrüchte', 'ok'), ('mustard', 'Erbsenfaser', 'ok'), ('lupin', 'Lupinenmehl', 'check'), ('lupin', 'lupino', 'check'),
+    ('sulphites', 'enthalten Sulfit', 'check'), ('sulphites', 'anidride solforosa', 'check'), ('sulphites', 'metabisulfito sódico', 'check'),
 ]
 
 httpd, base = serve()
@@ -92,6 +113,14 @@ with sync_playwright() as p:
     check(verdict(['fish'], BASE + 'farine', {'product_name': 'Filet de limande meunière'}) == 'check', 'nom « limande » : à vérifier')
     check(verdict(['molluscs'], 'oeufs frais', {'product_name': '6 œufs coque fermiers'}) == 'ok', 'œufs « coque » : pas de faux doute pour les mollusques')
     check(verdict(['molluscs'], 'coques 60 %, eau, sel', {'product_name': 'Coques au naturel'}) == 'check', 'boîte de coques : à vérifier pour les mollusques')
+    # liste en espagnol lisible grâce aux mots « chocolate » et « soja », sans allergène déclaré (Galletas María)
+    check(verdict(['gluten'], 'Harina de TRIGO 74%, azúcar, grasa de palma, chocolate, lecitina de soja') == 'check', 'liste en espagnol avec du blé : à vérifier')
+    check(verdict(['milk', 'eggs'], 'Weizenmehl, Zucker, Butter, Vollmilchpulver, Eier') == 'check', 'liste en allemand avec lait et œufs : à vérifier')
+    why = page.evaluate("""() => { const R = window.__RS; R.profile.sel = new Set(['gluten']); R.profile.words = []; R.profile.traces = false;
+      return R.evaluate({ code:'2', product_name:'Brotchips', ingredients_text_fr:'Weizenmehl, Zucker, Butter, Salz', allergens_tags:[], traces_tags:[], categories_tags:[] }).check.join(' | '); }""")
+    check('« Weizenmehl » (gluten ?)' in why, 'mot étranger : la raison nomme l\'allergène (' + why + ')')
+    why2 = page.evaluate("""() => window.__RS.evaluate({ code:'3', product_name:'Keks', ingredients_text_fr:'Weizenmehl, Zucker, Salz, Wasser', allergens_tags:[], traces_tags:[], categories_tags:[] }).check.join(' | ')""")
+    check('autre langue' in why2, 'liste illisible : le message dit qu\'elle est peut-être dans une autre langue (' + why2 + ')')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
