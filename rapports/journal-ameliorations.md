@@ -38,14 +38,26 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   pourrait les lever avec le label « sans gluten » / végan d'Open Food Facts.
 - Tâches programmées de GitHub très en retard (la « Base produits » prévue à 3 h 17 UTC a démarré à 8 h 46) :
   vérifier chaque semaine que les bases ont bien été mises à jour, sinon les lancer à la main.
-- Ingrédients en langue étrangère (3.24) : de 12 à 693 produits passent « À vérifier » selon l'allergène. Faux
-  doutes connus, sans danger : « ei » (œuf en allemand) quand l'étiquette mal lue écrit « ei » pour « et », mentions de traces
-  (« senza glutine, arachidi »), « oester-zwam » (pleurote). D'autres lettres mal lues comme « CEUF » pourraient exister
-  (« iait » pour « lait » ?) : à chercher dans la base.
-- Les mots étrangers déjà connus (leche, latte, Milch…) n'ajoutent pas encore l'allergène entre parenthèses comme les
-  nouveaux (« TRIGO » (gluten ?)) : à harmoniser.
+- Ingrédients en langue étrangère (3.24) et mots mal lus (3.25) : faux doutes connus, sans danger : « ei » (œuf en
+  allemand) quand l'étiquette mal lue écrit « ei » pour « et », mentions de traces (« senza glutine, arachidi »),
+  « oester-zwam » (pleurote), « bie » qui peut être autre chose que « blé ». Refaire la recherche des mots mal lus
+  (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
+- Recettes : le rappel « farine → une autre farine » pourrait dire « farine sans gluten » quand c'est le cas.
 
 ## Journal
+
+### 2026-10-20 · 3.25
+- Demande d'Alexandre : « continue à corriger tant qu'il reste un détail qui ne fonctionne pas ».
+- **Sécurité (mots mal lus sur l'étiquette)** : recherche dans toute la base des mots à une lettre près d'un allergène.
+  Reconnus maintenant : « doeuf », « d'eufs », « oeuts », « aeufs », « lalt », « iait », « lactoserun », « qluten »,
+  « giuten », « darachides », « sesane », « motarde », « nolsettes »… Sur la base actuelle : 256 produits de moins
+  « Compatible » pour les œufs, 38 pour le lait, 19 pour le gluten, 6 à 17 pour les autres. Faux amis gardés :
+  « beure de cacao », « huile de nolx de coco ».
+- La raison précise l'allergène aussi pour les mots étrangers déjà connus : « LECHE » (lait ?).
+- **Recettes** : quand l'appli remplace un ingrédient, la préparation le rappelle au-dessus des étapes (« Pour toi,
+  dans les étapes : lait → une boisson végétale, beurre → une margarine »), car les étapes parlent toujours du lait
+  et du beurre.
+- Tests : `verdicts.py` (mots mal lus, raison), `recettes.py` (rappel des remplacements).
 
 ### 2026-10-20 · 3.24
 - **Sécurité (œufs)** : sur environ 500 fiches, l'étiquette photographiée a été mal lue et « ŒUFS » est devenu « CEUFS »

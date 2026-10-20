@@ -76,6 +76,11 @@ CASES = [
     ('crustaceans', 'Garnelen', 'check'), ('crustaceans', 'gamberetti', 'check'), ('molluscs', 'mejillones', 'check'), ('molluscs', 'Muschelnudeln', 'ok'),
     ('celery', 'Knollensellerie', 'check'), ('celery', 'sedano', 'check'), ('mustard', 'Senfsaat', 'check'), ('mustard', 'senape', 'check'),
     ('mustard', 'Hülsenfrüchte', 'ok'), ('mustard', 'Erbsenfaser', 'ok'), ('lupin', 'Lupinenmehl', 'check'), ('lupin', 'lupino', 'check'),
+    # 3.25 : autres mots mal lus sur l'étiquette
+    ('milk', 'lalt écrémé en poudre', 'check'), ('milk', 'poudre de iait', 'check'), ('milk', 'lactoserun en poudre', 'check'), ('milk', 'beure de cacao', 'ok'),
+    ('eggs', "jaune doeuf", 'check'), ('eggs', "traces possibles d'eufs", 'check'), ('eggs', 'oeuts', 'check'), ('eggs', "blancs d'aeufs", 'check'),
+    ('gluten', 'qluten', 'check'), ('gluten', 'giuten', 'check'), ('peanuts', 'traces darachides', 'check'), ('sesame', 'sesane', 'check'),
+    ('mustard', 'graines de motarde', 'check'), ('nuts', 'nolsettes', 'check'), ('nuts', 'huile de nolx de coco', 'ok'),
     ('sulphites', 'enthalten Sulfit', 'check'), ('sulphites', 'anidride solforosa', 'check'), ('sulphites', 'metabisulfito sódico', 'check'),
 ]
 
@@ -121,6 +126,9 @@ with sync_playwright() as p:
     check('« Weizenmehl » (gluten ?)' in why, 'mot étranger : la raison nomme l\'allergène (' + why + ')')
     why2 = page.evaluate("""() => window.__RS.evaluate({ code:'3', product_name:'Keks', ingredients_text_fr:'Weizenmehl, Zucker, Salz, Wasser', allergens_tags:[], traces_tags:[], categories_tags:[] }).check.join(' | ')""")
     check('autre langue' in why2, 'liste illisible : le message dit qu\'elle est peut-être dans une autre langue (' + why2 + ')')
+    why3 = page.evaluate("""() => { const R = window.__RS; R.profile.sel = new Set(['milk']);
+      return R.evaluate({ code:'4', product_name:'Galleta', ingredients_text_fr:'harina, azúcar, chocolate, LECHE en polvo, sal', allergens_tags:[], traces_tags:[], categories_tags:[] }).check.join(' | '); }""")
+    check('« LECHE » (lait ?)' in why3, 'mot étranger connu : la raison nomme aussi l\'allergène (' + why3 + ')')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()

@@ -69,6 +69,12 @@ with sync_playwright() as p:
     page.wait_for_function("() => !document.querySelector('#recIngr .pending')", timeout=30000)
     check(page.locator('#recStepList li').count() == 5 and page.locator('#recIngr li').count() == 12, 'blanquette : 12 ingrédients, 5 étapes')
     page.click('#recBack'); page.wait_for_timeout(300)
+    page.fill('#recQ', 'crêpes'); page.wait_for_timeout(300)
+    page.click('#recCatalog .rrow >> text=Crêpes'); page.wait_for_selector('#recIngrText li')
+    page.wait_for_function("() => !document.querySelector('#recIngr .pending')", timeout=30000)
+    note = page.inner_text('#recSubNote') if page.is_visible('#recSubNote') else ''
+    check('lait →' in note, 'crêpes sans lait : les étapes rappellent le remplacement (' + note + ')')
+    page.click('#recBack'); page.wait_for_timeout(300); page.fill('#recQ', ''); page.wait_for_timeout(200)
     page.click('#recNew'); page.wait_for_timeout(300)
     check(page.is_visible('#recEditor'), 'créer sa recette : toujours possible')
     page.go_back(); page.wait_for_timeout(300)
