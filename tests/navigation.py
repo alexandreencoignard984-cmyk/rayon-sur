@@ -208,6 +208,23 @@ with sync_playwright() as p:
     page.wait_for_selector('#list li .name', timeout=20000)
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
 
+    print('Zones tactiles et boutons de la fiche (3.27)')
+    for theme in ('light', 'dark'):
+        ctx3, page3, errs3, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': theme})
+        wait_near(page3)
+        page3.set_viewport_size({'width': 390, 'height': 844})
+        page3.click('#homeGrid [data-q="en:biscuits"]'); page3.wait_for_selector('#list li [data-add]', timeout=20000)
+        sz = page3.eval_on_selector('#list li [data-add]', 'e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; }')
+        check(sz[0] >= 44 and sz[1] >= 44, f'{theme} : le « + » des produits fait au moins 44 x 44 ({sz})')
+        check(not page3.evaluate('() => document.documentElement.scrollWidth > window.innerWidth'), f'{theme} : rien ne déborde sur la liste')
+        page3.click('#list li [data-open] >> nth=0'); page3.wait_for_selector('#sheet[open]')
+        bg = page3.evaluate("() => [getComputedStyle(document.querySelector('#sheet .act')).backgroundColor, getComputedStyle(document.documentElement).getPropertyValue('--sunk').trim()]")
+        check(page3.locator('#sheet .act').count() >= 2 and page3.evaluate("() => { const c = document.createElement('i'); c.style.background = getComputedStyle(document.documentElement).getPropertyValue('--sunk'); document.body.append(c); const v = getComputedStyle(c).backgroundColor; c.remove(); return v; }") == bg[0], f'{theme} : boutons Ajouter / Favori / Partager sur fond --sunk ({bg[0]})')
+        check(not page3.evaluate("() => { const s = document.querySelector('#sheet'); return s.scrollWidth > s.clientWidth + 1; }"), f'{theme} : la fiche ne déborde pas')
+        page3.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'fiche-{theme}.png'))
+        check(not errs3, f'aucune erreur JavaScript ({theme})')
+        ctx3.close()
+
     print('Contrastes en mode sombre (pastilles, badge, cases de Ma liste)')
     ctx2, page2, errs2, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': 'dark'})
     wait_near(page2)

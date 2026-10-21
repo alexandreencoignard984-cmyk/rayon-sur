@@ -112,6 +112,9 @@ CASES = [
     ('fish', 'crème dlanchois', 'check'), ('fish', 'filets anchoislpois$onl', 'check'), ('fish', 'vin blanc (Roussette de Savoie)', 'ok'),
     ('fish', 'barres de céréales', 'ok'), ('fish', 'sucre de canne', 'ok'),
     ('fish', 'baguette cuite sur sole', 'ok'), ('fish', 'pomodori secchi al sole', 'ok'), ('fish', 'four à sole', 'ok'), ('fish', 'Peut contenir des traces de Sole', 'check'),
+    # 3.27 : lacunes de mots-clés
+    ('fish', 'sauce Worcester', 'check'), ('fish', 'rouille', 'check'), ('fish', 'garum', 'check'), ('fish', 'fumet', 'check'), ('fish', 'dashi', 'check'),
+    ('milk', 'lactoferrine', 'check'), ('milk', 'lactoferrin', 'check'), ('eggs', 'Eiweiß', 'check'), ('eggs', 'Eiweiss', 'check'), ('peanuts', 'groundnut oil', 'check'),
     ('eggs', 'colorant : Ei29', 'ok'), ('milk', 'Traces de _lactose0_', 'check'),
 ]
 
@@ -184,6 +187,14 @@ with sync_playwright() as p:
     check(verdict(['gluten'], 'farine de riz, eau, sel', {'product_name': 'Pain de mie sans gluten'}) == 'ok', 'nom « Pain de mie sans gluten » : pas de faux doute')
     check(verdict(['nuts'], 'jambon de porc, sel', {'product_name': 'Sugar Free Hazelnut Syrup'}) == 'check', 'nom « Sugar Free Hazelnut » : à vérifier pour les fruits à coque')
     check(verdict(['milk'], BASE + 'riz', {'product_name': 'Boisson végétale riz lait'}) == 'ok', 'nom « Boisson végétale … lait » : toujours pas de faux doute sur le lait')
+    # 3.27 : « sans X » n'efface que le mot X lui-même, pas les autres indices du nom
+    check(verdict(['fish'], 'olives noires, huile, sel', {'product_name': 'Rillettes de thon sans anchois'}) == 'check', 'nom « Rillettes de thon sans anchois » : à vérifier (thon)')
+    check(verdict(['milk'], BASE + 'farine', {'product_name': 'Gâteau sans lait au beurre'}) == 'check', 'nom « Gâteau sans lait au beurre » : à vérifier (beurre)')
+    check(verdict(['eggs'], BASE + 'farine', {'product_name': 'Gâteau sans oeuf mayonnaise'}) == 'check', 'nom « Gâteau sans œuf mayonnaise » : à vérifier (mayonnaise)')
+    check(verdict(['milk'], BASE + 'farine', {'product_name': 'Gâteau sans lait'}) == 'ok', 'nom « Gâteau sans lait » : compatible')
+    check(verdict(['lactose'], BASE + 'farine', {'product_name': 'Crème sans lactose'}) == 'ok', 'nom « Crème sans lactose » : pas de faux doute')
+    check(verdict(['milk'], BASE + 'farine', {'product_name': 'Dessert vegan crème'}) == 'ok', 'nom « vegan » : toujours sans faux doute pour le lait')
+    check(verdict(['gluten'], 'farine de riz', {'product_name': 'Biscuits sans gluten'}) == 'ok', 'nom « Biscuits sans gluten » : compatible')
     # rayons où l'allergène est presque toujours là
     check(verdict(['fish'], 'filets 100 %', {'categories_tags': ['en:frozen-fishes']}) == 'check', 'rayon poissons sans mot reconnu : à vérifier')
     check(verdict(['fish'], 'Filets sans peau de _bar_ BIO', {'categories_tags': ['en:fishes']}) == 'check', 'bar (rayon poissons) : à vérifier')
