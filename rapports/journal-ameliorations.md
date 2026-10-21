@@ -63,9 +63,11 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
-### 2026-10-21 · 3.26 — séance de 11 h 40 (heure de Paris) · NON PUBLIÉE
-- **Pas publiée** : l'accès GitHub de la séance était refusé (push et `gh` en 403). Le travail est dans le commit
-  local joint au compte rendu (fichier patch) ; à appliquer (`git am`) puis pousser par une séance qui a l'accès.
+### 2026-10-21 · 3.26 — séance de 11 h 40 (heure de Paris)
+- **Publiée le 21/10 à 16 h 08** (heure de Paris) par une autre séance : la séance de 11 h 40 n'avait pas l'accès
+  GitHub (push et `gh` en 403) ; son patch a été appliqué tel quel (`git am`, commit fc365c6) après `check_js.py`,
+  `tests/run.sh` et `audit_drive.py` au vert. Tâches GitHub « Tests » et « pages build and deployment » réussies
+  sur ce commit.
 - **Sécurité (sulfites)** : « disulphite », « metbisulphite », « anydride sulfureux », « SO2 », mots collés
   (« etsulfites »), langues étrangères, et « d_isulfite_ » coupé par Open Food Facts n'étaient pas reconnus : TUC,
   Maille Dijon, biscuits Gullón, abricots secs, crevettes sortaient « Compatible ». Les vins passent « À vérifier ».
