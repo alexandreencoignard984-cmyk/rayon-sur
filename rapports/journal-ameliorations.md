@@ -63,6 +63,23 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-21 · 3.27 — séance du soir
+- **Sécurité (« sans » dans le nom)** : un seul « sans » dans le nom effaçait tous les indices du nom : « Rillettes de
+  thon sans anchois », « Gâteau sans lait au beurre », « Gâteau sans œuf mayonnaise » sortaient « Compatible ».
+  Maintenant seuls les mots précédés de « sans » sont écartés ; « sans gluten » (profil gluten) et « sans lactose »
+  (profil lactose) valent pour tout le produit. Aucun produit ne gagne « Compatible ».
+- **Mots en plus (doutes seulement)** : worcester, rouille, garum, fumet, dashi, lactoferrine, eiweiß, groundnut.
+- Design : boutons Ajouter / Favori / Partager sur fond `--sunk` en clair ; « + » des produits à 44 × 44 px.
+- Tests : `verdicts.py` (17 cas), `navigation.py` (zones tactiles, boutons de la fiche). Début de séance : tout vert,
+  bases du 19/10, aucune issue GitHub ouverte.
+- Agents : DÉTECTEUR (« sans », lacunes de mots, texte abîmé) ; PARCOURS CLIENT : aucune régression de la 3.26, aucune
+  erreur JS ; DESIGN : boutons de la fiche, zones tactiles, vide sous les pastilles de rayons.
+- Pistes laissées : « bléi » (blé mal lu) dans « Nugget de poulet » sort Compatible pour le gluten si la liste n'est
+  pas marquée « mal lue » ; vin / bière / cidre / raisins secs écrits en ingrédient sans mention « sulfites » ;
+  « sauce caesar » (nom seul), « apium graveolens », « brassica juncea » ; message « Aucun produit compatible… »
+  trompeur après une recherche par nom à 0 résultat ; zones tactiles restantes (`.pchip`, `.selchip`, `.btnchip`,
+  `.quick .chip`, liens du pied de page) ; vide d'environ 45 px sous la rangée de rayons des résultats.
+
 ### 2026-10-21 · 3.26 — séance de 11 h 40 (heure de Paris)
 - **Publiée le 21/10 à 16 h 08** (heure de Paris) par une autre séance : la séance de 11 h 40 n'avait pas l'accès
   GitHub (push et `gh` en 403) ; son patch a été appliqué tel quel (`git am`, commit fc365c6) après `check_js.py`,
