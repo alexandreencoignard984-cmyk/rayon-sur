@@ -10,6 +10,11 @@ Rien de cette liste n'est fait sans son accord.
 - **Mode hors ligne** (service worker) : garder l'appli et la liste utilisables sans réseau. Proposé, pas encore
   accepté ; un correctif de cache par version a déjà été refusé.
 - **Naturalia et mise en avant des magasins bio** : proposé, en attente de réponse.
+- **Accès GitHub des séances automatiques** (21/10) : la séance n'a pas pu publier ni lire les tâches GitHub
+  (« dépôt non autorisé pour cette session »). Rajouter le dépôt rayon-sur aux sources de la tâche programmée.
+- **Thème « Comme l'iPhone » par défaut** : aujourd'hui l'appli démarre en « Clair » même si l'iPhone est en sombre.
+- **Vins « sans sulfites ajoutés »** : restent « Compatible » grâce au nom ; ils en contiennent souvent un peu
+  naturellement. Les passer « À vérifier » ?
 
 ## Pistes
 
@@ -30,7 +35,20 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   le dit) ; on pourrait proposer un remplaçant (fromage végétal à tartiner) si la base en a.
 - Accueil (3.14) : voir si d'autres rayons méritent une tuile, et s'il faut afficher sur chaque tuile le nombre de
   produits compatibles avec le profil (calcul à faire sans ralentir l'ouverture).
-- Accessibilité : contrastes en mode sombre, libellés des boutons icône, taille des zones tactiles.
+- Accessibilité : en clair, `--ok` sur `--ok-bg` à 4,36:1 (« Meilleur choix », « Modifier ») ; boutons « Ajouter /
+  Favori / Partager » de la fiche sans forme visible en clair (`.act` : `--surface` → `--sunk`) ; zones tactiles
+  sous 44 px : « Itinéraire » (`.loclist a`), `.selchip`, `.pchip`, `.nearline`, liens du pied de page Profil.
+- Allergène écrit en clair dans les ingrédients (« SÉSAME », « purée de sésame ») mais non déclaré par Open Food
+  Facts : « À vérifier » ; on pourrait le passer « Exclu » hors des phrases de traces (le client hésite).
+- Ajouter un produit « Exclu » à la liste ne prévient pas (« Ajouté à ta liste ») : afficher un avertissement.
+- Position refusée : magasin Leclerc imposé, « Magasins près de moi » introuvable à l'accueil ; la carte drive ne
+  montre alors que Leclerc (ajouter les enseignes où le produit a été vu, phrase au singulier).
+- Recettes : ingrédient sans version compatible (moutarde, tahini) sans idée de remplacement.
+- Petits textes : « Charger tout le rayon » ≠ bouton « Tout le rayon » ; tuile « Apéritif » → titre « Snacks salés » ;
+  étiquettes d'allergènes non traduites (« Metabisolfito ») ; « Mon drive Leclerc » : bulle du navigateur au lieu du
+  message de l'appli pour un texte qui n'est pas une adresse.
+- Garde-fous par rayon (3.26) : faux doutes sans danger « Tendre Noix » (jambon), « Pistaches coques », thon
+  végétal ; risque faible noté : `_fresh` accepté pour tout code dans `cleanP` (limiter aux codes `f:`).
 - Faux doutes restants après la 3.13 : desserts végétaux appelés « Skyr », barres « nougat » sans fruits à coque
   (Mars). Sans danger (« À vérifier »), mais on pourrait les lever avec le label végan ou la liste d'ingrédients.
 - Faux doutes ajoutés en 3.14 (sans danger, « À vérifier ») : madeleines ou cookies sans gluten qui ne disent pas
@@ -44,6 +62,32 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-21 · 3.26 — séance de 11 h 40 (heure de Paris) · NON PUBLIÉE
+- **Pas publiée** : l'accès GitHub de la séance était refusé (push et `gh` en 403). Le travail est dans le commit
+  local joint au compte rendu (fichier patch) ; à appliquer (`git am`) puis pousser par une séance qui a l'accès.
+- **Sécurité (sulfites)** : « disulphite », « metbisulphite », « anydride sulfureux », « SO2 », mots collés
+  (« etsulfites »), langues étrangères, et « d_isulfite_ » coupé par Open Food Facts n'étaient pas reconnus : TUC,
+  Maille Dijon, biscuits Gullón, abricots secs, crevettes sortaient « Compatible ». Les vins passent « À vérifier ».
+- **Sécurité (poisson)** : raie, sole, bar (par le rayon), loup de mer, roussette, tacaud, omble, œufs de lompe,
+  anchoïade non reconnus ; tout produit des rayons poissons / produits de la mer reste « À vérifier » sans mot trouvé.
+- **Sécurité (moutarde, céleri, arachide)** : « mustardseeds », « mosterd », « sennep » (nordique), « célerie »,
+  « selleri », « celer », « peanut butter »… reconnus. Un nom « vegan » ou « végétal » n'efface plus l'indice du nom
+  que pour le lait et les œufs (« Vegan Protein Bar Peanut Butter » était « Compatible » pour l'arachide). Rayon
+  moutardes → « À vérifier » pour la moutarde.
+- **Sécurité (chiffre de note collé)** : « oeufs1 », « ŒUF1 », « poisson1 », « Cacahuètes1 » reconnus.
+- Sur la base : Compatible → À vérifier : poisson 759, sulfites 214, moutarde 40, céleri 35, arachide 24, autres
+  ≤ 11. Aucun produit ne gagne « Compatible ».
+- Recettes : le compteur « Les produits 7/7 » (ou 12/11) comptait le sel et le poivre ; corrigé.
+- Recherche : choisir un rayon après une recherche par nom ne garde plus le texte (« 0 produit pour « houmous » »).
+- Mode sombre : chiffres et symboles foncés sur les pastilles vertes / orange / rouges (contraste 2 → 8) ; cercles à
+  cocher de Ma liste bien visibles (1,25 → 5,3).
+- Tests : `verdicts.py` (≈ 80 cas), `recettes.py`, `navigation.py` (rayon, contrastes) ; délai de `robustesse.py`
+  porté à 30 min dans `run.sh` (il frôlait 20 min).
+- Agents : DÉTECTEUR — sulfites, poissons, chiffres collés, moutarde/céleri étrangers, vins ; bases à jour (19/10) ;
+  GitHub inaccessible. PARCOURS CLIENT (arachide + sésame + moutarde, puis céleri + sulfites, Lyon/Bordeaux) — mêmes
+  verdicts, compteur recettes, rayon qui garde la recherche, plusieurs gênes (voir Pistes) ; aucune erreur JS.
+  DESIGN — contrastes sombres et cercles de Ma liste (faits), boutons de fiche en clair et petites zones (Pistes).
 
 ### 2026-10-20 · 3.25
 - Demande d'Alexandre : « continue à corriger tant qu'il reste un détail qui ne fonctionne pas ».

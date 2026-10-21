@@ -23,7 +23,7 @@
   --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#F1F4F2; --ink:#17201B; --muted:#646E68; --line:rgba(23,32,27,.11);
   --primary:#12804F; --on-primary:#FFFFFF;
   --ok:#12804F; --ok-bg:#E4F4EB; --warn:#A85A00; --warn-bg:#FDF0DC; --no:#C0291D; --no-bg:#FCE5E2;
-  --focus:#12804F; --scrim:rgba(10,20,15,.42); --bar:rgba(255,255,255,.92); --toastbg:rgba(23,32,27,.94); --card:0 0 0 1px rgba(23,32,27,.09), 0 8px 24px -14px rgba(23,32,27,.22);
+  --focus:#12804F; --on-s:#FFFFFF; --scrim:rgba(10,20,15,.42); --bar:rgba(255,255,255,.92); --toastbg:rgba(23,32,27,.94); --card:0 0 0 1px rgba(23,32,27,.09), 0 8px 24px -14px rgba(23,32,27,.22);
   --ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --display:"Archivo",-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
   --tabbar:58px; --r:14px;
@@ -34,14 +34,14 @@
     --bg:#101211; --surface:#191C1A; --sunk:#242825; --ink:#ECEFED; --muted:#9AA39E; --line:rgba(236,239,237,.12);
     --primary:#3DBF83; --on-primary:#06170E;
     --ok:#4FD08F; --ok-bg:#14301F; --warn:#F2B04A; --warn-bg:#36270E; --no:#FF8A7E; --no-bg:#3A1A17;
-    --focus:#4FD08F; --scrim:rgba(0,0,0,.6); --bar:rgba(25,28,26,.9); --toastbg:rgba(58,64,60,.97); --card:0 0 0 1px rgba(236,239,237,.06); color-scheme:dark;
+    --focus:#4FD08F; --on-s:#101211; --scrim:rgba(0,0,0,.6); --bar:rgba(25,28,26,.9); --toastbg:rgba(58,64,60,.97); --card:0 0 0 1px rgba(236,239,237,.06); color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#101211; --surface:#191C1A; --sunk:#242825; --ink:#ECEFED; --muted:#9AA39E; --line:rgba(236,239,237,.12);
   --primary:#3DBF83; --on-primary:#06170E;
   --ok:#4FD08F; --ok-bg:#14301F; --warn:#F2B04A; --warn-bg:#36270E; --no:#FF8A7E; --no-bg:#3A1A17;
-  --focus:#4FD08F; --scrim:rgba(0,0,0,.6); --bar:rgba(25,28,26,.9); --toastbg:rgba(58,64,60,.97); --card:0 0 0 1px rgba(236,239,237,.06); color-scheme:dark;
+  --focus:#4FD08F; --on-s:#101211; --scrim:rgba(0,0,0,.6); --bar:rgba(25,28,26,.9); --toastbg:rgba(58,64,60,.97); --card:0 0 0 1px rgba(236,239,237,.06); color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -161,7 +161,7 @@ dialog.sheet .sheet-head{touch-action:none}
 .tw{position:relative;width:52px;height:52px}
 .thumb{width:52px;height:52px;border-radius:10px;background:#fff;object-fit:contain;display:block;box-shadow:0 0 0 1px var(--line) inset}
 .thumb.empty{background:var(--sunk);box-shadow:none}
-.sbadge{position:absolute;right:-5px;bottom:-5px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;border:2px solid var(--surface)}
+.sbadge{position:absolute;right:-5px;bottom:-5px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:var(--on-s);border:2px solid var(--surface)}
 .sbadge svg{width:12px;height:12px}
 .name{display:block;font-size:16px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
 .meta{display:block;color:var(--muted);font-size:14px;overflow-wrap:anywhere}
@@ -213,9 +213,9 @@ dialog.sheet .sheet-head{touch-action:none}
 /* liste de courses */
 .item>.shop{grid-column:1/-1}
 .shop{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px}
-.shop input{appearance:none;-webkit-appearance:none;width:26px;height:26px;margin:0;border-radius:50%;box-shadow:0 0 0 2px var(--line) inset;display:grid;place-items:center}
+.shop input{appearance:none;-webkit-appearance:none;width:26px;height:26px;margin:0;border-radius:50%;box-shadow:0 0 0 2px var(--muted) inset;display:grid;place-items:center}
 .shop input:checked{background:var(--ok);box-shadow:none}
-.shop input:checked::after{content:"";width:12px;height:7px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:translateY(-2px) rotate(-45deg)}
+.shop input:checked::after{content:"";width:12px;height:7px;border-left:2.5px solid var(--on-s);border-bottom:2.5px solid var(--on-s);transform:translateY(-2px) rotate(-45deg)}
 .shop.done .name{text-decoration:line-through;color:var(--muted)}
 .shop .open{border:0;background:none;text-align:left;padding:2px 0;min-width:0}
 
@@ -264,7 +264,7 @@ input[type=text],select.plain{font-size:16px;background:var(--sunk);border:0;bor
 .tabbar button{display:grid;justify-items:center;align-content:center;gap:2px;height:var(--tabbar);border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:600;position:relative}
 .tabbar button svg{width:26px;height:26px}
 .tabbar button[aria-current="page"]{color:var(--ok)}
-.badge{position:absolute;top:6px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--no);color:#fff;font-size:11px;font-weight:700;line-height:18px}
+.badge{position:absolute;top:6px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--no);color:var(--on-s);font-size:11px;font-weight:700;line-height:18px}
 
 /* fiches qui montent du bas */
 dialog.sheet{position:fixed;inset:auto 0 0 0;width:100%;max-width:40rem;height:calc(100dvh - env(safe-area-inset-top,0px) - 12px);max-height:none;margin:0 auto;padding:0;border:0;border-radius:16px 16px 0 0;background:var(--bg);color:var(--ink)}
@@ -286,7 +286,7 @@ dialog.sheet.short .sheet-in{max-height:calc(100dvh - env(safe-area-inset-top,0p
 .hero .ph{background:var(--sunk);box-shadow:none}
 .hero h2{font-size:22px;margin:0 0 2px}
 .vbanner{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;margin-top:14px;padding:14px;border-radius:var(--r);background:var(--cb)}
-.vicon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--c);color:#fff}
+.vicon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--c);color:var(--on-s)}
 .vicon svg{width:22px;height:22px}
 .bigverdict{font-family:var(--display);font-stretch:85%;font-weight:800;font-size:22px;line-height:1.15;color:var(--c);padding-top:7px}
 .reasons{margin:6px 0 0;padding-left:18px;font-size:15px}
@@ -468,7 +468,7 @@ div.rowbtn{cursor:default}
 .flagbox[open]>summary::after{transform:rotate(90deg)}
 .flagbox .tags{margin:10px 0}
 .flagbox a{color:var(--primary);font-weight:600}
-.flagbox .chip[aria-pressed="true"]{background:var(--no);color:#fff;box-shadow:none}
+.flagbox .chip[aria-pressed="true"]{background:var(--no);color:var(--on-s);box-shadow:none}
 .links .src{color:var(--muted);font-size:13px}
 .drivebtn small.dseen{color:var(--ok);font-weight:600}
 .drivebtn small.dunk{color:var(--warn)}
@@ -1217,8 +1217,8 @@ const KW = {
   peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes|cacahouete|cacahouetes|peanut|peanuts)\b/g },
   soybeans: { re:/\b(soja|soya|edamame|tofu|tempeh|miso|tamari|shoyu|yuba|soy|soybean|soybeans)\b/g },
   sesame: { re:/\b(sesame|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa)\b/g },
-  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|lieu\s+(noir|jaune)|morue|capelan|eperlan|grondin|rascasse|sebaste|lingue|carrelet|pilchards?|sardinelles?|poutargue|katsuobushi|bacalao|fish|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring)\b/g,
-          ex:/\bcaviar\s+(de\s+|d')\s*(aubergines?|tomates?|legumes|courgettes?|poivrons?|olives?|champignons?|lentilles|betteraves?|carottes?|artichauts?|potirons?|poireaux|citrons?|cepes|pois\s+chiches)\b|\bdi\s+lotte\b/g },
+  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|lieu\s+(noir|jaune)|morue|capelan|eperlan|grondin|rascasse|sebaste|lingue|carrelet|pilchards?|sardinelles?|poutargue|katsuobushi|bacalao|fish|fishes|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring|raies?|ombles?|soles?|loup\s+de\s+mer|roussettes?|saumonettes?|tacauds?|lompes?|lump|anchoiade)\b/g,
+          ex:/\bcaviar\s+(de\s+|d')\s*(aubergines?|tomates?|legumes|courgettes?|poivrons?|olives?|champignons?|lentilles|betteraves?|carottes?|artichauts?|potirons?|poireaux|citrons?|cepes|pois\s+chiches)\b|\bdi\s+lotte\b|\broussettes?\s+(de\s+savoie|du\s+bugey)\b|\b(au|du|a|al|del|di|sur)\s+(la\s+)?soles?\b|\bsoles?\s+(de\s+)?(four|pierre)\b|\bbeurre\s+sole\b|\b(baguettes?|pains?|boules?|flutes?|batards?)\s+([a-z]+\s+)?soles?\b/g },
   crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|araignees?\s+de\s+mer|etrilles?|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish)\b/g },
   molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|coques?|amandes?\s+de\s+mer|berniques?|patelles?|clovisses?|vernis\s+de\s+mer|murex|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails|cockles?|whelks?|abalone|cuttlefish|calamari|limpets?|periwinkles?)\b/g,
           // « coques » (coquillages) mais pas les fruits à coque (même mal écrits : « fruits coque », « fruitsà coque »), les noisettes
@@ -1242,21 +1242,23 @@ const KW_X = {
   eggs: { re:/\b(eufs|doeufs?|deufs?|coeufs?|oeeufs?|oeuts?|aeufs|geufs|loeuf|huevos?|yemas?|ovoproductos|uov[oa]|tuorl[oi]|albume|ei|eier|[a-zß]*(vollei|eigelb|eiklar|huhnerei|eipulver|trockenei|flussigei|kippenei|eidooier)[a-zß]*|eieren|eigeel|volei|ovos?|jaj[a-z]*|ceufs?)(?![a-z0-9ß])/g },
   nuts: { re:/\b(nolsettes?|nosettes|noisetes|damandes?|nolx|avelines?|almendras?|avellanas?|nuez|nueces|anacardos?|pistachos?|frutos\s+de\s+cascara|frutos\s+secos|mandorl[ae]|nocciole|noc[ei]|anacardi|pistacchi[oa]?|frutta\s+(secca\s+)?a\s+guscio|[a-zß]*(hasel|wal|pekan|para|macadamia|cashew)nu(ss|ß)[a-zß]*|[a-zß]*mandel[a-zß]*|pistazie[a-zß]*|schalenfr[a-z]*|[a-z]*(hazel|wal|cashew|pecan|para)noo?t(en)?[a-z]*|amandel[a-z]*|noten|amendoas?|avelas?|noz|nozes|caju|pistacios?|orzech[a-z]*)(?![a-z0-9ß])/g,
           ex:/\bnolx\s+de\s+coco\b|\bnuez\s+(moscada|de\s+(coco|cola))\b|\bnoce\s+(moscata|di\s+cocco)\b|\bnoz(es)?\s+(moscada|de\s+coco)(?![a-z0-9ß])/g },
-  peanuts: { re:/\b(arahides?|darachides?|cacahuates?|mani|arachidi|[a-zß]*erdnu(ss|ß)[a-zß]*|[a-z]*pinda[a-z]*|amendoins?|arachidow[a-z]*)(?![a-z0-9ß])/g },
+  peanuts: { re:/\b(arahides?|darachides?|(d[li])?arachid[a-z]*|peanut[a-z]*|cacahu[a-z]*|cacahuates?|mani|arachidi|[a-zß]*erdnu(ss|ß)[a-zß]*|[a-z]*pinda[a-z]*|amendoins?|arachidow[a-z]*)(?![a-z0-9ß])/g,
+             ex:/[a-z]*arachidoni[a-z]*/g },
   soybeans: { re:/\b([a-zß]*soj[ae][a-zß]*|[a-z]*soia[a-z]*|sojow[a-z]*)(?![a-z0-9ß])/g },
   sesame: { re:/\b(sesane|sesome|seame|sesamo|[a-zß]*sesam[a-zß]*|sezam[a-z]*)(?![a-z0-9ß])/g },
-  fish: { re:/\b(polsson|pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
+  fish: { re:/\b([a-z]{0,2}anchoi[a-z]*|polsson|pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
           ex:/[a-zß]*tintenfisch[a-zß]*|[a-zß]*lachsschinken[a-zß]*|[a-zß]*[ai]fisch[a-zß]*/g },
   crustaceans: { re:/\b(custaces|gamba|camaron(es)?|langostinos?|cangrejos?|crustaceos?|gamber[a-z]*|granchi[oa]?|aragost[ae]|crostacei|[a-zß]*garnelen?[a-zß]*|[a-zß]*krabben?[a-zß]*|hummer[a-zß]*|krebs(tiere|fleisch)|garnalen|kreeft(en)?|krab|schaaldieren|camarao|camaroes|caranguejos?|lagostas?|krewetk[a-z]*|skorupiak[a-z]*)(?![a-z0-9ß])/g },
   molluscs: { re:/\b(molusques|mejillon(es)?|almejas?|pulpo|berberechos?|vieiras?|ostras?|moluscos?|cozze|polpo|seppi[ae]|ostrich[ei]|molluschi|capesante|[a-zß]*muschel[a-zß]*|[a-zß]*tintenfisch[a-zß]*|austern?|weichtiere|mosselen|inktvis|oesters?|weekdieren|mexilh(ao|oes)|lulas?|ameijoas?|kalmary|osmiornic[a-z]*)(?![a-z0-9ß])/g,
               ex:/[a-zß]*muschelnudel[a-zß]*|[a-zß]*muschelform[a-zß]*/g },
-  celery: { re:/\b(celerl|ceteri|apio|sedano|[a-zß]*sellerie[a-zß]*|selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
-  mustard: { re:/\b(moutard|mouarde|motarde|moutrde|moutade|mcutarde|noutarde|mostaza|senape|senf[a-zß]*|mosterd[a-z]*|mostarda|gorczyc[a-z]*|musztard[a-z]*)(?![a-z0-9ß])/g },
+  celery: { re:/\b(celerl|ceteri|apio|sedano|[a-z]*celeri[a-z]*|celer|celera|[a-zß]*selleri[a-zß]*|[a-z]*selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
+  mustard: { re:/\b([a-z]*(moutard|mustard)[a-z]*|mouarde|motarde|moutrde|moutade|mcutarde|noutarde|mostaza|senape|senf[a-zß]*|[a-z]*mosterd[a-z]*|mostarda|senneps?[a-z]*|senap[a-z]*|seneves?|gorczyc[a-z]*|musztard[a-z]*)(?![a-z0-9ß])/g },
   lupin: { re:/\b(altramuz|altramuces|lupin[a-z]+|tremocos?)(?![a-z0-9ß])/g },
-  sulphites: { re:/\b(sufites|sulftes|sulfiltes|sulfies|sulfitos?|solfit[oi]|sulfit|sulfiet[a-z]*|anhidrido\s+sulfuroso|anidride\s+solforosa|schwefeldioxid|zwaveldioxide|dioxido\s+de\s+(azufre|enxofre)|metabisolfit[oi]|metabisulfitos?|siarczyn[a-z]*|disiarczyn[a-z]*)(?![a-z0-9ß])/g },
+  sulphites: { re:/\b([a-z]*(sulfit|sulphit|solfit)[a-z]*|[a-z]*bisulfie[a-z]*|[a-z]*sulfureu[a-z]*|[a-z]*sulphurous|dioxyde\s+de\s+sulfure|so2|sufites|sulftes|sulfiltes|sulfies|sulfitos?|solfit[oi]|sulfit|sulfiet[a-z]*|anhidrido\s+sulfuroso|anidride\s+solforosa|schwefeldioxid|zwaveldioxide|dioxido\s+de\s+(azufre|enxofre)|metabisolfit[oi]|metabisulfitos?|siarczyn[a-z]*|disiarczyn[a-z]*)(?![a-z0-9ß])/g },
 };
 // mots étrangers déjà dans KW : la raison affichée précise aussi l'allergène
-const FOREIGN_W = /^(latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase|nocciola|bacalao|soya)$/;
+// et noms de poissons moins connus (« raie », « lompe »…)
+const FOREIGN_W = /^(latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase|nocciola|bacalao|soya|raies?|ombles?|soles?|loup\s+de\s+mer|roussettes?|saumonettes?|tacauds?|lompes?|lump|anchoiade)$/;
 const TAG_FR = Object.fromEntries(ALLERGENS.filter(a => a.key !== 'lactose').map(a => [a.tag, a.key === 'milk' ? 'Lait' : a.label]));
 const LABEL_FR = { 'en:no-lactose':'Sans lactose','en:no-gluten':'Sans gluten','en:no-milk':'Sans lait','en:vegan':'Végan','en:vegetarian':'Végétarien',
   'en:organic':'Bio','en:eu-organic':'Bio européen','fr:ab-agriculture-biologique':'AB','en:palm-oil-free':'Sans huile de palme','en:no-palm-oil':'Sans huile de palme',
@@ -1360,16 +1362,41 @@ function normMap(s){
   return { out, map };
 }
 const fold = s => normMap(String(s || '')).out;
+/* Copies du texte où l'on cherche aussi les mots-clés (on garde la position de chaque lettre dans le texte d'origine) :
+   - sans les « _ » qu'Open Food Facts met parfois au milieu d'un mot (« d_isulfite_ ») ;
+   - avec les chiffres de note collés au mot changés en espaces (« oeufs1 », « ŒUF9* », « poisson1 »), seulement après
+     au moins trois lettres : « e224 », « b12 » ou un additif mal lu (« Ei29 » pour E129) ne changent pas.
+   Un mot trouvé dans une copie compte comme trouvé : on ne fait qu'ajouter des doutes, jamais en retirer. */
+let tvLast = null, tvVars = null;
+function textVariants(text){
+  if (text === tvLast) return tvVars;
+  const base = normMap(text); const vs = [base];
+  if (text.includes('_')){
+    let out = ''; const map = [];
+    for (let k = 0; k < base.out.length; k++) if (text[base.map[k]] !== '_'){ out += base.out[k]; map.push(base.map[k]); }
+    vs.push({ out, map });
+  }
+  for (const v of vs.slice()){
+    const d = v.out.replace(/([a-z]{3})([0-9]{1,2})(?![0-9])/g, (m, w, n) => w + ' '.repeat(n.length));
+    if (d !== v.out) vs.push({ out:d, map:v.map });
+  }
+  tvLast = text; tvVars = vs;
+  return vs;
+}
 function findHits(text, kw){
-  const { out, map } = normMap(text || '');
-  const ex = [];
-  if (kw.ex) for (const m of out.matchAll(kw.ex)) ex.push([m.index, m.index + m[0].length]);
-  const ranges = [], words = [];
-  for (const m of out.matchAll(kw.re)){
-    const s = m.index, e = s + m[0].length;
-    if (ex.some(([a, b]) => s >= a && e <= b)) continue;
-    const os = map[s], oe = map[e - 1] + 1;
-    ranges.push([os, oe]); words.push(text.slice(os, oe).replace(/_/g, ''));
+  text = String(text || '');
+  const ranges = [], words = [], seen = new Set();
+  for (const { out, map } of textVariants(text)){
+    const ex = [];
+    if (kw.ex) for (const m of out.matchAll(kw.ex)) ex.push([m.index, m.index + m[0].length]);
+    for (const m of out.matchAll(kw.re)){
+      const s = m.index, e = s + m[0].length;
+      if (!m[0].length || ex.some(([a, b]) => s >= a && e <= b)) continue;
+      const os = map[s], oe = map[e - 1] + 1;
+      if (seen.has(os + ',' + oe)) continue;
+      seen.add(os + ',' + oe);
+      ranges.push([os, oe]); words.push(text.slice(os, oe).replace(/_/g, '').trim());
+    }
   }
   return { ranges, words };
 }
@@ -1680,6 +1707,14 @@ function dairyCat(p){
   return c.some(t => DAIRY_CATS.has(t)) && !c.some(t => NOT_DAIRY.test(t)) && !veganP(p) && !(p.labels_tags || []).includes('en:no-milk');
 }
 const glutenCat = p => (p.categories_tags || []).some(t => GLUTEN_CATS.has(t)) && !(p.labels_tags || []).includes('en:no-gluten');
+// rayons où l'allergène est presque toujours là : sans mot trouvé dans les ingrédients, le produit reste « À vérifier »
+const CAT_GUARD = {
+  fish: [new Set(['en:fishes','en:fish','en:frozen-fishes','en:smoked-fishes','en:canned-fishes','en:smoked-salmons','en:salmons','en:salmon-fillets',
+    'en:salmon-steaks','en:tunas','en:canned-tunas','en:breaded-fish','en:fish-fillets','en:surimi','en:seafood','en:fish-eggs']), 'Rayon poissons : vérifie l\'étiquette (poisson ?)'],
+  mustard: [new Set(['en:mustards']), 'Rayon moutardes : vérifie l\'étiquette (moutarde ?)'],
+  sulphites: [new Set(['en:wines','en:red-wines','en:white-wines','en:rose-wines','en:sparkling-wines','en:champagnes']), 'Le vin contient presque toujours des sulfites : vérifie l\'étiquette'],
+};
+const catGuard = (k, p) => !!CAT_GUARD[k] && (p.categories_tags || []).some(t => CAT_GUARD[k][0].has(t));
 // Texte d'ingrédients illisible pour l'appli : nom de marque recopié, texte de l'emballage mal lu,
 // ou langue étrangère sans aucun mot d'ingrédient courant en français ou en anglais.
 const ING_VOCAB = /\b(sucres?|sugars?|farines?|flours?|eau|water|sel|salt|huiles?|oils?|lait|milk|cacao|cocoa|ble|wheat|amidons?|starch|aromes?|flavou?r(ing)?s?|graisses?|fats?|oeufs?|eggs?|beurre|butter|creme|cream|sirops?|syrups?|jus|juices?|fruits?|chocolat|chocolate|levures?|yeast|emulsifiants?|emulsifiers?|lecithines?|lecithins?|poudre|powder|extraits?|extracts?|acides?|acids?|conservateurs?|preservatives?|colorants?|colou?rs?|epaississants?|thickeners?|gelifiants?|stabilisants?|stabili[sz]ers?|vinaigre|vinegar|ail|garlic|oignons?|onions?|tomates?|tomato(es)?|pommes?|apples?|citron|lemon|riz|rice|mais|corn|soja|soy|viande|meat|porc|pork|boeuf|beef|poulet|chicken|poissons?|fish|legumes|vegetables|epices|spices|herbes|ferments|glucose|fructose|dextrose|maltodextrine|proteines?|proteins?|fibres?|vitamines?|vitamins?|ingredients?|semoule|cereales|cereals|noix|nuts|amandes?|almonds?|noisettes?|hazelnuts?|arachides?|peanuts?|purees?|pulpe|concentre|ferment[eé]s?)\b/;
@@ -1693,6 +1728,15 @@ function bogusIngredients(p, raw){
   const words = t.split(/[^a-z0-9]+/).filter(w => w.length >= 3);
   return !(raw.length < 60 && words.length && words.filter(w => nameWords.has(w)).length >= Math.ceil(words.length / 2));
 }
+const NAME_FREE_OK = ['milk', 'lactose', 'eggs'];
+// le nom dit « sans gluten », « sans soja », « sans anchois », « peanut free »… pour cet allergène-là
+function nameSaysFree(nf, kw){
+  for (const m of nf.matchAll(kw.re)){
+    const pre = nf.slice(Math.max(0, m.index - 24), m.index), post = nf.slice(m.index + m[0].length, m.index + m[0].length + 10);
+    if (/\b(sans|without|free\s+from)\s+(de\s+|d')?$/.test(pre) || /^[\s-]*free\b/.test(post)) return true;
+  }
+  return false;
+}
 function evaluate(p){
   if (p && p._fresh){
     const bad = (p._al || []).filter(k => profile.sel.has(k)).map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k);
@@ -1704,7 +1748,10 @@ function evaluate(p){
   const hasText = raw.length > 3 && !bogusIngredients(p, raw);
   const dairy = dairyCat(p);
   const nameTxt = [nameOf(p), p.generic_name_fr || ''].join(' ');
-  const nameFree = /\b(sans|free|vegan|vegetal|vegetale|vegetaux|plant)\b/.test(fold(nameTxt));
+  // « sans », « vegan », « végétal » dans le nom : n'annule l'indice du nom que pour le lait et les œufs (« Vegan Peanut Butter »
+  // contient des arachides) ; pour les autres allergènes, seulement si le nom dit « sans » cet allergène (« Pain sans gluten »)
+  const nameFold = fold(nameTxt);
+  const nameFree = /\b(sans|free|vegan|vegetal|vegetale|vegetaux|plant)\b/.test(nameFold);
   const no = [], check = [], ok = [], info = [];
   const ia = new Set(p._ia || []);
   for (const a of ALLERGENS){
@@ -1716,7 +1763,7 @@ function evaluate(p){
     const xHits = hasText && !frHits.length ? findHits(raw, KW_X[a.kw]).words : [];
     const hits = frHits.length ? frHits : xHits;
     const hitMsg = frHits.length && !FOREIGN_W.test(fold(frHits[0]).trim()) ? `Ingrédient à vérifier : « ${frHits[0]} »` : hits.length ? `Ingrédient à vérifier : « ${hits[0]} » (${a.key === 'lactose' ? 'lait' : a.name} ?)` : '';
-    const nameHits = nameFree ? [] : findHits(nameTxt, KW[a.kw]).words;
+    const nameHits = (nameFree && (NAME_FREE_OK.includes(a.key) || nameSaysFree(nameFold, KW[a.kw]))) ? [] : findHits(nameTxt, KW[a.kw]).words;
     if (a.key === 'lactose'){
       if (isLactoseFree(p)) ok.push(al.has('en:milk') ? 'Contient du lait mais étiqueté sans lactose' : 'Étiqueté sans lactose');
       else if (al.has('en:milk')) no.push('Contient du lait, donc du lactose');
@@ -1735,6 +1782,7 @@ function evaluate(p){
     else if (hits.length) check.push(hitMsg);
     else if (nameHits.length) check.push(`Le nom évoque « ${nameHits[0]} » : vérifie l'étiquette`);
     else if (a.key === 'gluten' && glutenCat(p)) check.push('Le gluten est fréquent dans ce rayon : vérifie l\'étiquette');
+    else if (catGuard(a.key, p)) check.push(CAT_GUARD[a.key][1]);
     if (tr.has(a.tag)){
       if (profile.traces) no.push(`Traces possibles : ${a.name}`);
       else check.push(`Peut contenir des traces : ${a.name}`);
@@ -2232,6 +2280,8 @@ $('#rayonFilter').addEventListener('input', e => renderRayons(e.target.value));
 $('#rayonClose').addEventListener('click', () => closeDialog(rayonSheet));
 $('#rayonList').addEventListener('click', e => {
   const b = e.target.closest('[data-r]'); if (!b) return;
+  // un rayon choisi remplace la recherche par nom, comme les tuiles de l'accueil (sinon « 0 produit pour « houmous » »)
+  if (b.dataset.r) $('#terms').value = '';
   S.rayon = b.dataset.r; saveSearch(); $('#rayonName').textContent = RAYON_NAME[S.rayon]; renderQuick();
   closeDialog(rayonSheet); runSearch({ scroll:true });
 });
@@ -3223,7 +3273,8 @@ function renderRecipe(){
     const st2 = res.status === 'err' ? 'check' : res.status;
     const e = res.fresh || res.status === 'err' ? null : curPick(k);
     const subLbl = e && res.subOf ? res.subOf.get(e.code) : null;
-    if (res.status === 'ok'){ ok++; if (subLbl) subs++; }
+    // le compteur de l'onglet « Les produits » ne compte pas le sel et le poivre (ing.b), comme le total
+    if (res.status === 'ok'){ if (!ing.b) ok++; if (subLbl) subs++; }
     else if (!opt && !ing.b){ (res.status === 'check' ? toCheck : bad).push(ing.n); }
     const entry = shopEntry(k);
     const added = entry ? inShop(entry.code) : false;
@@ -4450,7 +4501,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.25';
+const APP_VERSION = '3.26';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
@@ -4489,7 +4540,7 @@ document.addEventListener('focusout', () => setTimeout(resetPage, 150));
 if (window.visualViewport) visualViewport.addEventListener('resize', () => setTimeout(resetPage, 150));
 window.addEventListener('online', () => toast('Connexion rétablie'));
 window.addEventListener('offline', () => toast('Pas de connexion : la recherche et le scan ne marchent pas sans réseau.', 4000));
-window.__RS = { getFlags:() => flags, liveQuality, evaluate, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, STORES, parseLeclerc, getLeclerc:() => leclercDrive, pickFor, storeById, testProfile:sel => { profile.sel = new Set(sel); profile.words = []; profile.traces = false; PV++; }, dtReport:() => DT && dtReport(), getDT:() => DT };
+window.__RS = { getFlags:() => flags, liveQuality, evaluate, renderIngredients, v2Url, cgiUrl, buildSet, profile, S, fromRow, loadIndex, ING, RECIPES, parseOH, ohStatus, osmChain, loc, getNear:() => near, nearIds, driveTerms, driveBrand, linkChains, driveUrl, getDriveFix:() => driveFix, driveMode, STORES, parseLeclerc, getLeclerc:() => leclercDrive, pickFor, storeById, testProfile:sel => { profile.sel = new Set(sel); profile.words = []; profile.traces = false; PV++; }, dtReport:() => DT && dtReport(), getDT:() => DT };
 })();
 </script>
 </body>

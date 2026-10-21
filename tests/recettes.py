@@ -68,6 +68,12 @@ with sync_playwright() as p:
     page.click('text=Blanquette de veau'); page.wait_for_selector('#recIngrText li')
     page.wait_for_function("() => !document.querySelector('#recIngr .pending')", timeout=30000)
     check(page.locator('#recStepList li').count() == 5 and page.locator('#recIngr li').count() == 12, 'blanquette : 12 ingrédients, 5 étapes')
+    # 3.26 : le compte « x/y » ne compte pas le sel et le poivre (avant : « 11/10 »)
+    nb = page.evaluate("""() => { const R = window.__RS, r = R.RECIPES.find(x => x.n === 'Blanquette de veau');
+      return [r.i.filter(x => !(R.ING[x[0]] || {}).b).length, r.i.filter(x => (R.ING[x[0]] || {}).b).length]; }""")
+    cnt = page.inner_text('#recProdN').strip()
+    a_, b_ = (int(x) for x in cnt.split('/'))
+    check(nb[1] > 0 and b_ == nb[0] and a_ <= b_, f'blanquette : compte des produits sans le sel ni le poivre ({cnt}, {nb[0]} produits, {nb[1]} de base)')
     page.click('#recBack'); page.wait_for_timeout(300)
     page.fill('#recQ', 'crêpes'); page.wait_for_timeout(300)
     page.click('#recCatalog .rrow >> text=Crêpes'); page.wait_for_selector('#recIngrText li')

@@ -82,6 +82,37 @@ CASES = [
     ('gluten', 'qluten', 'check'), ('gluten', 'giuten', 'check'), ('peanuts', 'traces darachides', 'check'), ('sesame', 'sesane', 'check'),
     ('mustard', 'graines de motarde', 'check'), ('nuts', 'nolsettes', 'check'), ('nuts', 'huile de nolx de coco', 'ok'),
     ('sulphites', 'enthalten Sulfit', 'check'), ('sulphites', 'anidride solforosa', 'check'), ('sulphites', 'metabisulfito sódico', 'check'),
+    # 3.26 : allergènes discrets — sulfites mal écrits, collés ou étrangers
+    ('sulphites', 'flour treatment agent (sodium disulphite)', 'check'), ('sulphites', 'antioxydant (disulphite de sodium)', 'check'),
+    ('sulphites', 'antioxidant (sodium metbisulphite)', 'check'), ('sulphites', 'conservateur : metabisulfie de sodium', 'check'),
+    ('sulphites', 'conservateur : disulfitede potassium', 'check'), ('sulphites', 'sucre etsulfites', 'check'), ('sulphites', 'Natriummetabisulfit', 'check'),
+    ('sulphites', 'metabisulfita', 'check'), ('sulphites', 'konserveringsmiddel (kaliumdisulfitt)', 'check'), ('sulphites', 'sulfiti', 'check'),
+    ('sulphites', 'metabisolfito di sodio', 'check'), ('sulphites', 'conservateur : anydride sulfureux', 'check'), ('sulphites', 'anhydridesulfureux', 'check'),
+    ('sulphites', 'dioxyde de sulfure', 'check'), ('sulphites', "farce (pulpe d'ail, SO2, épaississant E401)", 'check'),
+    ('sulphites', 'antioxydant : d_isulfite_ de potassium', 'check'), ('sulphites', 'sulfate de calcium, E330', 'ok'), ('sulphites', 'soja, so, eau', 'ok'),
+    # chiffre de note collé au mot (« oeufs1 » = issu de l'agriculture biologique)
+    ('eggs', 'oeufs1 (20%)', 'check'), ('eggs', "jaune d'ŒUF1", 'check'), ('eggs', 'OEUF9*', 'check'), ('fish', 'huile de POISSON1', 'check'),
+    ('peanuts', 'Cacahuètes1, sel', 'check'), ('gluten', 'malt6dextrine', 'check'), ('sulphites', 'E224', 'check'),
+    ('milk', 'vitamine b12, e471', 'ok'), ('milk', 'oméga3, colorant e160a', 'ok'),
+    # moutarde
+    ('mustard', 'mustardseed (yellow and brown)', 'check'), ('mustard', 'Contains sulphites, mustardseeds', 'check'), ('mustard', 'graines de moutardede Dijon', 'check'),
+    ('mustard', 'MOSTERD', 'check'), ('mustard', 'mostaza', 'check'), ('mustard', 'mostarda', 'check'), ('mustard', 'sennepsfrø 26%', 'check'),
+    ('mustard', 'SENNEPSPULVER', 'check'), ('mustard', 'krydderier (sennep, selleri)', 'check'), ('mustard', 'senap', 'check'), ('mustard', 'graines de sénevé', 'check'), ('mustard', 'Hülsenfrüchte, senf', 'check'),
+    # céleri
+    ('celery', 'krydderier (indeholder selleri)', 'check'), ('celery', 'arome (sadrže celer)', 'check'), ('celery', 'célerie, persil', 'check'),
+    ('celery', 'arômes naturels (dontcéleri', 'check'), ('celery', 'knolselderij', 'check'), ('celery', 'celera', 'check'), ('celery', 'celeriae', 'check'),
+    ('celery', 'persil, cerfeuil', 'ok'),
+    # arachide
+    ('peanuts', 'peanutbutter', 'check'), ('peanuts', 'huile darachide', 'check'), ('peanuts', 'huile dlarachide', 'check'), ('peanuts', 'arachideset sel', 'check'),
+    ('peanuts', 'cacahuétes', 'check'), ('peanuts', 'acide arachidonique', 'ok'), ('peanuts', 'arachidonic acid', 'ok'),
+    # poisson
+    ('fish', 'raie', 'check'), ('fish', 'ailes de raies', 'check'), ('fish', 'filets d\'omble chevalier', 'check'), ('fish', 'Sole nettoyée', 'check'),
+    ('fish', 'loup de mer', 'check'), ('fish', 'roussette', 'check'), ('fish', 'saumonette', 'check'), ('fish', 'tacaud', 'check'),
+    ('fish', 'Oeufs de lompe saumurés', 'check'), ('fish', 'lump roe', 'check'), ('fish', 'fishes', 'check'), ('fish', "crème d'anchoïade", 'check'),
+    ('fish', 'crème dlanchois', 'check'), ('fish', 'filets anchoislpois$onl', 'check'), ('fish', 'vin blanc (Roussette de Savoie)', 'ok'),
+    ('fish', 'barres de céréales', 'ok'), ('fish', 'sucre de canne', 'ok'),
+    ('fish', 'baguette cuite sur sole', 'ok'), ('fish', 'pomodori secchi al sole', 'ok'), ('fish', 'four à sole', 'ok'), ('fish', 'Peut contenir des traces de Sole', 'check'),
+    ('eggs', 'colorant : Ei29', 'ok'), ('milk', 'Traces de _lactose0_', 'check'),
 ]
 
 httpd, base = serve()
@@ -129,6 +160,37 @@ with sync_playwright() as p:
     why3 = page.evaluate("""() => { const R = window.__RS; R.profile.sel = new Set(['milk']);
       return R.evaluate({ code:'4', product_name:'Galleta', ingredients_text_fr:'harina, azúcar, chocolate, LECHE en polvo, sal', allergens_tags:[], traces_tags:[], categories_tags:[] }).check.join(' | '); }""")
     check('« LECHE » (lait ?)' in why3, 'mot étranger connu : la raison nomme aussi l\'allergène (' + why3 + ')')
+    # 3.26 : la raison nomme l'allergène pour les mots moins connus
+    def why(sel, ing, extra=None):
+        prod = {'code': '5', 'product_name': 'Produit test', 'brands': 'Marque', 'ingredients_text_fr': ing, 'allergens_tags': [], 'traces_tags': [], 'categories_tags': []}
+        prod.update(extra or {})
+        return page.evaluate("""([sel, prod]) => { const R = window.__RS; R.profile.sel = new Set(sel); R.profile.words = []; R.profile.traces = false;
+          const v = R.evaluate(prod); return v.check.concat(v.no).join(' | '); }""", [sel, prod])
+    w = why(['mustard'], BASE + 'SENNEPSPULVER'); check('« SENNEPSPULVER » (moutarde ?)' in w, 'moutarde en norvégien : la raison nomme l\'allergène (' + w + ')')
+    w = why(['fish'], BASE + 'raie'); check('« raie » (poisson ?)' in w, 'raie : la raison nomme le poisson (' + w + ')')
+    w = why(['sulphites'], BASE + 'antioxydant : d_isulfite_ de potassium'); check('« disulfite »' in w, 'tiret bas au milieu du mot : mot reconstitué (' + w + ')')
+    w = why(['eggs'], BASE + 'oeufs1 (20%)'); check('« oeufs »' in w, 'chiffre collé : le mot sans le chiffre (' + w + ')')
+    # surlignage dans la fiche : le mot entier, sans le tiret bas ni le chiffre collé
+    def marked(sel, ing):
+        return page.evaluate("""([sel, ing]) => { const R = window.__RS; R.testProfile(sel); const d = document.createElement('div');
+          d.innerHTML = R.renderIngredients(ing); return [...d.querySelectorAll('mark')].map(m => m.textContent).join(''); }""", [sel, ing])
+    m = marked(['sulphites'], 'antioxydant : d_isulfite_ de potassium'); check(m == 'disulfite', 'surlignage de « d_isulfite_ » : ' + m)
+    m = marked(['eggs'], 'farine, oeufs1 (20%), sucre1'); check(m == 'oeufs', 'surlignage de « oeufs1 » sans le chiffre : ' + m)
+    m = marked(['mustard'], 'eau, SENNEPSPULVER, sel'); check(m == 'SENNEPSPULVER', 'surlignage d\'un mot étranger : ' + m)
+    # « vegan » ou « sans » dans le nom n'annule plus que le lait et les œufs
+    check(verdict(['peanuts'], BASE + 'rice protein, cocoa', {'product_name': 'Vegan Protein Bar Peanut Butter'}) == 'check', 'nom « Vegan … Peanut Butter » : à vérifier pour l\'arachide')
+    check(verdict(['fish'], BASE + 'soja texturé', {'product_name': 'Thon végétal'}) == 'check', 'nom « Thon végétal » : à vérifier pour le poisson')
+    check(verdict(['fish'], 'olives noires, huile, sel', {'product_name': 'Tapenade noire sans anchois'}) == 'ok', 'nom « … sans anchois » : pas de faux doute sur le poisson')
+    check(verdict(['gluten'], 'farine de riz, eau, sel', {'product_name': 'Pain de mie sans gluten'}) == 'ok', 'nom « Pain de mie sans gluten » : pas de faux doute')
+    check(verdict(['nuts'], 'jambon de porc, sel', {'product_name': 'Sugar Free Hazelnut Syrup'}) == 'check', 'nom « Sugar Free Hazelnut » : à vérifier pour les fruits à coque')
+    check(verdict(['milk'], BASE + 'riz', {'product_name': 'Boisson végétale riz lait'}) == 'ok', 'nom « Boisson végétale … lait » : toujours pas de faux doute sur le lait')
+    # rayons où l'allergène est presque toujours là
+    check(verdict(['fish'], 'filets 100 %', {'categories_tags': ['en:frozen-fishes']}) == 'check', 'rayon poissons sans mot reconnu : à vérifier')
+    check(verdict(['fish'], 'Filets sans peau de _bar_ BIO', {'categories_tags': ['en:fishes']}) == 'check', 'bar (rayon poissons) : à vérifier')
+    check(verdict(['mustard'], 'eau, graines, vinaigre, sel', {'categories_tags': ['en:mustards']}) == 'check', 'rayon moutardes : à vérifier')
+    check(verdict(['sulphites'], 'raisin', {'categories_tags': ['en:red-wines']}) == 'check', 'vin rouge sans sulfites écrits : à vérifier')
+    check(verdict(['sulphites'], 'raisin', {'categories_tags': ['en:champagnes']}) == 'check', 'champagne sans sulfites écrits : à vérifier')
+    check(verdict(['fish'], BASE + 'riz', {'categories_tags': ['en:rices']}) == 'ok', 'rayon sans garde-fou : compatible')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
