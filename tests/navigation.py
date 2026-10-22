@@ -214,6 +214,7 @@ with sync_playwright() as p:
         wait_near(page3)
         page3.set_viewport_size({'width': 390, 'height': 844})
         page3.click('#homeGrid [data-q="en:biscuits"]'); page3.wait_for_selector('#list li [data-add]', timeout=20000)
+        page3.wait_for_function("() => { const e = document.querySelector('#list li [data-add]'); return !!e && e.getBoundingClientRect().width > 0; }", timeout=10000)
         sz = page3.eval_on_selector('#list li [data-add]', 'e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; }')
         check(sz[0] >= 44 and sz[1] >= 44, f'{theme} : le « + » des produits fait au moins 44 x 44 ({sz})')
         check(not page3.evaluate('() => document.documentElement.scrollWidth > window.innerWidth'), f'{theme} : rien ne déborde sur la liste')
@@ -225,12 +226,30 @@ with sync_playwright() as p:
         check(not errs3, f'aucune erreur JavaScript ({theme})')
         ctx3.close()
 
+    print('Sélecteurs plus faciles à toucher et message en sombre (3.28)')
+    for theme in ('light', 'dark'):
+        ctx4, page4, errs4, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': theme})
+        wait_near(page4)
+        page4.set_viewport_size({'width': 390, 'height': 844})
+        bx = page4.eval_on_selector('#store', 'e => { const r = e.getBoundingClientRect(), c = e.parentElement.getBoundingClientRect(); return [r.height, c.height, r.top < c.top]; }')
+        check(bx[0] >= 44 and bx[1] <= 37 and bx[2], f'{theme} : le sélecteur de magasin se touche sur 44 px de haut sans changer de dessin ({bx})')
+        check(not page4.evaluate('() => document.documentElement.scrollWidth > window.innerWidth'), f'{theme} : rien ne déborde sur l\'accueil')
+        page4.evaluate("() => { const t = document.querySelector('#toast'); t.textContent = ''; const m = document.createElement('span'); m.textContent = 'Ajouté à ta liste'; t.appendChild(m); t.classList.add('show'); }")
+        page4.wait_for_timeout(400)
+        shadow = page4.eval_on_selector('#toast', 'e => getComputedStyle(e).boxShadow')
+        check(('inset' in shadow) == (theme == 'dark'), f'{theme} : liseré clair sur le message seulement en sombre')
+        page4.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'toast-{theme}.png'))
+        check(not errs4, f'aucune erreur JavaScript ({theme})')
+        ctx4.close()
+
     print('Contrastes en mode sombre (pastilles, badge, cases de Ma liste)')
     ctx2, page2, errs2, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': 'dark'})
     wait_near(page2)
     page2.click('#homeGrid [data-q="en:biscuits"]'); page2.wait_for_selector('#list li .sbadge', timeout=20000)
     css = lambda sel, prop: page2.eval_on_selector(sel, f'e => getComputedStyle(e).{prop}')
     WHITE = 'rgb(255, 255, 255)'; DARK = 'rgb(16, 18, 17)'; MUTED = 'rgb(154, 163, 158)'
+    try: page2.wait_for_function("() => { const e = document.querySelector('#list li .sbadge'); return !!e && getComputedStyle(e).color === 'rgb(16, 18, 17)'; }", timeout=4000)   # la liste peut se redessiner juste après l'affichage
+    except Exception: pass
     check(css('#list li .sbadge', 'color') == DARK, 'sombre : pictogramme de la pastille foncé, pas blanc (' + css('#list li .sbadge', 'color') + ')')
     page2.click('#list li [data-add] >> nth=0'); page2.wait_for_selector('#listBadge:not([hidden])')
     check(css('#listBadge', 'color') == DARK, 'sombre : chiffre du badge Ma liste foncé, pas blanc (' + css('#listBadge', 'color') + ')')

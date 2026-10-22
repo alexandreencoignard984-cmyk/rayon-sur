@@ -106,7 +106,7 @@ p{margin:0}
 .chiprow::-webkit-scrollbar{display:none}
 .selchip,.btnchip{flex:none;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:15px;font-weight:600;white-space:nowrap}
 .selchip{position:relative;padding:0}
-.selchip select{height:36px;padding:0 30px 0 12px;border:0;border-radius:999px;background:transparent;font-weight:600;font-size:15px;-webkit-appearance:none;appearance:none}
+.selchip select{height:44px;margin:-4px -2px;padding:0 32px 0 14px;border:0;border-radius:999px;background:transparent;font-weight:600;font-size:15px;-webkit-appearance:none;appearance:none}
 .selchip svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;pointer-events:none}
 .btnchip svg{width:14px;height:14px}
 .btnchip .count{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--primary);color:var(--on-primary);font-size:12px;line-height:20px}
@@ -527,6 +527,8 @@ footer a{color:inherit}
 dialog .toast{position:fixed}
 .toast{display:flex;align-items:center;justify-content:space-between;gap:14px}
 .toast.show.hasact{pointer-events:auto}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .toast{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.12) inset}}
+:root[data-theme="dark"] .toast{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.12) inset}
 .tact{flex:none;border:0;background:transparent;color:#8BE3B4;font-weight:700;font-size:15px;padding:6px 0;white-space:nowrap}
 .spin{width:1em;height:1em;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;vertical-align:-.12em}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -1208,24 +1210,24 @@ const ALLERGENS = [
   { key:'sulphites', label:'Sulfites', name:'sulfites', tag:'en:sulphur-dioxide-and-sulphites', kw:'sulphites' },
 ];
 const KW = {
-  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|lactoferrines?|lactoferrin|lactalbumines?|lactoglobulines?|lacto-serum|kefir|skyr|quark|paneer|emmental|emmentaler|parmesan|parmigiano|grana\s+padano|pecorino|gorgonzola|cheddar|feta|gouda|edam|mimolette|comte|gruyere|beaufort|cantal|reblochon|roquefort|camembert|brie|raclette|chevre|burrata|stracciatella|halloumi|provolone|manchego|maroilles|munster|fontina|taleggio|scamorza|bechamel|chantilly|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase)\b/g,
+  milk: { re:/\b(lait|laits|laitier|laitiere|laitieres|laitiers|lactose|lactoserum|creme|cremes|beurre|caseine|caseines|caseinate|caseinates|fromage|fromages|yaourt|yaourts|babeurre|ghee|mascarpone|ricotta|mozzarella|lactoproteine|lactoproteines|lactoferrines?|lactoferrin|lactalbumines?|lactoglobulines?|lacto-serum|kefir|skyr|quark|paneer|emmental|emmentaler|parmesan|parmigiano|grana\s+padano|pecorino|gorgonzola|cheddar|feta|gouda|edam|mimolette|comte|gruyere|beaufort|cantal|reblochon|roquefort|camembert|brie|raclette|chevre|burrata|stracciatella|halloumi|provolone|manchego|maroilles|munster|fontina|taleggio|scamorza|bechamel|chantilly|milk|milks|butter|buttermilk|cream|whey|cheese|casein|caseinate|yogurt|yoghurt|latte|leche|leite|milch|lapte|mleko|melk|mjolk|queso|formaggio|kase|crema|yogourts?|yoghourts?|laitages?|tommes?|presures?|boursin|kefyr|ricota)\b/g,
           ex:/\b(lait|laits|creme|cremes|beurre)\s+(de\s+|d')\s*(noix\s+de\s+coco|coco|amandes?|avoine|soja|riz|noisettes?|cajou|cacao|karite|cacahuetes?|cacahouetes?|arachides?|marrons?|chataignes?|cassis|tartre)\b|\bkefir\s+(de\s+fruits|d'eau)\b|\b(coconut|almond|oat|soy|soya|rice|cashew|cocoa|peanut|shea|nut|hazelnut)\s+(milk|butter|cream|drink)\b|\bcream\s+of\s+tartar\b|\bfranche-comte\b/g },
-  gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|khorasan|engrain|amidonnier|farro|freekeh|gluten|malt|malte|maltee|triticale|froment|seitan|boulgour|bulgur|couscous|semoules?|chapelure|panure|pains?|biscuits?|gaufrettes?|cookies?|speculoos|croutons?|genoise|brioches?|madeleines?|crumble|chapatis?|bretzels?|udon|wheat|barley|rye|oat|oats|spelt|durum|semolina|breadcrumbs?|bread|wafers?)\b/g,
-          ex:/\b(pains?|chapelure|panure|semoules?|couscous|farines?|pates?|biscuits?|cookies?|gaufrettes?|brioches?|madeleines?)\s+sans\s+gluten\b|\bsans\s+gluten\b|\bgluten[\s-]free\b|\bsemoules?\s+(de\s+|d')\s*(mais|riz|sarrasin|millet|manioc|quinoa|ail|oignons?)\b|\bcouscous\s+de\s+chou-fleur\b|\bpour\s+couscous\b|\bgluten[\s-]free\s+(bread|breadcrumbs?)\b/g },
-  eggs: { re:/\b(oeuf|oeufs|ovoproduits?|ovo-produits?|ovalbumine|albumines?|lysozyme|mayonnaise|meringues?|egg|eggs|eiweiss|eiweis)\b/g, ex:/\balbumines?\s+de\s+lait\b/g },
-  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|pralin|nougat|nougatine|massepain|marzipan|frangipane|gianduja|nocciola|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|s(ain)?t[\s-]jacques)\b|\bamandes?\s+de\s+mer\b/g },
+  gluten: { re:/\b(ble|bles|orge|seigle|avoine|epeautre|kamut|khorasan|engrain|amidonnier|farro|freekeh|gluten|malt|malte|maltee|triticale|froment|seitan|boulgour|bulgur|couscous|semoules?|chapelure|panure|pains?|biscuits?|gaufrettes?|cookies?|speculoos|croutons?|genoise|brioches?|madeleines?|crumble|chapatis?|bretzels?|udon|wheat|barley|rye|oat|oats|spelt|durum|semolina|breadcrumbs?|bread|wafers?|farines?|nouilles?|ramen|gnocchis?|panko|tempura|vermicelles?|pates\s+alimentaires|sables?|pates?\s+feuilletees?|tortillas?|pizzas?)\b/g,
+          ex:/\b(pains?|chapelure|panure|semoules?|couscous|farines?|pates?|biscuits?|cookies?|gaufrettes?|brioches?|madeleines?|pizzas?|tortillas?|nouilles?|vermicelles?|gnocchis?|sables?|ramen|pates\s+feuilletees?|pates\s+alimentaires)\s+sans\s+gluten\b|\bsans\s+gluten\b|\bgluten[\s-]free\b|\bsemoules?\s+(de\s+|d')\s*(mais|riz|sarrasin|millet|manioc|quinoa|ail|oignons?)\b|\bcouscous\s+de\s+chou-fleur\b|\bpour\s+couscous\b|\bgluten[\s-]free\s+(bread|breadcrumbs?)\b|\bfarines?\s+(de\s+|d')\s*(mais|riz|sarrasin|pois\s+chiches?|chataignes?|coco|noix\s+de\s+coco|lupin|manioc|quinoa|lentilles?|amandes?|millet|tapioca|pommes?\s+de\s+terre|bananes?|soja|noisettes?|ceps|fonio|teff|sorgho|chanvre|lin|patates?\s+douces?|feves?|cajou|pois|haricots?|caroube|guar|graines?\s+de\s+(lin|chia|tournesol|courge))\b|\b(nouilles?|vermicelles?)\s+(de\s+|d')\s*(riz|soja|konjac|haricots?\s+mungo|patates?\s+douces?)\b|\btortillas?\s+(de\s+|d')\s*(mais|patatas?|pommes?\s+de\s+terre)\b|\btortillas?\s+(espagnole|au\s+mais)\b|\bflours?\s+(of\s+)?(rice|corn|chickpea|coconut|almond)\b/g },
+  eggs: { re:/\b(oeuf|oeufs|ovoproduits?|ovo-produits?|ovalbumine|albumines?|lysozyme|mayonnaise|meringues?|egg|eggs|eiweiss|eiweis|aioli|ovomucoides?|ovalbumins?|albumen|hollandaise)\b/g, ex:/\balbumines?\s+de\s+lait\b/g },
+  nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|pralin|nougat|nougatine|massepain|marzipan|frangipane|gianduja|nocciola|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts|orgeat|amaretto|amaretti|cerneaux|anacardes?)\b/g, ex:/\bnoix\s+de\s+(coco|muscade|s(ain)?t[\s-]jacques)\b|\bamandes?\s+de\s+mer\b/g },
   peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes|cacahouete|cacahouetes|peanut|peanuts|groundnuts?)\b/g },
-  soybeans: { re:/\b(soja|soya|edamame|tofu|tempeh|miso|tamari|shoyu|yuba|soy|soybean|soybeans)\b/g },
-  sesame: { re:/\b(sesame|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa)\b/g },
-  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|worcester|rouilles?|garum|fumets?|dashi|lieu\s+(noir|jaune)|morue|capelan|eperlan|grondin|rascasse|sebaste|lingue|carrelet|pilchards?|sardinelles?|poutargue|katsuobushi|bacalao|fish|fishes|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring|raies?|ombles?|soles?|loup\s+de\s+mer|roussettes?|saumonettes?|tacauds?|lompes?|lump|anchoiade)\b/g,
+  soybeans: { re:/\b(soja|soya|edamame|tofu|tempeh|miso|tamari|shoyu|yuba|soy|soybean|soybeans|natto|okara|teriyaki)\b/g },
+  sesame: { re:/\b(sesame|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa|houmous|hummus|humus|zaatar|za'atar)\b/g },
+  fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|worcester|rouilles?|garum|fumets?|dashi|lieu\s+(noir|jaune)|morue|capelan|eperlan|grondin|rascasse|sebaste|lingue|carrelet|pilchards?|sardinelles?|poutargue|katsuobushi|bacalao|fish|fishes|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring|raies?|ombles?|soles?|loup\s+de\s+mer|roussettes?|saumonettes?|tacauds?|lompes?|lump|anchoiade|mulets?|carpes?|brochets?|pollack|pollock|sushis?|basa|pollachius|(filets?|dos|paves?|steaks?|morceaux?|chair)\s+de\s+lieux?|lieux?[\s*]+(noir|jaune|msc)|lieux?\s+d'alaska|lieux?\s+\d+)\b/g,
           ex:/\bcaviar\s+(de\s+|d')\s*(aubergines?|tomates?|legumes|courgettes?|poivrons?|olives?|champignons?|lentilles|betteraves?|carottes?|artichauts?|potirons?|poireaux|citrons?|cepes|pois\s+chiches)\b|\bdi\s+lotte\b|\broussettes?\s+(de\s+savoie|du\s+bugey)\b|\b(au|du|a|al|del|di|sur)\s+(la\s+)?soles?\b|\bsoles?\s+(de\s+)?(four|pierre)\b|\bbeurre\s+sole\b|\b(baguettes?|pains?|boules?|flutes?|batards?)\s+([a-z]+\s+)?soles?\b/g },
-  crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|araignees?\s+de\s+mer|etrilles?|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish)\b/g },
-  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|coques?|amandes?\s+de\s+mer|berniques?|patelles?|clovisses?|vernis\s+de\s+mer|murex|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails|cockles?|whelks?|abalone|cuttlefish|calamari|limpets?|periwinkles?)\b/g,
+  crustaceans: { re:/\b(crustace|crustaces|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|araignees?\s+de\s+mer|etrilles?|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish|tourteaux?|bisques?|fruits\s+de\s+mer|seafoods?)\b/g },
+  molluscs: { re:/\b(mollusque|mollusques|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|coques?|amandes?\s+de\s+mer|berniques?|patelles?|clovisses?|vernis\s+de\s+mer|murex|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails|cockles?|whelks?|abalone|cuttlefish|calamari|limpets?|periwinkles?|pieuvres?|couteaux|fruits\s+de\s+mer|seafoods?)\b/g,
           // « coques » (coquillages) mais pas les fruits à coque (même mal écrits : « fruits coque », « fruitsà coque »), les noisettes
           // en coque, l'œuf à la coque, les coques de chocolat ou de macaron, ni les œufs « Baby Coque »
           ex:/fruit(?!s?\s+de\s+mer)[^.;:]{0,10}?coques?\b|\b(a|en|sans)\s+(la\s+)?coques?\b|\bcoques?\s+(de\s+|d'\s*|des\s+)?(cacao|noix|noisettes?|amandes?|cacahuetes?|cacahouetes?|arachides?|graines?|sarrasin|riz|ble|soja|oeufs?|tournesol|courges?|potirons?|pistaches?|macarons?|meringues?|chocolat|biscuits?|pate|tartes?|tartelettes?|nougatine|sucre|praline|cereales?)\b|\bcoques?\s+(au|aux|en)\s+(chocolat|caramel|praline|nougat|sucre|biscuit|meringue)\b|\bcoques?\s+(dures?|vides?|vegetales?|fourrees?|sucrees?|et\s+velours)\b|\bcoques?\s*\(\s*(noix|noisettes?|amandes?|fruits?)|\b(debris|morceaux|eclats?|residus?|fragments?)\s+(de|des|d')\s*coques?\b|\b(billes?|cereales?)\s+et\s+coques?\b|\b(baby|fraicheur)\s+coques?\b|\boeufs?\s+coques?\b|\bcoques?\s+(extra|gros|moyens?)\b|\bnut\s+shells?\b/g },
   celery: { re:/\b(celeri|celeris|celery|celeriac)\b/g },
-  mustard: { re:/\b(moutarde|moutardes|mustard)\b/g },
+  mustard: { re:/\b(moutarde|moutardes|mustard|dijonnaises?)\b/g },
   lupin: { re:/\b(lupin|lupins)\b/g },
   sulphites: { re:/\b(sulfite|sulfites|bisulfite|bisulfites|metabisulfite|metabisulfites|disulfite|disulfites|pyrosulfites?|metabisulphites?|bisulphites?|e[\s-]?22[0-8]|anhydride sulfureux|dioxyde de soufre|sulphite|sulphites|sulfur dioxide|sulphur dioxide)\b/g },
 };
@@ -1286,7 +1288,7 @@ function cleanP(p){
   if (!isObj(p) || p.code == null || p.code === '') return null;
   const o = Object.assign({}, p, { code:String(p.code) });
   for (const f of P_TEXT) if (o[f] != null && typeof o[f] !== 'string'){ if (typeof o[f] === 'number') o[f] = String(o[f]); else delete o[f]; }
-  for (const f of P_TAGS) if (o[f] != null) o[f] = Array.isArray(o[f]) ? o[f].filter(t => typeof t === 'string') : [];
+  for (const f of P_TAGS) if (o[f] != null) o[f] = Array.isArray(o[f]) ? o[f].filter(t => typeof t === 'string') : typeof o[f] === 'string' && (f === 'allergens_tags' || f === 'traces_tags') ? o[f].split(',').map(t => t.trim()).filter(Boolean) : [];
   if (o.nutriments != null && !isObj(o.nutriments)) delete o.nutriments;
   if (o.nutrient_levels != null && !isObj(o.nutrient_levels)) delete o.nutrient_levels;
   return o;
@@ -1348,17 +1350,38 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const INVISIBLE = /[\u00AD\u200B-\u200F\u2060\uFEFF]/;
+const ENTITY = { oelig:'œ', aelig:'æ', amp:'&', nbsp:' ', apos:"'", quot:'"', lt:'<', gt:'>', rsquo:"'", lsquo:"'", shy:'', zwnj:'', zwj:'', ensp:' ', emsp:' ', thinsp:' ',
+  eacute:'é', egrave:'è', ecirc:'ê', euml:'ë', agrave:'à', acirc:'â', auml:'ä', ccedil:'ç', icirc:'î', iuml:'ï', ocirc:'ô', ouml:'ö', ucirc:'û', ugrave:'ù', uuml:'ü', szlig:'ß', ntilde:'ñ' };
+// « &oelig; », « &eacute; », « &#233; » : lettre écrite en code HTML (Open Food Facts en garde parfois)
+function decodeEntity(s, i){
+  const m = /^&(?:#(\d{1,6})|#[xX]([0-9a-fA-F]{1,5})|([a-zA-Z]{2,8}));/.exec(s.slice(i, i + 12));
+  if (!m) return null;
+  let ch;
+  if (m[3]){ const k = m[3].toLowerCase(); ch = ENTITY[m[3]] !== undefined ? ENTITY[m[3]] : ENTITY[k] !== undefined ? (m[3][0] !== m[3][0].toLowerCase() ? ENTITY[k].toUpperCase() : ENTITY[k]) : undefined; }
+  else { const n = m[1] ? parseInt(m[1], 10) : parseInt(m[2], 16); try { ch = String.fromCodePoint(n); } catch (e) { ch = undefined; } }
+  return ch === undefined ? null : { ch, len:m[0].length };
+}
 function normChar(c){
+  if (c.charCodeAt(0) < 128) return c === '_' ? ' ' : c === '`' ? "'" : c.toLowerCase();   // lettres ordinaires : rien à convertir
+  if (INVISIBLE.test(c)) return '';
   const x = c.toLowerCase();
   if (x === 'œ') return 'oe';
   if (x === 'æ') return 'ae';
   if (x === '’' || x === '`' || x === 'ʼ') return "'";
   if (x === '_') return ' ';
-  return x.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  // NFKC d'abord : lettres pleine chasse (« ｌａｉｔ »), ligatures, espaces insécables
+  return x.normalize('NFKC').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/œ/g, 'oe').replace(/æ/g, 'ae');
 }
 function normMap(s){
   let out = ''; const map = [];
-  for (let i = 0; i < s.length; i++){ const n = normChar(s[i]); for (let k = 0; k < n.length; k++){ out += n[k]; map.push(i); } }
+  for (let i = 0; i < s.length; i++){
+    let c = s[i], step = 1;
+    if (c === '&'){ const d = decodeEntity(s, i); if (d){ c = d.ch; step = d.len; } }
+    const n = c.length > 1 ? [...c].map(normChar).join('') : normChar(c);
+    for (let k = 0; k < n.length; k++){ out += n[k]; map.push(i); }
+    i += step - 1;
+  }
   return { out, map };
 }
 const fold = s => normMap(String(s || '')).out;
@@ -1746,15 +1769,48 @@ function nameSaysFree(nf, kw, key){
   }
   return free;
 }
+/* Allergènes déclarés (« allergens_tags ») et traces (« traces_tags ») : Open Food Facts écrit parfois l'étiquette à sa façon
+   (« en:Céleri », « fr:lait », « en:fruits à coque », « fr:Dioxyde de soufre et sulfites »…). Une étiquette standard est comparée
+   en minuscules ; les autres sont lues avec les mêmes mots-clés que les ingrédients et comptent comme l'allergène trouvé.
+   Une étiquette que rien ne reconnaît (hors « en:none ») ne dit pas « sans » : `odd` la signale, pour un « À vérifier ». */
+const ALLERGEN_TAGS = new Set(ALLERGENS.map(a => a.tag));
+const TAG_X = { nuts:/\bfruits?\s+(a\s+)?coques?\b|\bnuts?\b/, crustaceans:/crustace|shellfish/, molluscs:/mollus|shellfish/,
+  fish:/\bfish\b|poisson/, gluten:/cereal/, eggs:/\beggs?\b|\boeufs?\b/, soybeans:/\bsoy|\bsoja/, sesame:/sesam/, peanuts:/peanut|arachid|cacahu/,
+  celery:/celer/, mustard:/mustard|moutard/, lupin:/lupin/, sulphites:/sulph|sulf|soufre|\bso2\b/ };
+function tagSet(list){
+  const arr = typeof list === 'string' ? list.split(',') : Array.isArray(list) ? list : [];
+  const set = new Set(); let odd = false;
+  for (const x of arr){
+    if (typeof x !== 'string') continue;
+    const t = x.trim().toLowerCase();
+    if (!t || t === 'en:none') continue;
+    if (ALLERGEN_TAGS.has(t)){ set.add(t); continue; }
+    const f = fold(t.replace(/^[a-z]{2,3}:/, '')), g = f.replace(/-/g, ' ');
+    let found = false;
+    for (const a of ALLERGENS){
+      if (a.key === 'lactose') continue;
+      if ((TAG_X[a.kw] && TAG_X[a.kw].test(g)) || [f, g].some(s => findHits(s, KW[a.kw]).words.length || findHits(s, KW_X[a.kw]).words.length)){ set.add(a.tag); found = true; }
+    }
+    if (!found) odd = true;
+  }
+  return { set, odd };
+}
 function evaluate(p){
   if (p && p._fresh){
     const bad = (p._al || []).filter(k => profile.sel.has(k)).map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k);
     return bad.length ? { status:'no', no:['Contient ' + bad.join(', ')], check:[], ok:[], info:[] } : { status:'ok', no:[], check:[], ok:['Produit frais'], info:[] };
   }
-  const al = new Set(p.allergens_tags || []);
-  const tr = new Set(p.traces_tags || []);
+  const alT = tagSet(p.allergens_tags), trT = tagSet(p.traces_tags);
+  const al = alT.set, tr = trT.set;
   const raw = ingredientsOf(p);
-  const hasText = raw.length > 3 && !bogusIngredients(p, raw);
+  // plusieurs textes d'ingrédients sur la fiche (français, original, anglais) : on lit tous ceux qui sont lisibles, sans doublon
+  const seenT = new Set(), texts = [];
+  for (const t of [p.ingredients_text_fr, p.ingredients_text, p.ingredients_text_en]){
+    const x = typeof t === 'string' ? t.trim() : '';
+    if (x.length > 3 && !seenT.has(x.toLowerCase()) && !bogusIngredients(p, x)){ seenT.add(x.toLowerCase()); texts.push(x); }
+  }
+  const hasText = texts.length > 0;
+  const rawAll = texts.join(' . ');
   const dairy = dairyCat(p);
   const nameTxt = [nameOf(p), p.generic_name_fr || ''].join(' ');
   // « sans », « vegan », « végétal » dans le nom : n'annule l'indice du nom que pour le lait et les œufs (« Vegan Peanut Butter »
@@ -1769,8 +1825,8 @@ function evaluate(p){
     if (a.key === 'lactose' && profile.sel.has('milk')) continue;
     const before = no.length + check.length;
     // mot français ou anglais d'abord ; sinon mot d'une autre langue (on précise alors l'allergène : « Weizenmehl » ne parle pas à tout le monde)
-    const frHits = hasText ? findHits(raw, KW[a.kw]).words : [];
-    const xHits = hasText && !frHits.length ? findHits(raw, KW_X[a.kw]).words : [];
+    const frHits = hasText ? findHits(rawAll, KW[a.kw]).words : [];
+    const xHits = hasText && !frHits.length ? findHits(rawAll, KW_X[a.kw]).words : [];
     const hits = frHits.length ? frHits : xHits;
     const hitMsg = frHits.length && !FOREIGN_W.test(fold(frHits[0]).trim()) ? `Ingrédient à vérifier : « ${frHits[0]} »` : hits.length ? `Ingrédient à vérifier : « ${hits[0]} » (${a.key === 'lactose' ? 'lait' : a.name} ?)` : '';
     const nameHits = (nameFree && ((NAME_FREE_OK.includes(a.key) && nameVegan) || nameSaysFree(nameFold, KW[a.kw], a.key))) ? [] : findHits(nameTxt, KW[a.kw]).words;
@@ -1800,7 +1856,9 @@ function evaluate(p){
     // ingrédient reconnu par Open Food Facts mais allergène non déclaré sur la fiche
     if (ia.has(a.tag) && !al.has(a.tag) && !(a.key === 'milk' && dairy) && !(no.length + check.length > before)) check.push(`Open Food Facts repère du ${a.name} dans les ingrédients : vérifie l'étiquette`);
   }
-  if (hasText) for (const w of profile.words){ const kw = wordKW(w); const h = kw && findHits(raw, kw).words; if (h && h.length) no.push(`Contient « ${h[0]} », que tu évites`); }
+  // étiquette d'allergène que rien ne reconnaît : ne dit pas « sans », donc à vérifier
+  if ((alT.odd || trT.odd) && hasCriteria() && !no.length && !check.length) check.push('Allergène noté de façon inhabituelle sur la fiche : vérifie l\'étiquette');
+  if (hasText) for (const w of profile.words){ const kw = wordKW(w); const h = kw && findHits(rawAll, kw).words; if (h && h.length) no.push(`Contient « ${h[0]} », que tu évites`); }
   if (!hasText && hasCriteria()) check.push(raw.length > 3 ? 'Ingrédients illisibles ou dans une autre langue : vérifie l\'emballage' : 'Ingrédients non renseignés : vérifie l\'emballage');
   else if (hasCriteria() && !no.length){
     const q = p._q || '';
@@ -4511,7 +4569,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.27';
+const APP_VERSION = '3.28';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

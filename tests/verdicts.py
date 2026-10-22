@@ -116,6 +116,26 @@ CASES = [
     ('fish', 'sauce Worcester', 'check'), ('fish', 'rouille', 'check'), ('fish', 'garum', 'check'), ('fish', 'fumet', 'check'), ('fish', 'dashi', 'check'),
     ('milk', 'lactoferrine', 'check'), ('milk', 'lactoferrin', 'check'), ('eggs', 'Eiweiß', 'check'), ('eggs', 'Eiweiss', 'check'), ('peanuts', 'groundnut oil', 'check'),
     ('eggs', 'colorant : Ei29', 'ok'), ('milk', 'Traces de _lactose0_', 'check'),
+    # 3.28 : mots manquants
+    ('gluten', 'farine', 'check'), ('gluten', 'nouilles', 'check'), ('gluten', 'ramen', 'check'), ('gluten', 'gnocchi', 'check'), ('gluten', 'panko', 'check'),
+    ('gluten', 'tempura', 'check'), ('gluten', 'vermicelles', 'check'), ('gluten', 'pâtes alimentaires', 'check'), ('gluten', 'sablé', 'check'),
+    ('gluten', 'pâte feuilletée', 'check'), ('gluten', 'tortilla', 'check'), ('gluten', 'pizza', 'check'),
+    ('gluten', 'farine de maïs', 'ok'), ('gluten', 'farine de pois chiches', 'ok'), ('gluten', 'farine sans gluten', 'ok'),
+    ('gluten', 'nouilles de riz', 'ok'), ('gluten', 'vermicelles de riz', 'ok'), ('gluten', 'pizza sans gluten', 'ok'), ('gluten', 'farine de sarrasin, farine de blé', 'check'),
+    ('milk', 'crema', 'check'), ('milk', 'yogourt', 'check'), ('milk', 'yoghourt', 'check'), ('milk', 'laitage', 'check'), ('milk', 'laitages', 'check'),
+    ('milk', 'tomme', 'check'), ('milk', 'présure', 'check'), ('milk', 'boursin', 'check'), ('milk', 'kéfyr', 'check'), ('milk', 'ricota', 'check'),
+    ('eggs', 'aïoli', 'check'), ('eggs', 'ovomucoïde', 'check'), ('eggs', 'ovalbumin', 'check'), ('eggs', 'albumen', 'check'), ('eggs', 'sauce hollandaise', 'check'),
+    ('nuts', 'orgeat', 'check'), ('nuts', 'amaretto', 'check'), ('nuts', 'cerneaux', 'check'), ('nuts', 'anacardes', 'check'),
+    ('soybeans', 'natto', 'check'), ('soybeans', 'okara', 'check'), ('soybeans', 'sauce teriyaki', 'check'),
+    ('crustaceans', 'tourteau', 'check'), ('crustaceans', 'bisque', 'check'), ('crustaceans', 'fruits de mer', 'check'),
+    ('molluscs', 'pieuvre', 'check'), ('molluscs', 'couteaux', 'check'), ('molluscs', 'fruits de mer', 'check'), ('molluscs', 'seafood', 'check'),
+    ('sesame', 'houmous', 'check'), ('sesame', 'zaatar', 'check'), ('mustard', 'sauce dijonnaise', 'check'),
+    ('fish', 'mulet', 'check'), ('fish', 'carpe', 'check'), ('fish', 'brochet', 'check'), ('fish', 'pollock', 'check'), ('fish', 'sushi', 'check'), ('fish', 'basa', 'check'),
+    ('fish', 'filet de lieu', 'check'), ('fish', 'lieu noir', 'check'), ('fish', 'lieu jaune', 'check'), ('fish', 'lieu (Pollachius virens)', 'check'),
+    ('fish', 'à conserver dans un lieu frais et sec', 'ok'), ('fish', 'plie', 'ok'),
+    # 3.28 : caractères invisibles, pleine chasse, codes HTML
+    ('milk', 'l\u00adait', 'check'), ('milk', 'la\u200bit', 'check'), ('milk', '\uff4c\uff41\uff49\uff54', 'check'), ('eggs', '&oelig;ufs', 'check'),
+    ('gluten', 'bl&eacute;', 'check'), ('milk', 'lait&nbsp;écrémé', 'check'),
 ]
 
 httpd, base = serve()
@@ -202,6 +222,26 @@ with sync_playwright() as p:
     check(verdict(['sulphites'], 'raisin', {'categories_tags': ['en:red-wines']}) == 'check', 'vin rouge sans sulfites écrits : à vérifier')
     check(verdict(['sulphites'], 'raisin', {'categories_tags': ['en:champagnes']}) == 'check', 'champagne sans sulfites écrits : à vérifier')
     check(verdict(['fish'], BASE + 'riz', {'categories_tags': ['en:rices']}) == 'ok', 'rayon sans garde-fou : compatible')
+    # 3.28 : allergènes déclarés avec une étiquette non standard
+    TAGS = [('celery', 'en:Céleri'), ('sulphites', 'fr:Anhydride sulfureux et sulfites (E220)'), ('sulphites', 'fr:Dioxyde de soufre et sulfites'),
+            ('sulphites', 'fr:disulfite de sodium'), ('peanuts', 'en:arachide'), ('milk', 'en:lait'), ('lactose', 'en:lait'), ('nuts', 'en:fruits à coque'),
+            ('milk', 'en:MILK SOLIDS'), ('milk', 'fr:lait'), ('milk', 'de:milch'), ('milk', 'en:Milk'), ('milk', 'EN:MILK'), ('gluten', 'en:wheat'),
+            ('nuts', 'en:tree-nuts'), ('gluten', 'en:cereals-with-gluten'), ('crustaceans', 'en:crustaceans-and-shellfish'), ('eggs', ' en:eggs '), ('gluten', 'fr:Et produits à base de ces céréales')]
+    bad = [f'{k} / {t}' for k, t in TAGS if verdict([k], BASE + 'riz', {'allergens_tags': [t]}) != 'no']
+    check(not bad, f'{len(TAGS)} étiquettes déclarées non standard : exclu' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
+    TRACES = [('milk', 'en:lait'), ('nuts', 'en:fruits-a-coque'), ('gluten', 'en:cereals-with-gluten'), ('crustaceans', 'en:crustaceans-and-shellfish'), ('milk', 'EN:Milk')]
+    bad = [f'{k} / {t}' for k, t in TRACES if verdict([k], BASE + 'riz', {'traces_tags': [t]}) != 'check']
+    check(not bad, f'{len(TRACES)} traces non standard : à vérifier' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
+    check(verdict(['milk'], BASE + 'riz', {'allergens_tags': ['en:none']}) == 'ok', 'étiquette « en:none » : compatible')
+    check(verdict(['milk'], BASE + 'riz', {'allergens_tags': ['en:gluten']}) == 'ok', 'autre allergène déclaré : pas de faux doute')
+    check(verdict(['milk'], BASE + 'riz', {'allergens_tags': 'en:milk,en:gluten'}) == 'no', 'étiquettes écrites en une seule chaîne : exclu')
+    check(verdict(['milk'], BASE + 'riz', {'allergens_tags': ['en:zorglub']}) == 'check', 'étiquette inconnue : à vérifier')
+    check(verdict(['milk'], BASE + 'riz', {'allergens_tags': ['fr:kiwi']}, ) != 'no', 'étiquette d\'un autre aliment : pas exclu')
+    # 3.28 : plusieurs textes d'ingrédients sur la fiche
+    check(verdict(['milk'], 'eau, sucre, sel, arôme', {'ingredients_text': 'water, sugar, milk powder, salt'}) == 'check', 'lait seulement dans le texte original : à vérifier')
+    check(verdict(['milk'], 'eau, sucre, sel, arôme', {'ingredients_text': 'water, sugar, salt, flavour'}) == 'ok', 'deux textes sans allergène : compatible')
+    check(verdict(['milk'], 'eau, sucre, sel, arôme', {'ingredients_text': 'eau, sucre, sel, arôme'}) == 'ok', 'deux textes identiques : compatible')
+    check(verdict(['milk'], '', {'ingredients_text_fr': '', 'ingredients_text': '', 'ingredients_text_en': 'milk, water'}) == 'check', 'texte anglais seul : à vérifier')
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
