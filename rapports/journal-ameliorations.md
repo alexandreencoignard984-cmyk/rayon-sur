@@ -12,6 +12,8 @@ Rien de cette liste n'est fait sans son accord.
 - **Naturalia et mise en avant des magasins bio** : proposé, en attente de réponse.
 - **Accès GitHub des séances automatiques** (21/10) : la séance n'a pas pu publier ni lire les tâches GitHub
   (« dépôt non autorisé pour cette session »). Rajouter le dépôt rayon-sur aux sources de la tâche programmée.
+- **Position envoyée à un miroir Overpass de mail.ru** (3e adresse de `OVERPASS`, VK) : retirer ou remplacer par
+  un miroir européen ? (règle « pas de collecte » : pas du pistage actif, mais non mentionné dans l'appli.)
 - **Thème « Comme l'iPhone » par défaut** : aujourd'hui l'appli démarre en « Clair » même si l'iPhone est en sombre.
 - **Vins « sans sulfites ajoutés »** : restent « Compatible » grâce au nom ; ils en contiennent souvent un peu
   naturellement. Les passer « À vérifier » ?
@@ -20,6 +22,25 @@ Rien de cette liste n'est fait sans son accord.
 
 Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer une piste une fois faite ou abandonnée.
 
+- **Faux « Compatible » encore dans la base (parcours client 22/10)** : soja collé dans un mot (« soyalecitin »,
+  « soyasaus », « Soyabean Oil », « Sojabasis » ≈ 15 produits, ex. Kikkoman 8715035290303, Oboy 7622300248987) ;
+  textes mal lus avec une lettre en trop (« farine de bléi », « blanc d'oeufi », « Ground Nut ») ; nom qui dit
+  l'allergène mais liste illisible (« Pagnottine con sesamo » 8000744000344, « Yakisoba … Mayonnaise »
+  4901990324595) ; houmous dont le champ ingrédients est un tableau nutritionnel (00349246, 51952723 : refuser
+  « Nutrition / Energy kJ » dans `bogusIngredients`, garde-fou sésame pour la catégorie en:hummus).
+- Mots encore manquants (détecteur) : lait (tomme, présure, kéfir variantes), poisson (mulet, carpe, sushi…
+  seulement en formes sûres), sulfites (E150b/d, vinaigre, vin hors catégorie), `bouquet garni` frais sans céleri,
+  « Lait de soja » (étiquette `fr:Lait de soja`) reste Compatible pour le lait par exception voulue.
+- Profil abîmé (`rs2:profile` avec `sel` en chaîne ou clé inconnue) : tout devient « Compatible » sans alerte ;
+  prévenir et ouvrir le Profil au lieu de se taire.
+- « Charger tout » puis nouvelle recherche : le bouton « Charger plus » disparaît (état « tout chargé » à remettre à
+  zéro) ; « Tout le rayon » / « Charger tout le rayon » à harmoniser.
+- Ma liste : « marque nationale » donne « Meilleur choix » chez Biocoop / Grand Frais / Lidl ; paragraphe « Vu dans
+  l'enseigne… » long quand la liste est vide (bulle grise redondante).
+- Toast « Autour de Rennes… » cache la 4e rangée de tuiles de l'accueil ; toast « Ajouté à ta liste » recouvre
+  « Stock au drive ». Message de position bloquée à réécrire pour l'iPhone (Réglages › Safari › Position).
+- Sans allergie choisie : afficher « Non filtré » plutôt que « Compatible ». Profil : textes de test visibles
+  (« Tester la connexion »…) ; pastille « Arachides, Soja +1 » ; recettes : indiquer lesquelles sont compatibles.
 - Vérifier que la barre du bas reste en bas sur iPhone (corrigé en 3.12 sans test sur un vrai téléphone) ;
   surveiller aussi le clavier dans les fiches (champ adresse), même bug possible sous iOS 26.
 - Recherche par code-barres chez Carrefour et Leclerc : non vérifiable automatiquement ; attendre le rapport de
@@ -62,6 +83,32 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-22 · 3.28 — séance de 9 h (heure de Paris)
+
+**Ce qui change pour Alexandre**
+- **Sécurité** : certains produits déclaraient leurs allergènes avec une étiquette écrite de travers (« en:Céleri »,
+  « fr:lait », « fr:Dioxyde de soufre et sulfites »…). L'appli les ignorait : environ 240 produits sortaient
+  « Compatible » à tort. Ils sont maintenant lus avec les mêmes mots que les ingrédients (« Exclu » si déclaré,
+  « À vérifier » pour les traces ou une étiquette inconnue).
+- La liste d'ingrédients est lue en français, en version originale et en anglais (avant, seulement la première).
+- Mots en plus : farine, nouilles, gnocchi, yogourt, aïoli, albumen, houmous, tourteau, pieuvre, teriyaki…
+  Caractères invisibles et codes HTML (`&oelig;`) ignorés.
+- Sélecteur de magasin plus facile à toucher (44 px) ; message plus lisible en mode sombre (liseré).
+- Effet de bord assumé : 3,3 % des produits changent de verdict (surtout « Compatible » → « À vérifier »,
+  dont ≈ 1,4 % à cause d'étiquettes inconnues comme `en:orange`). 139 « Compatible » → « Exclu », 45
+  « À vérifier » → « Compatible » (3 produits dont la liste est devenue lisible, sans allergène).
+
+**Ce que chaque agent a trouvé**
+- Détecteur : tout vert au départ (tests, audit drive, bases de 3 jours, 0 problème ouvert). Failles de verdict :
+  étiquettes non standard, un seul texte d'ingrédients lu, mots manquants, caractères invisibles ; position envoyée
+  à un miroir Overpass de mail.ru ; profil abîmé silencieux.
+- Parcours client : aucune erreur console, 0 faux « Compatible » dans les parcours à l'écran (arachide, soja,
+  sésame) ; en balayant la base, quelques faux « Compatible » restent (voir pistes).
+- Design : fond blanc, pas de bleu, rien de coupé ; zones tactiles des sélecteurs et toast sombre.
+- Réparateur : les 3 corrections + 2 retouches ; ≈ 110 cas ajoutés à tests/verdicts.py ; deux mesures fragiles de
+  navigation.py rendues stables (attente avant de mesurer).
+
 
 ### 2026-10-21 · 3.27 — séance du soir
 - **Sécurité (« sans » dans le nom)** : un seul « sans » dans le nom effaçait tous les indices du nom : « Rillettes de
