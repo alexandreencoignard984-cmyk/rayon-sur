@@ -22,6 +22,13 @@ Rien de cette liste n'est fait sans son accord.
 
 Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer une piste une fois faite ou abandonnée.
 
+- **Pistes du 22/10 soir** : mot coupé dans le message de verdict quand le texte contient un code HTML
+  (`normMap`, `bl&eacute;` → « bl& ») ; la fiche n'affiche que le texte d'ingrédients français alors que le verdict
+  lit aussi l'anglais (`ingredientsOf`) ; titre cyrillique dans la base (Gullón 8410376037883 : préférer
+  `product_name_fr` dans `build_data.py`) ; « Meilleur choix » donné à Biocoop à égalité avec l'enseigne où la marque
+  est vue ; `navigation.py` « + » en sombre mesuré [0, 0] sous charge (attendre l'affichage avant de mesurer) ;
+  décalage de 4 px des titres de section de Ma liste / Recettes.
+
 - **Faux « Compatible » encore dans la base (parcours client 22/10)** : soja collé dans un mot (« soyalecitin »,
   « soyasaus », « Soyabean Oil », « Sojabasis » ≈ 15 produits, ex. Kikkoman 8715035290303, Oboy 7622300248987) ;
   textes mal lus avec une lettre en trop (« farine de bléi », « blanc d'oeufi », « Ground Nut ») ; nom qui dit
@@ -83,6 +90,25 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-22 · 3.29 — séance du soir
+
+**Ce qui change pour Alexandre**
+- **Sécurité** : trois cas où un produit sortait « Compatible » à tort sont corrigés. (1) Un caractère invisible
+  collé entre deux mots (« lait‎écrémé ») faisait disparaître « lait » (régression de la 3.28). (2) « flour » seul
+  (farine en anglais) passe en « À vérifier » pour le gluten (farines de riz, maïs… restent compatibles).
+  (3) Œuf mal écrit (« blanc euf », « oeufe », « oeufq ») reconnu pour les œufs.
+- Pastille du profil et lien « Ou chercher… » de la carte drive : zones tactiles de 44 px.
+
+**Ce que chaque agent a trouvé**
+- Détecteur : mesure sur 299 747 produits : aucune hausse de « Compatible » avec la 3.28 (3 produits sûrs gagnent
+  « Compatible », ≈ 1 945 passent « À vérifier »). Les 3 failles ci-dessus ; mot coupé dans le message (« bl& »
+  pour `bl&eacute;`) et fiche qui n'affiche qu'un texte d'ingrédients (pistes).
+- Parcours client : aucune erreur JS, rien de cassé par la 3.28 ; défauts faibles (pistes).
+- Design : appli propre ; pastille de profil et lien drive trop petits (faits).
+- Réparateur : 3 corrections + tests dans `tests/verdicts.py`. `navigation.py` a échoué deux fois dans la série
+  complète (« + » des produits en sombre, mesure [0, 0]) mais passe seul : mesure instable sous charge.
+
 
 ### 2026-10-22 · 3.28 — séance de 9 h (heure de Paris)
 
