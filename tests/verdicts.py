@@ -136,6 +136,13 @@ CASES = [
     # 3.28 : caractères invisibles, pleine chasse, codes HTML
     ('milk', 'l\u00adait', 'check'), ('milk', 'la\u200bit', 'check'), ('milk', '\uff4c\uff41\uff49\uff54', 'check'), ('eggs', '&oelig;ufs', 'check'),
     ('gluten', 'bl&eacute;', 'check'), ('milk', 'lait&nbsp;écrémé', 'check'),
+    # 3.29 : invisible entre deux mots, « flour » seul, œufs écrits « euf »
+    ('milk', 'lait\u200eécrémé', 'check'), ('milk', 'lait\u200bécrémé en poudre', 'check'), ('milk', 'sucre,lait\u2060écrémé', 'check'),
+    ('milk', 'l\u00adait', 'check'), ('milk', 'la\u200eit', 'check'),
+    ('gluten', 'organic flour', 'check'), ('gluten', 'flour', 'check'), ('gluten', 'wheat flour', 'check'), ('gluten', 'farine', 'check'),
+    ('gluten', 'rice flour', 'ok'), ('gluten', 'corn flour', 'ok'), ('gluten', 'flour of rice', 'ok'), ('gluten', 'farine de riz', 'ok'),
+    ('gluten', 'farine de maïs', 'ok'), ('gluten', 'farine de lentilles', 'ok'), ('gluten', 'farine de caroube', 'ok'),
+    ('eggs', 'blanc euf', 'check'), ('eggs', 'euf', 'check'), ('eggs', 'eufs frais', 'check'), ('eggs', 'oeufe', 'check'), ('eggs', 'oeufq', 'check'),
 ]
 
 httpd, base = serve()
