@@ -101,6 +101,14 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-23 · 3.31 — couleurs plus vivantes (demande d'Alexandre)
+
+Alexandre trouvait l'appli « plate, sans vie ». Tuiles de rayons en cinq couleurs douces (vert, pêche, rose, jaune,
+lilas) avec ombre légère, dégradé vert pâle en haut des écrans, boutons verts en dégradé avec ombre ; version sombre
+assortie (variables `--wash`, `--t1`…`--t5`, `--primary2`). Fond blanc, pas de bleu. Test de couleurs des tuiles ajouté ;
+test « + 44 × 44 » de `navigation.py` rendu fiable (mesure en une seule évaluation, avec essais). À voir avec lui :
+d'autres écrans à colorer (Recettes, Ma liste) ?
+
 ### 2026-10-23 · 3.30 — séance de 9 h (heure de Paris)
 
 **Changé** : (1) « fruits à coque » écrit en toutes lettres (traces, atelier) donnait « Compatible » pour un allergique aux

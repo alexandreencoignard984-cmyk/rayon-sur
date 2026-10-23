@@ -19,6 +19,8 @@ with sync_playwright() as p:
     print('1. Accueil')
     check('Comment ça marche' in page.inner_text('#intro') and page.locator('#intro .steps li').count() == 3, 'mode d\'emploi en 3 étapes')
     check(page.is_visible('#homeGrid .tile') and page.inner_text('#home h2') == 'Que veux-tu acheter ?', 'accueil : « Que veux-tu acheter ? » et les rayons en tuiles')
+    cols = page.eval_on_selector_all('#homeGrid .tile', 'els => els.slice(0, 5).map(e => getComputedStyle(e).backgroundColor)')
+    check(len(set(cols)) == 5, 'accueil : les tuiles de rayons ont des couleurs variées')
 
     print('2. Retour : fiche produit')
     page.click('#homeGrid [data-q="en:ice-creams-and-sorbets"]')
@@ -221,8 +223,11 @@ with sync_playwright() as p:
         wait_near(page3)
         page3.set_viewport_size({'width': 390, 'height': 844})
         page3.click('#homeGrid [data-q="en:biscuits"]'); page3.wait_for_selector('#list li [data-add]', timeout=20000)
-        page3.wait_for_function("() => { const e = document.querySelector('#list li [data-add]'); return !!e && e.getBoundingClientRect().width > 0; }", timeout=10000)
-        sz = page3.eval_on_selector('#list li [data-add]', 'e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; }')
+        # la liste se recharge une seconde fois : mesurer en une seule évaluation, avec quelques essais
+        for _ in range(30):
+            sz = page3.evaluate("() => { const e = document.querySelector('#list li [data-add]'); if (!e) return [0, 0]; const r = e.getBoundingClientRect(); return [r.width, r.height]; }")
+            if sz[0] >= 44 and sz[1] >= 44: break
+            page3.wait_for_timeout(200)
         check(sz[0] >= 44 and sz[1] >= 44, f'{theme} : le « + » des produits fait au moins 44 x 44 ({sz})')
         check(not page3.evaluate('() => document.documentElement.scrollWidth > window.innerWidth'), f'{theme} : rien ne déborde sur la liste')
         page3.click('#list li [data-open] >> nth=0'); page3.wait_for_selector('#sheet[open]')
