@@ -143,6 +143,20 @@ CASES = [
     ('gluten', 'rice flour', 'ok'), ('gluten', 'corn flour', 'ok'), ('gluten', 'flour of rice', 'ok'), ('gluten', 'farine de riz', 'ok'),
     ('gluten', 'farine de maïs', 'ok'), ('gluten', 'farine de lentilles', 'ok'), ('gluten', 'farine de caroube', 'ok'),
     ('eggs', 'blanc euf', 'check'), ('eggs', 'euf', 'check'), ('eggs', 'eufs frais', 'check'), ('eggs', 'oeufe', 'check'), ('eggs', 'oeufq', 'check'),
+    # 3.30 : « fruits à coque » écrit en toutes lettres, et mots manquants
+    ('nuts', 'Peut contenir des traces de fruits à coque', 'check'), ('nuts', 'traces de fruit à coque', 'check'), ('nuts', 'fruits à coques', 'check'),
+    ('nuts', 'fruit(s) à coque', 'check'), ('nuts', 'tree nuts', 'check'), ('nuts', 'may contain tree nuts', 'check'), ('nuts', 'frutos secos', 'check'),
+    ('nuts', 'Nüsse', 'check'), ('nuts', 'Nuss', 'check'), ('nuts', 'Kokosnuss', 'ok'), ('nuts', 'noix de coco', 'ok'),
+    ('nuts', 'fruits de mer, coques', 'ok'),
+    ('crustaceans', 'crustaceans', 'check'), ('crustaceans', 'Krebse', 'check'), ('crustaceans', 'Langusten', 'check'), ('crustaceans', 'Flusskrebs', 'check'),
+    ('crustaceans', 'krevety', 'check'), ('crustaceans', 'lagostim', 'check'),
+    ('molluscs', 'molluscs', 'check'), ('molluscs', 'mollusks', 'check'), ('molluscs', 'calamares', 'check'), ('molluscs', 'Schnecken', 'check'),
+    ('molluscs', 'conque', 'check'), ('molluscs', 'buccin', 'check'),
+    ('eggs', 'mayo', 'check'), ('eggs', 'omelette', 'check'), ('eggs', 'eggnog', 'check'), ('eggs', 'albumin', 'check'), ('eggs', 'vejce', 'check'),
+    ('eggs', 'albumine de lait', 'ok'), ('eggs', 'mayor', 'ok'),
+    ('peanuts', 'ground nuts', 'check'), ('peanuts', 'ground nut oil', 'check'), ('peanuts', 'cacahouettes', 'check'), ('peanuts', 'arachis', 'check'),
+    ('peanuts', 'earth nut', 'check'), ('peanuts', 'beer nuts', 'check'), ('peanuts', 'orzeszki ziemne', 'check'), ('peanuts', 'arašídy', 'check'),
+    ('peanuts', 'amendoim', 'check'), ('peanuts', 'acide arachidonique', 'ok'),
 ]
 
 httpd, base = serve()

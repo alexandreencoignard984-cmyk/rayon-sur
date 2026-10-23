@@ -156,6 +156,7 @@ with sync_playwright() as p:
     page.click('#allAisles'); page.wait_for_timeout(500)
     check(page.evaluate('() => __RS.S.rayon') == '' and page.inner_text('#rayonName') == 'Tous les rayons' and page.is_hidden('#widenRow'), 'recherche relancée dans tous les rayons')
     page.fill('#terms', '')
+    page.fill('#terms', '')
 
     print('10. Accueil : les rayons en tuiles')
     def view(): return page.evaluate("() => document.getElementById('screen-search').dataset.view")
@@ -177,6 +178,12 @@ with sync_playwright() as p:
     check(view() == 'home', 'bouton « Rayons » : retour à l\'accueil')
     page.fill('#terms', ''); page.click('#go'); page.wait_for_timeout(300)
     check(view() == 'home' and 'Tape le nom' in page.inner_text('#toast'), 'Rechercher sans nom : message d\'aide, on reste sur l\'accueil')
+    # 3.30 : recherche sans aucun résultat : message clair, pas de bande vide ni de « Charger plus »
+    page.fill('#terms', 'zzqxkwv'); page.click('#go'); page.wait_for_selector('#list .empty-card', timeout=20000)
+    msg = page.inner_text('#list .empty-card')
+    check(msg.startswith('Aucun produit trouvé pour « zzqxkwv »') and 'Tous les magasins' in msg and 'Charger plus' not in msg, 'recherche vide : ' + msg[:90])
+    check(page.evaluate("() => getComputedStyle(document.getElementById('status')).display") == 'none', 'bande de statut vide masquée')
+    page.click('#homeBack'); page.wait_for_timeout(300)
     # 3.26 : après une recherche par nom, un rayon choisi dans « Voir tous les rayons » remplace le nom (avant : « 0 produit pour « houmous » »)
     page.fill('#terms', 'houmous'); page.click('#go'); page.wait_for_function("() => document.getElementById('screen-search').dataset.view === 'results'", timeout=20000)
     page.wait_for_timeout(800)
