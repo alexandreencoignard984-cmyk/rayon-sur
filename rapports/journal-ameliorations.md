@@ -22,6 +22,16 @@ Rien de cette liste n'est fait sans son accord.
 
 Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer une piste une fois faite ou abandonnée.
 
+- **Pistes du 23/10 (détecteur / parcours / design)** : mots étrangers encore absents : lait (Sahne, Joghurt, mlieko,
+  smetana, tvaroh, lactalbumin, NFDM, « dairy »), gluten (mehl, pšenica, mąka, triticum, hordeum, secale, orges, pâtes
+  seules, sauce soja, bière), moutarde (hořčice), lupin (łubin), sulfites (siřičitany), céleri (zeller, livèche) ; mots
+  collés (« laitécrémé » seul, « laitentier ») ; nom du produit non lu en allemand/italien (Dattel-erdnuss, nocciole).
+  Houmous : 74 sur 75 « À vérifier » quand le sésame est écrit : dire « Contient du sésame d'après les ingrédients »
+  (ou « Exclu » : décision de sécurité). Recette sans version compatible : bouton « Passer cet ingrédient » / idée
+  maison. Compteur « Exclus … » qui reste affiché. « Lactose » / « Lait (allergie) » sans explication à l'accueil du
+  profil. Carte drive : phrase « Pas signalé ici » répétée, recherche « Maison fossier Biscuits rose » coupée. Zones
+  tactiles < 44 px : puces `.chip` (34), `#filtersBtn` (36), `#sheetClose` (36), `.tact` (33), « Itinéraire » (28),
+  case « Pris » (26), liens du pied du Profil.
 - **Pistes du 22/10 soir** : mot coupé dans le message de verdict quand le texte contient un code HTML
   (`normMap`, `bl&eacute;` → « bl& ») ; la fiche n'affiche que le texte d'ingrédients français alors que le verdict
   lit aussi l'anglais (`ingredientsOf`) ; titre cyrillique dans la base (Gullón 8410376037883 : préférer
@@ -90,6 +100,20 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-23 · 3.30 — séance de 9 h (heure de Paris)
+
+**Changé** : (1) « fruits à coque » écrit en toutes lettres (traces, atelier) donnait « Compatible » pour un allergique aux
+fruits à coque (623 produits de la base concernés) : maintenant « À vérifier » ; « Nüsse/Nuss » seuls aussi.
+(2) Mots ajoutés : crustaceans, molluscs/mollusks, calamares, krebs, langusten, mayo, omelette, eggnog, ground nuts,
+cacahouettes, arachis… (3) Recherche sans résultat : « Aucun produit trouvé pour « … » ». (4) Design : vert `--ok` plus
+foncé en clair (4,98:1), contour sur Ajouter/Favori/Partager, bande vide supprimée sous les rubriques.
+
+**Détecteur** : tests 3.26 à 3.29 verts, aucune issue ouverte, données de 4 jours. Balayage de 247 643 produits : trous
+listés dans les pistes. **Parcours client** (lait + sésame + céleri) : aucune erreur JS, gestes retour bons ; points
+dans les pistes. **Design** : fond blanc, pas de bleu, sombre propre ; zones tactiles sous 44 px restantes.
+Note : au premier lancement Playwright manquait (`pip install playwright==1.56.0 --break-system-packages`).
+Le test « + 44 × 44 » de `navigation.py` échoue parfois sous charge (repasse seul).
 
 ### 2026-10-22 · 3.29 — séance du soir
 
