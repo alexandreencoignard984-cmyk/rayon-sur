@@ -101,6 +101,24 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-23 · 3.33 — séance du soir
+
+**Changé** : (1) Crustacés et mollusques : « crustacean », « shellfish », « molluscan », « Meeresfrüchte », « frutti di mare »,
+« mariscos » et les textes mal lus (« mollus ues », « CRUSTRCE> », « CREV T TE ») passent en « À vérifier » (avant : « Compatible »
+pour 3 produits réels : Udon 0031146156917, Le coeur marin 3302748354023, Salade perles marines 0208042016465).
+(2) Mots rares ajoutés : ovoalbumine, albumina, tiramisu, monkey nuts, goober, satay, fruits à écale, nutella, emmenthal, rollmops.
+(3) Design : texte des boutons verts lisible (`--primary2` #148756, 4,54:1) ; carte du Scan avec un bord visible en clair ;
+pictogrammes de la liste des recettes colorés (`--t1`…`--t5`).
+
+**Détecteur** : tests et audit drive verts, aucun problème ouvert, données de 4 jours (stocks : 4 jours aussi).
+**Parcours client** : aucune erreur JS, 3.30 et 3.31 n'ont rien cassé. **Design** : cohérent, voir ci-dessus.
+Note d'environnement : `python3` (3.11) n'a pas Playwright ; utiliser `/usr/bin/python3` (3.13) avec Chromium 1243 via
+`executable_path` (Playwright 1.56 attend la 1194).
+
+**Pas fait (pistes)** : recherche sans résultat : ligne « 0 produit analysé » + onglets « … » à masquer ; toast « Autour de Rennes »
+qui cache les tuiles ; bande des onglets (fond différent du dégradé quand on défile) ; fromages isolés non reconnus (petit-suisse,
+faisselle, saint-nectaire…), sauce tartare, aiglefin, bar ; barres de progression de Ma liste en dégradé.
+
 ### 2026-10-23 · 3.31 — couleurs plus vivantes (demande d'Alexandre)
 
 Alexandre trouvait l'appli « plate, sans vie ». Tuiles de rayons en cinq couleurs douces (vert, pêche, rose, jaune,

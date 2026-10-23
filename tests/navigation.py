@@ -22,6 +22,19 @@ with sync_playwright() as p:
     cols = page.eval_on_selector_all('#homeGrid .tile', 'els => els.slice(0, 5).map(e => getComputedStyle(e).backgroundColor)')
     check(len(set(cols)) == 5, 'accueil : les tuiles de rayons ont des couleurs variées')
 
+    # 3.32 : le texte blanc des boutons « primary » doit être lisible (>= 4,5:1) aux deux bouts du dégradé, en clair comme en sombre
+    def lum(rgb):
+        c = [(v / 255 / 12.92) if v / 255 <= 0.03928 else (((v / 255) + 0.055) / 1.055) ** 2.4 for v in rgb]
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    def ratio(a, b):
+        la, lb = sorted([lum(a), lum(b)], reverse=True); return (la + 0.05) / (lb + 0.05)
+    for theme in ('light', 'dark'):
+        cols = page.evaluate("""(t) => { document.documentElement.dataset.theme = t; const cs = getComputedStyle(document.documentElement);
+          const px = n => { const c = document.createElement('i'); c.style.color = cs.getPropertyValue(n).trim(); document.body.append(c); const v = getComputedStyle(c).color; c.remove(); return v.match(/\\d+/g).slice(0, 3).map(Number); };
+          const r = [px('--primary2'), px('--primary'), px('--on-primary')]; delete document.documentElement.dataset.theme; return r; }""", theme)
+        r1, r2 = ratio(cols[2], cols[0]), ratio(cols[2], cols[1])
+        check(r1 >= 4.5 and r2 >= 4.5, f'{theme} : texte des boutons principaux lisible sur le dégradé ({r1:.2f}:1 et {r2:.2f}:1)')
+
     print('2. Retour : fiche produit')
     page.click('#homeGrid [data-q="en:ice-creams-and-sorbets"]')
     page.wait_for_selector('#list li .name', timeout=20000)
@@ -253,6 +266,23 @@ with sync_playwright() as p:
         page4.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'toast-{theme}.png'))
         check(not errs4, f'aucune erreur JavaScript ({theme})')
         ctx4.close()
+
+    print('Écran Scan et Recettes : carte avec bord, pictogrammes colorés (3.33)')
+    os.makedirs(os.environ.get('SHOTS', '/tmp'), exist_ok=True)
+    for theme in ('light', 'dark'):
+        ctx5, page5, errs5, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': theme})
+        wait_near(page5)
+        page5.click('nav [data-go="scan"]'); page5.wait_for_selector('.scanidle', state='visible'); page5.wait_for_timeout(300)
+        check(page5.eval_on_selector('.scanidle', 'e => getComputedStyle(e).boxShadow') not in ('', 'none'), f'{theme} : la grande carte du Scan a une ombre / un bord')
+        page5.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'scan-{theme}.png'))
+        page5.click('nav [data-go="recipes"]'); page5.wait_for_selector('.reclist .rico.em', state='visible'); page5.wait_for_timeout(300)
+        cols = page5.eval_on_selector_all('.reclist li:nth-child(-n+5) .rico.em', 'els => els.slice(0, 5).map(e => getComputedStyle(e).backgroundColor)')
+        check(len(cols) == 5 and len(set(cols)) == 5, f'{theme} : les pictogrammes de recettes ont 5 couleurs différentes')
+        size = page5.eval_on_selector('.reclist .rico.em', 'e => [e.offsetWidth, e.offsetHeight]')
+        check(size == [44, 44], f'{theme} : pictogramme de recette toujours 44 x 44 px ({size})')
+        page5.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'recettes-{theme}.png'))
+        check(not errs5, f'aucune erreur JavaScript ({theme})')
+        ctx5.close()
 
     print('Contrastes en mode sombre (pastilles, badge, cases de Ma liste)')
     ctx2, page2, errs2, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': 'dark'})

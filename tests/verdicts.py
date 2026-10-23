@@ -157,6 +157,19 @@ CASES = [
     ('peanuts', 'ground nuts', 'check'), ('peanuts', 'ground nut oil', 'check'), ('peanuts', 'cacahouettes', 'check'), ('peanuts', 'arachis', 'check'),
     ('peanuts', 'earth nut', 'check'), ('peanuts', 'beer nuts', 'check'), ('peanuts', 'orzeszki ziemne', 'check'), ('peanuts', 'arašídy', 'check'),
     ('peanuts', 'amendoim', 'check'), ('peanuts', 'acide arachidonique', 'ok'),
+    # 3.32 : crustacés et mollusques en anglais, allemand, italien, espagnol ; textes abîmés
+    ('crustaceans', 'CRUSTACEAN SHELLFISH', 'check'), ('crustaceans', 'crustacean', 'check'), ('crustaceans', 'shellfish', 'check'),
+    ('molluscs', 'shellfish', 'check'), ('molluscs', 'molluscan shellfish', 'check'), ('crustaceans', 'Meeresfrüchte', 'check'),
+    ('molluscs', 'Meeresfrüchte', 'check'), ('crustaceans', 'frutti di mare', 'check'), ('molluscs', 'frutti di mare', 'check'),
+    ('crustaceans', 'mariscos', 'check'), ('molluscs', 'mariscos', 'check'),
+    ('molluscs', 'mollus ues', 'check'), ('crustaceans', 'CRUSTRCE>', 'check'), ('crustaceans', 'CREV T TE', 'check'),
+    ('crustaceans', 'pizza crust', 'ok'), ('crustaceans', 'piecrust', 'ok'), ('crustaceans', 'croûte', 'ok'), ('molluscs', 'croûte, pizza crust', 'ok'),
+    ('nuts', 'fruits de mer', 'ok'), ('nuts', 'shellfish', 'ok'), ('nuts', 'noix de coco', 'ok'), ('molluscs', 'fruits à coque', 'ok'),
+    # 3.32 : mots rares
+    ('eggs', 'ovoalbumine', 'check'), ('eggs', 'albumina', 'check'), ('eggs', 'ovoalbumina', 'check'), ('eggs', 'tiramisu', 'check'),
+    ('peanuts', 'monkey nuts', 'check'), ('peanuts', 'goober', 'check'), ('peanuts', 'sauce satay', 'check'),
+    ('nuts', 'fruits à écale', 'check'), ('nuts', 'nutella', 'check'), ('milk', 'emmenthal', 'check'), ('fish', 'rollmops', 'check'),
+    ('eggs', 'albumine de lait', 'ok'), ('peanuts', 'acide arachidonique', 'ok'), ('milk', 'lait de coco', 'ok'), ('peanuts', 'beurre de cacao', 'ok'),
 ]
 
 httpd, base = serve()
