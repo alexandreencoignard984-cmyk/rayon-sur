@@ -15,6 +15,8 @@ Rien de cette liste n'est fait sans son accord.
 - **Position envoyée à un miroir Overpass de mail.ru** (3e adresse de `OVERPASS`, VK) : retirer ou remplacer par
   un miroir européen ? (règle « pas de collecte » : pas du pistage actif, mais non mentionné dans l'appli.)
 - **Thème « Comme l'iPhone » par défaut** : aujourd'hui l'appli démarre en « Clair » même si l'iPhone est en sombre.
+- **Allergène écrit en clair → « Exclu » au lieu de « À vérifier »** (parcours 24/10) : 727 œufs « Exclus » mais 961 « À vérifier » ;
+  sésame (88 houmous) et moutarde (407) pareil ; dans Recettes › Crêpes (œufs cochés) la ligne Œufs propose un « + ». Décision de sécurité.
 - **Vins « sans sulfites ajoutés »** : restent « Compatible » grâce au nom ; ils en contiennent souvent un peu
   naturellement. Les passer « À vérifier » ?
 
@@ -100,6 +102,28 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-24 · 3.34 — séance de journée (heure de Paris : matin)
+
+**Changé** : (1) Verdicts plus prudents (jamais plus souple) : œufs, moutarde, arachide, poisson, céleri mal lus avec des lettres
+collées devant (« blanc dtœuf », « larachide », « MOUTAR 'E ») ; œufs en italien/danois (uovo, ÆG, lysozym) ; sulfites écrits
+autrement (sulfure, sulfurique, metabisulphate, « metabisul - fite », E223 collé) ; allemand décliné (Krebstieren, Weichtieren) ;
+soja slave/scandinave (sojový, soyalecitin, szója). (2) Le nom du produit est lu aussi avec les mots étrangers (« Gamba blanca »,
+« Pasta fresca all'uovo », « Pindakaas »). (3) Design : puces de rayons, bouton Filtres, filtres de Recettes et boutons − / + des
+portions passent à 44 px. Tests : 59 cas réels dans `verdicts.py`, mesure des zones tactiles dans `navigation.py`.
+
+**Détecteur** : CI verte, aucun problème ouvert, données de 5 jours (le lundi 26/10 les rafraîchit) ; ~40 faux « Compatible »
+trouvés (sulfites, œufs/arachide collés, allemand, soja), tous traités. **Parcours client** (œufs + sésame + moutarde) : aucune
+erreur JS ; 2 faux « Compatible » moutarde et 7 œufs corrigés ; voir « décisions » pour Exclu/À vérifier. **Design** : propre,
+seules les zones tactiles trop basses étaient à reprendre.
+Note d'environnement : `python3` (3.11) n'a pas Playwright → utiliser `/usr/bin/python3` ; Playwright 1.56 attend Chromium 1194
+(liens symboliques vers 1243 créés dans /opt/pw-browsers). `liens_drive.py` a eu un délai dépassé une fois sous forte charge
+(deux séries de tests en parallèle), vert seul : ne pas lancer deux séries en même temps.
+
+**Pas fait (pistes)** : « sauce soja » seule → gluten ; « Exclu » plutôt que « À vérifier » quand l'allergène est écrit
+(décision) ; recette : « 5/6 » vert à côté d'un ingrédient qui est l'allergène → « 1 ingrédient à éviter » ; scan : chercher
+d'abord dans la base locale avant « absent d'Open Food Facts » ; recherche par nom hors réseau → repli sur la base locale ;
+lien « L'ajouter à la base » violet en sombre ; `cleanProfile` : `sel` abîmé = tout « Compatible » sans alerte.
 
 ### 2026-10-23 · 3.33 — séance du soir
 
