@@ -108,20 +108,73 @@ def monkey(b, base, steps, seed, errs_out, offline=False):
     ctx.close()
 
 
+def profils_abimes(b, base):
+    """Profil enregistré valide en JSON mais de forme inattendue : jamais « tout Compatible » en silence."""
+    def ouvrir(raw):
+        ctx = b.new_context(viewport={'width': 390, 'height': 844}, locale='fr-FR')
+        setup_routes(ctx, {})
+        ctx.add_init_script("""(() => { try { if (sessionStorage.getItem('__init')) return; sessionStorage.setItem('__init', '1');
+          localStorage.setItem('rs2:profile', %s); localStorage.setItem('rs2:geoAsked', '1'); } catch (e) {} })();""" % json.dumps(raw))
+        page = ctx.new_page(); errs = []
+        page.on('pageerror', lambda e: errs.append(str(e).split('\n')[0]))
+        page.on('dialog', lambda d: d.accept())
+        page.goto(base); page.wait_for_timeout(600)
+        return ctx, page, errs
+    sel = lambda page: sorted(page.evaluate('() => [...window.__RS.profile.sel]'))
+    # profil abîmé : l'écran d'accueil s'ouvre, la valeur enregistrée reste telle quelle jusqu'au choix
+    for raw in ['{}', '{"sel":"milk"}', '{"sel":null}', '{"sel":{"milk":true}}', '{"sel":[1,null,"zorglub"]}', '{"words":["palme"]}']:
+        ctx, page, errs = ouvrir(raw)
+        check(page.is_visible('#onboard'), f'profil {raw} : l\'écran d\'accueil s\'ouvre')
+        stocke = page.evaluate("() => localStorage.getItem('rs2:profile')")
+        check(stocke == raw, f'profil {raw} : valeur enregistrée intacte avant le choix ({stocke})')
+        if raw == '{"sel":"milk"}':
+            check(page.get_attribute('#obChips [data-k="milk"]', 'aria-pressed') == 'true', 'profil {"sel":"milk"} : lait déjà coché sur l\'écran d\'accueil')
+            page.click('#obGo'); page.wait_for_timeout(200)
+            check(json.loads(page.evaluate("() => localStorage.getItem('rs2:profile')"))['sel'] == ['milk'], 'après le choix : le profil est enregistré proprement')
+        check(not errs, f'profil {raw} : aucune erreur JavaScript ({errs[:1]})')
+        ctx.close()
+    # clés écrites avec majuscules ou espaces : reconnues, jamais une clé hors liste
+    ctx, page, errs = ouvrir('{"sel":["Milk"," EGGS ","zorglub",3]}')
+    check(not page.is_visible('#onboard'), 'sel [Milk, EGGS] : pas d\'écran d\'accueil')
+    check(sel(page) == ['eggs', 'milk'], f'sel [Milk, EGGS] : lait et œufs gardés ({sel(page)})')
+    ctx.close()
+    # profil vide choisi volontairement : comportement inchangé
+    ctx, page, errs = ouvrir('{"sel":[],"traces":false,"words":[]}')
+    check(not page.is_visible('#onboard') and sel(page) == [], 'sel [] choisi volontairement : pas d\'écran d\'accueil, profil vide')
+    ctx.close()
+    # import : un fichier sans liste d'allergènes valide ne touche pas aux allergies actuelles
+    ctx, page, errs = ouvrir(json.dumps(PROFILE))
+    avant = sel(page)
+    for contenu in [{'app': 'rayon-sur', 'version': 3, 'profile': {'sel': 'eggs'}}, {'app': 'rayon-sur', 'version': 3, 'profile': {}},
+                    {'app': 'rayon-sur', 'version': 3, 'profile': {'sel': [5, None]}}]:
+        page.set_input_files('#importFile', files=[{'name': 's.json', 'mimeType': 'application/json', 'buffer': json.dumps(contenu).encode()}])
+        page.wait_for_timeout(300)
+        check(sel(page) == avant and sorted(json.loads(page.evaluate("() => localStorage.getItem('rs2:profile')"))['sel']) == avant,
+              f'import {contenu["profile"]} : allergies actuelles gardées ({sel(page)})')
+    page.set_input_files('#importFile', files=[{'name': 's.json', 'mimeType': 'application/json', 'buffer': json.dumps({'app': 'rayon-sur', 'version': 3, 'profile': {'sel': ['Eggs']}}).encode()}])
+    page.wait_for_timeout(300)
+    check(sel(page) == ['eggs'], f'import d\'un profil valide : remplacé ({sel(page)})')
+    check(not errs, f'import : aucune erreur JavaScript ({errs[:1]})')
+    ctx.close()
+
+
 def main():
     steps = int(sys.argv[1]) if len(sys.argv) > 1 else 150
-    only = sys.argv[2] if len(sys.argv) > 2 else ''        # « donnees » ou « clics » pour ne lancer qu'une partie
+    only = sys.argv[2] if len(sys.argv) > 2 else ''        # « donnees », « clics » ou « profil » pour ne lancer qu'une partie
     httpd, base = serve()
     with sync_playwright() as p:
         b = p.chromium.launch()
-        if only != 'clics':
+        if only in ('', 'donnees'):
             print('1. Données enregistrées abîmées', flush=True)
             errs, n = [], 0
             for key in SPECIFIC:
                 for raw in JUNK + [json.dumps(v) for v in SPECIFIC[key]]:
                     run_case(b, base, key, raw, errs); n += 1
             check(not errs, f'{n} cas de données abîmées sans erreur' + ('' if not errs else ' :\n    ' + '\n    '.join(errs)))
-        if only != 'donnees':
+        if only in ('', 'profil'):
+            print('1b. Profil abîmé', flush=True)
+            profils_abimes(b, base)
+        if only in ('', 'clics'):
             print('2. Clics au hasard', flush=True)
             errs = []
             for seed in (1, 2, 3):

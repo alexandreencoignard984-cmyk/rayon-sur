@@ -95,6 +95,8 @@ with sync_playwright() as p:
     shop = [{'code': 'a', 'p': {'code': 'a', 'product_name': 5, 'brands': ['x'], 'stores_tags': 'lidl'}}, None, {'code': 1}]
     ctx, page, errs, _ = new_page(b, base, granted=False, init={'rs2:shop': shop, 'rs2:profile': {'sel': 'milk', 'words': [1, 'palme']}, 'rs2:search': {'nutri': 'z', 'sort': 'zz', 'ran': True}})
     page.wait_for_timeout(1500)
+    check(page.is_visible('#onboard'), 'profil abîmé (sel n\'est pas une liste) : l\'écran d\'accueil s\'ouvre')
+    page.click('#obGo'); page.wait_for_timeout(300)
     page.click('nav [data-go="list"]'); page.wait_for_timeout(300)
     check(page.locator('#shopList li.item').count() == 1, 'le produit lisible est gardé, les autres ignorés')
     check(page.evaluate("() => __RS.S.nutri === '' && __RS.S.sort === 'popularity'"), 'filtres invalides remis à zéro')

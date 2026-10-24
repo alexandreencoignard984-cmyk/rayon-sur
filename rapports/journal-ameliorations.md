@@ -50,8 +50,6 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 - Mots encore manquants (détecteur) : lait (tomme, présure, kéfir variantes), poisson (mulet, carpe, sushi…
   seulement en formes sûres), sulfites (E150b/d, vinaigre, vin hors catégorie), `bouquet garni` frais sans céleri,
   « Lait de soja » (étiquette `fr:Lait de soja`) reste Compatible pour le lait par exception voulue.
-- Profil abîmé (`rs2:profile` avec `sel` en chaîne ou clé inconnue) : tout devient « Compatible » sans alerte ;
-  prévenir et ouvrir le Profil au lieu de se taire.
 - « Charger tout » puis nouvelle recherche : le bouton « Charger plus » disparaît (état « tout chargé » à remettre à
   zéro) ; « Tout le rayon » / « Charger tout le rayon » à harmoniser.
 - Ma liste : « marque nationale » donne « Meilleur choix » chez Biocoop / Grand Frais / Lidl ; paragraphe « Vu dans
@@ -102,6 +100,29 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-24 · 3.35 — séance du soir
+
+**Changé** : (1) Verdicts plus prudents (jamais plus souple) : fautes de lecture d'étiquette repérées sur de vrais produits
+(« OEUPS », « beurte », « amanoes », « moutrade », « anchols », « celeni », « (sufite) », « SESAHE », « cacahoutto », « glutent ») et
+quelques mots étrangers (Sahne, Joghurt, mlieko, yolk, zeller, hořčice, łubin) passent en « À vérifier ». (2) Profil abîmé
+(`rs2:profile` sans liste `sel` valide) : l'écran d'accueil se rouvre au lieu de tout afficher « Compatible » ; les clés
+« Milk » / « EGGS » sont reconnues ; la valeur enregistrée n'est pas touchée avant ton choix ; un fichier d'import sans allergies
+valides ne remplace plus tes allergies. (3) Design : cases « Pris » de Ma liste et liens du pied du Profil à 44 px de zone tactile.
+Tests : 13 cas réels de plus dans `verdicts.py`, `profils_abimes()` dans `robustesse.py` (`python3 tests/robustesse.py 0 profil`).
+
+**Détecteur** : CI verte, aucun problème ouvert, données de 5 jours ; 350 fichiers de la base passés au verdict : aucun produit qui
+déclare un allergène sans être repéré ; ~50 produits aux fautes de lecture ont été trouvés (traités pour les cas ci-dessus).
+**Parcours client** : aucune erreur JS ; 3.34 n'a rien cassé. **Design** : pas de bleu, contrastes bons ; zones tactiles reprises.
+Note d'environnement : Playwright installé pour `/usr/bin/python3` (3.13) ; liens `chromium-1194` → 1243 refaits dans /opt/pw-browsers.
+`tools/audit_drive.py` réécrit `rapports/recherches-drive.md` : `git checkout` ce fichier avant de commiter.
+
+**Pas fait (pistes)** : profil vide choisi volontairement → tout « Compatible » en vert (idée : pastille « Non trié » + bandeau) ;
+sans position le magasin par défaut est E.Leclerc sans explication ; toast « Autour de Rennes » qui cache les tuiles ; mot de
+rayon actif coupé dans la barre (« Fro… ») ; fiche : ingrédients en anglais, « Stock au drive » sous la ligne de flottaison ;
+recette dont l'ingrédient est l'allergène (« 5/6 » vert) ; « sauce soja », « bière », « pâtes » seuls pour le gluten ;
+contraste de `.grade.n4` (4,15:1) et `--warn` ; titres de section décalés de 4 px ; recherche par nom hors réseau.
+**Détecteur — idée** : cran « flou » (distance d'édition ≤ 1 d'un mot-clé long, uniquement vers « À vérifier »).
 
 ### 2026-10-24 · 3.34 — séance de journée (heure de Paris : matin)
 
