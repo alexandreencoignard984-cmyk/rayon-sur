@@ -105,10 +105,10 @@ p{margin:0}
 .sfield input{width:100%;min-width:0;height:48px;padding:0 12px 0 40px;border:0;border-radius:12px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:17px;-webkit-appearance:none;appearance:none}
 .sfield input::placeholder{color:var(--muted)}
 #go{min-height:48px}
-.chiprow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:2px 16px 4px;scroll-padding:16px}
+.chiprow{display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:2px 16px 4px;scroll-padding:16px}
 .chiprow::-webkit-scrollbar{display:none}
-.selchip,.btnchip{flex:none;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:15px;font-weight:600;white-space:nowrap}
-.selchip{position:relative;padding:0}
+.selchip,.btnchip{flex:none;display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 14px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:15px;font-weight:600;white-space:nowrap}
+.selchip{position:relative;padding:0;height:36px}
 .selchip select{height:44px;margin:-4px -2px;padding:0 32px 0 14px;border:0;border-radius:999px;background:transparent;font-weight:600;font-size:15px;-webkit-appearance:none;appearance:none}
 .selchip svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;pointer-events:none}
 .btnchip svg{width:14px;height:14px}
@@ -117,7 +117,7 @@ p{margin:0}
 .chip[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);box-shadow:none;font-weight:650}
 .chip .x{margin-left:6px;opacity:.75}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.quick .chip{min-height:34px;font-size:14px;background:transparent}
+.quick .chip{min-height:44px;font-size:14px;background:transparent}
 .quick .chip[aria-pressed="true"]{background:var(--primary)}
 
 .status{min-height:22px;margin:12px 4px 0;color:var(--muted);font-size:15px}
@@ -381,8 +381,8 @@ table.nut tr.sub td:first-child{padding-left:14px;color:var(--muted)}
 .backbtn svg{width:22px;height:22px}
 .rtitle{margin:0 0 12px}
 .recbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.stepper{display:inline-flex;align-items:center;gap:2px;height:36px;padding:0 3px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-weight:600;font-size:15px}
-.stepper button{width:30px;height:30px;border-radius:50%;border:0;background:var(--sunk);color:var(--ink);font-size:18px;font-weight:700;line-height:1}
+.stepper{display:inline-flex;align-items:center;gap:2px;height:48px;padding:0 2px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-weight:600;font-size:15px}
+.stepper button{width:44px;height:44px;border-radius:50%;border:0;background:var(--sunk);color:var(--ink);font-size:18px;font-weight:700;line-height:1}
 .stepper span{min-width:96px;text-align:center}
 /* zones tactiles d'au moins 44 px sans changer le dessin : la zone qu'on peut toucher déborde un peu du bouton */
 .chip,.btnchip,.iconbtn,.ghost.small,.stepper button,.wlinks a,.wlinks button{position:relative}
@@ -1226,10 +1226,10 @@ const KW = {
   nuts: { re:/\b(amande|amandes|noisette|noisettes|noix|pistache|pistaches|cajou|pecan|macadamia|praline|pralines|pralin|nougat|nougatine|massepain|marzipan|frangipane|gianduja|nocciola|almond|almonds|hazelnut|hazelnuts|walnut|walnuts|cashew|cashews|pistachio|pistachios|pecans?|nut|nuts|orgeat|amaretto|amaretti|cerneaux|anacardes?|nutella)\b|fruits?(?!s?\s+de\s+mer)[^.;:]{0,10}?coques?\b|fruits?\s*a\s*ecales?\b/g, ex:/\bnoix\s+de\s+(coco|muscade|s(ain)?t[\s-]jacques)\b|\bamandes?\s+de\s+mer\b/g },
   peanuts: { re:/\b(arachide|arachides|cacahuete|cacahuetes|cacahouete|cacahouetes|peanut|peanuts|groundnuts?|ground\s+nuts?|cacahouettes?|arachis|earth\s+nuts?|beer\s+nuts?|monkey\s+nuts?|goobers?|satay)\b/g },
   soybeans: { re:/\b(soja|soya|edamame|tofu|tempeh|miso|tamari|shoyu|yuba|soy|soybean|soybeans|natto|okara|teriyaki)\b/g },
-  sesame: { re:/\b(sesame|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa|houmous|hummus|humus|zaatar|za'atar)\b/g },
+  sesame: { re:/\b(sesame|sesamo|tahin|tahini|tahine|tahina|gomasio|gomashio|halva|halwa|houmous|hummus|humus|zaatar|za'atar)\b/g },
   fish: { re:/\b(poisson|poissons|anchois|thon|saumon|cabillaud|colin|merlu|sardine|sardines|maquereau|maquereaux|surimi|truite|hareng|harengs|eglefin|haddock|fletan|merlan|hoki|tilapia|pangasius|dorade|daurade|bonite|bonito|espadon|sprats?|rouget|turbot|limande|lotte|sandre|perche|anguille|esturgeon|caviar|tarama|nuoc[\s-]?mam|worcestershire|worcester|rouilles?|garum|fumets?|dashi|lieu\s+(noir|jaune)|morue|capelan|eperlan|grondin|rascasse|sebaste|lingue|carrelet|pilchards?|sardinelles?|poutargue|katsuobushi|bacalao|fish|fishes|tuna|salmon|cod|anchovy|anchovies|mackerel|trout|herring|raies?|ombles?|soles?|loup\s+de\s+mer|roussettes?|saumonettes?|tacauds?|lompes?|lump|anchoiade|mulets?|carpes?|brochets?|pollack|pollock|sushis?|basa|pollachius|rollmops|(filets?|dos|paves?|steaks?|morceaux?|chair)\s+de\s+lieux?|lieux?[\s*]+(noir|jaune|msc)|lieux?\s+d'alaska|lieux?\s+\d+)\b/g,
           ex:/\bcaviar\s+(de\s+|d')\s*(aubergines?|tomates?|legumes|courgettes?|poivrons?|olives?|champignons?|lentilles|betteraves?|carottes?|artichauts?|potirons?|poireaux|citrons?|cepes|pois\s+chiches)\b|\bdi\s+lotte\b|\broussettes?\s+(de\s+savoie|du\s+bugey)\b|\b(au|du|a|al|del|di|sur)\s+(la\s+)?soles?\b|\bsoles?\s+(de\s+)?(four|pierre)\b|\bbeurre\s+sole\b|\b(baguettes?|pains?|boules?|flutes?|batards?)\s+([a-z]+\s+)?soles?\b/g },
-  crustaceans: { re:/\b(crustace|crustaces|crustacean|crustaceans|shellfish|shellfishes|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|araignees?\s+de\s+mer|etrilles?|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish|tourteaux?|bisques?|fruits\s+de\s+mer|seafoods?)\b/g },
+  crustaceans: { re:/\b(crustace|crustaces|crustacean|crustaceans|shellfish|shellfishes|crevette|crevettes|crabe|crabes|homard|homards|langoustine|langoustines|ecrevisse|ecrevisses|langouste|langoustes|araignees?\s+de\s+mer|etrilles?|gamba|gambas|scampi|krill|shrimp|shrimps|prawn|prawns|crab|crabs|lobster|lobsters|crayfish|tourteaux?|bisques?|fruits\s+de\s+mer|seafoods?)\b/g },
   molluscs: { re:/\b(mollusque|mollusques|molluscan|shellfish|shellfishes|molluscs|mollusks?|conques?|buccins?|moule|moules|huitre|huitres|calmar|calmars|calamars?|chipirons?|bulots?|palourdes?|praires?|petoncles?|bigorneaux?|ormeaux?|tellines?|vongole|sepia|s(ain)?t[\s-]jacques|encornet|encornets|escargot|escargots|poulpe|poulpes|seiche|seiches|coquillage|coquillages|coques?|amandes?\s+de\s+mer|berniques?|patelles?|clovisses?|vernis\s+de\s+mer|murex|mussel|mussels|oyster|oysters|squid|octopus|clam|clams|scallop|scallops|snail|snails|cockles?|whelks?|abalone|cuttlefish|calamari|limpets?|periwinkles?|pieuvres?|couteaux|fruits\s+de\s+mer|seafoods?)\b/g,
           // « coques » (coquillages) mais pas les fruits à coque (même mal écrits : « fruits coque », « fruitsà coque »), les noisettes
           // en coque, l'œuf à la coque, les coques de chocolat ou de macaron, ni les œufs « Baby Coque »
@@ -1249,22 +1249,24 @@ const KW_X = {
           ex:/[a-zß]*(kokos|kokosnuss|mandel|hafer|soja|reis|cashew|haselnuss|erbsen|dinkel)(milch|drink)[a-zß]*|[a-zß]*milchsaur[a-zß]*|[a-zß]*(milch|molke|laktose|kase)[a-zß]*frei[a-zß]*|melk(zuur|esyre)[a-z]*|[a-z]*kaasjeskruid|[a-z]*suojakaasu[a-z]*|\bnata\s+de\s+coco\b|\b(sin|senza|sem)\s+(lactosa|lattosio|lactose)\b|\bkwas\s+mlekowy\b|[a-z]*(cacao|pinda|shea|noten|kokos|amandel|hazelnoot)boter|\bburro\s+di\s+(cacao|arachidi|karite)\b|\bmanteiga\s+de\s+(cacau|amendoim|karite)\b|\bmantequilla\s+de\s+(cacao|cacahuete|mani)\b|\b(panna|nata)\s+vegetale?\b|\bbeure\s+de\s+(cacao|karite|cacahuetes?)\b|\b(lalt|iait)\s+de\s+(coco|soja|riz|amandes?|avoine)\b/g },
   gluten: { re:/\b(bie|cluten|qluten|giuten|gliten|aluten|seigie|selgle|avolne|ovoine|davoine|depeautre|epautre|lorge|dorge|trigos?|cebada|centeno|avena|espelta|frumento|grano\s+(tenero|duro)|orzo|segale|glutine|cevada|centeio|aveia|[a-zß]*(weizen|roggen|dinkel|grunkern|tarwe)[a-zß]*|(gerst|hafer|rogge|haver)[a-zß]*|pszenn?[a-z]*|zytni[a-z]*|jeczmien[a-z]*|owsian[a-z]*)(?![a-z0-9ß])/g,
             ex:/[a-zß]*buchweizen[a-zß]*|\btrigo\s+sarraceno\b|\bsenza\s+glutine\b/g },
-  eggs: { re:/\b(ovoalbumin[a-z]?|albumina|eufs|oeuf[a-z]{1,2}|doeufs?|deufs?|coeufs?|oeeufs?|oeuts?|aeufs|geufs|loeuf|huevos?|yemas?|ovoproductos|uov[oa]|tuorl[oi]|albume|ei|eier|[a-zß]*(vollei|eigelb|eiklar|huhnerei|eipulver|trockenei|flussigei|kippenei|eidooier)[a-zß]*|eiwei(ss|ß)|eieren|eigeel|volei|ovos?|jaj[a-z]*|vejce|ceufs?)(?![a-z0-9ß])/g },
+  eggs: { re:/\b(ovoalbumin[a-z]?|albumina|eufs|oeuf[a-z]{1,2}|doeufs?|deufs?|coeufs?|oeeufs?|oeuts?|aeufs|geufs|loeuf|[a-z]*oeuf[a-z]*|aeg|aegge[a-z]*|eggehvit[a-z]*|lysozym[a-z]*|huevos?|yemas?|ovoproductos|uov[oa]|tuorl[oi]|albume|ei|eier|[a-zß]*(vollei|eigelb|eiklar|huhnerei|eipulver|trockenei|flussigei|kippenei|eidooier)[a-zß]*|eiwei(ss|ß)|eieren|eigeel|volei|ovos?|jaj[a-z]*|vejce|ceufs?)(?![a-z0-9ß])/g,
+          // « bœuf » et « Jœuf » contiennent « oeuf » sans être des œufs (le mot cherché est collé à ce qui précède : « dioeuf », « oeufsfrais »)
+          ex:/[a-z]*[bj]oeuf[a-z]*/g },
   nuts: { re:/\b(nolsettes?|nosettes|noisetes|damandes?|nolx|avelines?|almendras?|avellanas?|nuez|nueces|anacardos?|pistachos?|frutos\s+de\s+cascara|frutos\s+secos|nu(ss|ß)e?n?|mandorl[ae]|nocciole|noc[ei]|anacardi|pistacchi[oa]?|frutta\s+(secca\s+)?a\s+guscio|[a-zß]*(hasel|wal|pekan|para|macadamia|cashew)nu(ss|ß)[a-zß]*|[a-zß]*mandel[a-zß]*|pistazie[a-zß]*|schalenfr[a-z]*|[a-z]*(hazel|wal|cashew|pecan|para)noo?t(en)?[a-z]*|amandel[a-z]*|noten|amendoas?|avelas?|noz|nozes|caju|pistacios?|orzech[a-z]*)(?![a-z0-9ß])/g,
           ex:/\bnolx\s+de\s+coco\b|\bnuez\s+(moscada|de\s+(coco|cola))\b|\bnoce\s+(moscata|di\s+cocco)\b|\bnoz(es)?\s+(moscada|de\s+coco)(?![a-z0-9ß])/g },
-  peanuts: { re:/\b(arahides?|darachides?|(d[li])?arachid[a-z]*|peanut[a-z]*|cacahu[a-z]*|cacahuates?|mani|arachidi|[a-zß]*erdnu(ss|ß)[a-zß]*|[a-z]*pinda[a-z]*|amendoi[mn]s?|amendoins?|arachidow[a-z]*|orzeszk[a-z]*\s+ziemn[a-z]*|arasid[a-z]*)(?![a-z0-9ß])/g,
+  peanuts: { re:/\b(arahides?|darachides?|[a-z]*arachid[a-z]*|peanut[a-z]*|cacahu[a-z]*|cacahuates?|mani|arachidi|[a-zß]*erdnu(ss|ß)[a-zß]*|[a-z]*pinda[a-z]*|amendoi[mn]s?|amendoins?|arachidow[a-z]*|orzeszk[a-z]*\s+ziemn[a-z]*|arasid[a-z]*)(?![a-z0-9ß])/g,
              ex:/[a-z]*arachidoni[a-z]*/g },
-  soybeans: { re:/\b([a-zß]*soj[ae][a-zß]*|[a-z]*soia[a-z]*|sojow[a-z]*)(?![a-z0-9ß])/g },
+  soybeans: { re:/\b([a-zß]*soj[a-zß]*|szoj[a-z]*|soy[a-zß]+|[a-z]*soia[a-z]*)(?![a-z0-9ß])/g },
   sesame: { re:/\b(sesane|sesome|seame|sesamo|[a-zß]*sesam[a-zß]*|sezam[a-z]*)(?![a-z0-9ß])/g },
-  fish: { re:/\b([a-z]{0,2}anchoi[a-z]*|polsson|pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
+  fish: { re:/\b([a-z]{0,2}anchoi[a-z]*|[a-z]*poisson[a-z]*|polsson|pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
           ex:/[a-zß]*tintenfisch[a-zß]*|[a-zß]*lachsschinken[a-zß]*|[a-zß]*[ai]fisch[a-zß]*/g },
-  crustaceans: { re:/\b(custaces|crust(?:ac|rc)[a-z]*|crev\s?t(?:\s?t)?(?:\s?es?)?|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|gamba|[a-zß]*krebse?|langusten?|krevet[a-z]*|lagostim|camaron(es)?|langostinos?|cangrejos?|crustaceos?|gamber[a-z]*|granchi[oa]?|aragost[ae]|crostacei|[a-zß]*garnelen?[a-zß]*|[a-zß]*krabben?[a-zß]*|hummer[a-zß]*|krebs(tiere|fleisch)|garnalen|kreeft(en)?|krab|schaaldieren|camarao|camaroes|caranguejos?|lagostas?|krewetk[a-z]*|skorupiak[a-z]*)(?![a-z0-9ß])/g },
-  molluscs: { re:/\b(molusques|mollus(?![a-z])|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|calamares|schnecken?|mejillon(es)?|almejas?|pulpo|berberechos?|vieiras?|ostras?|moluscos?|cozze|polpo|seppi[ae]|ostrich[ei]|molluschi|capesante|[a-zß]*muschel[a-zß]*|[a-zß]*tintenfisch[a-zß]*|austern?|weichtiere|mosselen|inktvis|oesters?|weekdieren|mexilh(ao|oes)|lulas?|ameijoas?|kalmary|osmiornic[a-z]*)(?![a-z0-9ß])/g,
+  crustaceans: { re:/\b(custaces|crust(?:ac|rc)[a-z]*|crev\s?t(?:\s?t)?(?:\s?es?)?|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|gamba|[a-zß]*krebse?|langusten?|krevet[a-z]*|lagostim|camaron(es)?|langostinos?|cangrejos?|crustaceos?|gamber[a-z]*|granchi[oa]?|aragost[ae]|crostacei|[a-zß]*garnelen?[a-zß]*|[a-zß]*krabben?[a-zß]*|hummer[a-zß]*|krebstier[a-zß]*|krebsfleisch|schalentier[a-zß]*|garnalen|kreeft(en)?|krab|schaaldieren|camarao|camaroes|caranguejos?|lagostas?|krewetk[a-z]*|skorupiak[a-z]*)(?![a-z0-9ß])/g },
+  molluscs: { re:/\b(molusques|mollus(?![a-z])|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|calamares|schnecken?|mejillon(es)?|almejas?|pulpo|berberechos?|vieiras?|ostras?|moluscos?|cozze|polpo|seppi[ae]|ostrich[ei]|molluschi|capesante|[a-zß]*muschel[a-zß]*|[a-zß]*tintenfisch[a-zß]*|austern?|weichtier[a-zß]*|schalentier[a-zß]*|mosselen|inktvis|oesters?|weekdieren|mexilh(ao|oes)|lulas?|ameijoas?|kalmary|osmiornic[a-z]*)(?![a-z0-9ß])/g,
               ex:/[a-zß]*muschelnudel[a-zß]*|[a-zß]*muschelform[a-zß]*/g },
-  celery: { re:/\b(celerl|ceteri|apio|sedano|[a-z]*celeri[a-z]*|celer|celera|[a-zß]*selleri[a-zß]*|[a-z]*selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
-  mustard: { re:/\b([a-z]*(moutard|mustard)[a-z]*|mouarde|motarde|moutrde|moutade|mcutarde|noutarde|mostaza|senape|senf[a-zß]*|[a-z]*mosterd[a-z]*|mostarda|senneps?[a-z]*|senap[a-z]*|seneves?|gorczyc[a-z]*|musztard[a-z]*)(?![a-z0-9ß])/g },
+  celery: { re:/\b(celerl|ceteri|apio|sedano|[a-z]*celeri[a-z]*|[a-z]*celery[a-z]*|celer|celera|[a-zß]*selleri[a-zß]*|[a-z]*selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
+  mustard: { re:/\b([a-z]*(moutard|mustard)[a-z]*|mouarde|motarde|moutrde|moutade|mcutarde|noutarde|mostaz[a-z]*|[a-z]*mutard[a-z]*|moutar(?![a-z])|moutar\s*'\s*e|senape|senf[a-zß]*|[a-z]*mosterd[a-z]*|mostarda|senneps?[a-z]*|senap[a-z]*|seneves?|gorczyc[a-z]*|musztard[a-z]*)(?![a-z0-9ß])/g },
   lupin: { re:/\b(altramuz|altramuces|lupin[a-z]+|tremocos?)(?![a-z0-9ß])/g },
-  sulphites: { re:/\b([a-z]*(sulfit|sulphit|solfit)[a-z]*|[a-z]*bisulfie[a-z]*|[a-z]*sulfureu[a-z]*|[a-z]*sulphurous|dioxyde\s+de\s+sulfure|so2|sufites|sulftes|sulfiltes|sulfies|sulfitos?|solfit[oi]|sulfit|sulfiet[a-z]*|anhidrido\s+sulfuroso|anidride\s+solforosa|schwefeldioxid|zwaveldioxide|dioxido\s+de\s+(azufre|enxofre)|metabisolfit[oi]|metabisulfitos?|siarczyn[a-z]*|disiarczyn[a-z]*)(?![a-z0-9ß])/g },
+  sulphites: { re:/\b([a-z]*(sulfit|sulphit|solfit)[a-z]*|[a-z]*sul(f|ph)ur[a-z]*|[a-z]*metabisul[a-z]*|su(l|lf|lph)\s*-\s*(ph)?it[a-z]*|[a-z]*su(pl|lp)fit[a-z]*|[a-z]{1,4}e22[0-8](?![0-9])|[a-z]*bisulfie[a-z]*|[a-z]*sulfureu[a-z]*|[a-z]*sulphurous|dioxyde\s+de\s+sulfure|so2|sufites|sulftes|sulfiltes|sulfies|sulfitos?|solfit[oi]|sulfit|sulfiet[a-z]*|anhidrido\s+sulfuroso|anidride\s+solforosa|schwefeldioxid|zwaveldioxide|dioxido\s+de\s+(azufre|enxofre)|metabisolfit[oi]|metabisulfitos?|siarczyn[a-z]*|disiarczyn[a-z]*)(?![a-z0-9ß])/g },
 };
 // mots étrangers déjà dans KW : la raison affichée précise aussi l'allergène
 // et noms de poissons moins connus (« raie », « lompe »…)
@@ -1839,7 +1841,10 @@ function evaluate(p){
     const xHits = hasText && !frHits.length ? findHits(rawAll, KW_X[a.kw]).words : [];
     const hits = frHits.length ? frHits : xHits;
     const hitMsg = frHits.length && !FOREIGN_W.test(fold(frHits[0]).trim()) ? `Ingrédient à vérifier : « ${frHits[0]} »` : hits.length ? `Ingrédient à vérifier : « ${hits[0]} » (${a.key === 'lactose' ? 'lait' : a.name} ?)` : '';
-    const nameHits = (nameFree && ((NAME_FREE_OK.includes(a.key) && nameVegan) || nameSaysFree(nameFold, KW[a.kw], a.key))) ? [] : findHits(nameTxt, KW[a.kw]).words;
+    // le nom est lu aussi avec les mots d'une autre langue (« Gamba blanca », « pindakaas », « all'uovo »)
+    const nameOk = kw => nameFree && ((NAME_FREE_OK.includes(a.key) && nameVegan) || nameSaysFree(nameFold, kw, a.key));
+    let nameHits = nameOk(KW[a.kw]) ? [] : findHits(nameTxt, KW[a.kw]).words;
+    if (!nameHits.length && !nameOk(KW_X[a.kw])) nameHits = findHits(nameTxt, KW_X[a.kw]).words;
     if (a.key === 'lactose'){
       if (isLactoseFree(p)) ok.push(al.has('en:milk') ? 'Contient du lait mais étiqueté sans lactose' : 'Étiqueté sans lactose');
       else if (al.has('en:milk')) no.push('Contient du lait, donc du lactose');
@@ -4580,7 +4585,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.33';
+const APP_VERSION = '3.34';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

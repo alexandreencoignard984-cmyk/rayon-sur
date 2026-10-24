@@ -276,6 +276,83 @@ with sync_playwright() as p:
     check(verdict(['milk'], 'eau, sucre, sel, arôme', {'ingredients_text': 'water, sugar, salt, flavour'}) == 'ok', 'deux textes sans allergène : compatible')
     check(verdict(['milk'], 'eau, sucre, sel, arôme', {'ingredients_text': 'eau, sucre, sel, arôme'}) == 'ok', 'deux textes identiques : compatible')
     check(verdict(['milk'], '', {'ingredients_text_fr': '', 'ingredients_text': '', 'ingredients_text_en': 'milk, water'}) == 'check', 'texte anglais seul : à vérifier')
+    # 3.34 : produits réels de la base, texte tel que lu sur l'emballage (allergène, code-barres, nom, ingrédients) : jamais « Compatible »
+    REELS = [
+        # œufs : mot collé ou précédé de lettres en trop, mots étrangers
+        ('eggs', '26002200', '6 Cannelés de Bordeaux', 'ln deqait, lait écrémé), poudre dlœufs entiers, arôme vanille. Produit'),
+        ('eggs', '3178880003859', 'Petites couronnes du Roussillon anis', 'Farine de blé, sucre, huile de colza, oœufs entiers en poudre, anis en grains 3%'),
+        ('eggs', '3596710445653', 'Bâtonnets', 'Eau, chair de poissons 28,9%, diphosphates, blanc dlœuf poudre, arômes (contient poissons et crustacés)'),
+        ('eggs', '7613033960307', 'Bûche glacée framboisier', 'eau, sirop de glucose, sucre, huile végétale (coco), blanc dtœuf, lactose'),
+        ('eggs', '3551610008766', 'Panés de colin d’alaska', 'COLIN d\'Alaska MSC 58,8%, eau, farine de BLÉ*, blanc dqŒUF*, sel, poivre*'),
+        ('eggs', '8020083111112', 'Pesto à la Génoise', "huile d'olive vierae extra. basilic 37 %, fromaaes râpés (LAIT. sel, orésure. conservateur: Ivsozvme dlŒUF.éoaississant:E460)"),
+        ('eggs', '8002710812005', 'Zanetti Grana Padano Dop', 'Mælk, salt, osteløbe, konserveringsmiddel: lysozym fra ÆG.'),
+        ('eggs', '8011242120137', "Pasta fresca all'uovo", 'QD PÂTES FRAICHESAUXOEUFS ln rédients: semoule de BLÉ dur, farine de BLÉ tendre, 02tJFS (20%), eau.'),
+        ('eggs', '9000000000001', 'Pâtes', 'semoule de blé dur, eau, oeufsfrais'),
+        ('eggs', '9000000000002', 'Pâtes', 'semoule de blé dur, oeufsentiers, eau'),
+        ('eggs', '9000000000003', 'Gâteau', 'farine, sucre, dioeuf, eau'),
+        ('eggs', '9000000000004', 'Gaufre', 'farine, sucre, lysozyme dlŒUF, eau'),
+        ('eggs', '9000000000005', 'Crème', 'lait, sucre, æggehvide, eau'),
+        ('eggs', '9000000000006', 'Pâtes', 'Durum, eggehvite, vann'),
+        ('eggs', '9000000000007', 'Tagliatelle', 'semola di grano duro, uova fresche 20%'),
+        # moutarde, arachide, poisson, céleri
+        ('mustard', '3700009202449', 'Betteraves rouges', "Be 'alcool, MOUTAR 'E de Dijon (eau, pomme de terre *épaississant tgomme BP - 56382 GUER CEDEX."),
+        ('mustard', '3596710446964', 'Concombre au fromage blanc', 'Concombre 81 %huile .dealza fromage blanc vinaigrè de Dijon(eau2 graines .demutarde;vinaigre datcool, purée d\'ail'),
+        ('mustard', '9000000000008', 'Sauce', 'eau, mostazay, sel'),
+        ('peanuts', '3421557912122', 'Granola', "Fabriqué dans un atelier qui utilise d'autres fruits à coque, du soja, des graines de sésame, du lait et de larachide."),
+        ('peanuts', '3421557501401', 'Corn Flakes', 'Maïs* 65,7%, sucre de canne* 24.1 % Fabriqué dans atetier qui utilise des produits (aitiers et de liarachide.'),
+        ('peanuts', '9000000000009', 'Biscuit', 'farine, sucre, ETARACHIDES'),
+        ('fish', '9000000000010', 'Sauce', 'eau, sel, poudre depoissons'),
+        ('celery', '9000000000011', 'Épices', 'sel, celeryand pepper'),
+        # sulfites
+        ('sulphites', '78230477', 'Abricots secs', 'abricots secs, conservateur: dioxide sulphurique)'),
+        ('sulphites', '01583328', 'Dried mango', 'Dried mango, preservative sodium metabisulphates'),
+        ('sulphites', '40893150', 'Soft apricots', 'Partially rehydrated drled pltted aprlcots 87 % Dried Apricots, Preservative: Sulphur Dloxlde; Water, Acids: Malic Acid'),
+        ('sulphites', '5013635410811', 'Lemon Juice', 'lemon juice from concentrate (99.98%), preservative: potassium metabisulphate (0.02%)'),
+        ('sulphites', '76106750', 'Jus de citron', 'Jus de citron 98.86%, huile essentielle de citron, acide citrique. Conservateur : métabisulfique de potassium.'),
+        ('sulphites', '3512030017196', "Salade de pâtes à l'italienne", 'tomate cerise 19%, condiment balsamique blanc (vinaigre de vin, moût de raisin, conservateur : métabisul - fite de potassium), poivre blanc'),
+        ('sulphites', '3760183292247', 'Mini financiers Orange', 'écorces d\'orange confites 8,6%(2) (sirop de glucose - fructose, correcteur d\'acidité : acide citrique, conservateur : anhydride sulfurique), stabilisant : sorbitol'),
+        ('sulphites', '7610442255598', 'Cocosstängel', 'Cocos, sucre, conservateur (sulfure), origine: thailande'),
+        ('sulphites', '8850161155079', 'Oriental chef coconut milk', 'COCO, EAU, METABISULFIDE DE SODIUM'),
+        ('sulphites', '0206753037069', 'Pizza Saumon', "persillade (huile d'olives, persil, pulpe d'ail (sel, ail, anhydre de sulfure); eau; citron"),
+        ('sulphites', '2869864040144', 'Queues de crevettes', 'ELABORÉ FRANCE : CREVETTES. sel. antioxydant tE223, acidifiant Sans colorant'),
+        ('sulphites', '3182384050219', 'Melfor côté balsamique', "FR INGRÉDHTS : Vinaigre d'alcooly vinagre balsamique de tantes colorants: E150c, d, consentateurs : suPlfites Eà20 consomerde référenceavantladaie"),
+        ('sulphites', '9000000000012', 'Fruits secs', 'abricots, acide sulfurique'),
+        ('sulphites', '9000000000013', 'Fruits secs', 'abricots, conservateur : sulphurique'),
+        ('sulphites', '9000000000014', 'Fruits secs', 'abricots, metabisulphate de sodium'),
+        ('sulphites', '9000000000015', 'Fruits secs', 'abricots, anhydride sulfurique'),
+        # crustacés et mollusques en allemand
+        ('crustaceans', '5997523313050', 'CUP NOODLES Curry', 'Nudeln 77,6% [WEIZENMEHL, Palmöl, Kochsalz], Gewürze (SELLERIE). Kann Spuren von Krebstieren, Fisch, Weichtieren und Sesam enthalten.'),
+        ('molluscs', '5997523313050', 'CUP NOODLES Curry', 'Nudeln 77,6% [WEIZENMEHL, Palmöl, Kochsalz], Gewürze (SELLERIE). Kann Spuren von Krebstieren, Fisch, Weichtieren und Sesam enthalten.'),
+        ('crustaceans', '9000000000016', 'Suppe', 'Wasser, Salz, Schalentiere'),
+        ('molluscs', '9000000000017', 'Suppe', 'Wasser, Salz, Schalentiere'),
+        # nom du produit lu avec les mots d'une autre langue (ingrédients sans mot connu)
+        ('crustaceans', '20191672', 'Gamba blanca del Mediterráneo', '100 % viande bovine.'),
+        ('gluten', '32328585', 'Trigo Espelta 0% Azucares', 'ORGANIC CORN, ORGANIC SUNFLOWER OIL'),
+        ('peanuts', '3222475893421', 'Thoms speciale pindakaas', 'Pain de mie 49,3% (eau - sel)'),
+        ('nuts', '26042954', 'Gefüllte Oliven mit Mandeln (Penny) / Viande Hachée pur boeuf (Aldi)', '100 % viande bovine.'),
+        ('peanuts', '20292133', 'Bio-Fruchtschnitte Dattel-erdnuss', 'viande de porc, sel, muscade'),
+        ('sesame', '8000744000344', 'Pagnottine con sesamo', 'Da consu sa sul retro re qualche gl LK rre hydr sunflowe flour.'),
+        ('sesame', '9000000000018', 'Pain au sesamo', 'farine, eau'),
+        # soja slave ou scandinave
+        ('soybeans', '7622300479107', 'Choco Dessert', 'Šećer, voda, kakaov maslac, emulgatori (sojini lecitini, E476, E471), sol'),
+        ('soybeans', '8007990405985', 'Hulala whipping', 'Voda, sladkor (11%), stabilizatorji: E420ii, sojin lecitin (E322), E472b, sol'),
+        ('soybeans', '4056489751403', 'Protein pancake', 'zabliszt, tejcsokoládé (cukor, kakaóvaj, emulgeálószer: lecitinek /szója/; természetes vaniliaaroma)'),
+        ('soybeans', '7622300248987', 'Oboy', 'Sukker, 18% fettredusert kakao (med emulgator soyalecitin), druesukker, salt'),
+        ('soybeans', '4001724029526', 'Double Peppetoni Pizza', 'Hvetemel, vann, rapsolje, soyasaus (vann, soyabønner, salt, hvetemel), byggmaltekstrakt'),
+        ('soybeans', '9000000000019', 'Snack', 'mąka, sojový extrakt, sůl'),
+        # faux amis qui restent compatibles
+        ('sulphites', '9000000000020', 'Sel', 'sulfate de fer, sulfate de zinc, sulfate de cuivre, sel'),
+        ('eggs', '9000000000021', 'Plat', 'viande de bœuf 20%, boeuf, sel'),
+        ('eggs', '9000000000022', 'Plat', 'Jœuf, sel'),
+    ]
+    SAFE = {'9000000000020', '9000000000021', '9000000000022'}
+    print('3. Produits réels : jamais « Compatible » quand l\'allergène est écrit sur l\'emballage')
+    bad = []
+    for sel, code, name, ing in REELS:
+        got = verdict([sel], BASE + ing, {'code': code, 'product_name': name})
+        want_ok = code in SAFE
+        if (got == 'ok') != want_ok: bad.append(f'{code} {sel} / « {name} » / « {ing[:60]} » : {got}')
+    check(not bad, f'{len(REELS)} produits ou textes réels' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
