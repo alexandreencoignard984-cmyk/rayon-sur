@@ -27,7 +27,6 @@ Rien de cette liste n'est fait sans son accord.
 
 Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer une piste une fois faite ou abandonnée.
 
-- **URGENT — base produits** (26/10) : lecture réécrite sans DuckDB en 3.37, à relancer et vérifier (données toujours du 19/10 tant que ça n'a pas réussi).
 - **Pistes du 23/10 (détecteur / parcours / design)** : mots étrangers encore absents : lait (Sahne, Joghurt, mlieko,
   smetana, tvaroh, lactalbumin, NFDM, « dairy »), gluten (mehl, pšenica, mąka, triticum, hordeum, secale, orges, pâtes
   seules, sauce soja, bière), moutarde (hořčice), lupin (łubin), sulfites (siřičitany), céleri (zeller, livèche) ; mots
@@ -111,7 +110,7 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 est maintenant « À vérifier » ; `bogusIngredients` exige un vrai mot d'ingrédient (« acides », « graisses »… seuls ne comptent plus) avant
 un éventuel tableau nutritionnel. Mesure : 631 produits sur 247 643 (1 % des Compatibles) passent « À vérifier », aucun plus souple.
 (2) `tools/build_data.py` lit l'export en flux Python pur (plus de DuckDB) pour régler le manque de mémoire ; test hors réseau
-`tests/base_produits.py`. **Pas encore prouvé sur le vrai export de 1,49 Go : relancer « Base produits » et vérifier.**
+`tests/base_produits.py`. **Prouvé le soir même : « Base produits » a réussi en ~3 min sur GitHub, base du 26/10.**
 Étape `free -m; df -h` ajoutée au workflow. (3) Zones tactiles : ligne « près de moi » et « Voir ma liste » ≥ 44 px.
 (4) Design : titres de section alignés sur les cartes (`.sec` marge 0) ; texte foncé sur les pastilles Nutri-Score B/D et NOVA 2/3 (contraste ≥ 4,5:1).
 
