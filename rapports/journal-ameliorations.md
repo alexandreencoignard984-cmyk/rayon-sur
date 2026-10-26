@@ -27,6 +27,8 @@ Rien de cette liste n'est fait sans son accord.
 
 Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer une piste une fois faite ou abandonnée.
 
+- **URGENT — base produits qui ne se met plus à jour** (26/10) : « Base produits » échoue en mémoire (DuckDB) depuis l'export
+  de 1,49 Go ; données du 19/10. Détails et pistes dans l'entrée 3.36 du journal.
 - **Pistes du 23/10 (détecteur / parcours / design)** : mots étrangers encore absents : lait (Sahne, Joghurt, mlieko,
   smetana, tvaroh, lactalbumin, NFDM, « dairy »), gluten (mehl, pšenica, mąka, triticum, hordeum, secale, orges, pâtes
   seules, sauce soja, bière), moutarde (hořčice), lupin (łubin), sulfites (siřičitany), céleri (zeller, livèche) ; mots
@@ -113,12 +115,15 @@ hvede, vetestärkelse, fisk*, torsk, lohi, jordnøtter, nøtter, mandle…), et 
 produits (Nissin 4897878000081, Bagels 5410724320011, Heinz 5900783009496, Daim 7622210741530, Toro 7037610027045…) passent en
 « À vérifier » ou « Exclu ». ~50 cas de plus dans `tests/verdicts.py` (faux amis relax, eggplant, Eierschwammerl, Saint-Jacques
 gardés Compatibles). (2) Design : le message « Autour de … » reste 2,6 s au lieu de 4,5 s (il cachait des tuiles) ; pastille « E »
-rouge à 4,6:1 de contraste. (3) `tools/build_data.py` : la base produits du lundi ratait (voir ci-dessous) ; DuckDB limité à 8 Go,
-2 fils, fichiers temporaires sur disque.
+rouge à 4,6:1 de contraste. (3) `tools/build_data.py` : la base produits du lundi rate (voir ci-dessous) ; essais de réglage mémoire, pas encore réglé.
 
 **Détecteur** : bases de 7 jours (19/10) : « Base produits » et « Base magasins » relancées à la main ce matin ; magasins OK,
-produits **en échec : DuckDB « Out of Memory » (12,4 Go) sur le serveur GitHub** (l'export Open Food Facts a grossi) → réglage
-ajouté, à vérifier à la prochaine exécution (lundi 3/11 ou relance manuelle). Aucune issue ouverte. 374 733 produits passés au verdict
+produits **toujours en échec : DuckDB « Out of Memory » (12,4 Go atteints en ~40 s, pendant la lecture du CSV `read_csv` de
+`build_data.py`)** sur le serveur GitHub. L'export Open Food Facts fait 1,49 Go (1,28 Go le 19/10, qui passait). Essayés sans
+succès : `memory_limit` 8 Go + 2 fils + `temp_directory` (3.36), lecture par `fetchmany` (commit f03d934). Pistes : réduire
+`max_line_size` (20 Mo) ou retirer `parallel=false`/`all_varchar`, filtrer d'abord avec `zcat | grep` sur `en:france`, ou passer
+sur un serveur plus gros ; l'atelier de Claude ne peut pas télécharger l'export (403), donc à essayer depuis GitHub (essai ≈ 3 min
+via `gh api -X POST …/workflows/data.yml/dispatches -f ref=main`). **Les produits restent ceux du 19/10** (l'appli fonctionne). Aucune issue ouverte. 374 733 produits passés au verdict
 un allergène à la fois : trous = roumain, nordique, mots collés/mal lus (traités ci-dessus). **Parcours client** (sésame + poisson +
 lupin, aucune erreur JS) : 2 faux « Compatible » poisson (Nissin, Bagels), traces de sésame en croate non vues (traités) ; reste :
 rayon « Houmous » avec des « Compatible » sans rapport, « Stock au drive » qui promet plus que la carte ne fait, « Autour de
