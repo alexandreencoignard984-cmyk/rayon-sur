@@ -306,6 +306,10 @@ with sync_playwright() as p:
     for th in ('light', 'dark'):
         ctx6, page6, errs6, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': th})
         wait_near(page6)
+        # 3.37 : ligne « près de moi » de l'accueil (36 px) et bouton « Voir ma liste » du message (33 px) : zone touchable d'au moins 44 px
+        page6.wait_for_selector('#nearLine:not([hidden])', timeout=20000)
+        hn = page6.eval_on_selector('#nearLine', 'e => e.getBoundingClientRect().height')
+        check(hn >= 44, f'{th} : ligne « près de moi » de l\'accueil >= 44 px ({hn})')
         page6.click('#homeGrid [data-q="en:biscuits"]'); page6.wait_for_selector('#quick .chip', timeout=20000); page6.wait_for_timeout(300)
         hs = lambda sel: page6.eval_on_selector_all(sel, "els => els.filter(e => e.offsetParent).map(e => { const r = e.getBoundingClientRect(); return Math.min(r.width, r.height); })")
         def big(sel, label):
@@ -316,6 +320,11 @@ with sync_playwright() as p:
         # 3.35 : case « Pris » de Ma liste (26 px à l'écran) touchable sur 44 px, liens du pied du Profil sur ~44 px sans bouger la mise en page
         page6.click('nav [data-go="search"]')
         page6.wait_for_selector('#list li [data-add]', timeout=20000); page6.click('#list li [data-add] >> nth=0')
+        page6.wait_for_selector('#toast.show .tact')
+        tb = page6.eval_on_selector('#toast .tact', 'e => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; }')
+        hit = lambda dy: page6.evaluate('([x, y]) => { const e = document.elementFromPoint(x, y); return !!(e && e.closest(".tact")); }', [tb[0] + tb[2] / 2, tb[1] + dy])
+        check(hit(-5) and hit(tb[3] + 5), f'{th} : « Voir ma liste » touchable sur >= 44 px de haut (visuel {round(tb[3])} px)')
+        check(not hit(-12) and not hit(tb[3] + 12), f'{th} : zone touchable de « Voir ma liste » limitée (pas plus de 6 px autour)')
         page6.click('nav [data-go="list"]'); page6.wait_for_selector('#shopList .shop input')
         bx = page6.eval_on_selector('#shopList .shop input', 'e => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; }')
         check(round(bx[2]) == 26 and round(bx[3]) == 26, f'{th} : la case « Pris » garde son dessin de 26 px ({bx[2]} x {bx[3]})')
@@ -328,6 +337,18 @@ with sync_playwright() as p:
         page6.add_style_tag(content='footer a{display:inline!important;padding:0!important;margin:0!important}')
         h0 = page6.eval_on_selector('footer', 'e => Math.round(e.getBoundingClientRect().height)')
         check(abs(h1 - h0) <= 2, f'{th} : le pied du Profil garde la même hauteur ({h0} -> {h1})')
+        # 3.37 design : titres de section alignés sur les cartes ; texte des pastilles Nutri-Score B/D et NOVA 2/3 lisible (>= 4,5:1)
+        for scr in ('recipes', 'list', 'scan', 'profile'):
+            page6.click(f'nav [data-go="{scr}"]'); page6.wait_for_timeout(250)
+            gaps = page6.evaluate("""(s) => [...document.querySelectorAll('#screen-' + s + ' .sec')].filter(e => e.offsetWidth > 0).map(e => {
+              const n = e.nextElementSibling; if (!n || !n.offsetWidth) return null;
+              return [Math.round(e.getBoundingClientRect().left), Math.round(n.getBoundingClientRect().left)]; }).filter(Boolean)""", scr)
+            check(all(a == b for a, b in gaps), f'{th} : titres de section alignés sur les cartes, écran {scr} ({gaps})')
+        pastilles = page6.evaluate("""() => ['g-b', 'g-d', 'n2', 'n3'].map(c => { const e = document.createElement('span'); e.className = 'grade ' + c; document.body.append(e);
+          const cs = getComputedStyle(e); const r = [c, cs.color, cs.backgroundColor]; e.remove(); return r; })""")
+        for c, fg, bg in pastilles:
+            f = [int(v) for v in re.findall(r'\d+', fg)[:3]]; g = [int(v) for v in re.findall(r'\d+', bg)[:3]]
+            check(ratio(f, g) >= 4.5, f'{th} : pastille {c} lisible ({ratio(f, g):.2f}:1)')
         check(not errs6, f'aucune erreur JavaScript ({th})')
         ctx6.close()
     b.close()

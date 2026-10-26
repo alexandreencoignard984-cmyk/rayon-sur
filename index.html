@@ -73,7 +73,7 @@ p{margin:0}
 .lede{color:var(--muted);font-size:15px;margin:-4px 0 14px}
 .hint{font-size:14px;color:var(--muted)}
 .recsub{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ink);font-size:15px}
-.sec{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:26px 4px 8px}
+.sec{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:26px 0 8px}
 .sec h2{font-size:20px}
 
 /* boutons */
@@ -320,8 +320,8 @@ mark{background:var(--no-bg);color:var(--no);font-weight:700;border-radius:3px;p
 .scores{display:flex;flex-wrap:wrap;gap:10px 18px}
 .score{display:flex;align-items:center;gap:8px;font-size:15px}
 .grade{display:inline-grid;place-items:center;min-width:32px;height:32px;padding:0 6px;border-radius:8px;font-weight:800;color:#fff}
-.g-a,.g-a-plus{background:#038141}.g-b{background:#85BB2F}.g-c{background:#FECB02;color:#222}.g-d{background:#EE8100}.g-e,.g-f{background:#E63E11}
-.n1{background:#038141}.n2{background:#85BB2F}.n3{background:#EE8100}.n4{background:#D93A0F}
+.g-a,.g-a-plus{background:#038141}.g-b{background:#85BB2F;color:#222}.g-c{background:#FECB02;color:#222}.g-d{background:#EE8100;color:#222}.g-e,.g-f{background:#E63E11}
+.n1{background:#038141}.n2{background:#85BB2F;color:#222}.n3{background:#EE8100;color:#222}.n4{background:#D93A0F}
 table.nut{width:100%;border-collapse:collapse;font-size:15px}
 table.nut td{padding:7px 0;border-top:1px solid var(--line)}
 table.nut tr:first-child td{border-top:0}
@@ -417,7 +417,7 @@ div.rowbtn{cursor:default}
 .listsum span{flex:1;min-width:0}
 .listsum b{color:var(--ok)}
 .listsum .go{flex:none;color:var(--ok);font-weight:700;white-space:nowrap}
-.nearline{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:9px 12px;border:0;border-radius:12px;background:var(--ok-bg);color:var(--ink);font-size:14px;line-height:1.3;text-align:left}
+.nearline{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:9px 12px;min-height:44px;border:0;border-radius:12px;background:var(--ok-bg);color:var(--ink);font-size:14px;line-height:1.3;text-align:left}
 .nearline svg{flex:none;width:16px;height:16px;color:var(--ok)}
 .nearline span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nearline b{flex:none;color:var(--ok);font-weight:650}
@@ -538,7 +538,8 @@ dialog .toast{position:fixed}
 .toast.show.hasact{pointer-events:auto}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .toast{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.12) inset}}
 :root[data-theme="dark"] .toast{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.12) inset}
-.tact{flex:none;border:0;background:transparent;color:#8BE3B4;font-weight:700;font-size:15px;padding:6px 0;white-space:nowrap}
+.tact{position:relative;flex:none;border:0;background:transparent;color:#8BE3B4;font-weight:700;font-size:15px;padding:6px 0;white-space:nowrap}
+.tact::before{content:"";position:absolute;inset:-6px -10px}
 .spin{width:1em;height:1em;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;vertical-align:-.12em}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -1767,11 +1768,16 @@ const catGuard = (k, p) => !!CAT_GUARD[k] && (p.categories_tags || []).some(t =>
 // Texte d'ingrédients illisible pour l'appli : nom de marque recopié, texte de l'emballage mal lu,
 // ou langue étrangère sans aucun mot d'ingrédient courant en français ou en anglais.
 const ING_VOCAB = /\b(sucres?|sugars?|farines?|flours?|eau|water|sel|salt|huiles?|oils?|lait|milk|cacao|cocoa|ble|wheat|amidons?|starch|aromes?|flavou?r(ing)?s?|graisses?|fats?|oeufs?|eggs?|beurre|butter|creme|cream|sirops?|syrups?|jus|juices?|fruits?|chocolat|chocolate|levures?|yeast|emulsifiants?|emulsifiers?|lecithines?|lecithins?|poudre|powder|extraits?|extracts?|acides?|acids?|conservateurs?|preservatives?|colorants?|colou?rs?|epaississants?|thickeners?|gelifiants?|stabilisants?|stabili[sz]ers?|vinaigre|vinegar|ail|garlic|oignons?|onions?|tomates?|tomato(es)?|pommes?|apples?|citron|lemon|riz|rice|mais|corn|soja|soy|viande|meat|porc|pork|boeuf|beef|poulet|chicken|poissons?|fish|legumes|vegetables|epices|spices|herbes|ferments|glucose|fructose|dextrose|maltodextrine|proteines?|proteins?|fibres?|vitamines?|vitamins?|ingredients?|semoule|cereales|cereals|noix|nuts|amandes?|almonds?|noisettes?|hazelnuts?|arachides?|peanuts?|purees?|pulpe|concentre|ferment[eé]s?)\b/;
+const NUTRI_TXT = /\bkj\b|\bkcal\b|valeurs? nutritionnelles|nutrition facts|nutritional (values?|information)|nahrwert|informations? nutritionnelles/;
+const ING_WEAK = /\b(acides?|acids?|graisses?|fats?|proteines?|proteins?|fibres?|vitamines?|vitamins?|ingredients?)\b/g;
 function bogusIngredients(p, raw){
   const t = fold(raw);
   const brand = fold(brandList(p)[0] || '');
   if (raw.length < 80 && brand.length >= 4 && t.includes(brand)) return true;
-  if (ING_VOCAB.test(t)) return false;
+  // il faut au moins un vrai mot d'ingrédient (« acides », « graisses », « protéines »… se lisent aussi dans un tableau nutritionnel),
+  // avant l'éventuel tableau des valeurs nutritionnelles recopié à la suite (« 2307 kJ », « valeurs nutritionnelles »…)
+  const cut = t.search(NUTRI_TXT);
+  if (ING_VOCAB.test((cut < 0 ? t : t.slice(0, cut)).replace(ING_WEAK, ' '))) return false;
   // une seule matière première qui reprend le nom du produit (« Lentilles corail »)
   const nameWords = new Set(fold(nameOf(p)).split(/[^a-z0-9]+/).filter(w => w.length >= 3));
   const words = t.split(/[^a-z0-9]+/).filter(w => w.length >= 3);
@@ -4599,7 +4605,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.36';
+const APP_VERSION = '3.37';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

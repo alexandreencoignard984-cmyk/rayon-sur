@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 OUT="${RS_OUT:-/tmp/rayon-sur-tests}"; mkdir -p "$OUT"
 fail=0
-for t in verdicts.py fiches.py recettes.py localisation.py navigation.py liens_drive.py magasins_reels.py appli.py bugs.py "robustesse.py 80"; do
+for t in base_produits.py verdicts.py fiches.py recettes.py localisation.py navigation.py liens_drive.py magasins_reels.py appli.py bugs.py "robustesse.py 80"; do
   echo "──── $t"
   name="${t%% *}"
   # robustesse.py dure près de 20 min seul : délai large pour éviter les faux échecs

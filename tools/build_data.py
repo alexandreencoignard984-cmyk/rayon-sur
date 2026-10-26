@@ -10,8 +10,6 @@ Usage : python3 tools/build_data.py [chemin_du_csv.gz]
 """
 import datetime, gzip, json, os, re, subprocess, sys, time, unicodedata
 
-import duckdb
-
 CSV_URL = 'https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CFG = json.load(open(os.path.join(ROOT, 'tools', 'config.json'), encoding='utf-8'))
@@ -129,41 +127,48 @@ def download(path):
     return found[-1] if found else ''
 
 
+def read_rows(src):
+    """Lit l'export CSV.gz en flux (une ligne à la fois, sans DuckDB : quelques Mo de mémoire seulement).
+    Garde les produits vendus en France, avec un nom, dans un de nos rayons. Chaque ligne : les champs de la
+    requête historique, dans le même ordre ('' devient None)."""
+    nut = NUT
+    need = ['code', 'product_name', 'brands', 'quantity', 'stores', 'categories_tags', 'labels_tags', 'allergens',
+            'traces_tags', 'ingredients_text', 'ingredients_analysis_tags', 'nutriscore_grade', 'nutriscore_score',
+            'nova_group', 'environmental_score_grade', 'environmental_score_score', 'image_small_url',
+            'unique_scans_n'] + nut
+    optional = ['ingredients_tags', 'states_tags', 'last_modified_t']
+    aisles = set(AISLES)
+    out, bad = [], 0
+    with gzip.open(src, 'rt', encoding='utf-8', errors='replace', newline='\n') as fh:
+        head = fh.readline().rstrip('\n').split('\t')
+        pos = {c: i for i, c in enumerate(head)}
+        missing = [c for c in need + ['countries_tags'] if c not in pos]
+        if missing:
+            raise SystemExit(f'ARRÊT : colonnes absentes de l\'export : {missing}')
+        log('colonnes facultatives :', {c: c in pos for c in ('ingredients_tags', 'states_tags', 'last_modified_t')})
+        idx = [pos[c] for c in need] + [pos.get(c) for c in optional]
+        ci, ni, cati, n = pos['countries_tags'], pos['product_name'], pos['categories_tags'], len(head)
+        for line in fh:
+            if 'en:france' not in line:
+                continue
+            f = line.rstrip('\n').split('\t')
+            if len(f) != n:
+                bad += 1
+                continue
+            if 'en:france' not in f[ci] or not f[ni]:
+                continue
+            if not any(c in aisles for c in f[cati].split(',')):
+                continue
+            out.append(tuple(None if i is None or f[i] == '' else f[i] for i in idx))
+    log(f'lignes mal formées ignorées : {bad}')
+    return out
+
+
 def main():
     src = sys.argv[1] if len(sys.argv) > 1 else '/tmp/off-products.csv.gz'
     export_date = '' if os.environ.get('NO_DOWNLOAD') else download(src)
     log('taille', os.path.getsize(src))
-    con = duckdb.connect()
-    con.execute("SET preserve_insertion_order=false")
-    # Le serveur GitHub a ~16 Go : peu de fils, et fichiers temporaires sur disque plutôt que tout en mémoire
-    con.execute("SET threads=2")
-    con.execute("SET temp_directory='/tmp/duckdb-tmp'")
-    pattern = ',(' + '|'.join(re.escape(t) for t in AISLES) + '),'
-    nut_sql = ', '.join(f'"{c}"' for c in NUT)
-    # colonnes facultatives : prises si l'export les contient (sinon vides, sans faire échouer la construction)
-    with gzip.open(src, 'rt', encoding='utf-8', errors='replace') as fh:
-        header = set(fh.readline().rstrip('\n').split('\t'))
-    opt = lambda c: f'"{c}"' if c in header else f'NULL AS "{c}"'
-    log('colonnes facultatives :', {c: c in header for c in ('ingredients_tags', 'states_tags', 'last_modified_t')})
-    q = f"""
-      SELECT code, product_name, brands, quantity, stores, categories_tags, labels_tags, allergens, traces_tags,
-             ingredients_text, ingredients_analysis_tags, nutriscore_grade, nutriscore_score, nova_group,
-             environmental_score_grade, environmental_score_score, image_small_url, unique_scans_n, {nut_sql},
-             {opt('ingredients_tags')}, {opt('states_tags')}, {opt('last_modified_t')}
-      FROM read_csv('{src}', delim='\t', quote='', escape='', header=true, all_varchar=true, ignore_errors=true,
-                    max_line_size=20000000, parallel=false)
-      WHERE countries_tags LIKE '%en:france%'
-        AND product_name IS NOT NULL AND product_name <> ''
-        AND regexp_matches(',' || coalesce(categories_tags, '') || ',', '{pattern}')
-    """
-    # lecture par paquets : fetchall() gardait deux copies de ~500 000 lignes (DuckDB + Python) et manquait de mémoire
-    cur = con.execute(q)
-    rows = []
-    while True:
-        chunk = cur.fetchmany(20000)
-        if not chunk:
-            break
-        rows.extend(chunk)
+    rows = read_rows(src)
     log('produits France dans nos rayons :', len(rows))
 
     by_aisle = {t: [] for t in AISLES}

@@ -27,8 +27,7 @@ Rien de cette liste n'est fait sans son accord.
 
 Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer une piste une fois faite ou abandonnée.
 
-- **URGENT — base produits qui ne se met plus à jour** (26/10) : « Base produits » échoue en mémoire (DuckDB) depuis l'export
-  de 1,49 Go ; données du 19/10. Détails et pistes dans l'entrée 3.36 du journal.
+- **URGENT — base produits** (26/10) : lecture réécrite sans DuckDB en 3.37, à relancer et vérifier (données toujours du 19/10 tant que ça n'a pas réussi).
 - **Pistes du 23/10 (détecteur / parcours / design)** : mots étrangers encore absents : lait (Sahne, Joghurt, mlieko,
   smetana, tvaroh, lactalbumin, NFDM, « dairy »), gluten (mehl, pšenica, mąka, triticum, hordeum, secale, orges, pâtes
   seules, sauce soja, bière), moutarde (hořčice), lupin (łubin), sulfites (siřičitany), céleri (zeller, livèche) ; mots
@@ -105,6 +104,22 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-26 · 3.37 — séance du soir
+
+**Changé** : (1) Faux « Compatible » corrigé : un texte d'ingrédients illisible (OCR cassé, ex. Favorina « Lapin chocolat » 20086244)
+est maintenant « À vérifier » ; `bogusIngredients` exige un vrai mot d'ingrédient (« acides », « graisses »… seuls ne comptent plus) avant
+un éventuel tableau nutritionnel. Mesure : 631 produits sur 247 643 (1 % des Compatibles) passent « À vérifier », aucun plus souple.
+(2) `tools/build_data.py` lit l'export en flux Python pur (plus de DuckDB) pour régler le manque de mémoire ; test hors réseau
+`tests/base_produits.py`. **Pas encore prouvé sur le vrai export de 1,49 Go : relancer « Base produits » et vérifier.**
+Étape `free -m; df -h` ajoutée au workflow. (3) Zones tactiles : ligne « près de moi » et « Voir ma liste » ≥ 44 px.
+(4) Design : titres de section alignés sur les cartes (`.sec` marge 0) ; texte foncé sur les pastilles Nutri-Score B/D et NOVA 2/3 (contraste ≥ 4,5:1).
+
+**Détecteur** : base produits du 19/10 (périmée), magasins du 26/10, 0 issue ouverte, aucun faux « Compatible » dans le code du matin.
+**Parcours client** : parcours complet OK en clair et sombre, aucune erreur JS ; faux « Compatible » du lapin (traité) ; reste : zones tactiles
+(puces 38 px, « Itinéraire » 28, « Pris » 26, « Autres choix » 36), compteur « Exclus … » figé sans réseau, textes anglais en fiche,
+« Meilleur choix » à deux enseignes, « Autour d'Avranches ». **Design** : pas de bleu, fond blanc ; onglets segmentés peu marqués en sombre (piste).
+Note d'environnement : liens `chromium-1194` → 1243 recréés dans `/opt/pw-browsers` ; lancer les tests avec `PATH=/usr/bin:$PATH`.
 
 ### 2026-10-26 · 3.36 — séance de journée (heure de Paris : 9 h)
 

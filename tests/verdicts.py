@@ -499,6 +499,28 @@ with sync_playwright() as p:
         want_ok = code in SAFE
         if (got == 'ok') != want_ok: bad.append(f'{code} {sel} / « {name} » / « {ing[:60]} » : {got}')
     check(not bad, f'{len(REELS)} produits ou textes réels' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
+    print('4. Texte d\'ingrédients illisible (3.37) : « À vérifier », jamais « Compatible »')
+    def st(name, ing, sel=('milk', 'gluten', 'eggs', 'nuts')):
+        return page.evaluate("""([sel, name, ing]) => { const R = window.__RS; R.profile.sel = new Set(sel); R.profile.words = []; R.profile.traces = false;
+          return R.evaluate({ code:'9100000000001', product_name:name, brands:'Favorina', ingredients_text:ing, allergens_tags:[], traces_tags:[], categories_tags:['en:chocolates'] }).status; }""", [list(sel), name, ing])
+    LAPIN = ('FAIRKACE icutaurs de vendre davatage de Nconditions Fairtrade, Ensavoir suww,info,fairtrade,net/program, oeUSutritionnelles movemes '
+             'Crergle atières grasses ont acides gras saturés ucides nt succes pour 100g 2307 kJ/')
+    bad = []
+    for name, ing in [('Lapin chocolat', LAPIN),
+                      ('Chocolat', 'Valeurs nutritionnelles moyennes pour 100 g : énergie 2307 kJ / 547 kcal, matières grasses 31,9 g dont acides gras saturés 20 g'),
+                      ('Chocolat', 'dont acides gras saturés 20 g, protéines 6 g, fibres 3 g'),
+                      ('Chocolat', 'Nutrition facts per 100 g energy 2307 kJ fat 31 g'),
+                      ('Chocolat', 'graisses protéines fibres vitamines')]:
+        got = st(name, ing)
+        if got == 'ok': bad.append(f'{name} / « {ing[:50]} » : {got}')
+    check(not bad, 'tableau nutritionnel ou texte mal lu : jamais « Compatible »' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
+    real = [('Chocolat noir', 'pâte de cacao, sucre, beurre de cacao, vanille'), ('Biscuit', 'sucre, huile de palme, sel, arôme naturel'),
+            ('Eau aromatisée', 'eau, arôme naturel de citron, acide citrique'),
+            ('Bonbons', 'sirop de glucose, sucre, acidifiant : acide citrique, arômes, colorants'),
+            ('Dark chocolate', 'cocoa mass, sugar, cocoa butter, vanilla extract'), ('Jam', 'strawberries, sugar, water, pectin, citric acid'),
+            ('Purée', 'pommes de terre, sel'), ('Compote', 'pommes, fruits, jus de citron')]
+    bad = [f'{n} / « {i} » : {st(n, i, ("peanuts", "fish"))}' for n, i in real if st(n, i, ('peanuts', 'fish')) != 'ok']
+    check(not bad, f'{len(real)} textes d\'ingrédients normaux restent « Compatible »' + ('' if not bad else ' :\n    ' + '\n    '.join(bad)))
     check(not errs, 'aucune erreur JavaScript' + (': ' + '; '.join(errs[:3]) if errs else ''))
     b.close()
 httpd.shutdown()
