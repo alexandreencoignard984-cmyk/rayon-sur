@@ -17,6 +17,9 @@ Rien de cette liste n'est fait sans son accord.
 - **Thème « Comme l'iPhone » par défaut** : aujourd'hui l'appli démarre en « Clair » même si l'iPhone est en sombre.
 - **Allergène écrit en clair → « Exclu » au lieu de « À vérifier »** (parcours 24/10) : 727 œufs « Exclus » mais 961 « À vérifier » ;
   sésame (88 houmous) et moutarde (407) pareil ; dans Recettes › Crêpes (œufs cochés) la ligne Œufs propose un « + ». Décision de sécurité.
+- **Fruits secs et sulfites** (détecteur 26/10) : abricots secs, raisins secs, « fruits secs », mueslis avec fruits secs sont
+  « Compatible » pour les sulfites si E220-E228 n'est pas écrit (82 abricots secs, 349 « fruits secs » dans l'échantillon).
+  Les passer « À vérifier » quand les sulfites sont dans le profil ?
 - **Vins « sans sulfites ajoutés »** : restent « Compatible » grâce au nom ; ils en contiennent souvent un peu
   naturellement. Les passer « À vérifier » ?
 
@@ -100,6 +103,35 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
   (mots à une lettre près d'un allergène, voir la séance du 20/10) après les grosses mises à jour de la base.
 
 ## Journal
+
+### 2026-10-26 · 3.36 — séance de journée (heure de Paris : 9 h)
+
+**Changé** : (1) Verdicts plus prudents (jamais plus souples) : mots d'allergènes ajoutés en roumain (muștar, telină, ouă, grâu,
+susan, alune, dioxid de sulf), croate/portugais (susam, gergelim), allemand (Eierlikör, eiern), nordique/finnois (maito, mjölk*,
+hvede, vetestärkelse, fisk*, torsk, lohi, jordnøtter, nøtter, mandle…), et mots mal lus ou collés (lactoss/lactosc/lactosk,
+« dlAMANDES », « Saunon », « JACQUESIANCHOIS », eggpowder, yolk collé, mayonnais). Les faux « Compatible » trouvés sur de vrais
+produits (Nissin 4897878000081, Bagels 5410724320011, Heinz 5900783009496, Daim 7622210741530, Toro 7037610027045…) passent en
+« À vérifier » ou « Exclu ». ~50 cas de plus dans `tests/verdicts.py` (faux amis relax, eggplant, Eierschwammerl, Saint-Jacques
+gardés Compatibles). (2) Design : le message « Autour de … » reste 2,6 s au lieu de 4,5 s (il cachait des tuiles) ; pastille « E »
+rouge à 4,6:1 de contraste. (3) `tools/build_data.py` : la base produits du lundi ratait (voir ci-dessous) ; DuckDB limité à 8 Go,
+2 fils, fichiers temporaires sur disque.
+
+**Détecteur** : bases de 7 jours (19/10) : « Base produits » et « Base magasins » relancées à la main ce matin ; magasins OK,
+produits **en échec : DuckDB « Out of Memory » (12,4 Go) sur le serveur GitHub** (l'export Open Food Facts a grossi) → réglage
+ajouté, à vérifier à la prochaine exécution (lundi 3/11 ou relance manuelle). Aucune issue ouverte. 374 733 produits passés au verdict
+un allergène à la fois : trous = roumain, nordique, mots collés/mal lus (traités ci-dessus). **Parcours client** (sésame + poisson +
+lupin, aucune erreur JS) : 2 faux « Compatible » poisson (Nissin, Bagels), traces de sésame en croate non vues (traités) ; reste :
+rayon « Houmous » avec des « Compatible » sans rapport, « Stock au drive » qui promet plus que la carte ne fait, « Autour de
+Avranches » (→ « d'Avranches »). **Design** : pas de bleu, fond blanc, aucune erreur ; contraste et toast traités.
+Note d'environnement : `python3` par défaut n'a pas Playwright → lancer les tests avec `PATH=/usr/bin:$PATH` ; liens
+`chromium-1194` → 1243 à refaire (dossier `chrome-linux` + `headless_shell`).
+
+**Pas fait (pistes)** : durcir `bogusIngredients` (texte roumain/étranger accepté comme lisible dès qu'il a un mot commun) ;
+cran « flou » (distance d'édition ≤ 1) pour les mots longs mal lus ; titres de section décalés de 4 px (`.sec{margin:26px 4px 8px}` →
+`0`, à vérifier sur Recettes/Scan) ; zones tactiles `.chip` 38 px, `#sheetClose` 36, « Itinéraire » ; `.n2`/`.n3` texte blanc
+2,3–2,7:1 ; pastille « Sésame, Poisson +1 » (→ « 3 allergènes ») ; colin « à vérifier » sans explication (« Le colin est un
+poisson ») ; badge « Contient ton allergène » dans la liste des recettes ; message de position refusée pour iPhone.
+**À décider** (ajouté ci-dessus) : abricots/raisins/fruits secs sans E220 → « À vérifier » pour les sulfites ?
 
 ### 2026-10-24 · 3.35 — séance du soir
 

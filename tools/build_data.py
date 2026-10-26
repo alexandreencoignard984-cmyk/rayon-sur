@@ -135,6 +135,10 @@ def main():
     log('taille', os.path.getsize(src))
     con = duckdb.connect()
     con.execute("SET preserve_insertion_order=false")
+    # Le serveur GitHub a ~16 Go : limiter DuckDB et lui laisser écrire sur disque plutôt que de manquer de mémoire
+    con.execute("SET memory_limit='8GB'")
+    con.execute("SET threads=2")
+    con.execute("SET temp_directory='/tmp/duckdb-tmp'")
     pattern = ',(' + '|'.join(re.escape(t) for t in AISLES) + '),'
     nut_sql = ', '.join(f'"{c}"' for c in NUT)
     # colonnes facultatives : prises si l'export les contient (sinon vides, sans faire échouer la construction)
