@@ -135,8 +135,7 @@ def main():
     log('taille', os.path.getsize(src))
     con = duckdb.connect()
     con.execute("SET preserve_insertion_order=false")
-    # Le serveur GitHub a ~16 Go : limiter DuckDB et lui laisser écrire sur disque plutôt que de manquer de mémoire
-    con.execute("SET memory_limit='8GB'")
+    # Le serveur GitHub a ~16 Go : peu de fils, et fichiers temporaires sur disque plutôt que tout en mémoire
     con.execute("SET threads=2")
     con.execute("SET temp_directory='/tmp/duckdb-tmp'")
     pattern = ',(' + '|'.join(re.escape(t) for t in AISLES) + '),'
@@ -157,7 +156,14 @@ def main():
         AND product_name IS NOT NULL AND product_name <> ''
         AND regexp_matches(',' || coalesce(categories_tags, '') || ',', '{pattern}')
     """
-    rows = con.execute(q).fetchall()
+    # lecture par paquets : fetchall() gardait deux copies de ~500 000 lignes (DuckDB + Python) et manquait de mémoire
+    cur = con.execute(q)
+    rows = []
+    while True:
+        chunk = cur.fetchmany(20000)
+        if not chunk:
+            break
+        rows.extend(chunk)
     log('produits France dans nos rayons :', len(rows))
 
     by_aisle = {t: [] for t in AISLES}
