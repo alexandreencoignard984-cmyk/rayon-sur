@@ -104,6 +104,16 @@ Idées notées, à reprendre par ordre d'intérêt pour l'utilisateur. Retirer u
 
 ## Journal
 
+### 2026-10-27 · 3.39 — séance du soir (pas de séance du matin)
+
+- **Équipe** : Détecteur, Parcours client et Design n'ont trouvé aucun bug de verdict ni de perte de données ; la 3.37 n'a rien cassé (seuls des « Compatible » passent en « À vérifier », jamais l'inverse). Bases à jour (produits et magasins du 26/10), aucun problème ouvert sur GitHub.
+- **Corrigé** : le compteur « Exclus » restait sur « … » quand une recherche ne trouvait rien de compatible (l'appli charge maintenant aussi les exclus pour afficher le vrai nombre). Les tests « Stock au drive » (`localisation.py` 10c, `navigation.py` 6) dépendaient de l'ordre de la base (1er produit du rayon = vu seulement chez Super U) : ils prennent maintenant un produit « Chez Carrefour ».
+- **Design** : croix de fermeture des fiches, « Une erreur ? » et lien « corrige la fiche » à 44 px de zone tactile ; la pastille d'allergies de l'accueil n'est plus coupée (« Lait (allergie), Gluten » en entier). Tests de taille ajoutés.
+- **Pistes ajoutées** : recette « Farine » remplacée par de la Maïzena (amidon) : exclure les amidons de la substitution ; message de verdict qui cite le lait avant le blé du nom ; libellé « Ingrédient à vérifier : « wheat » » à rendre plus clair ; le run « Base produits » n° 16 du 26/10 a échoué à l'étape Publier (course avec le n° 15, base publiée quand même) : à surveiller lundi 02/11.
+- **Pour les tests dans l'atelier** : Playwright 1.56 attend Chromium 1194 alors que 1243 est installé ; des liens symboliques dans /opt/pw-browsers font le pont (hors dépôt).
+- **Décisions en attente** : inchangées (voir « À décider par Alexandre »). Le point « allergène écrit en clair → Exclu » pèse plus lourd que prévu : avec gluten + lait, 4 686 biscuits sur 4 744 sont « À vérifier ».
+
+
 ### 2026-10-26 · 3.37 — séance du soir
 
 **Changé** : (1) Faux « Compatible » corrigé : un texte d'ingrédients illisible (OCR cassé, ex. Favorina « Lapin chocolat » 20086244)
