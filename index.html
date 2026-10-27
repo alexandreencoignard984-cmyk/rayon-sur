@@ -65,7 +65,7 @@ svg{flex:none}
 
 .scroller{background:linear-gradient(180deg,var(--wash) 0,var(--bg) 260px) no-repeat}
 .wrap{max-width:40rem;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 28px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0 12px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0 12px}
 h1{font-family:var(--display);font-stretch:75%;font-weight:800;font-size:34px;line-height:1.05;letter-spacing:-.01em;margin:0}
 h2{font-size:20px;font-weight:700;line-height:1.2;margin:0}
 h3{font-size:17px;font-weight:700;margin:0 0 8px}
@@ -94,8 +94,8 @@ p{margin:0}
 
 /* puce profil */
 .top h1{white-space:nowrap;flex:none}
-.pchip{display:inline-flex;align-items:center;gap:6px;max-width:55%;min-width:0;flex:0 1 auto;min-height:44px;padding:0 12px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:14px;font-weight:600}
-.pchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pchip{display:inline-flex;align-items:center;gap:6px;max-width:100%;min-width:0;flex:0 1 auto;min-height:44px;padding:0 10px;border-radius:999px;border:0;background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;font-size:14px;font-weight:600}
+.pchip span{overflow:hidden;line-height:1.15;overflow-wrap:anywhere}
 .pchip svg{width:16px;height:16px;color:var(--ok)}
 
 /* recherche */
@@ -282,10 +282,9 @@ dialog.sheet::backdrop{background:var(--scrim)}
 dialog.sheet.short{height:auto;max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px)}
 .sheet-in{display:flex;flex-direction:column;height:100%;max-height:inherit}
 dialog.sheet.short .sheet-in{max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px)}
-.sheet-head{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;padding:14px 12px 10px}
+.sheet-head{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;padding:10px 8px 6px}
 .sheet-head::before{content:"";position:absolute;top:6px;left:50%;width:36px;height:5px;margin-left:-18px;border-radius:3px;background:var(--line)}
 .sheet-head .t{text-align:center;font-weight:700;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sheet-head .iconbtn{width:36px;height:36px}
 .sheet-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 16px calc(env(safe-area-inset-bottom,0px) + 24px)}
 .sheet-foot{padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 12px);background:var(--bg);box-shadow:0 -1px 0 var(--line)}
 
@@ -471,12 +470,12 @@ div.rowbtn{cursor:default}
 .dhelp[open]>summary::after{transform:rotate(90deg)}
 .dhelp p{margin:6px 2px}
 .dcopy{display:flex;flex-wrap:wrap;gap:8px;margin:10px 2px 2px}
-.flagbox>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:15px}
+.flagbox>summary{min-height:44px;align-items:center;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px;font-weight:600;font-size:15px}
 .flagbox>summary::-webkit-details-marker{display:none}
 .flagbox>summary::after{content:"›";color:var(--muted);transition:transform .2s}
 .flagbox[open]>summary::after{transform:rotate(90deg)}
 .flagbox .tags{margin:10px 0}
-.flagbox a{color:var(--primary);font-weight:600}
+.flagbox a{color:var(--primary);font-weight:600;display:inline-block;padding:13px 0;margin:-13px 0;vertical-align:baseline;position:relative;z-index:1}
 .flagbox .chip[aria-pressed="true"]{background:var(--no);color:var(--on-s);box-shadow:none}
 .links .src{color:var(--muted);font-size:13px}
 .drivebtn small.dseen{color:var(--ok);font-weight:600}
@@ -2226,6 +2225,8 @@ async function loadSet(set, first){
   if (!okN && lastErr){ setStatus(esc(errorText(lastErr)) + RETRY_BTN, true); if (!myR.products.size) $('#results').hidden = true; else render(); return; }
   if (!myR.loadingAll) setStatus(lastErr ? 'Une partie des produits n\'a pas pu être chargée : Open Food Facts est saturé.' + RETRY_BTN : '');
   render();
+  // rien de compatible trouvé : on charge aussi le reste pour que « Exclus » affiche un vrai nombre (0 ou plus), pas « … »
+  if (myR === R && !lastErr && set === R.sets.safe && R.sets.safe !== R.sets.all && !myR.products.size && !R.sets.all.loaded) loadSet(R.sets.all);
 }
 $('#status').addEventListener('click', e => { if (e.target.closest('[data-retry]')) runSearch(); });
 function render(){
@@ -4605,7 +4606,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.37';
+const APP_VERSION = '3.39';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */

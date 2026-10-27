@@ -313,11 +313,11 @@ def main():
         wait_near(page)
         page.click('#homeGrid [data-q="en:ice-creams-and-sorbets"]')
         page.wait_for_selector('#results:not([hidden]) #list li .name', timeout=20000)
-        page.click('#list li .name >> nth=0')
+        page.click('#list li:has-text("Chez Carrefour") .name >> nth=0')   # un produit vu chez Carrefour, quel que soit l'ordre des données
         page.wait_for_selector('#sheet[open] .drivebtn', timeout=8000)
         hrefs = page.eval_on_selector_all('#sheet .drivebtn .dmain', 'els => els.map(e => e.href)')
         txt = page.inner_text('#sheet .drives')
-        check(len(hrefs) >= 2 and ('Voir le produit' in txt or 'Chercher' in txt), f'{len(hrefs)} liens vers les drives : ' + txt.replace('\n', ' | ')[:120])
+        check(len(hrefs) >= 1 and ('Voir le produit' in txt or 'Chercher' in txt), f'{len(hrefs)} lien(s) vers le drive : ' + txt.replace('\n', ' | ')[:120])
         check(any('carrefour.fr/s?q=' in h for h in hrefs) or any(h == 'https://www.leclercdrive.fr/' for h in hrefs), 'recherche directe sur le site de l\'enseigne (drive Leclerc : son site)')
         page.click('#sheetClose')
         sojade = {'code': '3273220020018', 'product_name': 'À la Grecque Greek Style Nature-Natural', 'brands': 'Sojade', 'stores_tags': ['biocoop']}

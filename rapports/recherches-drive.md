@@ -1,101 +1,101 @@
 # Recherches « Stock au drive »
 
-Contrôle du 26/10/2026  appli 3.36  247 643 produits.
+Contrôle du 27/10/2026  appli 3.38  243 586 produits.
 Chaque produit reçoit la recherche que l'appli envoie aux sites des enseignes (marque + 2 mots utiles du nom).
 Les sites eux-mêmes ne sont pas interrogés : pour ça, utilise « Tester les liens drive » dans Profil.
 
-**96.3 %** des recherches sans défaut (hors « sans marque »).
+**95.5 %** des recherches sans défaut (hors « sans marque »).
 
 | Cas | Toute la base | 10 % les plus consultés | Seuil |
 |---|---:|---:|---:|
 | Recherche vide | 0.0 % | 0.0 %  | 0.5 % |
-| Un seul mot alors que le nom en dit plus | 0.0 % | 0.0 %  | 5 % |
-| Sans marque (recherche sur le nom seul) | 4.2 % | 1.3 %  | — |
+| Un seul mot alors que le nom en dit plus | 0.1 % | 0.0 %  | 5 % |
+| Sans marque (recherche sur le nom seul) | 4.6 % | 1.5 %  | — |
 | Chiffres hors de la marque | 0.0 % | 0.0 %  | 2 % |
-| Contient un mot anglais | 3.6 % | 4.9 %  | 10 % |
-| Plus de 45 caractères | 0.1 % | 0.0 %  | 2 % |
+| Contient un mot anglais | 4.4 % | 6.0 %  | 10 % |
+| Plus de 45 caractères | 0.1 % | 0.1 %  | 2 % |
 
 ## Un seul mot alors que le nom en dit plus
 
 | Produit | Marque | Recherche | Code |
 |---|---|---|---|
-| Snickers (5 Stück à 50 g) |  | « Snickers » | 5000159560498 |
-| CRUNCH (lot de 2) | Crunch | « Crunch » | 8000300312102 |
-| Hanuta 10er-Pack | hanuta | « hanuta » | 8000500272442 |
-| Pom'Potes (Pomme/Framboise) | Pom'Potes | « Pom'Potes » | 3021760400135 |
-| Twix 12er-Pack | Twix | « Twix » | 5000159557658 |
+| Arome MAGGI | Maggi | « Maggi » | 3033710084913 |
 | Tropico ( cocktail de fruits ) | Tropico | « Tropico » | 6194007891793 |
+| Snickers 4er-Packung | SNICKERS | « SNICKERS » | 5000159384209 |
+| FromageBlanc (Égoutté en toile) |  | « FromageBlanc » | 3701002407763 |
 | 50CLVITTEL | vittel | « vittel » | 3179732326911 |
+| Ossau-Iraty |  | « Ossau-Iraty » | 0025700029731 |
 | Melfor Arôme | Melfor | « Melfor » | 3182384020137 |
 | 8 légumes -30% de sel |  | « légumes » | 3490215000105 |
 | COCA- COLAMINICANGX20CL | Coca-Cola | « Coca-Cola » | 5449000243171 |
 | BRASSENATURE8x125g | Auchan | « Auchan » | 3596710402519 |
-| Quescrem nature150g |  | « Quescrem » | 8437008383705 |
+| Pomme-banane |  | « Pomme-banane » | 3701002407534 |
+| 2fruity | Hollywood | « Hollywood » | 7622210615558 |
 
 ## Sans marque (recherche sur le nom seul)
 
 | Produit | Marque | Recherche | Code |
 |---|---|---|---|
-| Prince Goût Chocolat au blé complet |  | « Prince Chocolat blé » | 7622210449283 |
 | levure pâtisserie |  | « levure pâtisserie » | 6111180000231 |
 | Goldium crémeux |  | « Goldium crémeux » | 6111259092495 |
 | Ciel |  | « Ciel » | 5449000061515 |
-| 180G C OR NOIR NOISETTE |  | « OR NOIR NOISETTE » | 7622210995087 |
-| Véritable Petit Écolier Chocolat au Lait |  | « Véritable Petit Écolier » | 7622210421968 |
+| Nutella 750g |  | « Nutella » | 80176800 |
+| FLOCONS D'AVOINE |  | « FLOCONS AVOINE » | 20003166 |
+| Bio Chocolat Noir |  | « Bio Chocolat Noir » | 40896243 |
+| Cola 500 Ml |  | « Cola » | 54491472 |
+| Petit écolier Chocolat au lait |  | « Petit écolier Chocolat » | 7622210421968 |
 | Cappy pulpy |  | « Cappy pulpy » | 90382383 |
-| Philadelphia Original |  | « Philadelphia » | 7622300441937 |
+| CRANBERRIES GETROCKNET & GESÜSST |  | « CRANBERRIES GETROCKNET GESÜSST » | 20150907 |
+| Special Flakes Original |  | « Special Flakes » | 20621469 |
 | fanta tops lemon 1.5l |  | « fanta tops lemon » | 5449000132277 |
-| Petits fours financiers |  | « Petits fours financiers » | 6923818881323 |
-| Sidi Harazem |  | « Sidi Harazem » | 6111128000026 |
-| Poms 2 |  | « Poms » | 5449000036957 |
 
 ## Chiffres hors de la marque
 
 | Produit | Marque | Recherche | Code |
 |---|---|---|---|
-| 6111266963139 |  | « 6111266963139 » | 6111266963139 |
 | 7up |  | « 7up » | 6111252420226 |
+| 3523230064453 |  | « 3523230064453 » | 3523230064453 |
+| 3288131541105 |  | « 3288131541105 » | 3288131541105 |
 | 7610700023402 |  | « 7610700023402 » | 7610700023402 |
 | 6111246955277 |  | « 6111246955277 » | 6111246955277 |
-| 3421557922596 |  | « 3421557922596 » | 3421557922596 |
+| 6111262901135 |  | « 6111262901135 » | 6111262901135 |
+| 8712857982034 |  | « 8712857982034 » | 8712857982034 |
+| 5900073911317 |  | « 5900073911317 » | 5900073911317 |
 | 40 |  | « 40 » | 6111245340692 |
-| 40 |  | « 40 » | 6111245340074 |
 | 40 |  | « 40 » | 6111245340371 |
 | 1848 |  | « 1848 » | 8601346306027 |
 | 41022 |  | « 41022 » | 6953237400751 |
-| 6111267140188 |  | « 6111267140188 » | 6111267140188 |
-| 6111128001313 |  | « 6111128001313 » | 6111128001313 |
 
 ## Contient un mot anglais
 
 | Produit | Marque | Recherche | Code |
 |---|---|---|---|
-| Menguy's Peanut 100% | menguy's | « menguy's Peanut » | 3327272107969 |
+| Cream cheese | Original | « Original Cream cheese » | 6111246721278 |
+| Pure peanut butter | Jardin Bio étic | « Jardin Bio étic Pure peanut » | 3760020507350 |
+| Orange juice | Cappy | « Cappy Orange juice » | 5449000147417 |
+| Menguy's Peanut 100% | Menguy's | « Menguy's Peanut » | 3327272107969 |
 | Be Nuts ! - Pâte à tartiner Cacahuète | Andros | « Andros Be Nuts » | 3608580124047 |
-| Cashew Nuts | Alesto | « Alesto Cashew Nuts » | 20267605 |
-| Chocolate con leche y almendras | Maruja | « Maruja Chocolate con » | 8425197712024 |
-| Tomato Ketchup BIO | Heinz | « Heinz Tomato Ketchup » | 8715700407760 |
-| Almond Drink Sugar-Free | Vemondo | « Vemondo Almond Drink » | 4056489346357 |
-| Dark absolute 99% cacao | Lindt EXCELLENCE | « Lindt EXCELLENCE Dark absolute » | 3046920028721 |
-| Organic Dark Chocolate | Lidl Organic | « Lidl Organic Dark Chocolate » | 40896243 |
-| Be Nuts! Pâte à tartiner Cacahuète | Andros | « Andros Be Nuts » | 3608580124108 |
-| Tomato Ketchup | Heinz | « Heinz Tomato Ketchup » | 87157215 |
-| Crunchy oats&honey | Nature valley | « Nature valley Crunchy oats » | 8410076801180 |
-| Sour Cream & Onion | Pringles | « Pringles Sour Cream » | 5053990155354 |
+| Dark Chocolate - 85% Cocoa | J.D: Gross | « J.D: Gross Dark Chocolate » | 20995553 |
+| Fresh Square - Plain | elle et vire | « elle et vire Fresh Square » | 3480341000636 |
+| Mixed Nuts | Alesto | « Alesto Mixed Nuts » | 20047238 |
+| S. Pellegrino Water | San Pellegrino | « San Pellegrino Water » | 8002270014901 |
+| Milk chocolate bar | CHOCOLATES MARUJA S.L. | « CHOCOLATES MARUJA S.L. Milk chocolate » | 8425197712024 |
+| ALPRO creamy oat | alpro | « alpro creamy oat » | 5411188115366 |
+| Tomato Ketchup BIO | H.J. Heinz B.V. | « H.J. Heinz B.V. Tomato Ketchup » | 8715700407760 |
 
 ## Plus de 45 caractères
 
 | Produit | Marque | Recherche | Code |
 |---|---|---|---|
-| Goût Noisette Chocolat Noir | Nature Innovation Internationa | « Nature Innovation International Noisette Chocolat » | 3609200011532 |
+| Vita Coco | FAUSER VITAQUELLWERK Kommandit | « FAUSER VITAQUELLWERK Kommanditgesellschaft Vita Coco » | 4003247102304 |
+| Muesli CroustillantNoix | AUCHAN RETAIL SERVICES | « AUCHAN RETAIL SERVICES Muesli CroustillantNoix » | 3596710446605 |
 | Pastilles menthol-eucalyptus | Fisherman's Friend | « Fisherman's Friend Pastilles menthol-eucalyptus » | 5000357103459 |
-| Chokenut Pâte à tartiner sans lait | Noiseraie Productions Artisana | « Noiseraie Productions Artisanales Chokenut Pâte » | 3760076000324 |
+| Pâte à Tartiner Chokenut | Noiseraie Productions Artisana | « Noiseraie Productions Artisanales Pâte Tartiner » | 3760076000324 |
 | Biscotte essentielle | Biscotterie La chantéracoise | « Biscotterie La chantéracoise Biscotte essentielle » | 3760178790000 |
-| Mantequilla tradicional | Central Lechera Asturiana | « Central Lechera Asturiana Mantequilla tradicional » | 8410297033001 |
+| Leche Desnatada | CORPORACION ALIMENTARIA PEÑASA | « CORPORACION ALIMENTARIA PEÑASANTA.S.A. Leche Desnatada » | 8410297012105 |
+| Mantequilla tradicional | CORPORACION ALIMENTARIA PEÑASA | « CORPORACION ALIMENTARIA PEÑASANTA.S.A. Mantequilla tradicion » | 8410297033001 |
+| Ensalada Completa Pasta & Rucula pollo y queso | FLORETTE IBERICA ALIMENTARIA | « FLORETTE IBERICA ALIMENTARIA Ensalada Completa » | 8414516085598 |
+| Galletas Digestive de Avena | CENTROS COMERCIALES CARREFOUR | « CENTROS COMERCIALES CARREFOUR Galletas Digestive » | 8431876221039 |
 | Préparation de clémentines et oranges de corse | Itinéraire des saveurs | « Itinéraire des saveurs Préparation clémentines » | 3250390783275 |
-| Chipolatas supérieures | La Nouvelle Agriculture | « La Nouvelle Agriculture Chipolatas supérieures » | 3265980165409 |
-| Thunfisch-Salat Verschiedene Sorten | Saupiquet RIO mare | « Saupiquet RIO mare Thunfisch-Salat Verschiedene » | 3165950580860 |
-| Pistazien Streich-Creme, italienisch | antichi sapori dell'Etna | « antichi sapori dell'Etna Pistazien Streich-Creme » | 8032523530452 |
-| Worcestershiresauce, Worcestersauce | Lea & Perrins | « Lea & Perrins Worcestershiresauce Worcestersauce » | 5000111040983 |
-| Granfetta integrale | Delverde Industrie Alimentari | « Delverde Industrie Alimentari Granfetta integrale » | 8000270019599 |
-| Liégeois Chocolat | Mamie NovaNovaAndros Restaurat | « Mamie NovaNovaAndros Restauration Liégeois Chocolat » | 3177630000247 |
+| Royal Mints | Delitzscher Schokoladenfabrik  | « Delitzscher Schokoladenfabrik GmbH Royal Mints » | 4019400440657 |
+| Ato Natura Leche Uht Entera Brick | CORPORACION ALIMENTARIA PEÑASA | « CORPORACION ALIMENTARIA PEÑASANTA.S.A. Ato Natura » | 8410135001469 |

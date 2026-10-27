@@ -98,7 +98,8 @@ with sync_playwright() as p:
     page.click('#list li [data-add] >> nth=2'); page.wait_for_timeout(300)   # remet la liste comme avant
 
     print('6. Fiche « Stock au drive »')
-    page.click('#list li [data-open] >> nth=0'); page.wait_for_selector('#sheet[open] .drivebtn')
+    # un produit vu chez Carrefour (indépendant de l'ordre des données)
+    page.click('#list li:has-text("Chez Carrefour") [data-open] >> nth=0'); page.wait_for_selector('#sheet[open] .drivebtn')
     txt = page.inner_text('#sheet .card:has(.drives)')
     check('Vérifie que c\'est bien' in txt and 'Mauvais produit ?' in txt, 'nom, marque et format à comparer, bouton « Mauvais produit ? »')
     check(any(k in txt for k in ('Voir le produit', 'Ouvrir le drive', 'Chercher')) and ('Vu dans cette enseigne' in txt or 'Pas signalé' in txt), 'bouton vers le site et présence dans l\'enseigne indiqués : ' + ' / '.join(l for l in txt.split('\n') if l in ('Voir le produit', 'Ouvrir le drive', 'Chercher')))
@@ -197,7 +198,9 @@ with sync_playwright() as p:
     page.fill('#terms', 'zzqxkwv'); page.click('#go'); page.wait_for_selector('#list .empty-card', timeout=20000)
     msg = page.inner_text('#list .empty-card')
     check(msg.startswith('Aucun produit trouvé pour « zzqxkwv »') and 'Tous les magasins' in msg and 'Charger plus' not in msg, 'recherche vide : ' + msg[:90])
+    page.wait_for_function("() => getComputedStyle(document.getElementById('status')).display === 'none'", timeout=15000)
     check(page.evaluate("() => getComputedStyle(document.getElementById('status')).display") == 'none', 'bande de statut vide masquée')
+    check(page.inner_text('#n-no') == '0', 'recherche vide : le compteur « Exclus » affiche 0, pas « … » : ' + page.inner_text('#n-no'))
     page.click('#homeBack'); page.wait_for_timeout(300)
     # 3.26 : après une recherche par nom, un rayon choisi dans « Voir tous les rayons » remplace le nom (avant : « 0 produit pour « houmous » »)
     page.fill('#terms', 'houmous'); page.click('#go'); page.wait_for_function("() => document.getElementById('screen-search').dataset.view === 'results'", timeout=20000)
@@ -349,6 +352,31 @@ with sync_playwright() as p:
         for c, fg, bg in pastilles:
             f = [int(v) for v in re.findall(r'\d+', fg)[:3]]; g = [int(v) for v in re.findall(r'\d+', bg)[:3]]
             check(ratio(f, g) >= 4.5, f'{th} : pastille {c} lisible ({ratio(f, g):.2f}:1)')
+        # 3.39 design : croix des fiches, « Une erreur ? » et lien « corrige la fiche » touchables sur >= 44 px ; pastille du profil non tronquée
+        page6.click('nav [data-go="search"]'); page6.wait_for_selector('#list li [data-open]', timeout=20000)
+        page6.click('#list li [data-open] >> nth=0'); page6.wait_for_selector('#sheet[open] .flagbox', timeout=20000); page6.wait_for_timeout(400)
+        cb = page6.eval_on_selector('#sheetClose', 'e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; }')
+        check(cb[0] >= 44 and cb[1] >= 44, f'{th} : croix de la fiche >= 44 x 44 ({cb})')
+        hh = page6.eval_on_selector('#sheet .sheet-head', 'e => e.getBoundingClientRect().height')
+        check(hh <= 62, f'{th} : en-tête de la fiche resté compact ({hh} px)')
+        sh = page6.eval_on_selector('#sheet .flagbox>summary', 'e => e.getBoundingClientRect().height')
+        check(sh >= 44, f'{th} : « Une erreur ? » >= 44 px ({sh})')
+        page6.evaluate("() => { document.querySelector('#sheet .flagbox').open = true; }"); page6.wait_for_timeout(200)
+        page6.eval_on_selector('#sheet .flagbox a', 'e => e.scrollIntoView({block: "center"})'); page6.wait_for_timeout(200)
+        ok = page6.evaluate("""() => { const a = document.querySelector('#sheet .flagbox a'); const r = a.getClientRects()[0]; const x = r.left + r.width / 2;
+          const up = r.top + r.height / 2 - 21, dn = r.top + r.height / 2 + 21;
+          return [up, dn].map(y => { const e = document.elementFromPoint(x, y); return !!(e && e.closest('.flagbox a')); }); }""")
+        check(all(ok), f'{th} : lien « corrige la fiche » touchable sur >= 44 px de haut ({ok})')
+        check(not page6.evaluate("() => { const s = document.querySelector('#sheet'); return s.scrollWidth > s.clientWidth + 1; }"), f'{th} : la fiche ne déborde pas (croix 44 px)')
+        page6.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'fiche-zones-{th}.png'))
+        page6.keyboard.press('Escape'); page6.wait_for_timeout(300)
+        ctxp, pagep, errsp, _ = new_page(b, base, geo=RENNES, init={'rs2:theme': th, 'rs2:profile': {'sel': ['milk', 'gluten'], 'traces': False, 'words': []}})
+        wait_near(pagep); pagep.set_viewport_size({'width': 390, 'height': 844}); pagep.wait_for_timeout(300)
+        tr = pagep.evaluate("() => { const s = document.querySelector('#profileLine span'); return [s.textContent, s.scrollWidth, s.clientWidth]; }")
+        check(tr[1] <= tr[2], f'{th} : pastille du profil sur l\'accueil non tronquée ({tr})')
+        check(not pagep.evaluate('() => document.documentElement.scrollWidth > window.innerWidth'), f'{th} : accueil sans débordement')
+        pagep.screenshot(path=os.path.join(os.environ.get('SHOTS', '/tmp'), f'accueil-{th}.png'))
+        ctxp.close()
         check(not errs6, f'aucune erreur JavaScript ({th})')
         ctx6.close()
     b.close()
