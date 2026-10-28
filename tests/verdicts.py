@@ -201,6 +201,13 @@ with sync_playwright() as p:
     check(verdict(['lactose'], BASE + 'lait', {'labels_tags': ['en:no-lactose'], 'allergens_tags': ['en:milk']}) == 'ok', 'lait sans lactose étiqueté : compatible pour une intolérance')
     check(verdict(['milk'], BASE + 'lait', {'labels_tags': ['en:no-lactose'], 'allergens_tags': ['en:milk']}) == 'no', 'lait sans lactose : exclu pour une allergie au lait')
     check(verdict(['gluten', 'milk'], BASE + 'riz, huile de tournesol') == 'ok', 'produit sans risque : compatible')
+    # 3.40 : garde-fous par rayon pour le céleri (bouillons) et le sésame (houmous, pains burger)
+    check(verdict(['celery'], BASE + 'sel, graisse de palme, exhausteur de goût, boeuf', {'product_name': 'Cube de bouillon Boeuf Ideal', 'categories_tags': ['en:bouillon-cubes']}) == 'check', 'cube de bouillon sans céleri lisible : à vérifier pour le céleri')
+    check(verdict(['celery'], BASE + 'os de volaille', {'categories_tags': ['en:broths']}) == 'check', 'bouillon sans céleri lisible : à vérifier pour le céleri')
+    check(verdict(['sesame'], BASE + 'pois chiches, citron, ail', {'categories_tags': ['en:hummus']}) == 'check', 'houmous sans sésame lisible : à vérifier pour le sésame')
+    check(verdict(['sesame'], BASE + 'farine, levure', {'categories_tags': ['en:hamburger-buns']}) == 'check', 'pain burger sans sésame lisible : à vérifier pour le sésame')
+    check(verdict(['celery'], BASE + 'carottes', {'categories_tags': ['en:soups']}) == 'ok', 'soupe sans céleri : pas de faux doute')
+    check(verdict(['sesame'], BASE + 'farine, levure', {'categories_tags': ['en:breads']}) == 'ok', 'pain ordinaire : pas de faux doute pour le sésame')
     check(verdict(['gluten'], BASE + 'carottes', {'product_name': 'Légumes pour couscous'}) == 'ok', 'nom « Légumes pour couscous » : pas de faux doute sur le gluten')
     check(verdict(['gluten'], BASE + 'farine', {'product_name': 'Pain campagnard'}) == 'check', 'nom « Pain … » sans allergène déclaré : à vérifier')
     check(verdict(['fish'], BASE + 'farine', {'product_name': 'Filet de limande meunière'}) == 'check', 'nom « limande » : à vérifier')
@@ -489,9 +496,39 @@ with sync_playwright() as p:
         ('eggs', '9000000000303', 'Test', 'sucre, eggplant, sel'),
         ('eggs', '9000000000304', 'Test', 'sucre, Eierschwammerl, sel'),
         ('fish', '9000000000305', 'Test', 'sucre, coquille Saint-Jacques, sel'),
+        # 3.40 : textes néerlandais, suédois, danois, norvégien, allemand (Chinese tomatensoep 8714100721483 : « mie », « El-EIWIT », « ROOM »)
+        ('milk', '9000000000400', 'Test', 'Water, suiker, room 10%, boter, glucosestroop, zout'),
+        ('eggs', '9000000000401', 'Test', 'Groenten 40%, water, mie 5% (tarwe), gedroogd eiwit, zout'),
+        ('gluten', '9000000000402', 'Test', 'Water, koekjes, wafel, pannenkoek, zout'),
+        ('milk', '9000000000403', 'Test', 'Vatten, socker, grädde 20%, smör, salt'),
+        ('gluten', '9000000000404', 'Test', 'Vatten, vetemjöl 40%, socker, havre, salt'),
+        ('eggs', '9000000000405', 'Test', 'Vatten, ägg 10%, salt, socker'),
+        ('gluten', '9000000000406', 'Oatly Havredrikk Sjokolade', 'vann, havre 10 %, rapsolje, kakao, salt'),
+        ('gluten', '9000000000407', 'Test', 'Water, tarwebloem 30%, zout, gist, paneermeel, beschuit'),
+        ('gluten', '9000000000408', 'Test', 'Wasser, Nudeln 30%, Brot, Salz'),
+        ('gluten', '9000000000409', 'Test', 'Water, noedels, zout'),
+        ('milk', '9000000000410', 'Test', 'Water, karnemelk, wei, zout'),
+        ('milk', '9000000000411', 'Test', 'Vand, sukker, smør, ost, mælk, salt'),
+        ('nuts', '9000000000412', 'Test', 'Water, pistachenoten 5%, notenpasta, zout'),
+        ('nuts', '9000000000413', 'Test', 'Wasser, Zucker, Cashewkerne 10%, Salz'),
+        ('nuts', '9000000000414', 'Test', 'Vatten, hasselnöt 5%, valnöt, salt'),
+        ('fish', '9000000000415', 'Test', 'Wasser, Anchovis 10%, Salz'),
+        ('fish', '9000000000416', 'Test', 'Vatten, lax, tun, salt'),
+        ('crustaceans', '9000000000417', 'Test', 'Vatten, räkor 20%, salt'),
+        ('molluscs', '9000000000418', 'Test', 'Water, schelpdieren, zout'),
+        ('celery', '9000000000419', 'Test', 'Water, selderie, zout'),
+        ('eggs', '9000000000420', 'Test', 'Water, eipoeder, zout'),
+        ('milk', '9000000000421', 'Test', 'Water, cacaoboter, suiker'),
+        # 3.40 : texte mal lu, allergène collé à du bruit (Joghurt Toffee Mcennedy 20252878)
+        ('peanuts', '9000000000430', 'Joghurt Toffee', "tait e sucte caramé!sé, fibres de blé* émue* (scia)' Peut contenir dcs traces de tra ct6arachides. Non ouvett4"),
+        ('peanuts', '9000000000431', 'Test', 'sucre, ofpeanut, sel'),
+        ('nuts', '9000000000432', 'Test', 'sucre, tait noisettesl, sel'),
+        ('crustaceans', '9000000000433', 'Test', 'sucre, deCREVETTE, sel'),
+        ('peanuts', '9000000000434', 'Test', 'sucre, acide arachidonique, sel'),
+        ('gluten', '9000000000422', 'Test', 'Water, sojabonen, zout'),
     ]
     SAFE = {'9000000000020', '9000000000021', '9000000000022', '9000000000060', '9000000000061', '9000000000062', '9000000000063', '9000000000064',
-            '9000000000067', '9000000000068', '9000000000300', '9000000000301', '9000000000302', '9000000000303', '9000000000304', '9000000000305'}
+            '9000000000067', '9000000000068', '9000000000300', '9000000000301', '9000000000302', '9000000000303', '9000000000304', '9000000000305', '9000000000421', '9000000000422', '9000000000434'}
     print('3. Produits réels : jamais « Compatible » quand l\'allergène est écrit sur l\'emballage')
     bad = []
     for sel, code, name, ing in REELS:

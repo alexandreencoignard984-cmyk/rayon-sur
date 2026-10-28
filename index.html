@@ -1246,25 +1246,25 @@ const KW = {
    Aussi les mots mal lus sur la photo de l'étiquette (« CEUFS », « lalt », « giuten », « doeufs » sans apostrophe…).
    Lu seulement dans la liste d'ingrédients (pas dans le nom : « Leche de almendras » est une boisson végétale). */
 const KW_X = {
-  milk: { re:/\b(maito[a-z]*|mjolk[a-z]*|mj[øo]lk[a-z]*|piim[a-z]*|fl[øo]de|lactos(?:s|c|k|oe)|[a-z]*milkpow[a-z]*|lalt|iait|lrit|beure|beurte|lactccerum|sahne|joghurt|mlieko|lactalbumin|iactoserum|actoserum|lacioserum|lactoserun|latoserum|lactosenum|iactose|lrctose|lbctose|fromaqe|fomage|lacteos?|lactosa|lattosio|laktose|suero|sueros|mantequilla|natas?|quesos|yogur|yogures|latticini|formaggi|burro|panna|siero|manteiga|queijos?|iogurte|requeijao|[a-zß]*(milch|molke|kase|rahm|kaas)[a-zß]*|melk[a-z]*|(koe|hel|skummet|mager|halfvolle?|volle?)melk[a-z]*|roomboter|roomijs|slagroom|kookroom|zure\s+room|[a-z]+boter|wei(poeder|eiwit|proteine|permeaat)|butter(reinfett|schmalz|fett)|mlek[a-z]*|mleczn[a-z]*|serwatk[a-z]*)(?![a-z0-9ß])/g,
+  milk: { re:/\b(room|boter|karnemelk|wei|gradde|smor|ost|smør|maelk|mjolkpulver|maito[a-z]*|mjolk[a-z]*|mj[øo]lk[a-z]*|piim[a-z]*|fl[øo]de|lactos(?:s|c|k|oe)|[a-z]*milkpow[a-z]*|lalt|iait|lrit|beure|beurte|lactccerum|sahne|joghurt|mlieko|lactalbumin|iactoserum|actoserum|lacioserum|lactoserun|latoserum|lactosenum|iactose|lrctose|lbctose|fromaqe|fomage|lacteos?|lactosa|lattosio|laktose|suero|sueros|mantequilla|natas?|quesos|yogur|yogures|latticini|formaggi|burro|panna|siero|manteiga|queijos?|iogurte|requeijao|[a-zß]*(milch|molke|kase|rahm|kaas)[a-zß]*|melk[a-z]*|(koe|hel|skummet|mager|halfvolle?|volle?)melk[a-z]*|roomboter|roomijs|slagroom|kookroom|zure\s+room|[a-z]+boter|wei(poeder|eiwit|proteine|permeaat)|butter(reinfett|schmalz|fett)|mlek[a-z]*|mleczn[a-z]*|serwatk[a-z]*)(?![a-z0-9ß])/g,
           ex:/[a-zß]*(kokos|kokosnuss|mandel|hafer|soja|reis|cashew|haselnuss|erbsen|dinkel)(milch|drink)[a-zß]*|[a-zß]*milchsaur[a-zß]*|[a-zß]*(milch|molke|laktose|kase)[a-zß]*frei[a-zß]*|melk(zuur|esyre)[a-z]*|[a-z]*kaasjeskruid|[a-z]*suojakaasu[a-z]*|\bnata\s+de\s+coco\b|\b(sin|senza|sem)\s+(lactosa|lattosio|lactose)\b|\bkwas\s+mlekowy\b|[a-z]*(cacao|pinda|shea|noten|kokos|amandel|hazelnoot)boter|\bburro\s+di\s+(cacao|arachidi|karite)\b|\bmanteiga\s+de\s+(cacau|amendoim|karite)\b|\bmantequilla\s+de\s+(cacao|cacahuete|mani)\b|\b(panna|nata)\s+vegetale?\b|\bbeure\s+de\s+(cacao|karite|cacahuetes?)\b|\b(lalt|iait)\s+de\s+(coco|soja|riz|amandes?|avoine)\b/g },
-  gluten: { re:/\b(grau|hvede[a-z]*|vetestarkelse|havregryn|glutens|glutent|bie|cluten|qluten|giuten|gliten|aluten|seigie|selgle|avolne|ovoine|davoine|depeautre|epautre|lorge|dorge|trigos?|cebada|centeno|avena|espelta|frumento|grano\s+(tenero|duro)|orzo|segale|glutine|cevada|centeio|aveia|[a-zß]*(weizen|roggen|dinkel|grunkern|tarwe)[a-zß]*|(gerst|hafer|rogge|haver)[a-zß]*|pszenn?[a-z]*|zytni[a-z]*|jeczmien[a-z]*|owsian[a-z]*)(?![a-z0-9ß])/g,
+  gluten: { re:/\b(mie|noedels?|nudeln|[a-zß]*brot|paneermeel|beschuit|koekjes?|koek|wafels?|pannenkoek(?:en)?|kruidenkoek|vete(?:mjol|starkelse)?|havre[a-z]*|rug(?:brod|mel)?|rugmjol|grau|hvede[a-z]*|vetestarkelse|havregryn|glutens|glutent|bie|cluten|qluten|giuten|gliten|aluten|seigie|selgle|avolne|ovoine|davoine|depeautre|epautre|lorge|dorge|trigos?|cebada|centeno|avena|espelta|frumento|grano\s+(tenero|duro)|orzo|segale|glutine|cevada|centeio|aveia|[a-zß]*(weizen|roggen|dinkel|grunkern|tarwe)[a-zß]*|(gerst|hafer|rogge|haver)[a-zß]*|pszenn?[a-z]*|zytni[a-z]*|jeczmien[a-z]*|owsian[a-z]*)(?![a-z0-9ß])/g,
             ex:/[a-zß]*buchweizen[a-zß]*|\btrigo\s+sarraceno\b|\bsenza\s+glutine\b/g },
-  eggs: { re:/\b(oua|galbenus[a-z]*|eierlikor|eggpowder|ggpowder|[a-z]*yolk[a-z]*|mayonnais|eiern|eierzeugnisse[n]?|egge\s*-\s*plomme|eggeplomme|oeups|oeurfs|yolks?|ovoalbumin[a-z]?|albumina|eufs|oeuf[a-z]{1,2}|doeufs?|deufs?|coeufs?|oeeufs?|oeuts?|aeufs|geufs|loeuf|[a-z]*oeuf[a-z]*|aeg|aegge[a-z]*|eggehvit[a-z]*|lysozym[a-z]*|huevos?|yemas?|ovoproductos|uov[oa]|tuorl[oi]|albume|ei|eier|[a-zß]*(vollei|eigelb|eiklar|huhnerei|eipulver|trockenei|flussigei|kippenei|eidooier)[a-zß]*|eiwei(ss|ß)|eieren|eigeel|volei|ovos?|jaj[a-z]*|vejce|ceufs?)(?![a-z0-9ß])/g,
+  eggs: { re:/\b(eiwit[a-z]*|eipoeders?|agg(?:pulver|vita|vitepulver|ula|gula)?|oua|galbenus[a-z]*|eierlikor|eggpowder|ggpowder|[a-z]*yolk[a-z]*|mayonnais|eiern|eierzeugnisse[n]?|egge\s*-\s*plomme|eggeplomme|oeups|oeurfs|yolks?|ovoalbumin[a-z]?|albumina|eufs|oeuf[a-z]{1,2}|doeufs?|deufs?|coeufs?|oeeufs?|oeuts?|aeufs|geufs|loeuf|[a-z]*oeuf[a-z]*|aeg|aegge[a-z]*|eggehvit[a-z]*|lysozym[a-z]*|huevos?|yemas?|ovoproductos|uov[oa]|tuorl[oi]|albume|ei|eier|[a-zß]*(vollei|eigelb|eiklar|huhnerei|eipulver|trockenei|flussigei|kippenei|eidooier)[a-zß]*|eiwei(ss|ß)|eieren|eigeel|volei|ovos?|jaj[a-z]*|vejce|ceufs?)(?![a-z0-9ß])/g,
           // « bœuf » et « Jœuf » contiennent « oeuf » sans être des œufs (le mot cherché est collé à ce qui précède : « dioeuf », « oeufsfrais »)
           ex:/[a-z]*[bj]oeuf[a-z]*/g },
-  nuts: { re:/\b(alune|nuci|dl?amandes?|nussfr[a-z]*|orech[a-z]*|mandorlat[oai]|mandle[a-z]*|[a-z]*n[øo](?:tter|dder)|amanoes|amendes?|noiseties|nolsettes?|nosettes|noisetes|damandes?|nolx|avelines?|almendras?|avellanas?|nuez|nueces|anacardos?|pistachos?|frutos\s+de\s+cascara|frutos\s+secos|nu(ss|ß)e?n?|mandorl[ae]|nocciole|noc[ei]|anacardi|pistacchi[oa]?|frutta\s+(secca\s+)?a\s+guscio|[a-zß]*(hasel|wal|pekan|para|macadamia|cashew)nu(ss|ß)[a-zß]*|[a-zß]*mandel[a-zß]*|pistazie[a-zß]*|schalenfr[a-z]*|[a-z]*(hazel|wal|cashew|pecan|para)noo?t(en)?[a-z]*|amandel[a-z]*|noten|amendoas?|avelas?|noz|nozes|caju|pistacios?|orzech[a-z]*)(?![a-z0-9ß])/g,
+  nuts: { re:/\b(pistachenoten|notenpasta|macadamianoten|cashewkern[a-z]*|hasselnot[a-z]*|valnot[a-z]*|alune|nuci|dl?amandes?|nussfr[a-z]*|orech[a-z]*|mandorlat[oai]|mandle[a-z]*|[a-z]*n[øo](?:tter|dder)|amanoes|amendes?|noiseties|nolsettes?|nosettes|noisetes|damandes?|nolx|avelines?|almendras?|avellanas?|nuez|nueces|anacardos?|pistachos?|frutos\s+de\s+cascara|frutos\s+secos|nu(ss|ß)e?n?|mandorl[ae]|nocciole|noc[ei]|anacardi|pistacchi[oa]?|frutta\s+(secca\s+)?a\s+guscio|[a-zß]*(hasel|wal|pekan|para|macadamia|cashew)nu(ss|ß)[a-zß]*|[a-zß]*mandel[a-zß]*|pistazie[a-zß]*|schalenfr[a-z]*|[a-z]*(hazel|wal|cashew|pecan|para)noo?t(en)?[a-z]*|amandel[a-z]*|noten|amendoas?|avelas?|noz|nozes|caju|pistacios?|orzech[a-z]*)(?![a-z0-9ß])/g,
           ex:/\bnolx\s+de\s+coco\b|\bnuez\s+(moscada|de\s+(coco|cola))\b|\bnoce\s+(moscata|di\s+cocco)\b|\bnoz(es)?\s+(moscada|de\s+coco)(?![a-z0-9ß])/g },
   peanuts: { re:/\b(alune|jordn[øo][a-z]*|maapahkl[a-z]*|kikiriki|arachde|arachldes?|cacahou[a-z]*|arahides?|darachides?|[a-z]*arachid[a-z]*|peanut[a-z]*|cacahu[a-z]*|cacahuates?|mani|arachidi|[a-zß]*erdnu(ss|ß)[a-zß]*|[a-z]*pinda[a-z]*|amendoi[mn]s?|amendoins?|arachidow[a-z]*|orzeszk[a-z]*\s+ziemn[a-z]*|arasid[a-z]*)(?![a-z0-9ß])/g,
              ex:/[a-z]*arachidoni[a-z]*/g },
   soybeans: { re:/\b([a-zß]*soj[a-zß]*|szoj[a-z]*|soy[a-zß]+|[a-z]*soia[a-z]*)(?![a-z0-9ß])/g },
   sesame: { re:/\b(susan|susam[a-z]*|gergelim|sesahe|sesaee|sisame|sesane|sesome|seame|sesamo|[a-zß]*sesam[a-zß]*|sezam[a-z]*)(?![a-z0-9ß])/g },
-  fish: { re:/\b(saunon[a-z]*|jacquesi?anchois|[a-z]*fisk[a-z]*|torsk[a-z]*|lohi[a-z]*|anchols|[a-z]{0,2}anchoi[a-z]*|[a-z]*poisson[a-z]*|polsson|pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
+  fish: { re:/\b(anchovis|lax|tun|saunon[a-z]*|jacquesi?anchois|[a-z]*fisk[a-z]*|torsk[a-z]*|lohi[a-z]*|anchols|[a-z]{0,2}anchoi[a-z]*|[a-z]*poisson[a-z]*|polsson|pescados?|pesce|pesci|atun|tonno|salmone|merluza|merluzzo|anchoas?|acciugh[ei]|alici|sardinas?|sardin[ae]|caballa|sgombro|[a-zß]*fisch[a-zß]*|[a-zß]*lachs[a-zß]*|hering[ea]?|sardellen?|kabeljauw?|vis(olie|saus|bouillon|eiwit|gelatine)?|tonijn|zalm|ansjovis|makreel|haring|peixes?|atum|bacalhau|salmao|sardinhas?|anchovas?|ryb(a|y|ne|ny|i)|tunczyk|losos[a-z]*)(?![a-z0-9ß])/g,
           ex:/[a-zß]*tintenfisch[a-zß]*|[a-zß]*lachsschinken[a-zß]*|[a-zß]*[ai]fisch[a-zß]*/g },
-  crustaceans: { re:/\b(custaces|crust(?:ac|rc)[a-z]*|crev\s?t(?:\s?t)?(?:\s?es?)?|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|gamba|[a-zß]*krebse?|langusten?|krevet[a-z]*|lagostim|camaron(es)?|langostinos?|cangrejos?|crustaceos?|gamber[a-z]*|granchi[oa]?|aragost[ae]|crostacei|[a-zß]*garnelen?[a-zß]*|[a-zß]*krabben?[a-zß]*|hummer[a-zß]*|krebstier[a-zß]*|krebsfleisch|schalentier[a-zß]*|garnalen|kreeft(en)?|krab|schaaldieren|camarao|camaroes|caranguejos?|lagostas?|krewetk[a-z]*|skorupiak[a-z]*)(?![a-z0-9ß])/g },
-  molluscs: { re:/\b(molusques|mollus(?![a-z])|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|calamares|schnecken?|mejillon(es)?|almejas?|pulpo|berberechos?|vieiras?|ostras?|moluscos?|cozze|polpo|seppi[ae]|ostrich[ei]|molluschi|capesante|[a-zß]*muschel[a-zß]*|[a-zß]*tintenfisch[a-zß]*|austern?|weichtier[a-zß]*|schalentier[a-zß]*|mosselen|inktvis|oesters?|weekdieren|mexilh(ao|oes)|lulas?|ameijoas?|kalmary|osmiornic[a-z]*)(?![a-z0-9ß])/g,
+  crustaceans: { re:/\b(rakor|rakar|rejer|custaces|crust(?:ac|rc)[a-z]*|crev\s?t(?:\s?t)?(?:\s?es?)?|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|gamba|[a-zß]*krebse?|langusten?|krevet[a-z]*|lagostim|camaron(es)?|langostinos?|cangrejos?|crustaceos?|gamber[a-z]*|granchi[oa]?|aragost[ae]|crostacei|[a-zß]*garnelen?[a-zß]*|[a-zß]*krabben?[a-zß]*|hummer[a-zß]*|krebstier[a-zß]*|krebsfleisch|schalentier[a-zß]*|garnalen|kreeft(en)?|krab|schaaldieren|camarao|camaroes|caranguejos?|lagostas?|krewetk[a-z]*|skorupiak[a-z]*)(?![a-z0-9ß])/g },
+  molluscs: { re:/\b(schelpdier(?:en)?|molusques|mollus(?![a-z])|[a-zß]*meeresfr[a-zß]*|frutti\s+di\s+mare|mariscos?|calamares|schnecken?|mejillon(es)?|almejas?|pulpo|berberechos?|vieiras?|ostras?|moluscos?|cozze|polpo|seppi[ae]|ostrich[ei]|molluschi|capesante|[a-zß]*muschel[a-zß]*|[a-zß]*tintenfisch[a-zß]*|austern?|weichtier[a-zß]*|schalentier[a-zß]*|mosselen|inktvis|oesters?|weekdieren|mexilh(ao|oes)|lulas?|ameijoas?|kalmary|osmiornic[a-z]*)(?![a-z0-9ß])/g,
               ex:/[a-zß]*muschelnudel[a-zß]*|[a-zß]*muschelform[a-zß]*/g },
-  celery: { re:/\b(telina|celeni|celei|zeller|celerl|ceteri|apio|sedano|[a-z]*celeri[a-z]*|[a-z]*celery[a-z]*|celer|celera|[a-zß]*selleri[a-zß]*|[a-z]*selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
+  celery: { re:/\b(selderie|telina|celeni|celei|zeller|celerl|ceteri|apio|sedano|[a-z]*celeri[a-z]*|[a-z]*celery[a-z]*|celer|celera|[a-zß]*selleri[a-zß]*|[a-z]*selderij[a-z]*|selder|aipo|seler[a-z]*)(?![a-z0-9ß])/g },
   mustard: { re:/\b(mustar|moutr+[aeo]d?e|moufrde|moutrd|nwutarde|esoutarde|moutari|horcice|[a-z]*(moutard|mustard)[a-z]*|mouarde|motarde|moutrde|moutade|mcutarde|noutarde|mostaz[a-z]*|[a-z]*mutard[a-z]*|moutar(?![a-z])|moutar\s*'\s*e|senape|senf[a-zß]*|[a-z]*mosterd[a-z]*|mostarda|senneps?[a-z]*|senap[a-z]*|seneves?|gorczyc[a-z]*|musztard[a-z]*)(?![a-z0-9ß])/g },
   lupin: { re:/\b(lubin[a-z]{0,2}|altramuz|altramuces|lupin[a-z]+|tremocos?)(?![a-z0-9ß])/g },
   sulphites: { re:/\b(dioxid\s+de\s+sulf[a-z]*|disufites?|sufite|sultes|bisulfates?|[a-z]*(sulfit|sulphit|solfit)[a-z]*|[a-z]*sul(f|ph)ur[a-z]*|[a-z]*metabisul[a-z]*|su(l|lf|lph)\s*-\s*(ph)?it[a-z]*|[a-z]*su(pl|lp)fit[a-z]*|[a-z]{1,4}e22[0-8](?![0-9])|[a-z]*bisulfie[a-z]*|[a-z]*sulfureu[a-z]*|[a-z]*sulphurous|dioxyde\s+de\s+sulfure|so2|sufites|sulftes|sulfiltes|sulfies|sulfitos?|solfit[oi]|sulfit|sulfiet[a-z]*|anhidrido\s+sulfuroso|anidride\s+solforosa|schwefeldioxid|zwaveldioxide|dioxido\s+de\s+(azufre|enxofre)|metabisolfit[oi]|metabisulfitos?|siarczyn[a-z]*|disiarczyn[a-z]*)(?![a-z0-9ß])/g },
@@ -1761,6 +1761,8 @@ const CAT_GUARD = {
   fish: [new Set(['en:fishes','en:fish','en:frozen-fishes','en:smoked-fishes','en:canned-fishes','en:smoked-salmons','en:salmons','en:salmon-fillets',
     'en:salmon-steaks','en:tunas','en:canned-tunas','en:breaded-fish','en:fish-fillets','en:surimi','en:seafood','en:fish-eggs']), 'Rayon poissons : vérifie l\'étiquette (poisson ?)'],
   mustard: [new Set(['en:mustards']), 'Rayon moutardes : vérifie l\'étiquette (moutarde ?)'],
+  celery: [new Set(['en:bouillon-cubes', 'en:broths']), 'Les bouillons contiennent souvent du céleri : vérifie l\'étiquette'],
+  sesame: [new Set(['en:hummus', 'en:hamburger-buns']), 'Houmous et pains burger : le sésame est fréquent, vérifie l\'étiquette'],
   sulphites: [new Set(['en:wines','en:red-wines','en:white-wines','en:rose-wines','en:sparkling-wines','en:champagnes']), 'Le vin contient presque toujours des sulfites : vérifie l\'étiquette'],
 };
 const catGuard = (k, p) => !!CAT_GUARD[k] && (p.categories_tags || []).some(t => CAT_GUARD[k][0].has(t));
@@ -1826,6 +1828,29 @@ function tagSet(list){
   }
   return { set, odd };
 }
+/* Texte mal lu sur la photo de l'emballage (« ct6arachides » : un chiffre ou des lettres parasites collés au mot) : les mots d'allergènes
+   longs et très reconnaissables sont aussi cherchés À L'INTÉRIEUR des mots. Cherché seulement si aucun mot-clé normal n'a rien trouvé :
+   on ne fait qu'ajouter des doutes (« À vérifier »), jamais en retirer. */
+const STEMS = {
+  peanuts: /arachid|cacahuet|cacahouet|peanut/g, nuts: /noisett|pistach|almond|hazelnut/g, sesame: /sesam/g, crustaceans: /crustac|crevett/g,
+  molluscs: /mollusq/g, fish: /poisson|saumon|anchoi/g, mustard: /moutard/g, celery: /celeri/g,
+};
+function stemHits(text, kwKey){
+  const re = STEMS[kwKey]; if (!re) return [];
+  const words = [];
+  for (const { out, map } of textVariants(String(text || ''))){
+    const ex = [];
+    for (const kw of [KW[kwKey], KW_X[kwKey]]) if (kw && kw.ex) for (const m of out.matchAll(kw.ex)) ex.push([m.index, m.index + m[0].length]);
+    for (const m of out.matchAll(re)){
+      const s = m.index, e = s + m[0].length;
+      if (ex.some(([a, b]) => s >= a && e <= b)) continue;
+      // le mot entier autour de la racine, tel qu'écrit sur la fiche
+      let a = s, b = e; while (a > 0 && /[a-z0-9]/.test(out[a - 1])) a--; while (b < out.length && /[a-z0-9]/.test(out[b])) b++;
+      words.push(String(text).slice(map[a], map[b - 1] + 1).trim());
+    }
+  }
+  return words;
+}
 function evaluate(p){
   if (p && p._fresh){
     const bad = (p._al || []).filter(k => profile.sel.has(k)).map(k => (ALLERGENS.find(a => a.key === k) || {}).name || k);
@@ -1858,7 +1883,8 @@ function evaluate(p){
     // mot français ou anglais d'abord ; sinon mot d'une autre langue (on précise alors l'allergène : « Weizenmehl » ne parle pas à tout le monde)
     const frHits = hasText ? findHits(rawAll, KW[a.kw]).words : [];
     const xHits = hasText && !frHits.length ? findHits(rawAll, KW_X[a.kw]).words : [];
-    const hits = frHits.length ? frHits : xHits;
+    const sHits = hasText && !frHits.length && !xHits.length ? stemHits(rawAll, a.kw) : [];
+    const hits = frHits.length ? frHits : xHits.length ? xHits : sHits;
     const hitMsg = frHits.length && !FOREIGN_W.test(fold(frHits[0]).trim()) ? `Ingrédient à vérifier : « ${frHits[0]} »` : hits.length ? `Ingrédient à vérifier : « ${hits[0]} » (${a.key === 'lactose' ? 'lait' : a.name} ?)` : '';
     // le nom est lu aussi avec les mots d'une autre langue (« Gamba blanca », « pindakaas », « all'uovo »)
     const nameOk = kw => nameFree && ((NAME_FREE_OK.includes(a.key) && nameVegan) || nameSaysFree(nameFold, kw, a.key));
@@ -4606,7 +4632,7 @@ $('#dtCopy').addEventListener('click', async () => {
 });
 
 /* ================= Version ================= */
-const APP_VERSION = '3.39';
+const APP_VERSION = '3.40';
 $('#appVersion').textContent = APP_VERSION;
 
 /* ================= Apparence ================= */
